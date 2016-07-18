@@ -4,7 +4,6 @@
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -14,15 +13,5 @@ hs_err_pid*
 *.ipr
 *.iws
 build/
-gradle/
 eclipse/
 .gradle/
-out/
-CREDITS-fml.txt
-*-changelog.txt
-gradlew
-gradlew.bat
-LICENSE-fml.txt
-MinecraftForge-Credits.txt
-MinecraftForge-License.txt
-README.txt
