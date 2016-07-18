@@ -78,7 +78,7 @@ public class StringCache {
 				if ((c1 != c2) && ((c1 < '0') || (c1 > '9') || (c2 < '0') || (c2 > '9') || colorCode)) {
 					return false;
 				}
-				colorCode = (c1 == 'ง');
+				colorCode = (c1 == 'ยง');
 			}
 			return true;
 		}
@@ -94,7 +94,7 @@ public class StringCache {
 					c = '0';
 				}
 				code = (code * 31) + c;
-				colorCode = (c == 'ง');
+				colorCode = (c == 'ยง');
 			}
 			return code;
 		}
@@ -177,9 +177,9 @@ public class StringCache {
 	private void cacheDightGlyphs() {
 		digitGlyphsReady = false;
 		digitGlyphs[0] = cacheString("0123456789").glyphs;
-		digitGlyphs[1] = cacheString("งl0123456789").glyphs;
-		digitGlyphs[2] = cacheString("งo0123456789").glyphs;
-		digitGlyphs[3] = cacheString("งlงo0123456789").glyphs;
+		digitGlyphs[1] = cacheString("ยงl0123456789").glyphs;
+		digitGlyphs[2] = cacheString("ยงo0123456789").glyphs;
+		digitGlyphs[3] = cacheString("ยงlยงo0123456789").glyphs;
 		digitGlyphsReady = true;
 	}
 
