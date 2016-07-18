@@ -1,0 +1,6 @@
+{
+    "variants": {
+        "active=true": { "model": "customnpcs:npcRedstoneActiveBlock" },
+        "active=false": { "model": "customnpcs:npcRedstoneBlock" }
+    }
+}

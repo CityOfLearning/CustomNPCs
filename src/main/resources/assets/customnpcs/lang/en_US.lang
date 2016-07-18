@@ -1,6 +1,7 @@
 customnpcs.defaultTextColor=404040
 
-entity.CustomNpc.name=Custom Npc
+entity.CustomNpc.name=Custom NPC
+entity.customnpcs.CustomNpc.name=Custom NPC
 
 itemGroup.cnpcs=CustomNpcs Tools
 itemGroup.cnpcsw=CustomNpcs Weapons
@@ -50,6 +51,10 @@ tile.npcPlaceholder_12.name=Placeholder
 tile.npcPlaceholder_13.name=Placeholder
 tile.npcPlaceholder_14.name=Placeholder
 tile.npcPlaceholder_15.name=Placeholder
+tile.npcScripted.name=Scripted Block
+tile.npcBuilderBlock.name=Builder Block
+tile.npcCopyBlock.name=Copy Block
+tile.npcTradingBlock.name=Trading Block
 
 gui.delete=Are you sure you want to delete this?
 gui.add=Add
@@ -108,12 +113,20 @@ gui.paste=Paste
 gui.settings=Settings
 gui.enabled=Enabled
 gui.website=Website
+gui.forum=Forum
 gui.text=Text
 gui.detailed=Detailed
 gui.server=Server
 gui.showmore=Show More
 gui.update=Update
+gui.finished=Finished
 gui.disabled=Disabled
+gui.editor=Editor
+gui.extraoptions=Extra Options
+gui.started=Started
+gui.yoffset=YOffset
+gui.playernearby=Player nearby
+gui.button=Button
 
 remote.title=Nearby NPCs
 remote.reset=Reset
@@ -149,7 +162,7 @@ mailbox.username=Username
 mailbox.subject=Subject
 mailbox.send=Send
 mailbox.write=Write Message
-mailbox.succes=Succesfully send your mail to %s
+mailbox.succes=Succesfully sent your mail to %s
 mailbox.errorUsername=Unknown username
 mailbox.errorSubject=Subject cant be empty
 mailbox.setup=Setup mail
@@ -168,12 +181,14 @@ display.livingAnimation=Has a living animation
 display.visible=Visible
 display.bossbar=BossBar
 display.url=Url
+display.tint=Tint
 
 inv.minExp=Min Exp
 inv.maxExp=Max Exp
 inv.npcInventory=NPC Inventory
 inv.inventory=Inventory
 inv.dropChance=Drop chance
+inv.auto=Auto Pickup
 
 availability.options=Availability Options
 availability.always=Always
@@ -214,11 +229,21 @@ role.companion=Companion
 
 trader.insufficient=Insufficient Currency
 trader.sufficient=Sufficient Currency
+trader.busy=Already in use
+trader.trade=Trade
+trader.waiting=Waiting for trade to start
+trader.cancelled=Trade was cancelled
+trader.complete=Trade completed succesfully
+
+farmer.itempicked=Item Picked up
+farmer.donothing=Do Nothing
+farmer.chest=Put in chest
+farmer.drop=Drop on the ground
 
 job.name=Job
 job.none=No Job
 job.guard=Guard
-job.healer=Healer
+job.healer=Beacon
 job.bard=Bard
 job.itemgiver=Item Giver
 job.boss=Boss
@@ -226,6 +251,8 @@ job.spawner=Spawner
 job.conversation=Conversation
 job.chunkloader=Chunk Loader
 job.puppet=Puppet
+job.builder=Builder
+job.farmer=Farmer
 
 stats.health=Health
 stats.aggro=AggroRange
@@ -236,19 +263,20 @@ stats.meleestrength=MeleeStrength
 stats.meleerange=MeleeRange
 stats.meleespeed=MeleeSpeed
 stats.accuracy=Accuracy(%)
-stats.rangedrange=RangedRange
-stats.burstspeed=FireRate
+stats.burstspeed=BurstRate
 stats.mindelay=MinDelay
 stats.maxdelay=MaxDelay
 stats.burstcount=BurstCount
 stats.shotcount=ShotCount
-stats.walkspeed=WalkSpeed
+stats.movespeed=MoveSpeed
 stats.meleeeffect=Effect(s)
 stats.respawn=Respawn
 stats.deadbody=HideDeadBody
 stats.fireimmune=ImmuneToFire
 stats.candrown=CanDrown
-stats.firesound:=SoundFX
+stats.firesound=FireSound
+stats.hitsound=HitSound
+stats.groundsound=GroundSound
 stats.creaturetype=CreatureType
 stats.normal=Normal
 stats.undead=Undead
@@ -261,9 +289,10 @@ stats.amplify=Amplified
 stats.melee=Melee
 stats.regenhealth=Health Regen
 stats.combatregen=Combat Regen
-stats.naturallydespawns=Naturally Despawn
+stats.naturally=Naturally
 stats.aimWhileShooting=Aim While Shooting
 stats.potionImmune=PotionImmune
+stats.attackInvisible=Attack Invisible
 
 stats.size=Size
 stats.speed=Speed
@@ -278,6 +307,8 @@ stats.stick=Sticks
 stats.regular=No Amp
 stats.amplified=Amp
 stats.explosion=Explosion
+stats.indirect=ShootIndirect
+stats.meleerange=MeleeRange
 
 ai.standing=Standing
 ai.wandering=Wandering
@@ -293,8 +324,6 @@ ai.shelter=ShelterFrom
 ai.leapattarget=LeapAtTarget
 ai.sprint=CanSprint
 ai.clearlos=MustSeeTarget
-ai.indirect=CanFireIndirect
-ai.rangemelee=UseRangeAttack
 ai.tacticalvariant=TacticalVariant
 ai.cobwebAffected=CobwebAffected
 ai.movement=Movement
@@ -318,6 +347,14 @@ advanced.editingmode=EditingMode
 advanced.loadday=Load Day
 advanced.loadnight=Load Night
 advanced.haspitch=Has Pitch
+advanced.scenes=Scenes
+
+lines.world=World Lines
+lines.attack=Attack Lines
+lines.interact=Interact Lines
+lines.killed=Killed Lines
+lines.kill=Kill Lines
+lines.random=Random Lines
 
 faction.hostiles=Hostile Factions
 faction.unfriendly=Unfriendly
@@ -401,6 +438,7 @@ dialog.commandoptionplayer=Use "@dp" to target the player using this
 dialog.hideNPC=Hide NPC
 dialog.showWheel=Show Dialog Wheel
 dialog.disableEsc=Disable Esc
+dialog.starttext=Start Text
 
 quest.quest=Quest
 quest.quests=Quests
@@ -448,6 +486,23 @@ script.target=Target
 script.availableScripts=Available Scripts
 script.loadedScripts=Loaded Scripts
 script.collide=Collide
+script.kills=Kills
+script.dialog_closed=DialogClosed
+script.role=Role
+script.apidoc=API Doc
+script.apisrc=API Source
+
+script.removed=Removed
+script.fallupon=FallUpon
+script.rainfill=RainFill
+script.clicked=Clicked
+script.harvested=Harvested
+script.exploded=Exploded
+script.neighborchanged=NeighborChanged
+script.collided=Collided
+script.target_lost=TargetLost
+script.toggled=Toggled
+script.powered=Powered
 
 item.npcWand.name=Npc Wand
 item.npcMobCloner.name=Mob Cloner
@@ -455,6 +510,8 @@ item.npcMovingPath.name=Npc Pather
 item.npcMounter.name=Mounter
 item.npcTeleporter.name=Teleporter
 item.npcScripter.name=Scripter
+item.npcScriptedDoorTool.name=Scripted Door
+item.npcScriptedBlock.name=Scripted Block
 
 item.npcBanjo.name=Banjo
 item.npcViolin.name=Violin
@@ -879,6 +936,8 @@ movement.pauses=Pauses
 movement.stopinteract=Stop on interact
 movement.crawling=Crawling
 movement.hug=Hugging
+movement.ground=Ground
+movement.flying=Flying
 
 model.head=Head
 model.rarm=R. Arm
@@ -896,12 +955,17 @@ puppet.standing=While standing
 puppet.walking=While walking
 puppet.attacking=While attacking
 
-guard.creepers=Attack Creepers
-guard.animals=Attack Animals
-guard.mobs=Attack Monsters
 guard.currentTargets=Current Targets
 guard.availableTargets=Available Targets
-guard.specifictargets=Specific targets
+guard.animals=Attack Animals
+guard.mobs=Attack Monsters
+guard.creepers=Attack Creepers
+
+beacon.range=Effect Range
+beacon.potency=Potency
+beacon.availableEffects=Available Effects
+beacon.currentEffects=Current Effects
+beacon.affect=Affect
 
 companion.baby=Baby
 companion.child=Child
@@ -914,3 +978,8 @@ companion.owner=Owner
 companion.strength=Strength
 companion.talent=Talent
 companion.level=Level
+
+schematic.width=Width
+schematic.length=Length
+schematic.height=Height
+schematic.preview=Preview
