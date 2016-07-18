@@ -58,3 +58,6 @@ processResources
     }
 }
 
+reobfJar.doLast {
+    ant.checksum file: tasks.jar.archivePath
+}
