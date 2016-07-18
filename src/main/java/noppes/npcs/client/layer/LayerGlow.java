@@ -52,7 +52,7 @@ public class LayerGlow implements LayerRenderer {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		renderer.getMainModel().render(npc, p_177201_2_, p_177201_3_, p_177201_5_, p_177201_6_, p_177201_7_,
 				p_177201_8_);
-		renderer.func_177105_a(npc, p_177201_4_);
+		renderer.setLightmap(npc, p_177201_4_);
 		GlStateManager.disableBlend();
 		GlStateManager.enableAlpha();
 		GlStateManager.depthFunc(515);

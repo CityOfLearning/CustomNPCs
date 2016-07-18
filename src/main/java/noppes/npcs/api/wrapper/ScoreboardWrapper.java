@@ -167,7 +167,7 @@ public class ScoreboardWrapper implements IScoreboard {
 			return true;
 		}
 		try {
-			final Entity entity = CommandBase.func_175768_b(MinecraftServer.getServer(), datatag);
+			final Entity entity = CommandBase.getEntity(MinecraftServer.getServer(), datatag);
 			final NBTTagCompound nbttagcompound = JsonToNBT.getTagFromJson(datatag);
 			final NBTTagCompound nbttagcompound2 = new NBTTagCompound();
 			entity.writeToNBT(nbttagcompound2);

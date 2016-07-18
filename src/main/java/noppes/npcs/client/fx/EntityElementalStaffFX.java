@@ -25,7 +25,7 @@ public class EntityElementalStaffFX extends EntityPortalFX {
 		z = d2;
 		float[] colors;
 		if (color <= 15) {
-			colors = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(color));
+			colors = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(color));
 		} else {
 			colors = new float[] { ((color >> 16) & 0xFF) / 255.0f, ((color >> 8) & 0xFF) / 255.0f,
 					(color & 0xFF) / 255.0f };

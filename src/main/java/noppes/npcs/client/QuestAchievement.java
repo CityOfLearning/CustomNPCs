@@ -21,7 +21,7 @@ public class QuestAchievement extends Achievement {
 	}
 
 	@Override
-	public IChatComponent func_150955_j() {
+	public IChatComponent createChatComponent() {
 		return new ChatComponentText(message);
 	}
 

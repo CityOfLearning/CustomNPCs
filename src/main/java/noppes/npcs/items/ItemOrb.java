@@ -21,7 +21,7 @@ public class ItemOrb extends ItemNpcInterface {
 
 	@Override
 	public int getColorFromItemStack(final ItemStack par1ItemStack, final int par2) {
-		final float[] color = EntitySheep.func_175513_a(EnumDyeColor.byDyeDamage(par1ItemStack.getItemDamage()));
+		final float[] color = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(par1ItemStack.getItemDamage()));
 		return new Color(color[0], color[1], color[2]).getRGB();
 	}
 
