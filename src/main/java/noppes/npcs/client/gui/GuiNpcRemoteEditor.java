@@ -1,8 +1,12 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
@@ -19,111 +23,111 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, GuiYesNoCallback {
+	private GuiCustomScroll scroll;
+	private HashMap<String, Integer> data;
 
-   private GuiCustomScroll scroll;
-   private HashMap data = new HashMap();
+	public GuiNpcRemoteEditor() {
+		data = new HashMap<String, Integer>();
+		xSize = 256;
+		setBackground("menubg.png");
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 3) {
+			Client.sendData(EnumPacketServer.RemoteFreeze, new Object[0]);
+		}
+		if (id == 5) {
+			for (final int ids : data.values()) {
+				Client.sendData(EnumPacketServer.RemoteReset, ids);
+				final Entity entity = player.worldObj.getEntityByID(ids);
+				if ((entity != null) && (entity instanceof EntityNPCInterface)) {
+					((EntityNPCInterface) entity).reset();
+				}
+			}
+		}
+		if (!data.containsKey(scroll.getSelected())) {
+			return;
+		}
+		if (id == 0) {
+			Client.sendData(EnumPacketServer.RemoteMainMenu, data.get(scroll.getSelected()));
+		}
+		if (id == 1) {
+			final GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
+			displayGuiScreen(guiyesno);
+		}
+		if (id == 2) {
+			Client.sendData(EnumPacketServer.RemoteReset, data.get(scroll.getSelected()));
+			final Entity entity2 = player.worldObj.getEntityByID(data.get(scroll.getSelected()));
+			if ((entity2 != null) && (entity2 instanceof EntityNPCInterface)) {
+				((EntityNPCInterface) entity2).reset();
+			}
+		}
+		if (id == 4) {
+			Client.sendData(EnumPacketServer.RemoteTpToNpc, data.get(scroll.getSelected()));
+			close();
+		}
+	}
 
-   public GuiNpcRemoteEditor() {
-      super.xSize = 256;
-      this.setBackground("menubg.png");
-      Client.sendData(EnumPacketServer.RemoteNpcsGet, new Object[0]);
-   }
+	@Override
+	public void confirmClicked(final boolean flag, final int i) {
+		if (flag) {
+			Client.sendData(EnumPacketServer.RemoteDelete, data.get(scroll.getSelected()));
+		}
+		NoppesUtil.openGUI(player, this);
+	}
 
-   public void initGui() {
-      super.initGui();
-      if(this.scroll == null) {
-         this.scroll = new GuiCustomScroll(this, 0);
-         this.scroll.setSize(165, 208);
-         this.scroll.guiLeft = super.guiLeft + 4;
-         this.scroll.guiTop = super.guiTop + 4;
-      }
+	@Override
+	public void initGui() {
+		super.initGui();
+		if (scroll == null) {
+			(scroll = new GuiCustomScroll(this, 0)).setSize(165, 208);
+		}
+		scroll.guiLeft = guiLeft + 4;
+		scroll.guiTop = guiTop + 4;
+		addScroll(scroll);
+		final String title = StatCollector.translateToLocal("remote.title");
+		final int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
+		addLabel(new GuiNpcLabel(0, title, guiLeft + x, guiTop - 8));
+		addButton(new GuiNpcButton(0, guiLeft + 170, guiTop + 6, 82, 20, "selectServer.edit"));
+		addButton(new GuiNpcButton(1, guiLeft + 170, guiTop + 28, 82, 20, "selectWorld.deleteButton"));
+		addButton(new GuiNpcButton(2, guiLeft + 170, guiTop + 50, 82, 20, "remote.reset"));
+		addButton(new GuiNpcButton(4, guiLeft + 170, guiTop + 72, 82, 20, "remote.tp"));
+		addButton(new GuiNpcButton(5, guiLeft + 170, guiTop + 110, 82, 20, "remote.resetall"));
+		addButton(new GuiNpcButton(3, guiLeft + 170, guiTop + 132, 82, 20, "remote.freeze"));
+	}
 
-      this.addScroll(this.scroll);
-      String title = StatCollector.translateToLocal("remote.title");
-      int x = (super.xSize - super.fontRendererObj.getStringWidth(title)) / 2;
-      this.addLabel(new GuiNpcLabel(0, title, super.guiLeft + x, super.guiTop - 8));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 170, super.guiTop + 6, 82, 20, "selectServer.edit"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 170, super.guiTop + 28, 82, 20, "selectWorld.deleteButton"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 170, super.guiTop + 50, 82, 20, "remote.reset"));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 170, super.guiTop + 72, 82, 20, "remote.tp"));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 170, super.guiTop + 110, 82, 20, "remote.resetall"));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 170, super.guiTop + 132, 82, 20, "remote.freeze"));
-   }
+	@Override
+	public void initPacket() {
+		Client.sendData(EnumPacketServer.RemoteNpcsGet, new Object[0]);
+	}
 
-   public void confirmClicked(boolean flag, int i) {
-      if(flag) {
-         Client.sendData(EnumPacketServer.RemoteDelete, new Object[]{this.data.get(this.scroll.getSelected())});
-      }
+	@Override
+	public void keyTyped(final char c, final int i) {
+		if ((i == 1) || isInventoryKey(i)) {
+			close();
+		}
+	}
 
-      NoppesUtil.openGUI(super.player, this);
-   }
+	@Override
+	public void mouseClicked(final int i, final int j, final int k) {
+		super.mouseClicked(i, j, k);
+		scroll.mouseClicked(i, j, k);
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 3) {
-         Client.sendData(EnumPacketServer.RemoteFreeze, new Object[0]);
-      }
+	@Override
+	public void save() {
+	}
 
-      if(id == 5) {
-         Iterator entity = this.data.values().iterator();
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		scroll.setList(list);
+		this.data = data;
+	}
 
-         while(entity.hasNext()) {
-            int ids = ((Integer)entity.next()).intValue();
-            Client.sendData(EnumPacketServer.RemoteReset, new Object[]{Integer.valueOf(ids)});
-            Entity entity1 = super.player.worldObj.getEntityByID(ids);
-            if(entity1 != null && entity1 instanceof EntityNPCInterface) {
-               ((EntityNPCInterface)entity1).reset();
-            }
-         }
-      }
-
-      if(this.data.containsKey(this.scroll.getSelected())) {
-         if(id == 0) {
-            Client.sendData(EnumPacketServer.RemoteMainMenu, new Object[]{this.data.get(this.scroll.getSelected())});
-         }
-
-         if(id == 1) {
-            GuiYesNo entity2 = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
-            this.displayGuiScreen(entity2);
-         }
-
-         if(id == 2) {
-            Client.sendData(EnumPacketServer.RemoteReset, new Object[]{this.data.get(this.scroll.getSelected())});
-            Entity entity3 = super.player.worldObj.getEntityByID(((Integer)this.data.get(this.scroll.getSelected())).intValue());
-            if(entity3 != null && entity3 instanceof EntityNPCInterface) {
-               ((EntityNPCInterface)entity3).reset();
-            }
-         }
-
-         if(id == 4) {
-            Client.sendData(EnumPacketServer.RemoteTpToNpc, new Object[]{this.data.get(this.scroll.getSelected())});
-            this.close();
-         }
-
-      }
-   }
-
-   public void mouseClicked(int i, int j, int k) {
-      super.mouseClicked(i, j, k);
-      this.scroll.mouseClicked(i, j, k);
-   }
-
-   public void keyTyped(char c, int i) {
-      if(i == 1 || this.isInventoryKey(i)) {
-         this.close();
-      }
-
-   }
-
-   public void save() {}
-
-   public void setData(Vector list, HashMap data) {
-      this.scroll.setList(list);
-      this.data = data;
-   }
-
-   public void setSelected(String selected) {
-      this.getButton(3).setDisplayText(selected);
-   }
+	@Override
+	public void setSelected(final String selected) {
+		getButton(3).setDisplayText(selected);
+	}
 }

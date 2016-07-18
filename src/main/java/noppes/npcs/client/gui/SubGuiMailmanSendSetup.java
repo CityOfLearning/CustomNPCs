@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
@@ -18,90 +22,85 @@ import noppes.npcs.containers.ContainerMail;
 import noppes.npcs.controllers.PlayerMail;
 
 public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfieldListener, GuiSelectionListener {
+	private PlayerMail mail;
+	private GuiNPCQuestSelection questSelection;
 
-   private PlayerMail mail;
-   private GuiNPCQuestSelection questSelection;
+	public SubGuiMailmanSendSetup(final PlayerMail mail, final GuiScreen parent) {
+		this.parent = parent;
+		xSize = 256;
+		setBackground("menubg.png");
+		this.mail = mail;
+	}
 
+	@Override
+	public void buttonEvent(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 0) {
+			close();
+		}
+		if (id == 1) {
+			mail.questId = -1;
+			mail.questTitle = "";
+			mail.message = new NBTTagCompound();
+			close();
+		}
+		if (id == 2) {
+			GuiMailmanWrite.parent = parent;
+			GuiMailmanWrite.mail = mail;
+			Client.sendData(EnumPacketServer.MailOpenSetup, mail.writeNBT());
+		}
+		if (id == 3) {
+			NoppesUtil.openGUI(player, questSelection = new GuiNPCQuestSelection(npc, getParent(), mail.questId));
+			questSelection.listener = this;
+		}
+		if (id == 4) {
+			mail.questId = -1;
+			mail.questTitle = "";
+			initGui();
+		}
+	}
 
-   public SubGuiMailmanSendSetup(PlayerMail mail, GuiScreen parent) {
-      super.parent = parent;
-      super.xSize = 256;
-      this.setBackground("menubg.png");
-      this.mail = mail;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(1, "mailbox.subject", guiLeft + 4, guiTop + 19));
+		addTextField(new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 60, guiTop + 14, 180, 20, mail.subject));
+		addLabel(new GuiNpcLabel(0, "mailbox.sender", guiLeft + 4, guiTop + 41));
+		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 60, guiTop + 36, 180, 20, mail.sender));
+		addButton(new GuiNpcButton(2, guiLeft + 29, guiTop + 100, "mailbox.write"));
+		addLabel(new GuiNpcLabel(3, "quest.quest", guiLeft + 13, guiTop + 135));
+		String title = mail.questTitle;
+		if (title.isEmpty()) {
+			title = "gui.select";
+		}
+		addButton(new GuiNpcButton(3, guiLeft + 70, guiTop + 130, 100, 20, title));
+		addButton(new GuiNpcButton(4, guiLeft + 171, guiTop + 130, 20, 20, "X"));
+		addButton(new GuiNpcButton(0, guiLeft + 26, guiTop + 190, 100, 20, "gui.done"));
+		addButton(new GuiNpcButton(1, guiLeft + 130, guiTop + 190, 100, 20, "gui.cancel"));
+		if (player.openContainer instanceof ContainerMail) {
+			final ContainerMail container = (ContainerMail) player.openContainer;
+			mail.items = container.mail.items;
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(1, "mailbox.subject", super.guiLeft + 4, super.guiTop + 19));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 14, 180, 20, this.mail.subject));
-      this.addLabel(new GuiNpcLabel(0, "mailbox.sender", super.guiLeft + 4, super.guiTop + 41));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 36, 180, 20, this.mail.sender));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 29, super.guiTop + 100, "mailbox.write"));
-      this.addLabel(new GuiNpcLabel(3, "quest.quest", super.guiLeft + 13, super.guiTop + 135));
-      String title = this.mail.questTitle;
-      if(title.isEmpty()) {
-         title = "gui.select";
-      }
+	@Override
+	public void save() {
+	}
 
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 70, super.guiTop + 130, 100, 20, title));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 171, super.guiTop + 130, 20, 20, "X"));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 26, super.guiTop + 190, 100, 20, "gui.done"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 130, super.guiTop + 190, 100, 20, "gui.cancel"));
-      if(super.player.openContainer instanceof ContainerMail) {
-         ContainerMail container = (ContainerMail)super.player.openContainer;
-         this.mail.items = container.mail.items;
-      }
+	@Override
+	public void selected(final int ob, final String name) {
+		mail.questId = ob;
+		mail.questTitle = questSelection.getSelected();
+		initGui();
+	}
 
-   }
-
-   public void buttonEvent(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 0) {
-         this.close();
-      }
-
-      if(id == 1) {
-         this.mail.questId = -1;
-         this.mail.questTitle = "";
-         this.mail.message = new NBTTagCompound();
-         this.close();
-      }
-
-      if(id == 2) {
-         GuiMailmanWrite.parent = super.parent;
-         GuiMailmanWrite.mail = this.mail;
-         Client.sendData(EnumPacketServer.MailOpenSetup, new Object[]{this.mail.writeNBT()});
-      }
-
-      if(id == 3) {
-         NoppesUtil.openGUI(super.player, this.questSelection = new GuiNPCQuestSelection(super.npc, this.getParent(), this.mail.questId));
-         this.questSelection.listener = this;
-      }
-
-      if(id == 4) {
-         this.mail.questId = -1;
-         this.mail.questTitle = "";
-         this.initGui();
-      }
-
-   }
-
-   public void selected(int ob, String name) {
-      this.mail.questId = ob;
-      this.mail.questTitle = this.questSelection.getSelected();
-      this.initGui();
-   }
-
-   public void save() {}
-
-   public void unFocused(GuiNpcTextField textField) {
-      if(textField.id == 0) {
-         this.mail.sender = textField.getText();
-      }
-
-      if(textField.id == 1) {
-         this.mail.subject = textField.getText();
-      }
-
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField textField) {
+		if (textField.id == 0) {
+			mail.sender = textField.getText();
+		}
+		if (textField.id == 1) {
+			mail.subject = textField.getText();
+		}
+	}
 }

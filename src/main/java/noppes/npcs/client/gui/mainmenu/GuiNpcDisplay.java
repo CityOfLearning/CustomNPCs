@@ -1,16 +1,17 @@
+//
+
+//
+
 package noppes.npcs.client.gui.mainmenu;
 
-import com.mojang.authlib.GameProfile;
-import java.util.UUID;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.DataDisplay;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.GuiNPCTextures;
 import noppes.npcs.client.gui.GuiNpcTextureCloaks;
 import noppes.npcs.client.gui.GuiNpcTextureOverlays;
-import noppes.npcs.client.gui.model.GuiCreationScreen;
+import noppes.npcs.client.gui.model.GuiCreationParts;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
@@ -18,139 +19,156 @@ import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.entity.data.DataDisplay;
 
 public class GuiNpcDisplay extends GuiNPCInterface2 implements ITextfieldListener, IGuiData {
+	private DataDisplay display;
 
-   private DataDisplay display;
+	public GuiNpcDisplay(final EntityNPCInterface npc) {
+		super(npc, 1);
+		display = npc.display;
+		Client.sendData(EnumPacketServer.MainmenuDisplayGet, new Object[0]);
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 0) {
+			display.setShowName(button.getValue());
+		}
+		if (button.id == 1) {
+			NoppesUtil.openGUI(player, new GuiCreationParts(npc));
+		}
+		if (button.id == 2) {
+			display.setSkinUrl("");
+			display.setSkinPlayer(null);
+			display.skinType = (byte) button.getValue();
+			initGui();
+		} else if (button.id == 3) {
+			NoppesUtil.openGUI(player, new GuiNPCTextures(npc, this));
+		} else if (button.id == 5) {
+			display.setHashLivingAnimation(button.getValue() == 0);
+		} else if (button.id == 7) {
+			display.setVisible(button.getValue());
+		} else if (button.id == 8) {
+			NoppesUtil.openGUI(player, new GuiNpcTextureCloaks(npc, this));
+		} else if (button.id == 9) {
+			NoppesUtil.openGUI(player, new GuiNpcTextureOverlays(npc, this));
+		} else if (button.id == 10) {
+			display.setBossbar(button.getValue());
+		}
+	}
 
-   public GuiNpcDisplay(EntityNPCInterface npc) {
-      super(npc, 1);
-      this.display = npc.display;
-      Client.sendData(EnumPacketServer.MainmenuDisplayGet, new Object[0]);
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		int y = guiTop + 4;
+		addLabel(new GuiNpcLabel(0, "gui.name", guiLeft + 5, y + 5));
+		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 50, y, 200, 20, display.getName()));
+		addButton(new GuiNpcButton(0, guiLeft + 253, y, 110, 20,
+				new String[] { "display.show", "display.hide", "display.showAttacking" }, display.getShowName()));
+		y += 23;
+		addLabel(new GuiNpcLabel(11, "gui.title", guiLeft + 5, y + 5));
+		addTextField(new GuiNpcTextField(11, this, fontRendererObj, guiLeft + 50, y, 200, 20, display.getTitle()));
+		y += 23;
+		addLabel(new GuiNpcLabel(1, "display.model", guiLeft + 5, y + 5));
+		addButton(new GuiNpcButton(1, guiLeft + 50, y, 110, 20, "selectServer.edit"));
+		addLabel(new GuiNpcLabel(2, "display.size", guiLeft + 175, y + 5));
+		addTextField(new GuiNpcTextField(2, this, fontRendererObj, guiLeft + 203, y, 40, 20, display.getSize() + ""));
+		getTextField(2).numbersOnly = true;
+		getTextField(2).setMinMaxDefault(1, 30, 5);
+		addLabel(new GuiNpcLabel(3, "(1-30)", guiLeft + 246, y + 5));
+		y += 23;
+		addLabel(new GuiNpcLabel(4, "display.texture", guiLeft + 5, y + 5));
+		addTextField(new GuiNpcTextField(3, this, fontRendererObj, guiLeft + 80, y, 200, 20,
+				(display.skinType == 0) ? display.getSkinTexture() : display.getSkinUrl()));
+		addButton(new GuiNpcButton(3, guiLeft + 325, y, 38, 20, "mco.template.button.select"));
+		addButton(new GuiNpcButton(2, guiLeft + 283, y, 40, 20,
+				new String[] { "display.texture", "display.player", "display.url" }, display.skinType));
+		getButton(3).setEnabled(display.skinType == 0);
+		if ((display.skinType == 1) && !display.getSkinPlayer().isEmpty()) {
+			getTextField(3).setText(display.getSkinPlayer());
+		}
+		y += 23;
+		addLabel(new GuiNpcLabel(8, "display.cape", guiLeft + 5, y + 5));
+		addTextField(new GuiNpcTextField(8, this, fontRendererObj, guiLeft + 80, y, 200, 20, display.getCapeTexture()));
+		addButton(new GuiNpcButton(8, guiLeft + 283, y, 80, 20, "display.selectTexture"));
+		y += 23;
+		addLabel(new GuiNpcLabel(9, "display.overlay", guiLeft + 5, y + 5));
+		addTextField(
+				new GuiNpcTextField(9, this, fontRendererObj, guiLeft + 80, y, 200, 20, display.getOverlayTexture()));
+		addButton(new GuiNpcButton(9, guiLeft + 283, y, 80, 20, "display.selectTexture"));
+		y += 23;
+		addLabel(new GuiNpcLabel(5, "display.livingAnimation", guiLeft + 5, y + 5));
+		addButton(new GuiNpcButton(5, guiLeft + 120, y, 50, 20, new String[] { "gui.yes", "gui.no" },
+				display.getHasLivingAnimation() ? 0 : 1));
+		addLabel(new GuiNpcLabel(6, "display.tint", guiLeft + 245, y + 5));
+		String color;
+		for (color = Integer.toHexString(display.getTint()); color.length() < 6; color = "0" + color) {
+		}
+		addTextField(new GuiNpcTextField(6, this, guiLeft + 350, y, 60, 20, color));
+		getTextField(6).setTextColor(display.getTint());
+		y += 23;
+		addLabel(new GuiNpcLabel(7, "display.visible", guiLeft + 5, y + 5));
+		addButton(new GuiNpcButton(7, guiLeft + 120, y, 50, 20, new String[] { "gui.yes", "gui.no", "gui.partly" },
+				display.getVisible()));
+		y += 23;
+		addLabel(new GuiNpcLabel(10, "display.bossbar", guiLeft + 5, y + 5));
+		addButton(new GuiNpcButton(10, guiLeft + 120, y, 110, 20,
+				new String[] { "display.hide", "display.show", "display.showAttacking" }, display.getBossbar()));
+	}
 
-   public void initGui() {
-      super.initGui();
-      int y = super.guiTop + 4;
-      this.addLabel(new GuiNpcLabel(0, "gui.name", super.guiLeft + 5, y + 5));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 50, y, 200, 20, this.display.name));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 253, y, 110, 20, new String[]{"display.show", "display.hide", "display.showAttacking"}, this.display.showName));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(11, "gui.title", super.guiLeft + 5, y + 5));
-      this.addTextField(new GuiNpcTextField(11, this, super.fontRendererObj, super.guiLeft + 50, y, 200, 20, this.display.title));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(1, "display.model", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 50, y, 110, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(2, "display.size", super.guiLeft + 175, y + 5));
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 203, y, 40, 20, this.display.modelSize + ""));
-      this.getTextField(2).numbersOnly = true;
-      this.getTextField(2).setMinMaxDefault(1, 30, 5);
-      this.addLabel(new GuiNpcLabel(3, "(1-30)", super.guiLeft + 246, y + 5));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(4, "display.texture", super.guiLeft + 5, y + 5));
-      this.addTextField(new GuiNpcTextField(3, this, super.fontRendererObj, super.guiLeft + 80, y, 200, 20, this.display.skinType == 0?this.display.texture:this.display.url));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 325, y, 38, 20, "mco.template.button.select"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 283, y, 40, 20, new String[]{"display.texture", "display.player", "display.url"}, this.display.skinType));
-      this.getButton(3).setEnabled(this.display.skinType == 0);
-      if(this.display.skinType == 1 && this.display.playerProfile != null) {
-         this.getTextField(3).setText(this.display.playerProfile.getName());
-      }
+	@Override
+	public void save() {
+		if (display.skinType == 1) {
+			display.loadProfile();
+		}
+		npc.textureLocation = null;
+		mc.renderGlobal.onEntityRemoved(npc);
+		mc.renderGlobal.onEntityAdded(npc);
+		Client.sendData(EnumPacketServer.MainmenuDisplaySave, display.writeToNBT(new NBTTagCompound()));
+	}
 
-      y += 23;
-      this.addLabel(new GuiNpcLabel(8, "display.cape", super.guiLeft + 5, y + 5));
-      this.addTextField(new GuiNpcTextField(8, this, super.fontRendererObj, super.guiLeft + 80, y, 200, 20, this.display.cloakTexture));
-      this.addButton(new GuiNpcButton(8, super.guiLeft + 283, y, 80, 20, "display.selectTexture"));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(9, "display.overlay", super.guiLeft + 5, y + 5));
-      this.addTextField(new GuiNpcTextField(9, this, super.fontRendererObj, super.guiLeft + 80, y, 200, 20, this.display.glowTexture));
-      this.addButton(new GuiNpcButton(9, super.guiLeft + 283, y, 80, 20, "display.selectTexture"));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(5, "display.livingAnimation", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 120, y, 50, 20, new String[]{"gui.yes", "gui.no"}, this.display.NoLivingAnimation?1:0));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(7, "display.visible", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(7, super.guiLeft + 120, y, 50, 20, new String[]{"gui.yes", "gui.no", "gui.partly"}, this.display.visible));
-      y += 23;
-      this.addLabel(new GuiNpcLabel(10, "display.bossbar", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 120, y, 110, 20, new String[]{"display.hide", "display.show", "display.showAttacking"}, this.display.showBossBar));
-   }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		display.readToNBT(compound);
+		initGui();
+	}
 
-   public void unFocused(GuiNpcTextField textfield) {
-      if(textfield.id == 0) {
-         if(!textfield.isEmpty()) {
-            this.display.name = textfield.getText();
-         } else {
-            textfield.setText(this.display.name);
-         }
-      } else if(textfield.id == 2) {
-         this.display.modelSize = textfield.getInteger();
-      } else if(textfield.id == 3) {
-         if(this.display.skinType == 2) {
-            this.display.url = textfield.getText();
-         } else if(this.display.skinType == 1) {
-            this.display.playerProfile = new GameProfile((UUID)null, textfield.getText());
-         } else {
-            this.display.texture = textfield.getText();
-         }
-      } else if(textfield.id == 8) {
-         super.npc.textureCloakLocation = null;
-         this.display.cloakTexture = textfield.getText();
-      } else if(textfield.id == 9) {
-         super.npc.textureGlowLocation = null;
-         this.display.glowTexture = textfield.getText();
-      } else if(textfield.id == 11) {
-         this.display.title = textfield.getText();
-      }
-
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.display.showName = button.getValue();
-      }
-
-      if(button.field_146127_k == 1) {
-         NoppesUtil.openGUI(super.player, new GuiCreationScreen(this, (EntityCustomNpc)super.npc));
-      }
-
-      if(button.field_146127_k == 2) {
-         this.display.skinType = (byte)button.getValue();
-         this.display.url = "";
-         this.display.playerProfile = null;
-         this.initGui();
-      } else if(button.field_146127_k == 3) {
-         NoppesUtil.openGUI(super.player, new GuiNPCTextures(super.npc, this));
-      } else if(button.field_146127_k == 5) {
-         this.display.NoLivingAnimation = button.getValue() == 1;
-      } else if(button.field_146127_k == 7) {
-         this.display.visible = button.getValue();
-      } else if(button.field_146127_k == 8) {
-         NoppesUtil.openGUI(super.player, new GuiNpcTextureCloaks(super.npc, this));
-      } else if(button.field_146127_k == 9) {
-         NoppesUtil.openGUI(super.player, new GuiNpcTextureOverlays(super.npc, this));
-      } else if(button.field_146127_k == 10) {
-         this.display.showBossBar = (byte)button.getValue();
-      }
-
-   }
-
-   public void save() {
-      if(this.display.skinType == 1) {
-         this.display.loadProfile();
-      }
-
-      super.npc.textureLocation = null;
-      super.mc.renderGlobal.onEntityDestroy(super.npc);
-      super.mc.renderGlobal.onEntityCreate(super.npc);
-      Client.sendData(EnumPacketServer.MainmenuDisplaySave, new Object[]{this.display.writeToNBT(new NBTTagCompound())});
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.display.readToNBT(compound);
-      this.initGui();
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField textfield) {
+		if (textfield.id == 0) {
+			if (!textfield.isEmpty()) {
+				display.setName(textfield.getText());
+			} else {
+				textfield.setText(display.getName());
+			}
+		} else if (textfield.id == 2) {
+			display.setSize(textfield.getInteger());
+		} else if (textfield.id == 3) {
+			if (display.skinType == 2) {
+				display.setSkinUrl(textfield.getText());
+			} else if (display.skinType == 1) {
+				display.setSkinPlayer(textfield.getText());
+			} else {
+				display.setSkinTexture(textfield.getText());
+			}
+		} else if (textfield.id == 6) {
+			int color = 0;
+			try {
+				color = Integer.parseInt(textfield.getText(), 16);
+			} catch (NumberFormatException e) {
+				color = 16777215;
+			}
+			display.setTint(color);
+			textfield.setTextColor(display.getTint());
+		} else if (textfield.id == 8) {
+			display.setCapeTexture(textfield.getText());
+		} else if (textfield.id == 9) {
+			display.setOverlayTexture(textfield.getText());
+		} else if (textfield.id == 11) {
+			display.setTitle(textfield.getText());
+		}
+	}
 }

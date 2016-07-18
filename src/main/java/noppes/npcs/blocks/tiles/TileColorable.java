@@ -1,52 +1,63 @@
+//
+
+//
+
 package noppes.npcs.blocks.tiles;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
-public class TileColorable extends TileEntity {
+public class TileColorable extends TileNpcEntity {
+	public int color;
+	public int rotation;
 
-   public int color = 14;
-   public int rotation;
+	public TileColorable() {
+		color = 14;
+	}
 
+	public boolean canUpdate() {
+		return false;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      super.readFromNBT(compound);
-      this.color = compound.getInteger("BannerColor");
-      this.rotation = compound.getInteger("BannerRotation");
-   }
+	@Override
+	public Packet getDescriptionPacket() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		writeToNBT(compound);
+		compound.removeTag("Items");
+		compound.removeTag("ExtraData");
+		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		return packet;
+	}
 
-   public void writeToNBT(NBTTagCompound compound) {
-      super.writeToNBT(compound);
-      compound.setInteger("BannerColor", this.color);
-      compound.setInteger("BannerRotation", this.rotation);
-   }
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+	}
 
-   public boolean canUpdate() {
-      return false;
-   }
+	@Override
+	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
+		final NBTTagCompound compound = pkt.getNbtCompound();
+		readFromNBT(compound);
+	}
 
-   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-      NBTTagCompound compound = pkt.getNbtCompound();
-      this.readFromNBT(compound);
-   }
+	public int powerProvided() {
+		return 0;
+	}
 
-   public Packet getDescriptionPacket() {
-      NBTTagCompound compound = new NBTTagCompound();
-      this.writeToNBT(compound);
-      compound.removeTag("Items");
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
-      return packet;
-   }
+	@Override
+	public void readFromNBT(final NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		color = compound.getInteger("BannerColor");
+		rotation = compound.getInteger("BannerRotation");
+	}
 
-   public AxisAlignedBB getRenderBoundingBox() {
-      return AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 1), (double)(super.zCoord + 1));
-   }
-
-   public int powerProvided() {
-      return 0;
-   }
+	@Override
+	public void writeToNBT(final NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("BannerColor", color);
+		compound.setInteger("BannerRotation", rotation);
+	}
 }

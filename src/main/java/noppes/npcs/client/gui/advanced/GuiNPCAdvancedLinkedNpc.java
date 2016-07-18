@@ -1,9 +1,14 @@
+//
+
+//
+
 package noppes.npcs.client.gui.advanced;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import noppes.npcs.client.Client;
@@ -16,52 +21,59 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScrollData, ICustomScrollListener {
+	public static GuiScreen Instance;
+	private GuiCustomScroll scroll;
+	private List<String> data;
 
-   private GuiCustomScroll scroll;
-   private List data = new ArrayList();
-   public static GuiScreen Instance;
+	public GuiNPCAdvancedLinkedNpc(final EntityNPCInterface npc) {
+		super(npc);
+		data = new ArrayList<String>();
+		GuiNPCAdvancedLinkedNpc.Instance = this;
+	}
 
+	@Override
+	public void buttonEvent(final GuiButton button) {
+		if (button.id == 1) {
+			Client.sendData(EnumPacketServer.LinkedSet, "");
+		}
+	}
 
-   public GuiNPCAdvancedLinkedNpc(EntityNPCInterface npc) {
-      super(npc);
-      Instance = this;
-      Client.sendData(EnumPacketServer.LinkedGetAll, new Object[0]);
-   }
+	@Override
+	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+		Client.sendData(EnumPacketServer.LinkedSet, guiCustomScroll.getSelected());
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.clear"));
-      if(this.scroll == null) {
-         this.scroll = new GuiCustomScroll(this, 0);
-         this.scroll.setSize(143, 208);
-      }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addButton(new GuiNpcButton(1, guiLeft + 358, guiTop + 38, 58, 20, "gui.clear"));
+		if (scroll == null) {
+			(scroll = new GuiCustomScroll(this, 0)).setSize(143, 208);
+		}
+		scroll.guiLeft = guiLeft + 137;
+		scroll.guiTop = guiTop + 4;
+		scroll.setSelected(npc.linkedName);
+		scroll.setList(data);
+		addScroll(scroll);
+	}
 
-      this.scroll.guiLeft = super.guiLeft + 137;
-      this.scroll.guiTop = super.guiTop + 4;
-      this.scroll.setSelected(super.npc.linkedName);
-      this.scroll.setList(this.data);
-      this.addScroll(this.scroll);
-   }
+	@Override
+	public void initPacket() {
+		Client.sendData(EnumPacketServer.LinkedGetAll, new Object[0]);
+	}
 
-   public void buttonEvent(GuiButton button) {
-      if(button.id == 1) {
-         Client.sendData(EnumPacketServer.LinkedSet, new Object[]{""});
-      }
+	@Override
+	public void save() {
+	}
 
-   }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		this.data = new ArrayList<String>(list);
+		initGui();
+	}
 
-   public void setData(Vector list, HashMap data) {
-      this.data = new ArrayList(list);
-      this.initGui();
-   }
-
-   public void setSelected(String selected) {
-      this.scroll.setSelected(selected);
-   }
-
-   public void save() {}
-
-   public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
-      Client.sendData(EnumPacketServer.LinkedSet, new Object[]{guiCustomScroll.getSelected()});
-   }
+	@Override
+	public void setSelected(final String selected) {
+		scroll.setSelected(selected);
+	}
 }

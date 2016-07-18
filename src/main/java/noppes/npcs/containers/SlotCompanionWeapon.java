@@ -1,25 +1,31 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.roles.RoleCompanion;
 
 class SlotCompanionWeapon extends Slot {
+	final RoleCompanion role;
 
-   final RoleCompanion role;
+	public SlotCompanionWeapon(final RoleCompanion role, final IInventory iinventory, final int id, final int x,
+			final int y) {
+		super(iinventory, id, x, y);
+		this.role = role;
+	}
 
+	@Override
+	public int getSlotStackLimit() {
+		return 1;
+	}
 
-   public SlotCompanionWeapon(RoleCompanion role, IInventory iinventory, int id, int x, int y) {
-      super(iinventory, id, x, y);
-      this.role = role;
-   }
-
-   public int getSlotStackLimit() {
-      return 1;
-   }
-
-   public boolean isItemValid(ItemStack itemstack) {
-      return this.role.canWearSword(itemstack);
-   }
+	@Override
+	public boolean isItemValid(final ItemStack itemstack) {
+		return (itemstack != null) && role.canWearSword(new ItemStackWrapper(itemstack));
+	}
 }

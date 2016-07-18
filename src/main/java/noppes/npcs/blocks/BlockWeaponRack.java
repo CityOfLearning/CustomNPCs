@@ -1,7 +1,16 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
 import java.util.List;
-import net.minecraft.block.Block;
+
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,153 +20,188 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import noppes.npcs.blocks.BlockTrigger;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileNpcContainer;
 import noppes.npcs.blocks.tiles.TileWeaponRack;
 
 public class BlockWeaponRack extends BlockTrigger {
+	public static final PropertyInteger DAMAGE;
+	public static final PropertyBool IS_TOP;
 
-   public BlockWeaponRack() {
-      super(Blocks.planks);
-   }
+	static {
+		DAMAGE = PropertyInteger.create("damage", 0, 6);
+		IS_TOP = PropertyBool.create("istop");
+	}
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-      if(par1World.isRemote) {
-         return true;
-      } else {
-         int meta = par1World.getBlockMetadata(i, j, k);
-         if(meta >= 7) {
-            --j;
-         }
+	public BlockWeaponRack() {
+		super(Blocks.planks);
+		setDefaultState(blockState.getBaseState().withProperty(BlockWeaponRack.IS_TOP, false));
+	}
 
-         TileWeaponRack tile = (TileWeaponRack)par1World.getTileEntity(i, j, k);
-         float hit = hitX;
-         if(tile.rotation == 2) {
-            hit = 1.0F - hitX;
-         }
+	@Override
+	public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {
+		final TileNpcContainer tile = (TileNpcContainer) world.getTileEntity(pos);
+		if (tile == null) {
+			return;
+		}
+		tile.dropItems(world, pos);
+		world.updateComparatorOutputLevel(pos, state.getBlock());
+		super.breakBlock(world, pos, state);
+	}
 
-         if(tile.rotation == 3) {
-            hit = 1.0F - hitZ;
-         }
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockWeaponRack.DAMAGE, BlockWeaponRack.IS_TOP });
+	}
 
-         if(tile.rotation == 1) {
-            hit = hitZ;
-         }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		if (var2 < 7) {
+			return new TileWeaponRack();
+		}
+		return null;
+	}
 
-         int selected = 2 - (int)((double)hit / 0.34D);
-         ItemStack item = player.getCurrentEquippedItem();
-         ItemStack weapon = tile.getStackInSlot(selected);
-         if(item == null && weapon != null) {
-            tile.setInventorySlotContents(selected, (ItemStack)null);
-            player.inventory.setInventorySlotContents(player.inventory.currentItem, weapon);
-            par1World.markBlockForUpdate(i, j, k);
-            this.updateSurrounding(par1World, i, j, k);
-         } else {
-            if(item == null || item.getItem() == null || item.getItem() instanceof ItemBlock) {
-               return true;
-            }
+	@Override
+	public int damageDropped(final IBlockState state) {
+		return state.getValue(BlockWeaponRack.DAMAGE);
+	}
 
-            if(item != null && weapon == null) {
-               tile.setInventorySlotContents(selected, item);
-               player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
-               par1World.markBlockForUpdate(i, j, k);
-               this.updateSurrounding(par1World, i, j, k);
-            }
-         }
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(final World world, final BlockPos pos, final IBlockState state) {
+		setBlockBoundsBasedOnState(world, pos);
+		return super.getCollisionBoundingBox(world, pos, state);
+	}
 
-         return true;
-      }
-   }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return state.getValue(BlockWeaponRack.DAMAGE) + (state.getValue(BlockWeaponRack.IS_TOP) ? 7 : 0);
+	}
 
-   public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-      par3List.add(new ItemStack(par1, 1, 0));
-      par3List.add(new ItemStack(par1, 1, 1));
-      par3List.add(new ItemStack(par1, 1, 2));
-      par3List.add(new ItemStack(par1, 1, 3));
-      par3List.add(new ItemStack(par1, 1, 4));
-      par3List.add(new ItemStack(par1, 1, 5));
-   }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockWeaponRack.DAMAGE, (meta % 7)).withProperty(BlockWeaponRack.IS_TOP,
+				(meta >= 7));
+	}
 
-   public int damageDropped(int par1) {
-      return par1 % 7;
-   }
+	@Override
+	public void getSubBlocks(final Item par1, final CreativeTabs par2CreativeTabs, final List par3List) {
+		par3List.add(new ItemStack(par1, 1, 0));
+		par3List.add(new ItemStack(par1, 1, 1));
+		par3List.add(new ItemStack(par1, 1, 2));
+		par3List.add(new ItemStack(par1, 1, 3));
+		par3List.add(new ItemStack(par1, 1, 4));
+		par3List.add(new ItemStack(par1, 1, 5));
+	}
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      if(!par1World.isAirBlock(par2, par3 + 1, par4)) {
-         par1World.setBlockToAir(par2, par3, par4);
-      } else {
-         int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-         l %= 4;
-         TileColorable tile = (TileColorable)par1World.getTileEntity(par2, par3, par4);
-         tile.rotation = l;
-         par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-         par1World.setBlock(par2, par3 + 1, par4, this, par6ItemStack.getMetadata() + 7, 2);
-      }
+	@Override
+	public boolean onBlockActivated(final World par1World, BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		if (par1World.isRemote) {
+			return true;
+		}
+		if (state.getValue(BlockWeaponRack.IS_TOP)) {
+			pos = pos.down();
+		}
+		final TileWeaponRack tile = (TileWeaponRack) par1World.getTileEntity(pos);
+		float hit = hitX;
+		if (tile.rotation == 2) {
+			hit = 1.0f - hitX;
+		}
+		if (tile.rotation == 3) {
+			hit = 1.0f - hitZ;
+		}
+		if (tile.rotation == 1) {
+			hit = hitZ;
+		}
+		final int selected = 2 - (int) (hit / 0.34);
+		final ItemStack item = player.getCurrentEquippedItem();
+		final ItemStack weapon = tile.getStackInSlot(selected);
+		if ((item == null) && (weapon != null)) {
+			tile.setInventorySlotContents(selected, null);
+			player.inventory.setInventorySlotContents(player.inventory.currentItem, weapon);
+			par1World.markBlockForUpdate(pos);
+			updateSurrounding(par1World, pos);
+		} else {
+			if ((item == null) || (item.getItem() == null) || (item.getItem() instanceof ItemBlock)) {
+				return true;
+			}
+			if ((item != null) && (weapon == null)) {
+				tile.setInventorySlotContents(selected, item);
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack) null);
+				par1World.markBlockForUpdate(pos);
+				updateSurrounding(par1World, pos);
+			}
+		}
+		return true;
+	}
 
-   }
+	@Override
+	public void onBlockHarvested(final World world, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player) {
+		if (state.getValue(BlockWeaponRack.IS_TOP) && (world.getBlockState(pos.down()).getBlock() == this)) {
+			world.setBlockToAir(pos.down());
+		} else if (!(boolean) state.getValue(BlockWeaponRack.IS_TOP)
+				&& (world.getBlockState(pos.up()).getBlock() == this)) {
+			world.setBlockToAir(pos.up());
+		}
+	}
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-      this.setBlockBoundsBasedOnState(world, x, y, z);
-      return super.getCollisionBoundingBoxFromPool(world, x, y, z);
-   }
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entity, final ItemStack stack) {
+		if (!world.isAirBlock(pos.up())) {
+			world.setBlockToAir(pos);
+		} else {
+			world.setBlockState(pos, state.withProperty(BlockWeaponRack.DAMAGE, stack.getItemDamage())
+					.withProperty(BlockWeaponRack.IS_TOP, false), 2);
+			world.setBlockState(pos.up(), state.withProperty(BlockWeaponRack.DAMAGE, stack.getItemDamage())
+					.withProperty(BlockWeaponRack.IS_TOP, true), 2);
+			int l = MathHelper.floor_double(((entity.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
+			l %= 4;
+			final TileColorable tile = (TileColorable) world.getTileEntity(pos);
+			tile.rotation = l;
+		}
+	}
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      int meta = world.getBlockMetadata(x, y, z);
-      if(meta >= 7) {
-         --y;
-      }
-
-      TileEntity tileentity = world.getTileEntity(x, y, z);
-      if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
-      } else {
-         TileColorable tile = (TileColorable)tileentity;
-         float xStart = 0.0F;
-         float zStart = 0.0F;
-         float xEnd = 1.0F;
-         float zEnd = 1.0F;
-         if(tile.rotation == 0) {
-            zStart = 0.7F;
-         } else if(tile.rotation == 2) {
-            zEnd = 0.3F;
-         } else if(tile.rotation == 3) {
-            xStart = 0.7F;
-         } else if(tile.rotation == 1) {
-            xEnd = 0.3F;
-         }
-
-         if(meta >= 7) {
-            this.setBlockBounds(xStart, -1.0F, zStart, xEnd, 0.8F, zEnd);
-         } else {
-            this.setBlockBounds(xStart, 0.0F, zStart, xEnd, 1.8F, zEnd);
-         }
-
-      }
-   }
-
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return var2 < 7?new TileWeaponRack():null;
-   }
-
-   public void onBlockHarvested(World p_149681_1_, int p_149681_2_, int p_149681_3_, int p_149681_4_, int p_149681_5_, EntityPlayer p_149681_6_) {
-      if(p_149681_5_ >= 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ - 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ - 1, p_149681_4_);
-      } else if(p_149681_5_ < 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ + 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ + 1, p_149681_4_);
-      }
-
-   }
-
-   public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_) {
-      TileNpcContainer tile = (TileNpcContainer)world.getTileEntity(x, y, z);
-      if(tile != null) {
-         tile.dropItems(world, x, y, z);
-         world.updateNeighborsAboutBlockChange(x, y, z, block);
-         super.breakBlock(world, x, y, z, block, p_149749_6_);
-      }
-   }
+	@Override
+	public void setBlockBoundsBasedOnState(final IBlockAccess world, BlockPos pos) {
+		boolean isTop = false;
+		try {
+			isTop = world.getBlockState(pos).getValue(BlockWeaponRack.IS_TOP);
+		} catch (IllegalArgumentException ex) {
+		}
+		if (isTop) {
+			pos = pos.down();
+		}
+		final TileEntity tileentity = world.getTileEntity(pos);
+		if (!(tileentity instanceof TileColorable)) {
+			super.setBlockBoundsBasedOnState(world, pos);
+			return;
+		}
+		final TileColorable tile = (TileColorable) tileentity;
+		float xStart = 0.0f;
+		float zStart = 0.0f;
+		float xEnd = 1.0f;
+		float zEnd = 1.0f;
+		if (tile.rotation == 0) {
+			zStart = 0.7f;
+		} else if (tile.rotation == 2) {
+			zEnd = 0.3f;
+		} else if (tile.rotation == 3) {
+			xStart = 0.7f;
+		} else if (tile.rotation == 1) {
+			xEnd = 0.3f;
+		}
+		if (isTop) {
+			setBlockBounds(xStart, -1.0f, zStart, xEnd, 0.8f, zEnd);
+		} else {
+			setBlockBounds(xStart, 0.0f, zStart, xEnd, 1.8f, zEnd);
+		}
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import net.minecraft.entity.Entity;
@@ -7,58 +11,61 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIWatchClosest extends EntityAIBase {
+	private EntityNPCInterface npc;
+	protected Entity closestEntity;
+	private float maxDistanceForPlayer;
+	private int lookTime;
+	private float chance;
+	private Class watchedClass;
 
-   private EntityNPCInterface theWatcher;
-   protected Entity closestEntity;
-   private float field_75333_c;
-   private int lookTime;
-   private float field_75331_e;
-   private Class watchedClass;
+	public EntityAIWatchClosest(final EntityNPCInterface par1EntityLiving, final Class par2Class, final float par3) {
+		npc = par1EntityLiving;
+		watchedClass = par2Class;
+		maxDistanceForPlayer = par3;
+		chance = 0.002f;
+		setMutexBits(AiMutex.LOOK);
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		return !npc.isInteracting() && !npc.isAttacking() && closestEntity.isEntityAlive() && npc.isEntityAlive()
+				&& npc.isInRange(closestEntity, maxDistanceForPlayer) && (lookTime > 0);
+	}
 
-   public EntityAIWatchClosest(EntityNPCInterface par1EntityLiving, Class par2Class, float par3) {
-      this.theWatcher = par1EntityLiving;
-      this.watchedClass = par2Class;
-      this.field_75333_c = par3;
-      this.field_75331_e = 0.002F;
-      this.setMutexBits(AiMutex.LOOK);
-   }
+	@Override
+	public void resetTask() {
+		closestEntity = null;
+	}
 
-   public boolean shouldExecute() {
-      if(this.theWatcher.getRNG().nextFloat() < this.field_75331_e && !this.theWatcher.isInteracting()) {
-         if(this.theWatcher.getAttackTarget() != null) {
-            this.closestEntity = this.theWatcher.getAttackTarget();
-         }
+	@Override
+	public boolean shouldExecute() {
+		if ((npc.getRNG().nextFloat() >= chance) || npc.isInteracting()) {
+			return false;
+		}
+		if (npc.getAttackTarget() != null) {
+			closestEntity = npc.getAttackTarget();
+		}
+		if (watchedClass == EntityPlayer.class) {
+			closestEntity = npc.worldObj.getClosestPlayerToEntity(npc, maxDistanceForPlayer);
+		} else {
+			closestEntity = npc.worldObj.findNearestEntityWithinAABB(watchedClass,
+					npc.getEntityBoundingBox().expand(maxDistanceForPlayer, 3.0, maxDistanceForPlayer), (Entity) npc);
+			if (closestEntity != null) {
+				return npc.canSee(closestEntity);
+			}
+		}
+		return closestEntity != null;
+	}
 
-         if(this.watchedClass == EntityPlayer.class) {
-            this.closestEntity = this.theWatcher.worldObj.getClosestPlayerToEntity(this.theWatcher, (double)this.field_75333_c);
-         } else {
-            this.closestEntity = this.theWatcher.worldObj.findNearestEntityWithinAABB(this.watchedClass, this.theWatcher.boundingBox.expand((double)this.field_75333_c, 3.0D, (double)this.field_75333_c), this.theWatcher);
-            if(this.closestEntity != null) {
-               return this.theWatcher.canSee(this.closestEntity);
-            }
-         }
+	@Override
+	public void startExecuting() {
+		lookTime = 60 + npc.getRNG().nextInt(60);
+	}
 
-         return this.closestEntity != null;
-      } else {
-         return false;
-      }
-   }
-
-   public boolean continueExecuting() {
-      return !this.theWatcher.isInteracting() && !this.theWatcher.isAttacking() && this.closestEntity.isEntityAlive() && this.theWatcher.isEntityAlive()?(this.theWatcher.getDistanceSqToEntity(this.closestEntity) > (double)(this.field_75333_c * this.field_75333_c)?false:this.lookTime > 0):false;
-   }
-
-   public void startExecuting() {
-      this.lookTime = 60 + this.theWatcher.getRNG().nextInt(60);
-   }
-
-   public void resetTask() {
-      this.closestEntity = null;
-   }
-
-   public void updateTask() {
-      this.theWatcher.getLookHelper().setLookPosition(this.closestEntity.posX, this.closestEntity.posY + (double)this.closestEntity.getEyeHeight(), this.closestEntity.posZ, 10.0F, (float)this.theWatcher.getVerticalFaceSpeed());
-      --this.lookTime;
-   }
+	@Override
+	public void updateTask() {
+		npc.getLookHelper().setLookPosition(closestEntity.posX, closestEntity.posY + closestEntity.getEyeHeight(),
+				closestEntity.posZ, 10.0f, npc.getVerticalFaceSpeed());
+		--lookTime;
+	}
 }

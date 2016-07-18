@@ -1,8 +1,13 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import noppes.npcs.client.Client;
@@ -16,105 +21,114 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollData {
+	private GuiNPCStringSlot slot;
+	private GuiScreen parent;
+	private HashMap<String, Integer> data;
+	private int dialog;
+	private boolean selectCategory;
+	public GuiSelectionListener listener;
 
-   private GuiNPCStringSlot slot;
-   private GuiScreen parent;
-   private HashMap data = new HashMap();
-   private int dialog;
-   private boolean selectCategory = true;
-   public GuiSelectionListener listener;
+	public GuiNPCDialogSelection(final EntityNPCInterface npc, final GuiScreen parent, final int dialog) {
+		super(npc);
+		data = new HashMap<String, Integer>();
+		selectCategory = true;
+		drawDefaultBackground = false;
+		title = "Select Dialog Category";
+		this.parent = parent;
+		this.dialog = dialog;
+		if (parent instanceof GuiSelectionListener) {
+			listener = (GuiSelectionListener) parent;
+		}
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 2) {
+			if (selectCategory) {
+				close();
+				NoppesUtil.openGUI(player, parent);
+			} else {
+				title = "Select Dialog Category";
+				selectCategory = true;
+				Client.sendData(EnumPacketServer.DialogCategoriesGet, dialog);
+			}
+		}
+		if (id == 4) {
+			doubleClicked();
+		}
+	}
 
-   public GuiNPCDialogSelection(EntityNPCInterface npc, GuiScreen parent, int dialog) {
-      super(npc);
-      super.drawDefaultBackground = false;
-      super.title = "Select Dialog Category";
-      this.parent = parent;
-      this.dialog = dialog;
-      if(dialog >= 0) {
-         Client.sendData(EnumPacketServer.DialogsGetFromDialog, new Object[]{Integer.valueOf(dialog)});
-         this.selectCategory = false;
-         super.title = "Select Dialog";
-      } else {
-         Client.sendData(EnumPacketServer.DialogCategoriesGet, new Object[]{Integer.valueOf(dialog)});
-      }
+	@Override
+	public void doubleClicked() {
+		if ((slot.selected == null) || slot.selected.isEmpty()) {
+			return;
+		}
+		if (selectCategory) {
+			selectCategory = false;
+			title = "Select Dialog";
+			Client.sendData(EnumPacketServer.DialogsGet, data.get(slot.selected));
+		} else {
+			dialog = data.get(slot.selected);
+			close();
+			NoppesUtil.openGUI(player, parent);
+		}
+	}
 
-      if(parent instanceof GuiSelectionListener) {
-         this.listener = (GuiSelectionListener)parent;
-      }
+	@Override
+	public void drawScreen(final int i, final int j, final float f) {
+		slot.drawScreen(i, j, f);
+		super.drawScreen(i, j, f);
+	}
 
-   }
+	@Override
+	public void handleMouseInput() throws IOException {
+		slot.handleMouseInput();
+		super.handleMouseInput();
+	}
 
-   public void initGui() {
-      super.initGui();
-      Vector list = new Vector();
-      this.slot = new GuiNPCStringSlot(list, this, false, 18);
-      this.slot.registerScrollButtons(4, 5);
-      this.addButton(new GuiNpcButton(2, super.width / 2 - 100, super.height - 41, 98, 20, "gui.back"));
-      this.addButton(new GuiNpcButton(4, super.width / 2 + 2, super.height - 41, 98, 20, "mco.template.button.select"));
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		final Vector<String> list = new Vector<String>();
+		addButton(new GuiNpcButton(2, (width / 2) - 100, height - 41, 98, 20, "gui.back"));
+		addButton(new GuiNpcButton(4, (width / 2) + 2, height - 41, 98, 20, "mco.template.button.select"));
+		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);
+	}
 
-   public void drawScreen(int i, int j, float f) {
-      this.slot.drawScreen(i, j, f);
-      super.drawScreen(i, j, f);
-   }
+	@Override
+	public void initPacket() {
+		if (dialog >= 0) {
+			Client.sendData(EnumPacketServer.DialogsGetFromDialog, dialog);
+			selectCategory = false;
+			title = "Select Dialog";
+		} else {
+			Client.sendData(EnumPacketServer.DialogCategoriesGet, dialog);
+			title = "Select Dialog Category";
+		}
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 2) {
-         if(this.selectCategory) {
-            this.close();
-            NoppesUtil.openGUI(super.player, this.parent);
-         } else {
-            super.title = "Select Dialog Category";
-            this.selectCategory = true;
-            Client.sendData(EnumPacketServer.DialogCategoriesGet, new Object[]{Integer.valueOf(this.dialog)});
-         }
-      }
+	@Override
+	public void save() {
+		if ((dialog >= 0) && (listener != null)) {
+			listener.selected(dialog, slot.selected);
+		}
+	}
 
-      if(id == 4) {
-         this.doubleClicked();
-      }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		this.data = data;
+		slot.setList(list);
+		if (dialog >= 0) {
+			for (final String name : data.keySet()) {
+				if (data.get(name) == dialog) {
+					slot.selected = name;
+				}
+			}
+		}
+	}
 
-   }
-
-   public void doubleClicked() {
-      if(this.slot.selected != null && !this.slot.selected.isEmpty()) {
-         if(this.selectCategory) {
-            this.selectCategory = false;
-            super.title = "Select Dialog";
-            Client.sendData(EnumPacketServer.DialogsGet, new Object[]{this.data.get(this.slot.selected)});
-         } else {
-            this.dialog = ((Integer)this.data.get(this.slot.selected)).intValue();
-            this.close();
-            NoppesUtil.openGUI(super.player, this.parent);
-         }
-
-      }
-   }
-
-   public void save() {
-      if(this.dialog >= 0 && this.listener != null) {
-         this.listener.selected(this.dialog, this.slot.selected);
-      }
-
-   }
-
-   public void setData(Vector list, HashMap data) {
-      this.data = data;
-      this.slot.setList(list);
-      if(this.dialog >= 0) {
-         Iterator var3 = data.keySet().iterator();
-
-         while(var3.hasNext()) {
-            String name = (String)var3.next();
-            if(((Integer)data.get(name)).intValue() == this.dialog) {
-               this.slot.selected = name;
-            }
-         }
-      }
-
-   }
-
-   public void setSelected(String selected) {}
+	@Override
+	public void setSelected(final String selected) {
+	}
 }

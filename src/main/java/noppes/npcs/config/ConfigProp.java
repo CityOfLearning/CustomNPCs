@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.config;
 
 import java.lang.annotation.ElementType;
@@ -6,10 +10,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ ElementType.FIELD })
 public @interface ConfigProp {
+	String info() default "";
 
-   String name() default "";
-
-   String info() default "";
+	String name() default "";
 }

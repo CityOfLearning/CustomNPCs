@@ -1,139 +1,204 @@
+//
+
+//
+
 package noppes.npcs;
 
 import java.util.HashMap;
-import java.util.Iterator;
+
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import noppes.npcs.ModelPartConfig;
-import noppes.npcs.ModelPartData;
+import noppes.npcs.constants.EnumParts;
 
 public class ModelDataShared {
+	protected ModelPartConfig arm1;
+	protected ModelPartConfig arm2;
+	protected ModelPartConfig body;
+	protected ModelPartConfig leg1;
+	protected ModelPartConfig leg2;
+	protected ModelPartConfig head;
+	protected ModelPartData legParts;
+	public Class<? extends EntityLivingBase> entityClass;
+	protected EntityLivingBase entity;
+	public NBTTagCompound extra;
+	protected HashMap<EnumParts, ModelPartData> parts;
 
-   public ModelPartConfig arms = new ModelPartConfig();
-   public ModelPartConfig body = new ModelPartConfig();
-   public ModelPartConfig legs = new ModelPartConfig();
-   public ModelPartConfig head = new ModelPartConfig();
-   public ModelPartData legParts = new ModelPartData();
-   public Class entityClass;
-   public EntityLivingBase entity;
-   public NBTTagCompound extra = new NBTTagCompound();
-   private HashMap parts = new HashMap();
-   public byte breasts = 0;
-   public byte headwear = 2;
+	public ModelDataShared() {
+		arm1 = new ModelPartConfig();
+		arm2 = new ModelPartConfig();
+		body = new ModelPartConfig();
+		leg1 = new ModelPartConfig();
+		leg2 = new ModelPartConfig();
+		head = new ModelPartConfig();
+		legParts = new ModelPartData("legs");
+		extra = new NBTTagCompound();
+		parts = new HashMap<EnumParts, ModelPartData>();
+	}
 
+	public void clearEntity() {
+		entity = null;
+	}
 
-   public NBTTagCompound writeToNBT() {
-      NBTTagCompound compound = new NBTTagCompound();
-      if(this.entityClass != null) {
-         compound.setString("EntityClass", this.entityClass.getCanonicalName());
-      }
+	public float getBodyY() {
+		return ((1.0f - body.scaleY) * 0.75f) + getLegsY();
+	}
 
-      compound.setTag("ArmsConfig", this.arms.writeToNBT());
-      compound.setTag("BodyConfig", this.body.writeToNBT());
-      compound.setTag("LegsConfig", this.legs.writeToNBT());
-      compound.setTag("HeadConfig", this.head.writeToNBT());
-      compound.setTag("LegParts", this.legParts.writeToNBT());
-      compound.setByte("Headwear", this.headwear);
-      compound.setByte("Breasts", this.breasts);
-      compound.setTag("ExtraData", this.extra);
-      NBTTagList list = new NBTTagList();
-      Iterator var3 = this.parts.keySet().iterator();
+	public Class<? extends EntityLivingBase> getEntityClass() {
+		return entityClass;
+	}
 
-      while(var3.hasNext()) {
-         String name = (String)var3.next();
-         NBTTagCompound item = ((ModelPartData)this.parts.get(name)).writeToNBT();
-         item.setString("PartName", name);
-         list.appendTag(item);
-      }
+	public float getLegsY() {
+		ModelPartConfig legs = leg1;
+		if (leg2.notShared && (leg2.scaleY > leg1.scaleY)) {
+			legs = leg2;
+		}
+		return (1.0f - legs.scaleY) * 0.75f;
+	}
 
-      compound.setTag("Parts", list);
-      return compound;
-   }
+	public ModelPartData getOrCreatePart(final EnumParts type) {
+		if (type == null) {
+			return null;
+		}
+		ModelPartData part = getPartData(type);
+		if (part == null) {
+			parts.put(type, part = new ModelPartData(type.name));
+		}
+		return part;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      this.setEntityClass(compound.getString("EntityClass"));
-      this.arms.readFromNBT(compound.getCompoundTag("ArmsConfig"));
-      this.body.readFromNBT(compound.getCompoundTag("BodyConfig"));
-      this.legs.readFromNBT(compound.getCompoundTag("LegsConfig"));
-      this.head.readFromNBT(compound.getCompoundTag("HeadConfig"));
-      this.legParts.readFromNBT(compound.getCompoundTag("LegParts"));
-      this.headwear = compound.getByte("Headwear");
-      this.breasts = compound.getByte("Breasts");
-      this.extra = compound.getCompoundTag("ExtraData");
-      HashMap parts = new HashMap();
-      NBTTagList list = compound.getTagList("Parts", 10);
+	public ModelPartConfig getPartConfig(final EnumParts type) {
+		if (type == EnumParts.BODY) {
+			return body;
+		}
+		if (type == EnumParts.ARM_LEFT) {
+			return arm1;
+		}
+		if (type == EnumParts.ARM_RIGHT) {
+			return arm2;
+		}
+		if (type == EnumParts.LEG_LEFT) {
+			return leg1;
+		}
+		if (type == EnumParts.LEG_RIGHT) {
+			return leg2;
+		}
+		return head;
+	}
 
-      for(int i = 0; i < list.tagCount(); ++i) {
-         NBTTagCompound item = list.getCompoundTagAt(i);
-         ModelPartData part = new ModelPartData();
-         part.readFromNBT(item);
-         parts.put(item.getString("PartName"), part);
-      }
+	public ModelPartData getPartData(final EnumParts type) {
+		if (type == EnumParts.LEGS) {
+			return legParts;
+		}
+		return parts.get(type);
+	}
 
-      this.parts = parts;
-   }
+	public float offsetY() {
+		if (entity == null) {
+			return -getBodyY();
+		}
+		return entity.height - 1.8f;
+	}
 
-   private void setEntityClass(String string) {
-      this.entityClass = null;
-      this.entity = null;
+	public void readFromNBT(final NBTTagCompound compound) {
+		this.setEntityClass(compound.getString("EntityClass"));
+		arm1.readFromNBT(compound.getCompoundTag("ArmsConfig"));
+		body.readFromNBT(compound.getCompoundTag("BodyConfig"));
+		leg1.readFromNBT(compound.getCompoundTag("LegsConfig"));
+		head.readFromNBT(compound.getCompoundTag("HeadConfig"));
+		legParts.readFromNBT(compound.getCompoundTag("LegParts"));
+		extra = compound.getCompoundTag("ExtraData");
+		final HashMap<EnumParts, ModelPartData> parts = new HashMap<EnumParts, ModelPartData>();
+		final NBTTagList list = compound.getTagList("Parts", 10);
+		for (int i = 0; i < list.tagCount(); ++i) {
+			final NBTTagCompound item = list.getCompoundTagAt(i);
+			final String name = item.getString("PartName");
+			final ModelPartData part = new ModelPartData(name);
+			part.readFromNBT(item);
+			final EnumParts e = EnumParts.FromName(name);
+			if (e != null) {
+				parts.put(e, part);
+			}
+		}
+		this.parts = parts;
+		updateTransate();
+	}
 
-      try {
-         Class e = Class.forName(string);
-         if(EntityLivingBase.class.isAssignableFrom(e)) {
-            this.entityClass = e.asSubclass(EntityLivingBase.class);
-         }
-      } catch (ClassNotFoundException var3) {
-         ;
-      }
+	public void removePart(final EnumParts type) {
+		parts.remove(type);
+	}
 
-   }
+	public void setEntityClass(final Class<? extends EntityLivingBase> entityClass) {
+		this.entityClass = entityClass;
+		entity = null;
+		extra = new NBTTagCompound();
+	}
 
-   public void setEntityClass(Class entityClass) {
-      this.entityClass = entityClass;
-      this.entity = null;
-      this.extra = new NBTTagCompound();
-      if(entityClass == EntityHorse.class) {
-         this.extra.setInteger("Type", -1);
-      }
+	private void setEntityClass(final String string) {
+		entityClass = null;
+		entity = null;
+		try {
+			final Class<?> cls = Class.forName(string);
+			if (EntityLivingBase.class.isAssignableFrom(cls)) {
+				entityClass = cls.asSubclass(EntityLivingBase.class);
+			}
+		} catch (ClassNotFoundException ex) {
+		}
+	}
 
-   }
+	private void updateTransate() {
+		for (final EnumParts part : EnumParts.values()) {
+			final ModelPartConfig config = getPartConfig(part);
+			if (config != null) {
+				if (part == EnumParts.HEAD) {
+					config.setTranslate(0.0f, getBodyY(), 0.0f);
+				} else if (part == EnumParts.ARM_LEFT) {
+					final ModelPartConfig body = getPartConfig(EnumParts.BODY);
+					final float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
+					final float y = getBodyY() + ((1.0f - config.scaleY) * -0.1f);
+					config.setTranslate(-x, y, 0.0f);
+					if (!config.notShared) {
+						final ModelPartConfig arm = getPartConfig(EnumParts.ARM_RIGHT);
+						arm.copyValues(config);
+					}
+				} else if (part == EnumParts.ARM_RIGHT) {
+					final ModelPartConfig body = getPartConfig(EnumParts.BODY);
+					final float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
+					final float y = getBodyY() + ((1.0f - config.scaleY) * -0.1f);
+					config.setTranslate(x, y, 0.0f);
+				} else if (part == EnumParts.LEG_LEFT) {
+					config.setTranslate((config.scaleX * 0.125f) - 0.113f, getLegsY(), 0.0f);
+					if (!config.notShared) {
+						final ModelPartConfig leg = getPartConfig(EnumParts.LEG_RIGHT);
+						leg.copyValues(config);
+					}
+				} else if (part == EnumParts.LEG_RIGHT) {
+					config.setTranslate((1.0f - config.scaleX) * 0.125f, getLegsY(), 0.0f);
+				} else if (part == EnumParts.BODY) {
+					config.setTranslate(0.0f, getBodyY(), 0.0f);
+				}
+			}
+		}
+	}
 
-   public Class getEntityClass() {
-      return this.entityClass;
-   }
-
-   public float offsetY() {
-      return this.entity == null?-this.getBodyY():this.entity.height - 1.8F;
-   }
-
-   public void clearEntity() {
-      this.entity = null;
-   }
-
-   public ModelPartData getPartData(String type) {
-      return (ModelPartData)this.parts.get(type);
-   }
-
-   public void removePart(String type) {
-      this.parts.remove(type);
-   }
-
-   public ModelPartData getOrCreatePart(String type) {
-      ModelPartData part = (ModelPartData)this.parts.get(type);
-      if(part == null) {
-         this.parts.put(type, part = new ModelPartData());
-      }
-
-      return part;
-   }
-
-   public float getBodyY() {
-      return this.legParts.type == 3?(0.9F - this.body.scaleY) * 0.75F + this.getLegsY():(this.legParts.type == 3?(0.5F - this.body.scaleY) * 0.75F + this.getLegsY():(1.0F - this.body.scaleY) * 0.75F + this.getLegsY());
-   }
-
-   public float getLegsY() {
-      return this.legParts.type == 3?(0.87F - this.legs.scaleY) * 1.0F:(1.0F - this.legs.scaleY) * 0.75F;
-   }
+	public NBTTagCompound writeToNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		if (entityClass != null) {
+			compound.setString("EntityClass", entityClass.getCanonicalName());
+		}
+		compound.setTag("ArmsConfig", arm1.writeToNBT());
+		compound.setTag("BodyConfig", body.writeToNBT());
+		compound.setTag("LegsConfig", leg1.writeToNBT());
+		compound.setTag("HeadConfig", head.writeToNBT());
+		compound.setTag("LegParts", legParts.writeToNBT());
+		compound.setTag("ExtraData", extra);
+		final NBTTagList list = new NBTTagList();
+		for (final EnumParts e : parts.keySet()) {
+			final NBTTagCompound item = parts.get(e).writeToNBT();
+			item.setString("PartName", e.name);
+			list.appendTag(item);
+		}
+		compound.setTag("Parts", list);
+		return compound;
+	}
 }

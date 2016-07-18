@@ -1,10 +1,19 @@
+//
+
+//
+
 package noppes.npcs.client.gui.player;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.io.IOException;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.lwjgl.input.Keyboard;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -15,357 +24,349 @@ import net.minecraft.nbt.NBTTagString;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.constants.EnumPlayerPacket;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
 public class GuiBook extends GuiScreen {
+	@SideOnly(Side.CLIENT)
+	static class NextPageButton extends GuiButton {
+		private final boolean field_146151_o;
 
-   private static final Logger logger = LogManager.getLogger();
-   private static final ResourceLocation bookGuiTextures = new ResourceLocation("textures/gui/book.png");
-   private final EntityPlayer editingPlayer;
-   private final ItemStack bookObj;
-   private final boolean bookIsUnsigned;
-   private boolean field_146481_r;
-   private boolean field_146480_s;
-   private int updateCount;
-   private int bookImageWidth = 192;
-   private int bookImageHeight = 192;
-   private int bookTotalPages = 1;
-   private int currPage;
-   private NBTTagList bookPages;
-   private String bookTitle = "";
-   private GuiBook.NextPageButton buttonNextPage;
-   private GuiBook.NextPageButton buttonPreviousPage;
-   private GuiButton buttonDone;
-   private GuiButton buttonSign;
-   private GuiButton buttonFinalize;
-   private GuiButton buttonCancel;
-   private static final String __OBFID = "CL_00000744";
-   private int x;
-   private int y;
-   private int z;
+		public NextPageButton(final int par1, final int par2, final int par3, final boolean par4) {
+			super(par1, par2, par3, 23, 13, "");
+			field_146151_o = par4;
+		}
 
+		@Override
+		public void drawButton(final Minecraft p_146112_1_, final int p_146112_2_, final int p_146112_3_) {
+			if (visible) {
+				final boolean flag = (p_146112_2_ >= xPosition) && (p_146112_3_ >= yPosition)
+						&& (p_146112_2_ < (xPosition + width)) && (p_146112_3_ < (yPosition + height));
+				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+				p_146112_1_.getTextureManager().bindTexture(GuiBook.bookGuiTextures);
+				int k = 0;
+				int l = 192;
+				if (flag) {
+					k += 23;
+				}
+				if (!field_146151_o) {
+					l += 13;
+				}
+				this.drawTexturedModalRect(xPosition, yPosition, k, l, 23, 13);
+			}
+		}
+	}
 
-   public GuiBook(EntityPlayer par1EntityPlayer, ItemStack item, int x, int y, int z) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-      this.editingPlayer = par1EntityPlayer;
-      this.bookObj = item;
-      this.bookIsUnsigned = item.getItem() == Items.writable_book;
-      if(item.hasTagCompound()) {
-         NBTTagCompound nbttagcompound = item.getTagCompound();
-         this.bookPages = nbttagcompound.getTagList("pages", 8);
-         if(this.bookPages != null) {
-            this.bookPages = (NBTTagList)this.bookPages.copy();
-            this.bookTotalPages = this.bookPages.tagCount();
-            if(this.bookTotalPages < 1) {
-               this.bookTotalPages = 1;
-            }
-         }
-      }
+	private static final Logger logger;
+	private static final ResourceLocation bookGuiTextures;
+	static {
+		logger = LogManager.getLogger();
+		bookGuiTextures = new ResourceLocation("textures/gui/book.png");
+	}
+	private final EntityPlayer editingPlayer;
+	private final ItemStack bookObj;
+	private final boolean bookIsUnsigned;
+	private boolean bookIsModified;
+	private boolean bookGettingSigned;
+	private int updateCount;
+	private int bookImageWidth;
+	private int bookImageHeight;
+	private int bookTotalPages;
+	private int currPage;
+	private NBTTagList bookPages;
+	private String bookTitle;
+	private NextPageButton buttonNextPage;
+	private NextPageButton buttonPreviousPage;
+	private GuiButton buttonDone;
+	private GuiButton buttonSign;
+	private GuiButton buttonFinalize;
+	private GuiButton buttonCancel;
+	private int x;
 
-      if(this.bookPages == null && this.bookIsUnsigned) {
-         this.bookPages = new NBTTagList();
-         this.bookPages.appendTag(new NBTTagString(""));
-         this.bookTotalPages = 1;
-      }
+	private int y;
 
-   }
+	private int z;
 
-   public void updateScreen() {
-      super.updateScreen();
-      ++this.updateCount;
-   }
+	public GuiBook(final EntityPlayer par1EntityPlayer, final ItemStack item, final int x, final int y, final int z) {
+		bookImageWidth = 192;
+		bookImageHeight = 192;
+		bookTotalPages = 1;
+		bookTitle = "";
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		editingPlayer = par1EntityPlayer;
+		bookObj = item;
+		bookIsUnsigned = (item.getItem() == Items.writable_book);
+		if (item.hasTagCompound()) {
+			final NBTTagCompound nbttagcompound = item.getTagCompound();
+			bookPages = nbttagcompound.getTagList("pages", 8);
+			if (bookPages != null) {
+				bookPages = (NBTTagList) bookPages.copy();
+				bookTotalPages = bookPages.tagCount();
+				if (bookTotalPages < 1) {
+					bookTotalPages = 1;
+				}
+			}
+		}
+		if ((bookPages == null) && bookIsUnsigned) {
+			(bookPages = new NBTTagList()).appendTag(new NBTTagString(""));
+			bookTotalPages = 1;
+		}
+	}
 
-   public boolean doesGuiPauseGame() {
-      return false;
-   }
+	@Override
+	protected void actionPerformed(final GuiButton p_146284_1_) {
+		if (p_146284_1_.enabled) {
+			if (p_146284_1_.id == 0) {
+				mc.displayGuiScreen((GuiScreen) null);
+				sendBookToServer(false);
+			} else if ((p_146284_1_.id == 3) && bookIsUnsigned) {
+				bookGettingSigned = true;
+			} else if (p_146284_1_.id == 1) {
+				if (currPage < (bookTotalPages - 1)) {
+					++currPage;
+				} else if (bookIsUnsigned) {
+					addNewPage();
+					if (currPage < (bookTotalPages - 1)) {
+						++currPage;
+					}
+				}
+			} else if (p_146284_1_.id == 2) {
+				if (currPage > 0) {
+					--currPage;
+				}
+			} else if ((p_146284_1_.id == 5) && bookGettingSigned) {
+				sendBookToServer(true);
+				mc.displayGuiScreen((GuiScreen) null);
+			} else if ((p_146284_1_.id == 4) && bookGettingSigned) {
+				bookGettingSigned = false;
+			}
+			updateButtons();
+		}
+	}
 
-   public void initGui() {
-      super.buttonList.clear();
-      Keyboard.enableRepeatEvents(true);
-      if(this.bookIsUnsigned) {
-         super.buttonList.add(this.buttonSign = new GuiButton(3, super.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.signButton", new Object[0])));
-         super.buttonList.add(this.buttonDone = new GuiButton(0, super.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.done", new Object[0])));
-         super.buttonList.add(this.buttonFinalize = new GuiButton(5, super.width / 2 - 100, 4 + this.bookImageHeight, 98, 20, I18n.format("book.finalizeButton", new Object[0])));
-         super.buttonList.add(this.buttonCancel = new GuiButton(4, super.width / 2 + 2, 4 + this.bookImageHeight, 98, 20, I18n.format("gui.cancel", new Object[0])));
-      } else {
-         super.buttonList.add(this.buttonDone = new GuiButton(0, super.width / 2 - 100, 4 + this.bookImageHeight, 200, 20, I18n.format("gui.done", new Object[0])));
-      }
+	private void addNewPage() {
+		if ((bookPages != null) && (bookPages.tagCount() < 50)) {
+			bookPages.appendTag(new NBTTagString(""));
+			++bookTotalPages;
+			bookIsModified = true;
+		}
+	}
 
-      int i = (super.width - this.bookImageWidth) / 2;
-      byte b0 = 2;
-      super.buttonList.add(this.buttonNextPage = new GuiBook.NextPageButton(1, i + 120, b0 + 154, true));
-      super.buttonList.add(this.buttonPreviousPage = new GuiBook.NextPageButton(2, i + 38, b0 + 154, false));
-      this.updateButtons();
-   }
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
 
-   public void onGuiClosed() {
-      Keyboard.enableRepeatEvents(false);
-   }
+	@Override
+	public void drawScreen(final int par1, final int par2, final float par3) {
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		mc.getTextureManager().bindTexture(GuiBook.bookGuiTextures);
+		final int k = (width - bookImageWidth) / 2;
+		final byte b0 = 2;
+		this.drawTexturedModalRect(k, b0, 0, 0, bookImageWidth, bookImageHeight);
+		if (bookGettingSigned) {
+			String s = bookTitle;
+			if (bookIsUnsigned) {
+				if (((updateCount / 6) % 2) == 0) {
+					s = s + "" + EnumChatFormatting.BLACK + "_";
+				} else {
+					s = s + "" + EnumChatFormatting.GRAY + "_";
+				}
+			}
+			final String s2 = I18n.format("book.editTitle", new Object[0]);
+			final int l = fontRendererObj.getStringWidth(s2);
+			fontRendererObj.drawString(s2, k + 36 + ((116 - l) / 2), b0 + 16 + 16, 0);
+			final int i1 = fontRendererObj.getStringWidth(s);
+			fontRendererObj.drawString(s, k + 36 + ((116 - i1) / 2), b0 + 48, 0);
+			final String s3 = I18n.format("book.byAuthor", new Object[] { editingPlayer.getName() });
+			final int j1 = fontRendererObj.getStringWidth(s3);
+			fontRendererObj.drawString(EnumChatFormatting.DARK_GRAY + s3, k + 36 + ((116 - j1) / 2), b0 + 48 + 10, 0);
+			final String s4 = I18n.format("book.finalizeWarning", new Object[0]);
+			fontRendererObj.drawSplitString(s4, k + 36, b0 + 80, 116, 0);
+		} else {
+			final String s = I18n.format("book.pageIndicator", new Object[] { currPage + 1, bookTotalPages });
+			String s2 = "";
+			if ((bookPages != null) && (currPage >= 0) && (currPage < bookPages.tagCount())) {
+				s2 = bookPages.getStringTagAt(currPage);
+			}
+			if (bookIsUnsigned) {
+				if (fontRendererObj.getBidiFlag()) {
+					s2 += "_";
+				} else if (((updateCount / 6) % 2) == 0) {
+					s2 = s2 + "" + EnumChatFormatting.BLACK + "_";
+				} else {
+					s2 = s2 + "" + EnumChatFormatting.GRAY + "_";
+				}
+			}
+			final int l = fontRendererObj.getStringWidth(s);
+			fontRendererObj.drawString(s, ((k - l) + bookImageWidth) - 44, b0 + 16, 0);
+			fontRendererObj.drawSplitString(s2, k + 36, b0 + 16 + 16, 116, 0);
+		}
+		super.drawScreen(par1, par2, par3);
+	}
 
-   private void updateButtons() {
-      this.buttonNextPage.visible = !this.field_146480_s && (this.currPage < this.bookTotalPages - 1 || this.bookIsUnsigned);
-      this.buttonPreviousPage.visible = !this.field_146480_s && this.currPage > 0;
-      this.buttonDone.visible = !this.bookIsUnsigned || !this.field_146480_s;
-      if(this.bookIsUnsigned) {
-         this.buttonSign.visible = !this.field_146480_s;
-         this.buttonCancel.visible = this.field_146480_s;
-         this.buttonFinalize.visible = this.field_146480_s;
-         this.buttonFinalize.enabled = this.bookTitle.trim().length() > 0;
-      }
+	@Override
+	public void initGui() {
+		buttonList.clear();
+		Keyboard.enableRepeatEvents(true);
+		if (bookIsUnsigned) {
+			buttonList.add(buttonSign = new GuiButton(3, (width / 2) - 100, 4 + bookImageHeight, 98, 20,
+					I18n.format("book.signButton", new Object[0])));
+			buttonList.add(buttonDone = new GuiButton(0, (width / 2) + 2, 4 + bookImageHeight, 98, 20,
+					I18n.format("gui.done", new Object[0])));
+			buttonList.add(buttonFinalize = new GuiButton(5, (width / 2) - 100, 4 + bookImageHeight, 98, 20,
+					I18n.format("book.finalizeButton", new Object[0])));
+			buttonList.add(buttonCancel = new GuiButton(4, (width / 2) + 2, 4 + bookImageHeight, 98, 20,
+					I18n.format("gui.cancel", new Object[0])));
+		} else {
+			buttonList.add(buttonDone = new GuiButton(0, (width / 2) - 100, 4 + bookImageHeight, 200, 20,
+					I18n.format("gui.done", new Object[0])));
+		}
+		final int i = (width - bookImageWidth) / 2;
+		final byte b0 = 2;
+		buttonList.add(buttonNextPage = new NextPageButton(1, i + 120, b0 + 154, true));
+		buttonList.add(buttonPreviousPage = new NextPageButton(2, i + 38, b0 + 154, false));
+		updateButtons();
+	}
 
-   }
+	@Override
+	protected void keyTyped(final char par1, final int par2) throws IOException {
+		super.keyTyped(par1, par2);
+		if (bookIsUnsigned) {
+			if (bookGettingSigned) {
+				keyTypedInTitle(par1, par2);
+			} else {
+				keyTypedInBook(par1, par2);
+			}
+		}
+	}
 
-   private void sendBookToServer(boolean sign) {
-      if(this.bookIsUnsigned && this.field_146481_r && this.bookPages != null) {
-         while(this.bookPages.tagCount() > 1) {
-            String nbttagcompound = this.bookPages.getStringTagAt(this.bookPages.tagCount() - 1);
-            if(nbttagcompound.length() != 0) {
-               break;
-            }
+	private void keyTypedInBook(final char p_146463_1_, final int p_146463_2_) {
+		switch (p_146463_1_) {
+		case '\u0016': {
+			pageInsertIntoCurrent(GuiScreen.getClipboardString());
+		}
+		default: {
+			switch (p_146463_2_) {
+			case 14: {
+				final String s = pageGetCurrent();
+				if (s.length() > 0) {
+					pageSetCurrent(s.substring(0, s.length() - 1));
+				}
+				return;
+			}
+			case 28:
+			case 156: {
+				pageInsertIntoCurrent("\n");
+				return;
+			}
+			default: {
+				if (ChatAllowedCharacters.isAllowedCharacter(p_146463_1_)) {
+					pageInsertIntoCurrent(Character.toString(p_146463_1_));
+				}
+				return;
+			}
+			}
+		}
+		}
+	}
 
-            this.bookPages.removeTag(this.bookPages.tagCount() - 1);
-         }
+	private void keyTypedInTitle(final char p_146460_1_, final int p_146460_2_) {
+		switch (p_146460_2_) {
+		case 14: {
+			if (!bookTitle.isEmpty()) {
+				bookTitle = bookTitle.substring(0, bookTitle.length() - 1);
+				updateButtons();
+			}
+		}
+		case 28:
+		case 156: {
+			if (!bookTitle.isEmpty()) {
+				sendBookToServer(true);
+				mc.displayGuiScreen((GuiScreen) null);
+			}
+		}
+		default: {
+			if ((bookTitle.length() < 16) && ChatAllowedCharacters.isAllowedCharacter(p_146460_1_)) {
+				bookTitle += Character.toString(p_146460_1_);
+				updateButtons();
+				bookIsModified = true;
+			}
+		}
+		}
+	}
 
-         if(this.bookObj.hasTagCompound()) {
-            NBTTagCompound nbttagcompound1 = this.bookObj.getTagCompound();
-            nbttagcompound1.setTag("pages", this.bookPages);
-         } else {
-            this.bookObj.setTagInfo("pages", this.bookPages);
-         }
+	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
+	}
 
-         if(sign) {
-            this.bookObj.setTagInfo("author", new NBTTagString(this.editingPlayer.getCommandSenderName()));
-            this.bookObj.setTagInfo("title", new NBTTagString(this.bookTitle.trim()));
-            this.bookObj.setItem(Items.written_book);
-         }
+	private String pageGetCurrent() {
+		return ((bookPages != null) && (currPage >= 0) && (currPage < bookPages.tagCount()))
+				? bookPages.getStringTagAt(currPage) : "";
+	}
 
-         NoppesUtilPlayer.sendData(EnumPlayerPacket.SaveBook, new Object[]{Integer.valueOf(this.x), Integer.valueOf(this.y), Integer.valueOf(this.z), Boolean.valueOf(sign), this.bookObj.writeToNBT(new NBTTagCompound())});
-      }
+	private void pageInsertIntoCurrent(final String p_146459_1_) {
+		final String s1 = pageGetCurrent();
+		final String s2 = s1 + p_146459_1_;
+		final int i = fontRendererObj.splitStringWidth(s2 + "" + EnumChatFormatting.BLACK + "_", 118);
+		if ((i <= 118) && (s2.length() < 256)) {
+			pageSetCurrent(s2);
+		}
+	}
 
-   }
+	private void pageSetCurrent(final String p_146457_1_) {
+		if ((bookPages != null) && (currPage >= 0) && (currPage < bookPages.tagCount())) {
+			bookPages.set(currPage, new NBTTagString(p_146457_1_));
+			bookIsModified = true;
+		}
+	}
 
-   protected void actionPerformed(GuiButton p_146284_1_) {
-      if(p_146284_1_.enabled) {
-         if(p_146284_1_.id == 0) {
-            super.mc.displayGuiScreen((GuiScreen)null);
-            this.sendBookToServer(false);
-         } else if(p_146284_1_.id == 3 && this.bookIsUnsigned) {
-            this.field_146480_s = true;
-         } else if(p_146284_1_.id == 1) {
-            if(this.currPage < this.bookTotalPages - 1) {
-               ++this.currPage;
-            } else if(this.bookIsUnsigned) {
-               this.addNewPage();
-               if(this.currPage < this.bookTotalPages - 1) {
-                  ++this.currPage;
-               }
-            }
-         } else if(p_146284_1_.id == 2) {
-            if(this.currPage > 0) {
-               --this.currPage;
-            }
-         } else if(p_146284_1_.id == 5 && this.field_146480_s) {
-            this.sendBookToServer(true);
-            super.mc.displayGuiScreen((GuiScreen)null);
-         } else if(p_146284_1_.id == 4 && this.field_146480_s) {
-            this.field_146480_s = false;
-         }
+	private void sendBookToServer(final boolean sign) {
+		if (bookIsUnsigned && bookIsModified && (bookPages != null)) {
+			while (bookPages.tagCount() > 1) {
+				final String s = bookPages.getStringTagAt(bookPages.tagCount() - 1);
+				if (s.length() != 0) {
+					break;
+				}
+				bookPages.removeTag(bookPages.tagCount() - 1);
+			}
+			if (bookObj.hasTagCompound()) {
+				final NBTTagCompound nbttagcompound = bookObj.getTagCompound();
+				nbttagcompound.setTag("pages", bookPages);
+			} else {
+				bookObj.setTagInfo("pages", bookPages);
+			}
+			if (sign) {
+				bookObj.setTagInfo("author", new NBTTagString(editingPlayer.getName()));
+				bookObj.setTagInfo("title", new NBTTagString(bookTitle.trim()));
+				bookObj.setItem(Items.written_book);
+			}
+			NoppesUtilPlayer.sendData(EnumPlayerPacket.SaveBook, x, y, z, sign,
+					bookObj.writeToNBT(new NBTTagCompound()));
+		}
+	}
 
-         this.updateButtons();
-      }
+	private void updateButtons() {
+		buttonNextPage.visible = (!bookGettingSigned && ((currPage < (bookTotalPages - 1)) || bookIsUnsigned));
+		buttonPreviousPage.visible = (!bookGettingSigned && (currPage > 0));
+		buttonDone.visible = (!bookIsUnsigned || !bookGettingSigned);
+		if (bookIsUnsigned) {
+			buttonSign.visible = !bookGettingSigned;
+			buttonCancel.visible = bookGettingSigned;
+			buttonFinalize.visible = bookGettingSigned;
+			buttonFinalize.enabled = (bookTitle.trim().length() > 0);
+		}
+	}
 
-   }
-
-   private void addNewPage() {
-      if(this.bookPages != null && this.bookPages.tagCount() < 50) {
-         this.bookPages.appendTag(new NBTTagString(""));
-         ++this.bookTotalPages;
-         this.field_146481_r = true;
-      }
-
-   }
-
-   protected void keyTyped(char par1, int par2) {
-      super.keyTyped(par1, par2);
-      if(this.bookIsUnsigned) {
-         if(this.field_146480_s) {
-            this.func_146460_c(par1, par2);
-         } else {
-            this.keyTypedInBook(par1, par2);
-         }
-      }
-
-   }
-
-   private void keyTypedInBook(char p_146463_1_, int p_146463_2_) {
-      switch(p_146463_1_) {
-      case 22:
-         this.func_146459_b(GuiScreen.getClipboardString());
-         return;
-      default:
-         switch(p_146463_2_) {
-         case 14:
-            String s = this.func_146456_p();
-            if(s.length() > 0) {
-               this.func_146457_a(s.substring(0, s.length() - 1));
-            }
-
-            return;
-         case 28:
-         case 156:
-            this.func_146459_b("\n");
-            return;
-         default:
-            if(ChatAllowedCharacters.isAllowedCharacter(p_146463_1_)) {
-               this.func_146459_b(Character.toString(p_146463_1_));
-            }
-
-         }
-      }
-   }
-
-   private void func_146460_c(char p_146460_1_, int p_146460_2_) {
-      switch(p_146460_2_) {
-      case 14:
-         if(!this.bookTitle.isEmpty()) {
-            this.bookTitle = this.bookTitle.substring(0, this.bookTitle.length() - 1);
-            this.updateButtons();
-         }
-
-         return;
-      case 28:
-      case 156:
-         if(!this.bookTitle.isEmpty()) {
-            this.sendBookToServer(true);
-            super.mc.displayGuiScreen((GuiScreen)null);
-         }
-
-         return;
-      default:
-         if(this.bookTitle.length() < 16 && ChatAllowedCharacters.isAllowedCharacter(p_146460_1_)) {
-            this.bookTitle = this.bookTitle + Character.toString(p_146460_1_);
-            this.updateButtons();
-            this.field_146481_r = true;
-         }
-
-      }
-   }
-
-   private String func_146456_p() {
-      return this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount()?this.bookPages.getStringTagAt(this.currPage):"";
-   }
-
-   private void func_146457_a(String p_146457_1_) {
-      if(this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount()) {
-         this.bookPages.setTag(this.currPage, new NBTTagString(p_146457_1_));
-         this.field_146481_r = true;
-      }
-
-   }
-
-   private void func_146459_b(String p_146459_1_) {
-      String s1 = this.func_146456_p();
-      String s2 = s1 + p_146459_1_;
-      int i = super.fontRendererObj.splitStringWidth(s2 + "" + EnumChatFormatting.BLACK + "_", 118);
-      if(i <= 118 && s2.length() < 256) {
-         this.func_146457_a(s2);
-      }
-
-   }
-
-   public void drawScreen(int par1, int par2, float par3) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.getTextureManager().bindTexture(bookGuiTextures);
-      int k = (super.width - this.bookImageWidth) / 2;
-      byte b0 = 2;
-      this.drawTexturedModalRect(k, b0, 0, 0, this.bookImageWidth, this.bookImageHeight);
-      String s;
-      String s1;
-      int l;
-      if(this.field_146480_s) {
-         s = this.bookTitle;
-         if(this.bookIsUnsigned) {
-            if(this.updateCount / 6 % 2 == 0) {
-               s = s + "" + EnumChatFormatting.BLACK + "_";
-            } else {
-               s = s + "" + EnumChatFormatting.GRAY + "_";
-            }
-         }
-
-         s1 = I18n.format("book.editTitle", new Object[0]);
-         l = super.fontRendererObj.getStringWidth(s1);
-         super.fontRendererObj.drawString(s1, k + 36 + (116 - l) / 2, b0 + 16 + 16, 0);
-         int i1 = super.fontRendererObj.getStringWidth(s);
-         super.fontRendererObj.drawString(s, k + 36 + (116 - i1) / 2, b0 + 48, 0);
-         String s2 = I18n.format("book.byAuthor", new Object[]{this.editingPlayer.getCommandSenderName()});
-         int j1 = super.fontRendererObj.getStringWidth(s2);
-         super.fontRendererObj.drawString(EnumChatFormatting.DARK_GRAY + s2, k + 36 + (116 - j1) / 2, b0 + 48 + 10, 0);
-         String s3 = I18n.format("book.finalizeWarning", new Object[0]);
-         super.fontRendererObj.drawSplitString(s3, k + 36, b0 + 80, 116, 0);
-      } else {
-         s = I18n.format("book.pageIndicator", new Object[]{Integer.valueOf(this.currPage + 1), Integer.valueOf(this.bookTotalPages)});
-         s1 = "";
-         if(this.bookPages != null && this.currPage >= 0 && this.currPage < this.bookPages.tagCount()) {
-            s1 = this.bookPages.getStringTagAt(this.currPage);
-         }
-
-         if(this.bookIsUnsigned) {
-            if(super.fontRendererObj.getBidiFlag()) {
-               s1 = s1 + "_";
-            } else if(this.updateCount / 6 % 2 == 0) {
-               s1 = s1 + "" + EnumChatFormatting.BLACK + "_";
-            } else {
-               s1 = s1 + "" + EnumChatFormatting.GRAY + "_";
-            }
-         }
-
-         l = super.fontRendererObj.getStringWidth(s);
-         super.fontRendererObj.drawString(s, k - l + this.bookImageWidth - 44, b0 + 16, 0);
-         super.fontRendererObj.drawSplitString(s1, k + 36, b0 + 16 + 16, 116, 0);
-      }
-
-      super.drawScreen(par1, par2, par3);
-   }
-
-
-   @SideOnly(Side.CLIENT)
-   static class NextPageButton extends GuiButton {
-
-      private final boolean field_146151_o;
-      private static final String __OBFID = "CL_00000745";
-
-
-      public NextPageButton(int par1, int par2, int par3, boolean par4) {
-         super(par1, par2, par3, 23, 13, "");
-         this.field_146151_o = par4;
-      }
-
-      public void drawButton(Minecraft p_146112_1_, int p_146112_2_, int p_146112_3_) {
-         if(super.visible) {
-            boolean flag = p_146112_2_ >= super.xPosition && p_146112_3_ >= super.yPosition && p_146112_2_ < super.xPosition + super.width && p_146112_3_ < super.yPosition + super.height;
-            GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            p_146112_1_.getTextureManager().bindTexture(GuiBook.bookGuiTextures);
-            int k = 0;
-            int l = 192;
-            if(flag) {
-               k += 23;
-            }
-
-            if(!this.field_146151_o) {
-               l += 13;
-            }
-
-            this.drawTexturedModalRect(super.xPosition, super.yPosition, k, l, 23, 13);
-         }
-
-      }
-   }
+	@Override
+	public void updateScreen() {
+		super.updateScreen();
+		++updateCount;
+	}
 }

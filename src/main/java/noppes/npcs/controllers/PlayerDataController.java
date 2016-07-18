@@ -1,10 +1,18 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -12,204 +20,188 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
-import noppes.npcs.controllers.Bank;
-import noppes.npcs.controllers.BankController;
-import noppes.npcs.controllers.PlayerBankData;
-import noppes.npcs.controllers.PlayerData;
-import noppes.npcs.controllers.PlayerMail;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class PlayerDataController {
+	public static PlayerDataController instance;
 
-   public static PlayerDataController instance;
+	public PlayerDataController() {
+		PlayerDataController.instance = this;
+	}
 
+	public void addPlayerMessage(final String username, final PlayerMail mail) {
+		mail.time = System.currentTimeMillis();
+		MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
+		final PlayerData data = getDataFromUsername(username);
+		data.mailData.playermail.add(mail.copy());
+		savePlayerData(data);
+	}
 
-   public PlayerDataController() {
-      instance = this;
-   }
+	public PlayerBankData getBankData(final EntityPlayer player, final int bankId) {
+		final Bank bank = BankController.getInstance().getBank(bankId);
+		final PlayerBankData data = getPlayerData(player).bankData;
+		if (!data.hasBank(bank.id)) {
+			data.loadNew(bank.id);
+		}
+		return data;
+	}
 
-   public File getSaveDir() {
-      try {
-         File e = new File(CustomNpcs.getWorldSaveDirectory(), "playerdata");
-         if(!e.exists()) {
-            e.mkdir();
-         }
+	public PlayerData getDataFromUsername(final String username) {
+		final EntityPlayer player = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
+		PlayerData data = null;
+		if (player == null) {
+			final Map<String, NBTTagCompound> map = getUsernameData();
+			for (final String name : map.keySet()) {
+				if (name.equalsIgnoreCase(username)) {
+					data = new PlayerData();
+					data.setNBT(map.get(name));
+					break;
+				}
+			}
+		} else {
+			data = getPlayerData(player);
+		}
+		return data;
+	}
 
-         return e;
-      } catch (Exception var2) {
-         var2.printStackTrace();
-         return null;
-      }
-   }
+	public PlayerData getPlayerData(final EntityPlayer player) {
+		PlayerData data = (PlayerData) player.getExtendedProperties("CustomNpcsData");
+		if (data == null) {
+			player.registerExtendedProperties("CustomNpcsData", data = new PlayerData());
+			data.player = player;
+			data.loadNBTData(null);
+		}
+		data.player = player;
+		return data;
+	}
 
-   public NBTTagCompound loadPlayerDataOld(String player) {
-      File saveDir = this.getSaveDir();
-      String filename = player;
-      if(player.isEmpty()) {
-         filename = "noplayername";
-      }
+	public List<PlayerData> getPlayersData(final ICommandSender sender, final String username) {
+		final ArrayList<PlayerData> list = new ArrayList<PlayerData>();
+		final List<EntityPlayerMP> players = PlayerSelector.matchEntities(sender, username,
+				(Class) EntityPlayerMP.class);
+		if (players.isEmpty()) {
+			final PlayerData data = PlayerDataController.instance.getDataFromUsername(username);
+			if (data != null) {
+				list.add(data);
+			}
+		} else {
+			for (final EntityPlayer player : players) {
+				list.add(PlayerDataController.instance.getPlayerData(player));
+			}
+		}
+		return list;
+	}
 
-      filename = filename + ".dat";
+	public File getSaveDir() {
+		try {
+			final File file = new File(CustomNpcs.getWorldSaveDirectory(), "playerdata");
+			if (!file.exists()) {
+				file.mkdir();
+			}
+			return file;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
-      File e;
-      try {
-         e = new File(saveDir, filename);
-         if(e.exists()) {
-            NBTTagCompound comp = CompressedStreamTools.readCompressed(new FileInputStream(e));
-            e.delete();
-            e = new File(saveDir, filename + "_old");
-            if(e.exists()) {
-               e.delete();
-            }
+	public Map<String, NBTTagCompound> getUsernameData() {
+		final Map<String, NBTTagCompound> map = new HashMap<String, NBTTagCompound>();
+		for (final File file : getSaveDir().listFiles()) {
+			if (!file.isDirectory()) {
+				if (file.getName().endsWith(".json")) {
+					try {
+						final NBTTagCompound compound = NBTJsonUtil.LoadFile(file);
+						if (compound.hasKey("PlayerName")) {
+							map.put(compound.getString("PlayerName"), compound);
+						}
+					} catch (Exception e) {
+						LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+					}
+				}
+			}
+		}
+		return map;
+	}
 
-            return comp;
-         }
-      } catch (Exception var7) {
-         LogWriter.except(var7);
-      }
+	public boolean hasMail(final EntityPlayer player) {
+		return getPlayerData(player).mailData.hasMail();
+	}
 
-      try {
-         e = new File(saveDir, filename + "_old");
-         if(e.exists()) {
-            return CompressedStreamTools.readCompressed(new FileInputStream(e));
-         }
-      } catch (Exception var6) {
-         LogWriter.except(var6);
-      }
+	public String hasPlayer(final String username) {
+		for (final String name : getUsernameData().keySet()) {
+			if (name.equalsIgnoreCase(username)) {
+				return name;
+			}
+		}
+		return "";
+	}
 
-      return new NBTTagCompound();
-   }
+	public NBTTagCompound loadPlayerData(final String player) {
+		final File saveDir = getSaveDir();
+		String filename = player;
+		if (filename.isEmpty()) {
+			filename = "noplayername";
+		}
+		filename += ".json";
+		File file = null;
+		try {
+			file = new File(saveDir, filename);
+			if (file.exists()) {
+				return NBTJsonUtil.LoadFile(file);
+			}
+		} catch (Exception e) {
+			LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+		}
+		return new NBTTagCompound();
+	}
 
-   public NBTTagCompound loadPlayerData(String player) {
-      File saveDir = this.getSaveDir();
-      String filename = player;
-      if(player.isEmpty()) {
-         filename = "noplayername";
-      }
+	public NBTTagCompound loadPlayerDataOld(final String player) {
+		final File saveDir = getSaveDir();
+		String filename = player;
+		if (filename.isEmpty()) {
+			filename = "noplayername";
+		}
+		filename += ".dat";
+		try {
+			File file = new File(saveDir, filename);
+			if (file.exists()) {
+				final NBTTagCompound comp = CompressedStreamTools.readCompressed(new FileInputStream(file));
+				file.delete();
+				file = new File(saveDir, filename + "_old");
+				if (file.exists()) {
+					file.delete();
+				}
+				return comp;
+			}
+		} catch (Exception e) {
+			LogWriter.except(e);
+		}
+		try {
+			final File file = new File(saveDir, filename + "_old");
+			if (file.exists()) {
+				return CompressedStreamTools.readCompressed(new FileInputStream(file));
+			}
+		} catch (Exception e) {
+			LogWriter.except(e);
+		}
+		return new NBTTagCompound();
+	}
 
-      filename = filename + ".json";
-
-      try {
-         File e = new File(saveDir, filename);
-         if(e.exists()) {
-            return NBTJsonUtil.LoadFile(e);
-         }
-      } catch (Exception var5) {
-         LogWriter.except(var5);
-      }
-
-      return new NBTTagCompound();
-   }
-
-   public void savePlayerData(PlayerData data) {
-      NBTTagCompound compound = data.getNBT();
-      String filename = data.uuid + ".json";
-
-      try {
-         File e = this.getSaveDir();
-         File file = new File(e, filename + "_new");
-         File file1 = new File(e, filename);
-         NBTJsonUtil.SaveFile(file, compound);
-         if(file1.exists()) {
-            file1.delete();
-         }
-
-         file.renameTo(file1);
-      } catch (Exception var7) {
-         LogWriter.except(var7);
-      }
-
-   }
-
-   public PlayerBankData getBankData(EntityPlayer player, int bankId) {
-      Bank bank = BankController.getInstance().getBank(bankId);
-      PlayerBankData data = this.getPlayerData(player).bankData;
-      if(!data.hasBank(bank.id)) {
-         data.loadNew(bank.id);
-      }
-
-      return data;
-   }
-
-   public PlayerData getPlayerData(EntityPlayer player) {
-      PlayerData data = (PlayerData)player.getExtendedProperties("CustomNpcsData");
-      if(data == null) {
-         player.registerExtendedProperties("CustomNpcsData", data = new PlayerData());
-         data.player = player;
-         data.loadNBTData((NBTTagCompound)null);
-      }
-
-      return data;
-   }
-
-   public String hasPlayer(String username) {
-      Iterator var2 = this.getUsernameData().keySet().iterator();
-
-      String name;
-      do {
-         if(!var2.hasNext()) {
-            return "";
-         }
-
-         name = (String)var2.next();
-      } while(!name.equalsIgnoreCase(username));
-
-      return name;
-   }
-
-   public PlayerData getDataFromUsername(String username) {
-      EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
-      PlayerData data = null;
-      if(player == null) {
-         Map map = this.getUsernameData();
-         Iterator var5 = map.keySet().iterator();
-
-         while(var5.hasNext()) {
-            String name = (String)var5.next();
-            if(name.equalsIgnoreCase(username)) {
-               data = new PlayerData();
-               data.setNBT((NBTTagCompound)map.get(name));
-               break;
-            }
-         }
-      } else {
-         data = this.getPlayerData(player);
-      }
-
-      return data;
-   }
-
-   public void addPlayerMessage(String username, PlayerMail mail) {
-      mail.time = System.currentTimeMillis();
-      EntityPlayerMP player = MinecraftServer.getServer().getConfigurationManager().getPlayerByUsername(username);
-      PlayerData data = this.getDataFromUsername(username);
-      data.mailData.playermail.add(mail.copy());
-      this.savePlayerData(data);
-   }
-
-   public Map getUsernameData() {
-      HashMap map = new HashMap();
-      File[] var2 = this.getSaveDir().listFiles();
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         File file = var2[var4];
-         if(!file.isDirectory() && file.getName().endsWith(".json")) {
-            try {
-               NBTTagCompound e = NBTJsonUtil.LoadFile(file);
-               if(e.hasKey("PlayerName")) {
-                  map.put(e.getString("PlayerName"), e);
-               }
-            } catch (Exception var7) {
-               LogWriter.except(var7);
-            }
-         }
-      }
-
-      return map;
-   }
-
-   public boolean hasMail(EntityPlayer player) {
-      return this.getPlayerData(player).mailData.hasMail();
-   }
+	public void savePlayerData(final PlayerData data) {
+		final NBTTagCompound compound = data.getNBT();
+		final String filename = data.uuid + ".json";
+		try {
+			final File saveDir = getSaveDir();
+			final File file = new File(saveDir, filename + "_new");
+			final File file2 = new File(saveDir, filename);
+			NBTJsonUtil.SaveFile(file, compound);
+			if (file2.exists()) {
+				file2.delete();
+			}
+			file.renameTo(file2);
+		} catch (Exception e) {
+			LogWriter.except(e);
+		}
+	}
 }

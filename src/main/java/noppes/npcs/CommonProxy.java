@@ -1,18 +1,22 @@
+//
+
+//
+
 package noppes.npcs;
 
-import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
-import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesUtilServer;
-import noppes.npcs.PacketHandlerPlayer;
-import noppes.npcs.PacketHandlerServer;
-import noppes.npcs.ServerEventsHandler;
-import noppes.npcs.blocks.tiles.TileNpcContainer;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.containers.ContainerCarpentryBench;
 import noppes.npcs.containers.ContainerCrate;
@@ -34,60 +38,153 @@ import noppes.npcs.containers.ContainerNPCTraderSetup;
 import noppes.npcs.containers.ContainerNpcItemGiver;
 import noppes.npcs.containers.ContainerNpcQuestReward;
 import noppes.npcs.containers.ContainerNpcQuestTypeItem;
+import noppes.npcs.containers.ContainerTradingBlock;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class CommonProxy implements IGuiHandler {
+	public boolean newVersionAvailable;
+	public int revision;
 
-   public boolean newVersionAvailable = false;
-   public int revision = 4;
+	public CommonProxy() {
+		newVersionAvailable = false;
+		revision = 4;
+	}
 
+	@Override
+	public Object getClientGuiElement(final int ID, final EntityPlayer player, final World world, final int x,
+			final int y, final int z) {
+		return null;
+	}
 
-   public void load() {
-      CustomNpcs.Channel.register(new PacketHandlerServer());
-      CustomNpcs.ChannelPlayer.register(new PacketHandlerPlayer());
-   }
+	public Container getContainer(final EnumGuiType gui, final EntityPlayer player, final int x, final int y,
+			final int z, final EntityNPCInterface npc) {
+		if (gui == EnumGuiType.MainMenuInv) {
+			return new ContainerNPCInv(npc, player);
+		}
+		if (gui == EnumGuiType.PlayerBankSmall) {
+			return new ContainerNPCBankSmall(player, x, y);
+		}
+		if (gui == EnumGuiType.PlayerBankUnlock) {
+			return new ContainerNPCBankUnlock(player, x, y);
+		}
+		if (gui == EnumGuiType.PlayerBankUprade) {
+			return new ContainerNPCBankUpgrade(player, x, y);
+		}
+		if (gui == EnumGuiType.PlayerBankLarge) {
+			return new ContainerNPCBankLarge(player, x, y);
+		}
+		if (gui == EnumGuiType.PlayerFollowerHire) {
+			return new ContainerNPCFollowerHire(npc, player);
+		}
+		if (gui == EnumGuiType.PlayerFollower) {
+			return new ContainerNPCFollower(npc, player);
+		}
+		if (gui == EnumGuiType.PlayerTrader) {
+			return new ContainerNPCTrader(npc, player);
+		}
+		if (gui == EnumGuiType.PlayerAnvil) {
+			return new ContainerCarpentryBench(player.inventory, player.worldObj, new BlockPos(x, y, z));
+		}
+		if (gui == EnumGuiType.SetupItemGiver) {
+			return new ContainerNpcItemGiver(npc, player);
+		}
+		if (gui == EnumGuiType.SetupTrader) {
+			return new ContainerNPCTraderSetup(npc, player);
+		}
+		if (gui == EnumGuiType.SetupFollower) {
+			return new ContainerNPCFollowerSetup(npc, player);
+		}
+		if (gui == EnumGuiType.QuestReward) {
+			return new ContainerNpcQuestReward(player);
+		}
+		if (gui == EnumGuiType.QuestItem) {
+			return new ContainerNpcQuestTypeItem(player);
+		}
+		if (gui == EnumGuiType.ManageRecipes) {
+			return new ContainerManageRecipes(player, x);
+		}
+		if (gui == EnumGuiType.ManageBanks) {
+			return new ContainerManageBanks(player);
+		}
+		if (gui == EnumGuiType.MerchantAdd) {
+			return new ContainerMerchantAdd(player, ServerEventsHandler.Merchant, player.worldObj);
+		}
+		if (gui == EnumGuiType.Crate) {
+			return new ContainerCrate((IInventory) player.inventory,
+					(IInventory) player.worldObj.getTileEntity(new BlockPos(x, y, z)));
+		}
+		if (gui == EnumGuiType.PlayerMailman) {
+			return new ContainerMail(player, x == 1, y == 1);
+		}
+		if (gui == EnumGuiType.CompanionInv) {
+			return new ContainerNPCCompanion(npc, player);
+		}
+		if (gui == EnumGuiType.TradingBlock) {
+			return new ContainerTradingBlock(player, new BlockPos(x, y, z));
+		}
+		return null;
+	}
 
-   public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-      if(ID > EnumGuiType.values().length) {
-         return null;
-      } else {
-         EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-         EnumGuiType gui = EnumGuiType.values()[ID];
-         return this.getContainer(gui, player, x, y, z, npc);
-      }
-   }
+	public EntityPlayer getPlayer() {
+		return null;
+	}
 
-   public Container getContainer(EnumGuiType gui, EntityPlayer player, int x, int y, int z, EntityNPCInterface npc) {
-      return (Container)(gui == EnumGuiType.MainMenuInv?new ContainerNPCInv(npc, player):(gui == EnumGuiType.PlayerBankSmall?new ContainerNPCBankSmall(player, x, y):(gui == EnumGuiType.PlayerBankUnlock?new ContainerNPCBankUnlock(player, x, y):(gui == EnumGuiType.PlayerBankUprade?new ContainerNPCBankUpgrade(player, x, y):(gui == EnumGuiType.PlayerBankLarge?new ContainerNPCBankLarge(player, x, y):(gui == EnumGuiType.PlayerFollowerHire?new ContainerNPCFollowerHire(npc, player):(gui == EnumGuiType.PlayerFollower?new ContainerNPCFollower(npc, player):(gui == EnumGuiType.PlayerTrader?new ContainerNPCTrader(npc, player):(gui == EnumGuiType.PlayerAnvil?new ContainerCarpentryBench(player.inventory, player.worldObj, x, y, z):(gui == EnumGuiType.SetupItemGiver?new ContainerNpcItemGiver(npc, player):(gui == EnumGuiType.SetupTrader?new ContainerNPCTraderSetup(npc, player):(gui == EnumGuiType.SetupFollower?new ContainerNPCFollowerSetup(npc, player):(gui == EnumGuiType.QuestReward?new ContainerNpcQuestReward(player):(gui == EnumGuiType.QuestItem?new ContainerNpcQuestTypeItem(player):(gui == EnumGuiType.ManageRecipes?new ContainerManageRecipes(player, x):(gui == EnumGuiType.ManageBanks?new ContainerManageBanks(player):(gui == EnumGuiType.MerchantAdd?new ContainerMerchantAdd(player, ServerEventsHandler.Merchant, player.worldObj):(gui == EnumGuiType.Crate?new ContainerCrate(player.inventory, (TileNpcContainer)player.worldObj.getTileEntity(x, y, z)):(gui == EnumGuiType.PlayerMailman?new ContainerMail(player, x == 1, y == 1):(gui == EnumGuiType.CompanionInv?new ContainerNPCCompanion(npc, player):null))))))))))))))))))));
-   }
+	@Override
+	public Object getServerGuiElement(final int ID, final EntityPlayer player, final World world, final int x,
+			final int y, final int z) {
+		if (ID > EnumGuiType.values().length) {
+			return null;
+		}
+		final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+		final EnumGuiType gui = EnumGuiType.values()[ID];
+		return getContainer(gui, player, x, y, z, npc);
+	}
 
-   public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-      return null;
-   }
+	public ModelBiped getSkirtModel() {
+		return null;
+	}
 
-   public void openGui(EntityNPCInterface npc, EnumGuiType gui) {}
+	public boolean hasClient() {
+		return false;
+	}
 
-   public void openGui(EntityNPCInterface npc, EnumGuiType gui, int x, int y, int z) {}
+	public void load() {
+		CustomNpcs.Channel.register(new PacketHandlerServer());
+		CustomNpcs.ChannelPlayer.register(new PacketHandlerPlayer());
+	}
 
-   public void openGui(int i, int j, int k, EnumGuiType gui, EntityPlayer player) {}
+	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui) {
+	}
 
-   public void openGui(EntityPlayer player, Object guiscreen) {}
+	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui, final int x, final int y, final int z) {
+	}
 
-   public void spawnParticle(EntityLivingBase player, String string, Object ... ob) {}
+	public void openGui(final EntityPlayer player, final Object guiscreen) {
+	}
 
-   public boolean hasClient() {
-      return false;
-   }
+	public void openGui(final int i, final int j, final int k, final EnumGuiType gui, final EntityPlayer player) {
+	}
 
-   public EntityPlayer getPlayer() {
-      return null;
-   }
+	public void postload() {
+	}
 
-   public void registerItem(Item item) {}
+	public void registerBlock(final Block block, final String name, final int meta,
+			final Class<? extends ItemBlock> itemclass) {
+		this.registerBlock(block, name, meta, itemclass, false);
+	}
 
-   public ModelBiped getSkirtModel() {
-      return null;
-   }
+	public void registerBlock(final Block block, final String name, final int meta,
+			final Class<? extends ItemBlock> itemclass, final boolean seperateMetadata) {
+		GameRegistry.registerBlock(block, itemclass, name);
+	}
 
-   public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ, float scale) {}
+	public void registerItem(final Item item, final String name, final int meta) {
+	}
+
+	public void spawnParticle(final EntityLivingBase player, final String string, final Object... ob) {
+	}
+
+	public void spawnParticle(final EnumParticleTypes type, final double x, final double y, final double z,
+			final double motionX, final double motionY, final double motionZ, final float scale) {
+	}
 }

@@ -1,10 +1,11 @@
+//
+
+//
+
 package noppes.npcs.blocks.tiles;
 
-import net.minecraft.tileentity.TileEntity;
-
-public class TileBlockAnvil extends TileEntity {
-
-   public boolean canUpdate() {
-      return false;
-   }
+public class TileBlockAnvil extends TileNpcEntity {
+	public boolean canUpdate() {
+		return false;
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
@@ -9,61 +13,64 @@ import noppes.npcs.client.gui.util.ISliderListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 
 public class SubGuiNpcResistanceProperties extends SubGuiInterface implements ISliderListener {
+	private Resistances resistances;
 
-   private Resistances resistances;
+	public SubGuiNpcResistanceProperties(final Resistances resistances) {
+		this.resistances = resistances;
+		setBackground("menubg.png");
+		xSize = 256;
+		ySize = 216;
+		closeOnEsc = true;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 66) {
+			close();
+		}
+	}
 
-   public SubGuiNpcResistanceProperties(Resistances resistances) {
-      this.resistances = resistances;
-      this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(0, "enchantment.knockback", guiLeft + 4, guiTop + 15));
+		addSlider(new GuiNpcSlider(this, 0, guiLeft + 94, guiTop + 10,
+				(int) ((resistances.knockback * 100.0f) - 100.0f) + "%", resistances.knockback / 2.0f));
+		addLabel(new GuiNpcLabel(1, "item.arrow.name", guiLeft + 4, guiTop + 37));
+		addSlider(new GuiNpcSlider(this, 1, guiLeft + 94, guiTop + 32,
+				(int) ((resistances.arrow * 100.0f) - 100.0f) + "%", resistances.arrow / 2.0f));
+		addLabel(new GuiNpcLabel(2, "stats.melee", guiLeft + 4, guiTop + 59));
+		addSlider(new GuiNpcSlider(this, 2, guiLeft + 94, guiTop + 54,
+				(int) ((resistances.melee * 100.0f) - 100.0f) + "%", resistances.melee / 2.0f));
+		addLabel(new GuiNpcLabel(3, "stats.explosion", guiLeft + 4, guiTop + 81));
+		addSlider(new GuiNpcSlider(this, 3, guiLeft + 94, guiTop + 76,
+				(int) ((resistances.explosion * 100.0f) - 100.0f) + "%", resistances.explosion / 2.0f));
+		addButton(new GuiNpcButton(66, guiLeft + 190, guiTop + 190, 60, 20, "gui.done"));
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "enchantment.knockback", super.guiLeft + 4, super.guiTop + 15));
-      this.addSlider(new GuiNpcSlider(this, 0, super.guiLeft + 94, super.guiTop + 10, (int)(this.resistances.knockback * 100.0F - 100.0F) + "%", this.resistances.knockback / 2.0F));
-      this.addLabel(new GuiNpcLabel(1, "item.arrow.name", super.guiLeft + 4, super.guiTop + 37));
-      this.addSlider(new GuiNpcSlider(this, 1, super.guiLeft + 94, super.guiTop + 32, (int)(this.resistances.arrow * 100.0F - 100.0F) + "%", this.resistances.arrow / 2.0F));
-      this.addLabel(new GuiNpcLabel(2, "stats.melee", super.guiLeft + 4, super.guiTop + 59));
-      this.addSlider(new GuiNpcSlider(this, 2, super.guiLeft + 94, super.guiTop + 54, (int)(this.resistances.playermelee * 100.0F - 100.0F) + "%", this.resistances.playermelee / 2.0F));
-      this.addLabel(new GuiNpcLabel(3, "stats.explosion", super.guiLeft + 4, super.guiTop + 81));
-      this.addSlider(new GuiNpcSlider(this, 3, super.guiLeft + 94, super.guiTop + 76, (int)(this.resistances.explosion * 100.0F - 100.0F) + "%", this.resistances.explosion / 2.0F));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 190, super.guiTop + 190, 60, 20, "gui.done"));
-   }
+	@Override
+	public void mouseDragged(final GuiNpcSlider slider) {
+		slider.displayString = (int) ((slider.sliderValue * 200.0f) - 100.0f) + "%";
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 66) {
-         this.close();
-      }
+	@Override
+	public void mousePressed(final GuiNpcSlider slider) {
+	}
 
-   }
-
-   public void mouseDragged(GuiNpcSlider slider) {
-      slider.displayString = (int)(slider.sliderValue * 200.0F - 100.0F) + "%";
-   }
-
-   public void mousePressed(GuiNpcSlider slider) {}
-
-   public void mouseReleased(GuiNpcSlider slider) {
-      if(slider.field_146127_k == 0) {
-         this.resistances.knockback = slider.sliderValue * 2.0F;
-      }
-
-      if(slider.field_146127_k == 1) {
-         this.resistances.arrow = slider.sliderValue * 2.0F;
-      }
-
-      if(slider.field_146127_k == 2) {
-         this.resistances.playermelee = slider.sliderValue * 2.0F;
-      }
-
-      if(slider.field_146127_k == 3) {
-         this.resistances.explosion = slider.sliderValue * 2.0F;
-      }
-
-   }
+	@Override
+	public void mouseReleased(final GuiNpcSlider slider) {
+		if (slider.id == 0) {
+			resistances.knockback = slider.sliderValue * 2.0f;
+		}
+		if (slider.id == 1) {
+			resistances.arrow = slider.sliderValue * 2.0f;
+		}
+		if (slider.id == 2) {
+			resistances.melee = slider.sliderValue * 2.0f;
+		}
+		if (slider.id == 3) {
+			resistances.explosion = slider.sliderValue * 2.0f;
+		}
+	}
 }

@@ -1,8 +1,14 @@
+//
+
+//
+
 package noppes.npcs.client.gui.player;
 
 import java.util.HashMap;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.NoppesUtilPlayer;
@@ -14,75 +20,82 @@ import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public class GuiTransportSelection extends GuiNPCInterface implements ITopButtonListener, IScrollData {
+	private final ResourceLocation resource;
+	protected int xSize;
+	protected int guiLeft;
+	protected int guiTop;
+	private GuiCustomScroll scroll;
 
-   private final ResourceLocation resource = new ResourceLocation("customnpcs", "textures/gui/smallbg.png");
-   protected int xSize = 176;
-   protected int guiLeft;
-   protected int guiTop;
-   private GuiCustomScroll scroll;
+	public GuiTransportSelection(final EntityNPCInterface npc) {
+		super(npc);
+		resource = new ResourceLocation("customnpcs", "textures/gui/smallbg.png");
+		xSize = 176;
+		drawDefaultBackground = false;
+		title = "";
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		final String sel = scroll.getSelected();
+		if ((button.id == 0) && (sel != null)) {
+			close();
+			NoppesUtilPlayer.sendData(EnumPlayerPacket.Transport, sel);
+		}
+	}
 
-   public GuiTransportSelection(EntityNPCInterface npc) {
-      super(npc);
-      super.drawDefaultBackground = false;
-      super.title = "";
-   }
+	@Override
+	public void drawScreen(final int i, final int j, final float f) {
+		drawDefaultBackground();
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		mc.renderEngine.bindTexture(resource);
+		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 176, 222);
+		super.drawScreen(i, j, f);
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.guiLeft = (super.width - this.xSize) / 2;
-      this.guiTop = (super.height - 222) / 2;
-      String name = "";
-      this.addLabel(new GuiNpcLabel(0, name, this.guiLeft + (this.xSize - super.fontRendererObj.getStringWidth(name)) / 2, this.guiTop + 10));
-      this.addButton(new GuiNpcButton(0, this.guiLeft + 10, this.guiTop + 192, 156, 20, StatCollector.translateToLocal("transporter.travel")));
-      if(this.scroll == null) {
-         this.scroll = new GuiCustomScroll(this, 0);
-      }
+	@Override
+	public void initGui() {
+		super.initGui();
+		guiLeft = (width - xSize) / 2;
+		guiTop = (height - 222) / 2;
+		final String name = "";
+		addLabel(new GuiNpcLabel(0, name, guiLeft + ((xSize - fontRendererObj.getStringWidth(name)) / 2), guiTop + 10));
+		addButton(new GuiNpcButton(0, guiLeft + 10, guiTop + 192, 156, 20,
+				StatCollector.translateToLocal("transporter.travel")));
+		if (scroll == null) {
+			scroll = new GuiCustomScroll(this, 0);
+		}
+		scroll.setSize(156, 165);
+		scroll.guiLeft = guiLeft + 10;
+		scroll.guiTop = guiTop + 20;
+		addScroll(scroll);
+	}
 
-      this.scroll.setSize(156, 165);
-      this.scroll.guiLeft = this.guiLeft + 10;
-      this.scroll.guiTop = this.guiTop + 20;
-      this.addScroll(this.scroll);
-   }
+	@Override
+	public void keyTyped(final char c, final int i) {
+		if ((i == 1) || isInventoryKey(i)) {
+			close();
+		}
+	}
 
-   public void drawScreen(int i, int j, float f) {
-      this.drawDefaultBackground();
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 222);
-      super.drawScreen(i, j, f);
-   }
+	@Override
+	public void mouseClicked(final int i, final int j, final int k) {
+		super.mouseClicked(i, j, k);
+		scroll.mouseClicked(i, j, k);
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      String sel = this.scroll.getSelected();
-      if(button.field_146127_k == 0 && sel != null) {
-         this.close();
-         NoppesUtilPlayer.sendData(EnumPlayerPacket.Transport, new Object[]{sel});
-      }
+	@Override
+	public void save() {
+	}
 
-   }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		scroll.setList(list);
+	}
 
-   public void mouseClicked(int i, int j, int k) {
-      super.mouseClicked(i, j, k);
-      this.scroll.mouseClicked(i, j, k);
-   }
-
-   public void keyTyped(char c, int i) {
-      if(i == 1 || this.isInventoryKey(i)) {
-         this.close();
-      }
-
-   }
-
-   public void save() {}
-
-   public void setData(Vector list, HashMap data) {
-      this.scroll.setList(list);
-   }
-
-   public void setSelected(String selected) {}
+	@Override
+	public void setSelected(final String selected) {
+	}
 }

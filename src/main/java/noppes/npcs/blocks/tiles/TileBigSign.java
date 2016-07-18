@@ -1,55 +1,63 @@
+//
+
+//
+
 package noppes.npcs.blocks.tiles;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import noppes.npcs.TextBlock;
 
-public class TileBigSign extends TileEntity {
+public class TileBigSign extends TileNpcEntity {
+	public int rotation;
+	public boolean canEdit;
+	public boolean hasChanged;
+	private String signText;
+	public TextBlock block;
 
-   public int rotation;
-   public boolean canEdit = true;
-   public boolean hasChanged = true;
-   private String signText = "";
-   public TextBlock block;
+	public TileBigSign() {
+		canEdit = true;
+		hasChanged = true;
+		signText = "";
+	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		writeToNBT(compound);
+		compound.removeTag("ExtraData");
+		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		return packet;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      super.readFromNBT(compound);
-      this.rotation = compound.getInteger("SignRotation");
-      this.setText(compound.getString("SignText"));
-   }
+	public String getText() {
+		return signText;
+	}
 
-   public void writeToNBT(NBTTagCompound compound) {
-      super.writeToNBT(compound);
-      compound.setInteger("SignRotation", this.rotation);
-      compound.setString("SignText", this.signText);
-   }
+	@Override
+	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
+		final NBTTagCompound compound = pkt.getNbtCompound();
+		readFromNBT(compound);
+	}
 
-   public boolean canUpdate() {
-      return false;
-   }
+	@Override
+	public void readFromNBT(final NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		rotation = compound.getInteger("SignRotation");
+		setText(compound.getString("SignText"));
+	}
 
-   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-      NBTTagCompound compound = pkt.getNbtCompound();
-      this.readFromNBT(compound);
-   }
+	public void setText(final String text) {
+		signText = text;
+		hasChanged = true;
+	}
 
-   public void setText(String text) {
-      this.signText = text;
-      this.hasChanged = true;
-   }
-
-   public String getText() {
-      return this.signText;
-   }
-
-   public Packet getDescriptionPacket() {
-      NBTTagCompound compound = new NBTTagCompound();
-      this.writeToNBT(compound);
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
-      return packet;
-   }
+	@Override
+	public void writeToNBT(final NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("SignRotation", rotation);
+		compound.setString("SignText", signText);
+	}
 }

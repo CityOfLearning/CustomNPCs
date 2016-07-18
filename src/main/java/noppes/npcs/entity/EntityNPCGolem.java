@@ -1,47 +1,49 @@
+//
+
+//
+
 package noppes.npcs.entity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
-import noppes.npcs.constants.EnumAnimation;
-import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCGolem extends EntityNPCInterface {
+	public EntityNPCGolem(final World world) {
+		super(world);
+		display.setSkinTexture("customnpcs:textures/entity/golem/Iron Golem.png");
+		width = 1.4f;
+		height = 2.5f;
+	}
 
-   public EntityNPCGolem(World world) {
-      super(world);
-      super.display.texture = "customnpcs:textures/entity/golem/Iron Golem.png";
-      super.width = 1.4F;
-      super.height = 2.5F;
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.setEntityClass(EntityNPCGolem.class);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 
-   public void updateHitbox() {
-      super.currentAnimation = EnumAnimation.values()[super.dataWatcher.getWatchableObjectInt(14)];
-      if(super.currentAnimation == EnumAnimation.LYING) {
-         super.width = super.height = 0.5F;
-      } else if(super.currentAnimation == EnumAnimation.SITTING) {
-         super.width = 1.4F;
-         super.height = 2.0F;
-      } else {
-         super.width = 1.4F;
-         super.height = 2.5F;
-      }
-
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.setEntityClass(EntityNPCGolem.class);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void updateHitbox() {
+		currentAnimation = dataWatcher.getWatchableObjectInt(14);
+		if (currentAnimation == 2) {
+			final float n = 0.5f;
+			height = n;
+			width = n;
+		} else if (currentAnimation == 1) {
+			width = 1.4f;
+			height = 2.0f;
+		} else {
+			width = 1.4f;
+			height = 2.5f;
+		}
+	}
 }

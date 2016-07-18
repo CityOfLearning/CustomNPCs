@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.nbt.NBTTagCompound;
@@ -6,21 +10,20 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCHumanMale extends EntityNPCInterface {
+	public EntityNPCHumanMale(final World world) {
+		super(world);
+	}
 
-   public EntityNPCHumanMale(World world) {
-      super(world);
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 }

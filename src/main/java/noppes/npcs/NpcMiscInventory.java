@@ -1,183 +1,204 @@
+//
+
+//
+
 package noppes.npcs;
 
 import java.util.HashMap;
-import java.util.Iterator;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilPlayer;
+import net.minecraft.util.IChatComponent;
 
 public class NpcMiscInventory implements IInventory {
+	public HashMap<Integer, ItemStack> items;
+	public int stackLimit;
+	private int size;
 
-   public HashMap items = new HashMap();
-   public int stackLimit = 64;
-   private int size;
+	public NpcMiscInventory(final int size) {
+		items = new HashMap<Integer, ItemStack>();
+		stackLimit = 64;
+		this.size = size;
+	}
 
+	public boolean addItemStack(final ItemStack item) {
+		boolean merged = false;
+		ItemStack mergable;
+		while (((mergable = getMergableItem(item)) != null) && (mergable.stackSize > 0)) {
+			final int size = mergable.getMaxStackSize() - mergable.stackSize;
+			if (size > item.stackSize) {
+				mergable.stackSize = mergable.getMaxStackSize();
+				item.stackSize -= size;
+				merged = true;
+			} else {
+				final ItemStack itemStack = mergable;
+				itemStack.stackSize += item.stackSize;
+				item.stackSize = 0;
+			}
+		}
+		if (item.stackSize <= 0) {
+			return true;
+		}
+		final int slot = firstFreeSlot();
+		if (slot >= 0) {
+			items.put(slot, item.copy());
+			item.stackSize = 0;
+			return true;
+		}
+		return merged;
+	}
 
-   public NpcMiscInventory(int size) {
-      this.size = size;
-   }
+	@Override
+	public void clear() {
+	}
 
-   public NBTTagCompound getToNBT() {
-      NBTTagCompound nbttagcompound = new NBTTagCompound();
-      nbttagcompound.setTag("NpcMiscInv", NBTTags.nbtItemStackList(this.items));
-      return nbttagcompound;
-   }
+	@Override
+	public void closeInventory(final EntityPlayer player) {
+	}
 
-   public void setFromNBT(NBTTagCompound nbttagcompound) {
-      this.items = NBTTags.getItemStackList(nbttagcompound.getTagList("NpcMiscInv", 10));
-   }
+	@Override
+	public ItemStack decrStackSize(final int par1, final int par2) {
+		if (items.get(par1) == null) {
+			return null;
+		}
+		ItemStack var4 = null;
+		if (items.get(par1).stackSize <= par2) {
+			var4 = items.get(par1);
+			items.put(par1, null);
+		} else {
+			var4 = items.get(par1).splitStack(par2);
+			if (items.get(par1).stackSize == 0) {
+				items.put(par1, null);
+			}
+		}
+		return var4;
+	}
 
-   public int getSizeInventory() {
-      return this.size;
-   }
+	public boolean decrStackSize(final ItemStack eating, final int decrease) {
+		for (final int slot : items.keySet()) {
+			final ItemStack item = items.get(slot);
+			if ((items != null) && (eating == item) && (item.stackSize >= decrease)) {
+				item.splitStack(decrease);
+				if (item.stackSize <= 0) {
+					items.put(slot, null);
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 
-   public ItemStack getStackInSlot(int var1) {
-      return (ItemStack)this.items.get(Integer.valueOf(var1));
-   }
+	public int firstFreeSlot() {
+		for (int i = 0; i < getSizeInventory(); ++i) {
+			if (items.get(i) == null) {
+				return i;
+			}
+		}
+		return -1;
+	}
 
-   public ItemStack decrStackSize(int par1, int par2) {
-      if(this.items.get(Integer.valueOf(par1)) == null) {
-         return null;
-      } else {
-         ItemStack var4 = null;
-         if(((ItemStack)this.items.get(Integer.valueOf(par1))).stackSize <= par2) {
-            var4 = (ItemStack)this.items.get(Integer.valueOf(par1));
-            this.items.put(Integer.valueOf(par1), (Object)null);
-         } else {
-            var4 = ((ItemStack)this.items.get(Integer.valueOf(par1))).splitStack(par2);
-            if(((ItemStack)this.items.get(Integer.valueOf(par1))).stackSize == 0) {
-               this.items.put(Integer.valueOf(par1), (Object)null);
-            }
-         }
+	@Override
+	public IChatComponent getDisplayName() {
+		return null;
+	}
 
-         return var4;
-      }
-   }
+	@Override
+	public int getField(final int id) {
+		return 0;
+	}
 
-   public boolean decrStackSize(ItemStack eating, int decrease) {
-      Iterator var3 = this.items.keySet().iterator();
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
 
-      int slot;
-      ItemStack item;
-      do {
-         if(!var3.hasNext()) {
-            return false;
-         }
+	@Override
+	public int getInventoryStackLimit() {
+		return stackLimit;
+	}
 
-         slot = ((Integer)var3.next()).intValue();
-         item = (ItemStack)this.items.get(Integer.valueOf(slot));
-      } while(this.items == null || eating != item || item.stackSize < decrease);
+	public ItemStack getMergableItem(final ItemStack item) {
+		for (final ItemStack is : items.values()) {
+			if (NoppesUtilPlayer.compareItems(item, is, false, false) && (is.stackSize < is.getMaxStackSize())) {
+				return is;
+			}
+		}
+		return null;
+	}
 
-      item.splitStack(decrease);
-      if(item.stackSize <= 0) {
-         this.items.put(Integer.valueOf(slot), (Object)null);
-      }
+	@Override
+	public String getName() {
+		return "Npc Misc Inventory";
+	}
 
-      return true;
-   }
+	@Override
+	public int getSizeInventory() {
+		return size;
+	}
 
-   public ItemStack getStackInSlotOnClosing(int var1) {
-      if(this.items.get(Integer.valueOf(var1)) != null) {
-         ItemStack var3 = (ItemStack)this.items.get(Integer.valueOf(var1));
-         this.items.put(Integer.valueOf(var1), (Object)null);
-         return var3;
-      } else {
-         return null;
-      }
-   }
+	@Override
+	public ItemStack getStackInSlot(final int var1) {
+		return items.get(var1);
+	}
 
-   public void setInventorySlotContents(int var1, ItemStack var2) {
-      if(var1 < this.getSizeInventory()) {
-         this.items.put(Integer.valueOf(var1), var2);
-      }
-   }
+	public NBTTagCompound getToNBT() {
+		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		nbttagcompound.setTag("NpcMiscInv", NBTTags.nbtItemStackList(items));
+		return nbttagcompound;
+	}
 
-   public int getInventoryStackLimit() {
-      return this.stackLimit;
-   }
+	@Override
+	public boolean hasCustomName() {
+		return true;
+	}
 
-   public boolean isUseableByPlayer(EntityPlayer var1) {
-      return true;
-   }
+	@Override
+	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+		return true;
+	}
 
-   public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-      return true;
-   }
+	@Override
+	public boolean isUseableByPlayer(final EntityPlayer var1) {
+		return true;
+	}
 
-   public String getInventoryName() {
-      return "Npc Misc Inventory";
-   }
+	@Override
+	public void markDirty() {
+	}
 
-   public boolean isCustomInventoryName() {
-      return true;
-   }
+	@Override
+	public void openInventory(final EntityPlayer player) {
+	}
 
-   public void markDirty() {}
+	@Override
+	public ItemStack removeStackFromSlot(final int var1) {
+		if (items.get(var1) != null) {
+			final ItemStack var2 = items.get(var1);
+			items.put(var1, null);
+			return var2;
+		}
+		return null;
+	}
 
-   public void openChest() {}
+	@Override
+	public void setField(final int id, final int value) {
+	}
 
-   public void closeChest() {}
+	public void setFromNBT(final NBTTagCompound nbttagcompound) {
+		items = NBTTags.getItemStackList(nbttagcompound.getTagList("NpcMiscInv", 10));
+	}
 
-   public boolean addItemStack(ItemStack item) {
-      boolean merged = false;
+	@Override
+	public void setInventorySlotContents(final int var1, final ItemStack var2) {
+		if (var1 >= getSizeInventory()) {
+			return;
+		}
+		items.put(var1, var2);
+	}
 
-      ItemStack mergable;
-      int slot;
-      while((mergable = this.getMergableItem(item)) != null && mergable.stackSize > 0) {
-         slot = mergable.getMaxStackSize() - mergable.stackSize;
-         if(slot > item.stackSize) {
-            mergable.stackSize = mergable.getMaxStackSize();
-            item.stackSize -= slot;
-            merged = true;
-         } else {
-            mergable.stackSize += item.stackSize;
-            item.stackSize = 0;
-         }
-      }
-
-      if(item.stackSize <= 0) {
-         return true;
-      } else {
-         slot = this.firstFreeSlot();
-         if(slot >= 0) {
-            this.items.put(Integer.valueOf(slot), item.copy());
-            item.stackSize = 0;
-            return true;
-         } else {
-            return merged;
-         }
-      }
-   }
-
-   public ItemStack getMergableItem(ItemStack item) {
-      Iterator var2 = this.items.values().iterator();
-
-      ItemStack is;
-      do {
-         if(!var2.hasNext()) {
-            return null;
-         }
-
-         is = (ItemStack)var2.next();
-      } while(!NoppesUtilPlayer.compareItems(item, is, false, false) || is.stackSize >= is.getMaxStackSize());
-
-      return is;
-   }
-
-   public int firstFreeSlot() {
-      for(int i = 0; i < this.getSizeInventory(); ++i) {
-         if(this.items.get(Integer.valueOf(i)) == null) {
-            return i;
-         }
-      }
-
-      return -1;
-   }
-
-   public void setSize(int i) {
-      this.size = i;
-   }
+	public void setSize(final int i) {
+		size = i;
+	}
 }

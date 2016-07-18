@@ -1,136 +1,172 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.api.entity.data.role.IJobBard;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.constants.EnumBardInstrument;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobInterface;
 
-public class JobBard extends JobInterface {
+public class JobBard extends JobInterface implements IJobBard {
+	public int minRange;
+	public int maxRange;
+	public boolean isStreamer;
+	public boolean hasOffRange;
+	public String song;
+	private EnumBardInstrument instrument;
+	private long ticks;
 
-   public int minRange = 2;
-   public int maxRange = 64;
-   public boolean isStreamer = true;
-   public boolean hasOffRange = true;
-   public String song = "";
-   private EnumBardInstrument instrument;
-   private long ticks;
+	public JobBard(final EntityNPCInterface npc) {
+		super(npc);
+		minRange = 2;
+		maxRange = 64;
+		isStreamer = true;
+		hasOffRange = true;
+		song = "";
+		instrument = EnumBardInstrument.Banjo;
+		ticks = 0L;
+		if (CustomItems.banjo != null) {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.banjo));
+			final boolean b = true;
+			overrideOffHand = b;
+			overrideMainHand = b;
+		}
+	}
 
+	@Override
+	public void delete() {
+		if (npc.worldObj.isRemote && hasOffRange && MusicController.Instance.isPlaying(song)) {
+			MusicController.Instance.stopMusic();
+		}
+	}
 
-   public JobBard(EntityNPCInterface npc) {
-      super(npc);
-      this.instrument = EnumBardInstrument.Banjo;
-      this.ticks = 0L;
-      if(CustomItems.banjo != null) {
-         super.mainhand = new ItemStack(CustomItems.banjo);
-         super.overrideMainHand = super.overrideOffHand = true;
-      }
+	public EnumBardInstrument getInstrument() {
+		return instrument;
+	}
 
-   }
+	@Override
+	public String getSong() {
+		return song;
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setString("BardSong", this.song);
-      nbttagcompound.setInteger("BardMinRange", this.minRange);
-      nbttagcompound.setInteger("BardMaxRange", this.maxRange);
-      nbttagcompound.setInteger("BardInstrument", this.instrument.ordinal());
-      nbttagcompound.setBoolean("BardStreamer", this.isStreamer);
-      nbttagcompound.setBoolean("BardHasOff", this.hasOffRange);
-      return nbttagcompound;
-   }
+	@Override
+	public void killed() {
+		delete();
+	}
 
-   public void readFromNBT(NBTTagCompound nbttagcompound) {
-      this.song = nbttagcompound.getString("BardSong");
-      this.minRange = nbttagcompound.getInteger("BardMinRange");
-      this.maxRange = nbttagcompound.getInteger("BardMaxRange");
-      this.setInstrument(nbttagcompound.getInteger("BardInstrument"));
-      this.isStreamer = nbttagcompound.getBoolean("BardStreamer");
-      this.hasOffRange = nbttagcompound.getBoolean("BardHasOff");
-   }
+	public void onLivingUpdate() {
+		if (!npc.isRemote()) {
+			return;
+		}
+		++ticks;
+		if ((ticks % 10L) != 0L) {
+			return;
+		}
+		if (song.isEmpty()) {
+			return;
+		}
+		if (!MusicController.Instance.isPlaying(song)) {
+			final List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+					npc.getEntityBoundingBox().expand(minRange, minRange / 2, minRange));
+			if (!list.contains(CustomNpcs.proxy.getPlayer())) {
+				return;
+			}
+			if (isStreamer) {
+				MusicController.Instance.playStreaming(song, npc);
+			} else {
+				MusicController.Instance.playMusic(song, npc);
+			}
+		} else if (MusicController.Instance.playingEntity != npc) {
+			final EntityPlayer player = CustomNpcs.proxy.getPlayer();
+			if (npc.getDistanceSqToEntity(player) < MusicController.Instance.playingEntity
+					.getDistanceSqToEntity(player)) {
+				MusicController.Instance.playingEntity = npc;
+			}
+		} else if (hasOffRange) {
+			final List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+					npc.getEntityBoundingBox().expand(maxRange, maxRange / 2, maxRange));
+			if (!list.contains(CustomNpcs.proxy.getPlayer())) {
+				MusicController.Instance.stopMusic();
+			}
+		}
+	}
 
-   public void setInstrument(int i) {
-      if(CustomItems.banjo != null) {
-         this.instrument = EnumBardInstrument.values()[i];
-         super.overrideMainHand = super.overrideOffHand = this.instrument != EnumBardInstrument.None;
-         switch(this.instrument) {
-         case None:
-            super.mainhand = null;
-            super.offhand = null;
-            break;
-         case Banjo:
-            super.mainhand = new ItemStack(CustomItems.banjo);
-            super.offhand = null;
-            break;
-         case Violin:
-            super.mainhand = new ItemStack(CustomItems.violin);
-            super.offhand = new ItemStack(CustomItems.violinbow);
-            break;
-         case Guitar:
-            super.mainhand = new ItemStack(CustomItems.guitar);
-            super.offhand = null;
-            break;
-         case Harp:
-            super.mainhand = new ItemStack(CustomItems.harp);
-            super.offhand = null;
-            break;
-         case FrenchHorn:
-            super.mainhand = new ItemStack(CustomItems.frenchHorn);
-            super.offhand = null;
-         }
+	@Override
+	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+		song = nbttagcompound.getString("BardSong");
+		minRange = nbttagcompound.getInteger("BardMinRange");
+		maxRange = nbttagcompound.getInteger("BardMaxRange");
+		setInstrument(nbttagcompound.getInteger("BardInstrument"));
+		isStreamer = nbttagcompound.getBoolean("BardStreamer");
+		hasOffRange = nbttagcompound.getBoolean("BardHasOff");
+	}
 
-      }
-   }
+	public void setInstrument(final int i) {
+		if (CustomItems.banjo == null) {
+			return;
+		}
+		instrument = EnumBardInstrument.values()[i];
+		final boolean b = instrument != EnumBardInstrument.None;
+		overrideOffHand = b;
+		overrideMainHand = b;
+		switch (instrument) {
+		case None: {
+			mainhand = null;
+			offhand = null;
+			break;
+		}
+		case Banjo: {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.banjo));
+			offhand = null;
+			break;
+		}
+		case Violin: {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.violin));
+			offhand = new ItemStackWrapper(new ItemStack(CustomItems.violinbow));
+			break;
+		}
+		case Guitar: {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.guitar));
+			offhand = null;
+			break;
+		}
+		case Harp: {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.harp));
+			offhand = null;
+			break;
+		}
+		case FrenchHorn: {
+			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.frenchHorn));
+			offhand = null;
+			break;
+		}
+		}
+	}
 
-   public EnumBardInstrument getInstrument() {
-      return this.instrument;
-   }
+	@Override
+	public void setSong(final String song) {
+		this.song = song;
+		npc.updateClient = true;
+	}
 
-   public void onLivingUpdate() {
-      if(super.npc.isRemote()) {
-         ++this.ticks;
-         if(this.ticks % 10L == 0L) {
-            if(!this.song.isEmpty()) {
-               List list;
-               if(!MusicController.Instance.isPlaying(this.song)) {
-                  list = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand((double)this.minRange, (double)(this.minRange / 2), (double)this.minRange));
-                  if(!list.contains(CustomNpcs.proxy.getPlayer())) {
-                     return;
-                  }
-
-                  if(this.isStreamer) {
-                     MusicController.Instance.playStreaming(this.song, super.npc);
-                  } else {
-                     MusicController.Instance.playMusic(this.song, super.npc);
-                  }
-               } else if(MusicController.Instance.playingEntity != super.npc) {
-                  EntityPlayer list1 = CustomNpcs.proxy.getPlayer();
-                  if(super.npc.getDistanceSqToEntity(list1) < MusicController.Instance.playingEntity.getDistanceSqToEntity(list1)) {
-                     MusicController.Instance.playingEntity = super.npc;
-                  }
-               } else if(this.hasOffRange) {
-                  list = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand((double)this.maxRange, (double)(this.maxRange / 2), (double)this.maxRange));
-                  if(!list.contains(CustomNpcs.proxy.getPlayer())) {
-                     MusicController.Instance.stopMusic();
-                  }
-               }
-
-            }
-         }
-      }
-   }
-
-   public void killed() {
-      this.delete();
-   }
-
-   public void delete() {
-      if(super.npc.worldObj.isRemote && this.hasOffRange && MusicController.Instance.isPlaying(this.song)) {
-         MusicController.Instance.stopMusic();
-      }
-
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setString("BardSong", song);
+		nbttagcompound.setInteger("BardMinRange", minRange);
+		nbttagcompound.setInteger("BardMaxRange", maxRange);
+		nbttagcompound.setInteger("BardInstrument", instrument.ordinal());
+		nbttagcompound.setBoolean("BardStreamer", isStreamer);
+		nbttagcompound.setBoolean("BardHasOff", hasOffRange);
+		return nbttagcompound;
+	}
 }

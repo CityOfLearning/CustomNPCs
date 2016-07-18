@@ -1,120 +1,147 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
-import noppes.npcs.CustomNpcs;
 import noppes.npcs.CustomNpcsPermissions;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileColorable;
+import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
-import noppes.npcs.entity.EntityNPCInterface;
 
-public class BlockBigSign extends BlockContainer {
+public class BlockBigSign extends BlockContainer implements ITileRenderer {
+	public int renderId;
+	private TileEntity renderTile;
 
-   public int renderId = -1;
+	public BlockBigSign() {
+		super(Material.wood);
+		renderId = -1;
+	}
 
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockRotated.DAMAGE });
+	}
 
-   public BlockBigSign() {
-      super(Material.wood);
-   }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileBigSign();
+	}
 
-   public int damageDropped(int par1) {
-      return par1;
-   }
+	@Override
+	public int damageDropped(final IBlockState state) {
+		return state.getValue(BlockRotated.DAMAGE);
+	}
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
-      return null;
-   }
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(final World world, final BlockPos pos, final IBlockState state) {
+		return null;
+	}
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      if(par1World.isRemote) {
-         return false;
-      } else {
-         ItemStack currentItem = player.inventory.getCurrentItem();
-         if(currentItem != null && currentItem.getItem() == CustomItems.wand && CustomNpcsPermissions.hasPermission(player, "customnpcs.editblocks")) {
-            TileBigSign tile = (TileBigSign)par1World.getTileEntity(i, j, k);
-            tile.canEdit = true;
-            NoppesUtilServer.sendOpenGui(player, EnumGuiType.BigSign, (EntityNPCInterface)null, i, j, k);
-            return true;
-         } else {
-            return false;
-         }
-      }
-   }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return damageDropped(state);
+	}
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-      l %= 4;
-      TileBigSign tile = (TileBigSign)par1World.getTileEntity(par2, par3, par4);
-      tile.rotation = l;
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-      if(par5EntityLivingBase instanceof EntityPlayer && par1World.isRemote) {
-         CustomNpcs.proxy.openGui(par2, par3, par4, EnumGuiType.BigSign, (EntityPlayer)par5EntityLivingBase);
-      }
+	@Override
+	public int getRenderType() {
+		return renderId;
+	}
 
-   }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockRotated.DAMAGE, meta);
+	}
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      TileEntity tileentity = world.getTileEntity(x, y, z);
-      if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
-      } else {
-         TileColorable tile = (TileColorable)tileentity;
-         int meta = tile.getBlockMetadata();
-         float xStart = 0.0F;
-         float zStart = 0.0F;
-         float xEnd = 1.0F;
-         float zEnd = 1.0F;
-         if(tile.rotation == 0) {
-            zStart = 0.87F;
-         } else if(tile.rotation == 2) {
-            zEnd = 0.13F;
-         } else if(tile.rotation == 3) {
-            xStart = 0.87F;
-         } else if(tile.rotation == 1) {
-            xEnd = 0.13F;
-         }
+	@Override
+	public TileEntity getTile() {
+		if (renderTile == null) {
+			renderTile = createNewTileEntity(null, 0);
+		}
+		return renderTile;
+	}
 
-         this.setBlockBounds(xStart, 0.0F, zStart, xEnd, 1.0F, zEnd);
-      }
-   }
+	@Override
+	public boolean isFullCube() {
+		return false;
+	}
 
-   public boolean isOpaqueCube() {
-      return false;
-   }
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
-   public boolean renderAsNormalBlock() {
-      return false;
-   }
+	@Override
+	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		if (par1World.isRemote) {
+			return false;
+		}
+		final ItemStack currentItem = player.inventory.getCurrentItem();
+		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
+				&& CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
+			final TileBigSign tile = (TileBigSign) par1World.getTileEntity(pos);
+			tile.canEdit = true;
+			NoppesUtilServer.sendOpenGui(player, EnumGuiType.BigSign, null, pos.getX(), pos.getY(), pos.getZ());
+			return true;
+		}
+		return false;
+	}
 
-   public int getRenderType() {
-      return this.renderId;
-   }
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entity, final ItemStack stack) {
+		int l = MathHelper.floor_double(((entity.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
+		l %= 4;
+		final TileBigSign tile = (TileBigSign) world.getTileEntity(pos);
+		tile.rotation = l;
+		world.setBlockState(pos, state.withProperty(BlockRotated.DAMAGE, stack.getItemDamage()), 2);
+		if ((entity instanceof EntityPlayer) && !world.isRemote) {
+			NoppesUtilServer.sendOpenGui((EntityPlayer) entity, EnumGuiType.BigSign, null, pos.getX(), pos.getY(),
+					pos.getZ());
+		}
+	}
 
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {}
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int p_149691_1_, int meta) {
-      return Blocks.planks.getIcon(p_149691_1_, meta);
-   }
-
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileBigSign();
-   }
+	@Override
+	public void setBlockBoundsBasedOnState(final IBlockAccess world, final BlockPos pos) {
+		final TileEntity tileentity = world.getTileEntity(pos);
+		if (!(tileentity instanceof TileColorable)) {
+			super.setBlockBoundsBasedOnState(world, pos);
+			return;
+		}
+		final TileColorable tile = (TileColorable) tileentity;
+		tile.getBlockMetadata();
+		float xStart = 0.0f;
+		float zStart = 0.0f;
+		float xEnd = 1.0f;
+		float zEnd = 1.0f;
+		if (tile.rotation == 0) {
+			zStart = 0.87f;
+		} else if (tile.rotation == 2) {
+			zEnd = 0.13f;
+		} else if (tile.rotation == 3) {
+			xStart = 0.87f;
+		} else if (tile.rotation == 1) {
+			xEnd = 0.13f;
+		}
+		setBlockBounds(xStart, 0.0f, zStart, xEnd, 1.0f, zEnd);
+	}
 }

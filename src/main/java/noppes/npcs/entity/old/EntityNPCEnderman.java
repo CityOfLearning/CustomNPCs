@@ -1,50 +1,53 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.entity.monster.EntityEnderman;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
-import noppes.npcs.constants.EnumAnimation;
 import noppes.npcs.entity.EntityCustomNpc;
-import noppes.npcs.entity.old.EntityNpcEnderchibi;
 
 public class EntityNPCEnderman extends EntityNpcEnderchibi {
+	public EntityNPCEnderman(final World world) {
+		super(world);
+		display.setSkinTexture("customnpcs:textures/entity/enderman/enderman.png");
+		display.setOverlayTexture("customnpcs:textures/overlays/ender_eyes.png");
+		width = 0.6f;
+		height = 2.9f;
+	}
 
-   public EntityNPCEnderman(World world) {
-      super(world);
-      super.display.texture = "customnpcs:textures/entity/enderman/enderman.png";
-      super.display.glowTexture = "customnpcs:textures/overlays/ender_eyes.png";
-      super.width = 0.6F;
-      super.height = 2.9F;
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.setEntityClass(EntityEnderman.class);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 
-   public void updateHitbox() {
-      if(super.currentAnimation == EnumAnimation.LYING) {
-         super.width = super.height = 0.2F;
-      } else if(super.currentAnimation == EnumAnimation.SITTING) {
-         super.width = 0.6F;
-         super.height = 2.3F;
-      } else {
-         super.width = 0.6F;
-         super.height = 2.9F;
-      }
-
-      super.width = super.width / 5.0F * (float)super.display.modelSize;
-      super.height = super.height / 5.0F * (float)super.display.modelSize;
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.setEntityClass(EntityEnderman.class);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void updateHitbox() {
+		if (currentAnimation == 2) {
+			final float n = 0.2f;
+			height = n;
+			width = n;
+		} else if (currentAnimation == 1) {
+			width = 0.6f;
+			height = 2.3f;
+		} else {
+			width = 0.6f;
+			height = 2.9f;
+		}
+		width = (width / 5.0f) * display.getSize();
+		height = (height / 5.0f) * display.getSize();
+	}
 }

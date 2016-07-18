@@ -1,6 +1,14 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
 import java.util.List;
+
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
@@ -8,66 +16,87 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileShelf;
 
 public class BlockShelf extends BlockRotated {
+	public BlockShelf() {
+		super(Blocks.planks);
+	}
 
-   public BlockShelf() {
-      super(Blocks.planks);
-   }
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockRotated.DAMAGE });
+	}
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-   }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileShelf();
+	}
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int x, int y, int z) {
-      this.setBlockBoundsBasedOnState(p_149668_1_, x, y, z);
-      return AxisAlignedBB.getBoundingBox((double)x + super.minX, (double)((float)y + 0.9F), (double)z + super.minZ, (double)x + super.maxX, (double)(y + 1), (double)z + super.maxZ);
-   }
+	@Override
+	public int damageDropped(final IBlockState state) {
+		return state.getValue(BlockRotated.DAMAGE);
+	}
 
-   public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-      par3List.add(new ItemStack(par1, 1, 0));
-      par3List.add(new ItemStack(par1, 1, 1));
-      par3List.add(new ItemStack(par1, 1, 2));
-      par3List.add(new ItemStack(par1, 1, 3));
-      par3List.add(new ItemStack(par1, 1, 4));
-      par3List.add(new ItemStack(par1, 1, 5));
-   }
+	@Override
+	public AxisAlignedBB getCollisionBoundingBox(final World world, final BlockPos pos, final IBlockState state) {
+		setBlockBoundsBasedOnState(world, pos);
+		return new AxisAlignedBB(pos.getX() + minX, pos.getY() + 0.9f, pos.getZ() + minZ, pos.getX() + maxX,
+				pos.getY() + 1, pos.getZ() + maxZ);
+	}
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      TileEntity tileentity = world.getTileEntity(x, y, z);
-      if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
-      } else {
-         TileColorable tile = (TileColorable)tileentity;
-         float xStart = 0.0F;
-         float zStart = 0.0F;
-         float xEnd = 1.0F;
-         float zEnd = 1.0F;
-         if(tile.rotation == 0) {
-            zStart = 0.3F;
-         } else if(tile.rotation == 2) {
-            zEnd = 0.7F;
-         } else if(tile.rotation == 3) {
-            xStart = 0.3F;
-         } else if(tile.rotation == 1) {
-            xEnd = 0.7F;
-         }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return damageDropped(state);
+	}
 
-         this.setBlockBounds(xStart, 0.44F, zStart, xEnd, 1.0F, zEnd);
-      }
-   }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockRotated.DAMAGE, meta);
+	}
 
-   public int damageDropped(int par1) {
-      return par1;
-   }
+	@Override
+	public void getSubBlocks(final Item par1, final CreativeTabs par2CreativeTabs, final List par3List) {
+		par3List.add(new ItemStack(par1, 1, 0));
+		par3List.add(new ItemStack(par1, 1, 1));
+		par3List.add(new ItemStack(par1, 1, 2));
+		par3List.add(new ItemStack(par1, 1, 3));
+		par3List.add(new ItemStack(par1, 1, 4));
+		par3List.add(new ItemStack(par1, 1, 5));
+	}
 
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileShelf();
-   }
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entity, final ItemStack stack) {
+		world.setBlockState(pos, state.withProperty(BlockRotated.DAMAGE, stack.getItemDamage()), 2);
+		super.onBlockPlacedBy(world, pos, state, entity, stack);
+	}
+
+	@Override
+	public void setBlockBoundsBasedOnState(final IBlockAccess world, final BlockPos pos) {
+		final TileEntity tileentity = world.getTileEntity(pos);
+		if (!(tileentity instanceof TileColorable)) {
+			super.setBlockBoundsBasedOnState(world, pos);
+			return;
+		}
+		final TileColorable tile = (TileColorable) tileentity;
+		float xStart = 0.0f;
+		float zStart = 0.0f;
+		float xEnd = 1.0f;
+		float zEnd = 1.0f;
+		if (tile.rotation == 0) {
+			zStart = 0.3f;
+		} else if (tile.rotation == 2) {
+			zEnd = 0.7f;
+		} else if (tile.rotation == 3) {
+			xStart = 0.3f;
+		} else if (tile.rotation == 1) {
+			xEnd = 0.7f;
+		}
+		setBlockBounds(xStart, 0.44f, zStart, xEnd, 1.0f, zEnd);
+	}
 }

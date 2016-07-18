@@ -1,133 +1,147 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.containers.ContainerNpcInterface;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 public class ContainerNPCTrader extends ContainerNpcInterface {
+	public RoleTrader role;
+	private EntityNPCInterface npc;
 
-   public RoleTrader role;
+	public ContainerNPCTrader(final EntityNPCInterface npc, final EntityPlayer player) {
+		super(player);
+		this.npc = npc;
+		role = (RoleTrader) npc.roleInterface;
+		for (int i = 0; i < 18; ++i) {
+			int x = 53;
+			x += (i % 3) * 72;
+			int y = 7;
+			y += (i / 3) * 21;
+			ItemStack item = role.inventoryCurrency.items.get(i);
+			ItemStack item2 = role.inventoryCurrency.items.get(i + 18);
+			if (item == null) {
+				item = item2;
+				item2 = null;
+			}
+			addSlotToContainer(new Slot(role.inventorySold, i, x, y));
+		}
+		for (int i2 = 0; i2 < 3; ++i2) {
+			for (int l1 = 0; l1 < 9; ++l1) {
+				addSlotToContainer(new Slot(player.inventory, l1 + (i2 * 9) + 9, 32 + (l1 * 18), 140 + (i2 * 18)));
+			}
+		}
+		for (int j1 = 0; j1 < 9; ++j1) {
+			addSlotToContainer(new Slot(player.inventory, j1, 32 + (j1 * 18), 198));
+		}
+	}
 
+	public boolean canBuy(ItemStack currency, ItemStack currency2, final EntityPlayer player) {
+		if ((currency == null) && (currency2 == null)) {
+			return true;
+		}
+		if (currency == null) {
+			currency = currency2;
+			currency2 = null;
+		}
+		if (NoppesUtilPlayer.compareItems(currency, currency2, role.ignoreDamage, role.ignoreNBT)) {
+			final ItemStack copy;
+			currency = (copy = currency.copy());
+			copy.stackSize += currency2.stackSize;
+			currency2 = null;
+		}
+		if (currency2 == null) {
+			return NoppesUtilPlayer.compareItems(player, currency, role.ignoreDamage, role.ignoreNBT);
+		}
+		return NoppesUtilPlayer.compareItems(player, currency, role.ignoreDamage, role.ignoreNBT)
+				&& NoppesUtilPlayer.compareItems(player, currency2, role.ignoreDamage, role.ignoreNBT);
+	}
 
-   public ContainerNPCTrader(EntityNPCInterface npc, EntityPlayer player) {
-      super(player);
-      this.role = (RoleTrader)npc.roleInterface;
+	private boolean canGivePlayer(final ItemStack item, final EntityPlayer entityplayer) {
+		final ItemStack itemstack3 = entityplayer.inventory.getItemStack();
+		if (itemstack3 == null) {
+			return true;
+		}
+		if (NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
+			final int k1 = item.stackSize;
+			if ((k1 > 0) && ((k1 + itemstack3.stackSize) <= itemstack3.getMaxStackSize())) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-      int j1;
-      int var8;
-      for(j1 = 0; j1 < 18; ++j1) {
-         byte l1 = 53;
-         var8 = l1 + j1 % 3 * 72;
-         byte y = 7;
-         int var9 = y + j1 / 3 * 21;
-         ItemStack item = (ItemStack)this.role.inventoryCurrency.items.get(Integer.valueOf(j1));
-         ItemStack item2 = (ItemStack)this.role.inventoryCurrency.items.get(Integer.valueOf(j1 + 18));
-         if(item == null) {
-            item2 = null;
-         }
+	private void givePlayer(final ItemStack item, final EntityPlayer entityplayer) {
+		final ItemStack itemstack3 = entityplayer.inventory.getItemStack();
+		if (itemstack3 == null) {
+			entityplayer.inventory.setItemStack(item);
+		} else if (NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
+			final int k1 = item.stackSize;
+			if ((k1 > 0) && ((k1 + itemstack3.stackSize) <= itemstack3.getMaxStackSize())) {
+				final ItemStack itemStack = itemstack3;
+				itemStack.stackSize += k1;
+			}
+		}
+	}
 
-         this.addSlotToContainer(new Slot(this.role.inventorySold, j1, var8, var9));
-      }
+	@Override
+	public ItemStack slotClick(final int i, final int j, int par3, final EntityPlayer entityplayer) {
+		if (par3 == 6) {
+			par3 = 0;
+		}
+		if ((i < 0) || (i >= 18)) {
+			return super.slotClick(i, j, par3, entityplayer);
+		}
+		if (j == 1) {
+			return null;
+		}
+		final Slot slot = inventorySlots.get(i);
+		if ((slot == null) || (slot.getStack() == null)) {
+			return null;
+		}
+		final ItemStack item = slot.getStack();
+		if (!canGivePlayer(item, entityplayer)) {
+			return null;
+		}
+		ItemStack currency = role.inventoryCurrency.getStackInSlot(i);
+		ItemStack currency2 = role.inventoryCurrency.getStackInSlot(i + 18);
+		if (!canBuy(currency, currency2, entityplayer)) {
+			return null;
+		}
+		final RoleEvent.TraderEvent event = new RoleEvent.TraderEvent(entityplayer, npc.wrappedNPC, item, currency,
+				currency2);
+		if (EventHooks.onNPCRole(npc, event)) {
+			return null;
+		}
+		if (event.currency1 != null) {
+			currency = event.currency1.getMCItemStack();
+		}
+		if (event.currency2 != null) {
+			currency2 = event.currency2.getMCItemStack();
+		}
+		if (!canBuy(currency, currency2, entityplayer)) {
+			return null;
+		}
+		NoppesUtilPlayer.consumeItem(entityplayer, currency, role.ignoreDamage, role.ignoreNBT);
+		NoppesUtilPlayer.consumeItem(entityplayer, currency2, role.ignoreDamage, role.ignoreNBT);
+		ItemStack soldItem = null;
+		if (event.sold != null) {
+			soldItem = event.sold.getMCItemStack();
+			givePlayer(soldItem, entityplayer);
+		}
+		return soldItem;
+	}
 
-      for(j1 = 0; j1 < 3; ++j1) {
-         for(var8 = 0; var8 < 9; ++var8) {
-            this.addSlotToContainer(new Slot(player.inventory, var8 + j1 * 9 + 9, 32 + var8 * 18, 140 + j1 * 18));
-         }
-      }
-
-      for(j1 = 0; j1 < 9; ++j1) {
-         this.addSlotToContainer(new Slot(player.inventory, j1, 32 + j1 * 18, 198));
-      }
-
-   }
-
-   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
-      return null;
-   }
-
-   public ItemStack slotClick(int i, int j, int par3, EntityPlayer entityplayer) {
-      if(par3 == 6) {
-         par3 = 0;
-      }
-
-      if(i >= 0 && i < 18) {
-         if(j == 1) {
-            return null;
-         } else {
-            Slot slot = (Slot)super.inventorySlots.get(i);
-            if(slot != null && slot.getStack() != null) {
-               ItemStack item = slot.getStack();
-               if(!this.canGivePlayer(item, entityplayer)) {
-                  return null;
-               } else if(!this.canBuy(i, entityplayer)) {
-                  return null;
-               } else {
-                  NoppesUtilPlayer.consumeItem(entityplayer, this.role.inventoryCurrency.getStackInSlot(i), false);
-                  NoppesUtilPlayer.consumeItem(entityplayer, this.role.inventoryCurrency.getStackInSlot(i + 18), false);
-                  ItemStack soldItem = item.copy();
-                  this.givePlayer(soldItem, entityplayer);
-                  return soldItem;
-               }
-            } else {
-               return null;
-            }
-         }
-      } else {
-         return super.slotClick(i, j, par3, entityplayer);
-      }
-   }
-
-   public boolean canBuy(int slot, EntityPlayer player) {
-      ItemStack currency = this.role.inventoryCurrency.getStackInSlot(slot);
-      ItemStack currency2 = this.role.inventoryCurrency.getStackInSlot(slot + 18);
-      if(currency == null && currency2 == null) {
-         return true;
-      } else {
-         if(currency == null) {
-            currency = currency2;
-            currency2 = null;
-         }
-
-         if(NoppesUtilPlayer.compareItems(currency, currency2, this.role.ignoreDamage, this.role.ignoreNBT)) {
-            currency = currency.copy();
-            currency.stackSize += currency2.stackSize;
-            currency2 = null;
-         }
-
-         return currency2 == null?NoppesUtilPlayer.compareItems(player, currency, false):NoppesUtilPlayer.compareItems(player, currency, false) && NoppesUtilPlayer.compareItems(player, currency2, false);
-      }
-   }
-
-   private boolean canGivePlayer(ItemStack item, EntityPlayer entityplayer) {
-      ItemStack itemstack3 = entityplayer.inventory.getItemStack();
-      if(itemstack3 == null) {
-         return true;
-      } else {
-         if(NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
-            int k1 = item.stackSize;
-            if(k1 > 0 && k1 + itemstack3.stackSize <= itemstack3.getMaxStackSize()) {
-               return true;
-            }
-         }
-
-         return false;
-      }
-   }
-
-   private void givePlayer(ItemStack item, EntityPlayer entityplayer) {
-      ItemStack itemstack3 = entityplayer.inventory.getItemStack();
-      if(itemstack3 == null) {
-         entityplayer.inventory.setItemStack(item);
-      } else if(NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
-         int k1 = item.stackSize;
-         if(k1 > 0 && k1 + itemstack3.stackSize <= itemstack3.getMaxStackSize()) {
-            itemstack3.stackSize += k1;
-         }
-      }
-
-   }
+	@Override
+	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+		return null;
+	}
 }

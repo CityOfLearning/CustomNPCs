@@ -1,50 +1,70 @@
+//
+
+//
+
 package noppes.npcs;
 
+import java.lang.reflect.Method;
+
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import noppes.npcs.ModelDataShared;
 import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class ModelData extends ModelDataShared {
+	public ModelData copy() {
+		final ModelData data = new ModelData();
+		data.readFromNBT(writeToNBT());
+		return data;
+	}
 
-   public EntityLivingBase getEntity(EntityNPCInterface npc) {
-      if(super.entityClass == null) {
-         return null;
-      } else {
-         if(super.entity == null) {
-            try {
-               super.entity = (EntityLivingBase)super.entityClass.getConstructor(new Class[]{World.class}).newInstance(new Object[]{npc.worldObj});
-               super.entity.readEntityFromNBT(super.extra);
-               if(super.entity instanceof EntityLiving) {
-                  EntityLiving e = (EntityLiving)super.entity;
-                  e.setCurrentItemOrArmor(0, npc.getHeldItem() != null?npc.getHeldItem():npc.getOffHand());
-                  e.setCurrentItemOrArmor(1, npc.inventory.armorItemInSlot(3));
-                  e.setCurrentItemOrArmor(2, npc.inventory.armorItemInSlot(2));
-                  e.setCurrentItemOrArmor(3, npc.inventory.armorItemInSlot(1));
-                  e.setCurrentItemOrArmor(4, npc.inventory.armorItemInSlot(0));
-               }
+	public EntityLivingBase getEntity(final EntityNPCInterface npc) {
+		if (entityClass == null) {
+			return null;
+		}
+		if (entity == null) {
+			try {
+				(entity = entityClass.getConstructor(World.class).newInstance(npc.worldObj)).readEntityFromNBT(extra);
+				if (entity instanceof EntityLiving) {
+					final EntityLiving living = (EntityLiving) entity;
+					for (int i = 0; i < 5; ++i) {
+						living.setCurrentItemOrArmor(0, npc.getEquipmentInSlot(i));
+					}
+				}
+				if (PixelmonHelper.isPixelmon(entity) && npc.worldObj.isRemote) {
+					if (extra.hasKey("Name")) {
+						PixelmonHelper.setName(entity, extra.getString("Name"));
+					} else {
+						PixelmonHelper.setName(entity, "Abra");
+					}
+				}
+			} catch (Exception ex) {
+			}
+		}
+		return entity;
+	}
 
-               if(PixelmonHelper.isPixelmon(super.entity) && npc.worldObj.isRemote) {
-                  if(super.extra.hasKey("Name")) {
-                     PixelmonHelper.setName(super.entity, super.extra.getString("Name"));
-                  } else {
-                     PixelmonHelper.setName(super.entity, "Abra");
-                  }
-               }
-            } catch (Exception var3) {
-               ;
-            }
-         }
-
-         return super.entity;
-      }
-   }
-
-   public ModelData copy() {
-      ModelData data = new ModelData();
-      data.readFromNBT(this.writeToNBT());
-      return data;
-   }
+	public void setExtra(final EntityLivingBase entity, String key, final String value) {
+		key = key.toLowerCase();
+		if (key.equals("breed") && EntityList.getEntityString(entity).equals("tgvstyle.Dog")) {
+			try {
+				Method method = entity.getClass().getMethod("getBreedID", new Class[0]);
+				final Enum breed = (Enum) method.invoke(entity, new Object[0]);
+				method = entity.getClass().getMethod("setBreedID", breed.getClass());
+				method.invoke(entity, breed.getClass().getEnumConstants()[Integer.parseInt(value)]);
+				final NBTTagCompound comp = new NBTTagCompound();
+				entity.writeEntityToNBT(comp);
+				extra.setString("EntityData21", comp.getString("EntityData21"));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		if (key.equalsIgnoreCase("name") && PixelmonHelper.isPixelmon(entity)) {
+			extra.setString("Name", value);
+		}
+		clearEntity();
+	}
 }

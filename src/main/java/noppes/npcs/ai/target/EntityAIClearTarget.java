@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.ai.target;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -6,34 +10,34 @@ import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIClearTarget extends EntityAITarget {
+	private EntityNPCInterface npc;
+	private EntityLivingBase target;
 
-   private EntityNPCInterface npc;
-   private EntityLivingBase target;
+	public EntityAIClearTarget(final EntityNPCInterface npc) {
+		super(npc, false);
+		this.npc = npc;
+	}
 
+	@Override
+	public void resetTask() {
+		npc.getNavigator().clearPathEntity();
+	}
 
-   public EntityAIClearTarget(EntityNPCInterface npc) {
-      super(npc, false);
-      this.npc = npc;
-   }
+	@Override
+	public boolean shouldExecute() {
+		target = taskOwner.getAttackTarget();
+		return (target != null)
+				&& (((target instanceof EntityPlayer) && ((EntityPlayer) target).capabilities.disableDamage)
+						|| ((npc.getOwner() != null) && !npc.isInRange(npc.getOwner(), npc.stats.aggroRange * 2))
+						|| !npc.isInRange(target, npc.stats.aggroRange * 2));
+	}
 
-   public boolean shouldExecute() {
-      this.target = super.taskOwner.getAttackTarget();
-      if(this.target == null) {
-         return false;
-      } else if(this.target instanceof EntityPlayer && ((EntityPlayer)this.target).capabilities.disableDamage) {
-         return true;
-      } else {
-         int distance = this.npc.stats.aggroRange * 2 * this.npc.stats.aggroRange;
-         return this.npc.getOwner() != null && this.npc.getDistanceSqToEntity(this.npc.getOwner()) > (double)distance?true:this.npc.getDistanceSqToEntity(this.target) > (double)distance;
-      }
-   }
-
-   public void startExecuting() {
-      super.taskOwner.setAttackTarget((EntityLivingBase)null);
-      if(this.target == super.taskOwner.getAITarget()) {
-         super.taskOwner.setRevengeTarget((EntityLivingBase)null);
-      }
-
-      super.startExecuting();
-   }
+	@Override
+	public void startExecuting() {
+		taskOwner.setAttackTarget((EntityLivingBase) null);
+		if (target == taskOwner.getAITarget()) {
+			taskOwner.setRevengeTarget((EntityLivingBase) null);
+		}
+		super.startExecuting();
+	}
 }

@@ -1,34 +1,40 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
 import noppes.npcs.ModelPartData;
+import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNpcEnderchibi extends EntityNPCInterface {
+	public EntityNpcEnderchibi(final World world) {
+		super(world);
+		display.setSkinTexture("customnpcs:textures/entity/enderchibi/MrEnderchibi.png");
+	}
 
-   public EntityNpcEnderchibi(World world) {
-      super(world);
-      super.display.texture = "customnpcs:textures/entity/enderchibi/MrEnderchibi.png";
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.legs.setScale(0.65F, 0.75F);
-         data.arms.setScale(0.5F, 1.45F);
-         ModelPartData part = data.getOrCreatePart("particles");
-         part.playerTexture = true;
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.getPartConfig(EnumParts.LEG_LEFT).setScale(0.65f, 0.75f);
+			data.getPartConfig(EnumParts.ARM_LEFT).setScale(0.5f, 1.45f);
+			final ModelPartData part = data.getOrCreatePart(EnumParts.PARTICLES);
+			part.type = 1;
+			part.color = 16711680;
+			part.playerTexture = true;
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 }

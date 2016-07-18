@@ -1,8 +1,12 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
@@ -11,51 +15,55 @@ import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleInterface;
 
 public class RolePostman extends RoleInterface {
+	public NpcMiscInventory inventory;
+	private List<EntityPlayer> recentlyChecked;
+	private List<EntityPlayer> toCheck;
 
-   public NpcMiscInventory inventory = new NpcMiscInventory(1);
-   private List recentlyChecked = new ArrayList();
-   private List toCheck;
+	public RolePostman(final EntityNPCInterface npc) {
+		super(npc);
+		inventory = new NpcMiscInventory(1);
+		recentlyChecked = new ArrayList<EntityPlayer>();
+	}
 
+	@Override
+	public boolean aiContinueExecute() {
+		return false;
+	}
 
-   public RolePostman(EntityNPCInterface npc) {
-      super(npc);
-   }
+	@Override
+	public boolean aiShouldExecute() {
+		if ((npc.ticksExisted % 20) != 0) {
+			return false;
+		}
+		(toCheck = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0))).removeAll(recentlyChecked);
+		final List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+				npc.getEntityBoundingBox().expand(20.0, 20.0, 20.0));
+		recentlyChecked.retainAll(listMax);
+		recentlyChecked.addAll(toCheck);
+		for (final EntityPlayer player : toCheck) {
+			if (PlayerDataController.instance.hasMail(player)) {
+				player.addChatMessage(new ChatComponentTranslation("You've got mail", new Object[0]));
+			}
+		}
+		return false;
+	}
 
-   public boolean aiShouldExecute() {
-      if(super.npc.ticksExisted % 20 != 0) {
-         return false;
-      } else {
-         this.toCheck = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(10.0D, 10.0D, 10.0D));
-         this.toCheck.removeAll(this.recentlyChecked);
-         List listMax = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(20.0D, 20.0D, 20.0D));
-         this.recentlyChecked.retainAll(listMax);
-         this.recentlyChecked.addAll(this.toCheck);
-         Iterator var2 = this.toCheck.iterator();
+	@Override
+	public void interact(final EntityPlayer player) {
+		player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 1, 1, 0);
+	}
 
-         while(var2.hasNext()) {
-            EntityPlayer player = (EntityPlayer)var2.next();
-            if(PlayerDataController.instance.hasMail(player)) {
-               player.addChatMessage(new ChatComponentTranslation("You\'ve got mail", new Object[0]));
-            }
-         }
+	@Override
+	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+		inventory.setFromNBT(nbttagcompound.getCompoundTag("PostInv"));
+	}
 
-         return false;
-      }
-   }
-
-   public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setTag("PostInv", this.inventory.getToNBT());
-      return nbttagcompound;
-   }
-
-   public void readFromNBT(NBTTagCompound nbttagcompound) {
-      this.inventory.setFromNBT(nbttagcompound.getCompoundTag("PostInv"));
-   }
-
-   public void interact(EntityPlayer player) {
-      player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 1, 1, 0);
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setTag("PostInv", inventory.getToNBT());
+		return nbttagcompound;
+	}
 }

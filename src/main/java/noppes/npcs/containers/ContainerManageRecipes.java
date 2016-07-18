@@ -1,8 +1,13 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.InventoryBasic;
@@ -12,164 +17,137 @@ import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.controllers.RecipeCarpentry;
 
 public class ContainerManageRecipes extends Container {
+	private InventoryBasic craftingMatrix;
+	public RecipeCarpentry recipe;
+	public int size;
+	public int width;
 
-   private InventoryBasic craftingMatrix;
-   public RecipeCarpentry recipe;
-   public int size;
-   public int width;
-   private boolean init = false;
+	public ContainerManageRecipes(final EntityPlayer player, final int size) {
+		this.size = size * size;
+		width = size;
+		craftingMatrix = new InventoryBasic("crafting", false, this.size + 1);
+		recipe = new RecipeCarpentry("");
+		addSlotToContainer(new Slot(craftingMatrix, 0, 87, 61));
+		for (int i = 0; i < size; ++i) {
+			for (int j = 0; j < size; ++j) {
+				addSlotToContainer(new Slot(craftingMatrix, (i * width) + j + 1, (j * 18) + 8, (i * 18) + 35));
+			}
+		}
+		for (int i2 = 0; i2 < 3; ++i2) {
+			for (int l1 = 0; l1 < 9; ++l1) {
+				addSlotToContainer(new Slot(player.inventory, l1 + (i2 * 9) + 9, 8 + (l1 * 18), 113 + (i2 * 18)));
+			}
+		}
+		for (int j2 = 0; j2 < 9; ++j2) {
+			addSlotToContainer(new Slot(player.inventory, j2, 8 + (j2 * 18), 171));
+		}
+	}
 
+	@Override
+	public boolean canInteractWith(final EntityPlayer entityplayer) {
+		return true;
+	}
 
-   public ContainerManageRecipes(EntityPlayer player, int size) {
-      this.size = size * size;
-      this.width = size;
-      this.craftingMatrix = new InventoryBasic("crafting", false, this.size + 1);
-      this.recipe = new RecipeCarpentry("");
-      this.addSlotToContainer(new Slot(this.craftingMatrix, 0, 87, 61));
+	public void saveRecipe() {
+		int nextChar = 0;
+		final char[] chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P' };
+		final Map<ItemStack, Character> nameMapping = new HashMap<ItemStack, Character>();
+		int firstRow = width;
+		int lastRow = 0;
+		int firstColumn = width;
+		int lastColumn = 0;
+		boolean seenRow = false;
+		for (int i = 0; i < width; ++i) {
+			boolean seenColumn = false;
+			for (int j = 0; j < width; ++j) {
+				final ItemStack item = craftingMatrix.getStackInSlot((i * width) + j + 1);
+				if (item != null) {
+					if (!seenColumn && (j < firstColumn)) {
+						firstColumn = j;
+					}
+					if (j > lastColumn) {
+						lastColumn = j;
+					}
+					seenColumn = true;
+					Character letter = null;
+					for (final ItemStack mapped : nameMapping.keySet()) {
+						if (NoppesUtilPlayer.compareItems(mapped, item, recipe.ignoreDamage, recipe.ignoreNBT)) {
+							letter = nameMapping.get(mapped);
+						}
+					}
+					if (letter == null) {
+						letter = chars[nextChar];
+						++nextChar;
+						nameMapping.put(item, letter);
+					}
+				}
+			}
+			if (seenColumn) {
+				if (!seenRow) {
+					firstRow = i;
+					lastRow = i;
+					seenRow = true;
+				} else {
+					lastRow = i;
+				}
+			}
+		}
+		final ArrayList<Object> recipe = new ArrayList<Object>();
+		for (int k = 0; k < width; ++k) {
+			if (k >= firstRow) {
+				if (k <= lastRow) {
+					String row = "";
+					for (int l = 0; l < width; ++l) {
+						if (l >= firstColumn) {
+							if (l <= lastColumn) {
+								final ItemStack item2 = craftingMatrix.getStackInSlot((k * width) + l + 1);
+								if (item2 == null) {
+									row += " ";
+								} else {
+									for (final ItemStack mapped : nameMapping.keySet()) {
+										if (NoppesUtilPlayer.compareItems(mapped, item2, false, false)) {
+											row += nameMapping.get(mapped);
+										}
+									}
+								}
+							}
+						}
+					}
+					recipe.add(row);
+				}
+			}
+		}
+		if (nameMapping.isEmpty()) {
+			final RecipeCarpentry r = new RecipeCarpentry(this.recipe.name);
+			r.copy(this.recipe);
+			this.recipe = r;
+			return;
+		}
+		for (final ItemStack mapped2 : nameMapping.keySet()) {
+			final Character letter2 = nameMapping.get(mapped2);
+			recipe.add(letter2);
+			recipe.add(mapped2);
+		}
+		this.recipe = RecipeCarpentry.createRecipe(this.recipe, craftingMatrix.getStackInSlot(0), recipe.toArray());
+	}
 
-      int j1;
-      int l1;
-      for(j1 = 0; j1 < size; ++j1) {
-         for(l1 = 0; l1 < size; ++l1) {
-            this.addSlotToContainer(new Slot(this.craftingMatrix, j1 * this.width + l1 + 1, l1 * 18 + 8, j1 * 18 + 35));
-         }
-      }
+	public void setRecipe(final RecipeCarpentry recipe) {
+		craftingMatrix.setInventorySlotContents(0, recipe.getRecipeOutput());
+		for (int i = 0; i < width; ++i) {
+			for (int j = 0; j < width; ++j) {
+				if (j >= recipe.recipeWidth) {
+					craftingMatrix.setInventorySlotContents((i * width) + j + 1, (ItemStack) null);
+				} else {
+					craftingMatrix.setInventorySlotContents((i * width) + j + 1,
+							recipe.getCraftingItem((i * recipe.recipeWidth) + j));
+				}
+			}
+		}
+		this.recipe = recipe;
+	}
 
-      for(j1 = 0; j1 < 3; ++j1) {
-         for(l1 = 0; l1 < 9; ++l1) {
-            this.addSlotToContainer(new Slot(player.inventory, l1 + j1 * 9 + 9, 8 + l1 * 18, 113 + j1 * 18));
-         }
-      }
-
-      for(j1 = 0; j1 < 9; ++j1) {
-         this.addSlotToContainer(new Slot(player.inventory, j1, 8 + j1 * 18, 171));
-      }
-
-   }
-
-   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
-      return null;
-   }
-
-   public boolean canInteractWith(EntityPlayer entityplayer) {
-      return true;
-   }
-
-   public void setRecipe(RecipeCarpentry recipe) {
-      this.craftingMatrix.setInventorySlotContents(0, recipe.getRecipeOutput());
-
-      for(int i = 0; i < this.width; ++i) {
-         for(int j = 0; j < this.width; ++j) {
-            if(j >= recipe.recipeWidth) {
-               this.craftingMatrix.setInventorySlotContents(i * this.width + j + 1, (ItemStack)null);
-            } else {
-               this.craftingMatrix.setInventorySlotContents(i * this.width + j + 1, recipe.getCraftingItem(i * recipe.recipeWidth + j));
-            }
-         }
-      }
-
-      this.recipe = recipe;
-   }
-
-   public void saveRecipe() {
-      int nextChar = 0;
-      char[] chars = new char[]{'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'};
-      HashMap nameMapping = new HashMap();
-      int firstRow = this.width;
-      int lastRow = 0;
-      int firstColumn = this.width;
-      int lastColumn = 0;
-      boolean seenRow = false;
-
-      Iterator var14;
-      ItemStack mapped1;
-      for(int recipe = 0; recipe < this.width; ++recipe) {
-         boolean r = false;
-
-         for(int mapped = 0; mapped < this.width; ++mapped) {
-            ItemStack letter = this.craftingMatrix.getStackInSlot(recipe * this.width + mapped + 1);
-            if(letter != null) {
-               if(!r && mapped < firstColumn) {
-                  firstColumn = mapped;
-               }
-
-               if(mapped > lastColumn) {
-                  lastColumn = mapped;
-               }
-
-               r = true;
-               Character item = null;
-               var14 = nameMapping.keySet().iterator();
-
-               while(var14.hasNext()) {
-                  mapped1 = (ItemStack)var14.next();
-                  if(NoppesUtilPlayer.compareItems(mapped1, letter, this.recipe.ignoreDamage, this.recipe.ignoreNBT)) {
-                     item = (Character)nameMapping.get(mapped1);
-                  }
-               }
-
-               if(item == null) {
-                  item = Character.valueOf(chars[nextChar]);
-                  ++nextChar;
-                  nameMapping.put(letter, item);
-               }
-            }
-         }
-
-         if(r) {
-            if(!seenRow) {
-               firstRow = recipe;
-               lastRow = recipe;
-               seenRow = true;
-            } else {
-               lastRow = recipe;
-            }
-         }
-      }
-
-      ArrayList var16 = new ArrayList();
-
-      for(int var17 = 0; var17 < this.width; ++var17) {
-         if(var17 >= firstRow && var17 <= lastRow) {
-            String var20 = "";
-
-            for(int var22 = 0; var22 < this.width; ++var22) {
-               if(var22 >= firstColumn && var22 <= lastColumn) {
-                  ItemStack var24 = this.craftingMatrix.getStackInSlot(var17 * this.width + var22 + 1);
-                  if(var24 == null) {
-                     var20 = var20 + " ";
-                  } else {
-                     var14 = nameMapping.keySet().iterator();
-
-                     while(var14.hasNext()) {
-                        mapped1 = (ItemStack)var14.next();
-                        if(NoppesUtilPlayer.compareItems(mapped1, var24, false, false)) {
-                           var20 = var20 + nameMapping.get(mapped1);
-                        }
-                     }
-                  }
-               }
-            }
-
-            var16.add(var20);
-         }
-      }
-
-      if(nameMapping.isEmpty()) {
-         RecipeCarpentry var19 = new RecipeCarpentry(this.recipe.name);
-         var19.copy(this.recipe);
-         this.recipe = var19;
-      } else {
-         Iterator var18 = nameMapping.keySet().iterator();
-
-         while(var18.hasNext()) {
-            ItemStack var21 = (ItemStack)var18.next();
-            Character var23 = (Character)nameMapping.get(var21);
-            var16.add(var23);
-            var16.add(var21);
-         }
-
-         this.recipe = RecipeCarpentry.saveRecipe(this.recipe, this.craftingMatrix.getStackInSlot(0), var16.toArray());
-      }
-   }
+	@Override
+	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+		return null;
+	}
 }

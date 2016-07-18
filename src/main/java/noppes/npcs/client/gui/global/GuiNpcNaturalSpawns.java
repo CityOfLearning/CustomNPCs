@@ -1,7 +1,12 @@
+//
+
+//
+
 package noppes.npcs.client.gui.global;
 
 import java.util.HashMap;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
@@ -24,160 +29,168 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.controllers.SpawnData;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class GuiNpcNaturalSpawns extends GuiNPCInterface2 implements IGuiData, IScrollData, ITextfieldListener, ICustomScrollListener, ISliderListener {
+public class GuiNpcNaturalSpawns extends GuiNPCInterface2
+		implements IGuiData, IScrollData, ITextfieldListener, ICustomScrollListener, ISliderListener {
+	private GuiCustomScroll scroll;
+	private HashMap<String, Integer> data;
+	private SpawnData spawn;
 
-   private GuiCustomScroll scroll;
-   private HashMap data = new HashMap();
-   private SpawnData spawn = new SpawnData();
+	public GuiNpcNaturalSpawns(final EntityNPCInterface npc) {
+		super(npc);
+		data = new HashMap<String, Integer>();
+		spawn = new SpawnData();
+		Client.sendData(EnumPacketServer.NaturalSpawnGetAll, new Object[0]);
+	}
 
+	@Override
+	public void buttonEvent(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 1) {
+			save();
+			String name;
+			for (name = "New"; data.containsKey(name); name += "_") {
+			}
+			final SpawnData spawn = new SpawnData();
+			spawn.name = name;
+			Client.sendData(EnumPacketServer.NaturalSpawnSave, spawn.writeNBT(new NBTTagCompound()));
+		}
+		if ((id == 2) && data.containsKey(scroll.getSelected())) {
+			Client.sendData(EnumPacketServer.NaturalSpawnRemove, spawn.id);
+			spawn = new SpawnData();
+			scroll.clear();
+		}
+		if (id == 3) {
+			setSubGui(new SubGuiNpcBiomes(spawn));
+		}
+		if (id == 5) {
+			setSubGui(new GuiNpcMobSpawnerSelector());
+		}
+		if (id == 25) {
+			spawn.compound1 = new NBTTagCompound();
+			initGui();
+		}
+		if (id == 27) {
+			spawn.type = ((GuiNpcButton) guibutton).getValue();
+		}
+	}
 
-   public GuiNpcNaturalSpawns(EntityNPCInterface npc) {
-      super(npc);
-      Client.sendData(EnumPacketServer.NaturalSpawnGetAll, new Object[0]);
-   }
+	@Override
+	public void closeSubGui(final SubGuiInterface gui) {
+		super.closeSubGui(gui);
+		if (gui instanceof GuiNpcMobSpawnerSelector) {
+			final GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector) gui;
+			final NBTTagCompound compound = selector.getCompound();
+			if (compound != null) {
+				spawn.compound1 = compound;
+			}
+			initGui();
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      if(this.scroll == null) {
-         this.scroll = new GuiCustomScroll(this, 0);
-         this.scroll.setSize(143, 208);
-      }
+	@Override
+	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+		if (guiCustomScroll.id == 0) {
+			save();
+			final String selected = scroll.getSelected();
+			spawn = new SpawnData();
+			Client.sendData(EnumPacketServer.NaturalSpawnGet, data.get(selected));
+		}
+	}
 
-      this.scroll.guiLeft = super.guiLeft + 214;
-      this.scroll.guiTop = super.guiTop + 4;
-      this.addScroll(this.scroll);
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 358, super.guiTop + 61, 58, 20, "gui.remove"));
-      if(this.spawn.id >= 0) {
-         this.showSpawn();
-      }
+	private String getTitle(final NBTTagCompound compound) {
+		if ((compound != null) && compound.hasKey("ClonedName")) {
+			return compound.getString("ClonedName");
+		}
+		return "gui.selectnpc";
+	}
 
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		if (scroll == null) {
+			(scroll = new GuiCustomScroll(this, 0)).setSize(143, 208);
+		}
+		scroll.guiLeft = guiLeft + 214;
+		scroll.guiTop = guiTop + 4;
+		addScroll(scroll);
+		addButton(new GuiNpcButton(1, guiLeft + 358, guiTop + 38, 58, 20, "gui.add"));
+		addButton(new GuiNpcButton(2, guiLeft + 358, guiTop + 61, 58, 20, "gui.remove"));
+		if (spawn.id >= 0) {
+			showSpawn();
+		}
+	}
 
-   private void showSpawn() {
-      this.addLabel(new GuiNpcLabel(1, "gui.title", super.guiLeft + 4, super.guiTop + 8));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 3, 140, 20, this.spawn.name));
-      this.addLabel(new GuiNpcLabel(3, "spawning.biomes", super.guiLeft + 4, super.guiTop + 30));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 120, super.guiTop + 25, 50, 20, "selectServer.edit"));
-      this.addSlider(new GuiNpcSlider(this, 4, super.guiLeft + 4, super.guiTop + 47, 180, 20, (float)this.spawn.itemWeight / 100.0F));
-      int y = super.guiTop + 70;
-      this.addButton(new GuiNpcButton(25, super.guiLeft + 14, y, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(5, "1:", super.guiLeft + 4, y + 5));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 36, y, 170, 20, this.getTitle(this.spawn.compound1)));
-   }
+	@Override
+	public void mouseDragged(final GuiNpcSlider guiNpcSlider) {
+		guiNpcSlider.displayString = StatCollector.translateToLocal("spawning.weightedChance") + ": "
+				+ (int) (guiNpcSlider.sliderValue * 100.0f);
+	}
 
-   private String getTitle(NBTTagCompound compound) {
-      return compound != null && compound.hasKey("ClonedName")?compound.getString("ClonedName"):"gui.selectnpc";
-   }
+	@Override
+	public void mousePressed(final GuiNpcSlider guiNpcSlider) {
+	}
 
-   public void buttonEvent(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 1) {
-         this.save();
+	@Override
+	public void mouseReleased(final GuiNpcSlider guiNpcSlider) {
+		spawn.itemWeight = (int) (guiNpcSlider.sliderValue * 100.0f);
+	}
 
-         String name;
-         for(name = "New"; this.data.containsKey(name); name = name + "_") {
-            ;
-         }
+	@Override
+	public void save() {
+		GuiNpcTextField.unfocus();
+		if (spawn.id >= 0) {
+			Client.sendData(EnumPacketServer.NaturalSpawnSave, spawn.writeNBT(new NBTTagCompound()));
+		}
+	}
 
-         SpawnData spawn = new SpawnData();
-         spawn.name = name;
-         Client.sendData(EnumPacketServer.NaturalSpawnSave, new Object[]{spawn.writeNBT(new NBTTagCompound())});
-      }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		final String name = scroll.getSelected();
+		this.data = data;
+		scroll.setList(list);
+		if (name != null) {
+			scroll.setSelected(name);
+		}
+		initGui();
+	}
 
-      if(id == 2 && this.data.containsKey(this.scroll.getSelected())) {
-         Client.sendData(EnumPacketServer.NaturalSpawnRemove, new Object[]{Integer.valueOf(this.spawn.id)});
-         this.spawn = new SpawnData();
-         this.scroll.clear();
-      }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		spawn.readNBT(compound);
+		setSelected(spawn.name);
+		initGui();
+	}
 
-      if(id == 3) {
-         this.setSubGui(new SubGuiNpcBiomes(this.spawn));
-      }
+	@Override
+	public void setSelected(final String selected) {
+	}
 
-      if(id == 5) {
-         this.setSubGui(new GuiNpcMobSpawnerSelector());
-      }
+	private void showSpawn() {
+		addLabel(new GuiNpcLabel(1, "gui.title", guiLeft + 4, guiTop + 8));
+		addTextField(new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 60, guiTop + 3, 140, 20, spawn.name));
+		addLabel(new GuiNpcLabel(3, "spawning.biomes", guiLeft + 4, guiTop + 30));
+		addButton(new GuiNpcButton(3, guiLeft + 120, guiTop + 25, 50, 20, "selectServer.edit"));
+		addSlider(new GuiNpcSlider(this, 4, guiLeft + 4, guiTop + 47, 180, 20, spawn.itemWeight / 100.0f));
+		final int y = guiTop + 70;
+		addButton(new GuiNpcButton(25, guiLeft + 14, y, 20, 20, "X"));
+		addLabel(new GuiNpcLabel(5, "1:", guiLeft + 4, y + 5));
+		addButton(new GuiNpcButton(5, guiLeft + 36, y, 170, 20, getTitle(spawn.compound1)));
+		addLabel(new GuiNpcLabel(26, "spawn.type", guiLeft + 4, guiTop + 100));
+		addButton(new GuiNpcButton(27, guiLeft + 70, guiTop + 93, 120, 20,
+				new String[] { "spawn.allday", "spawn.dark" }, spawn.type));
+	}
 
-      if(id == 25) {
-         this.spawn.compound1 = new NBTTagCompound();
-         this.initGui();
-      }
-
-   }
-
-   public void unFocused(GuiNpcTextField guiNpcTextField) {
-      String name = guiNpcTextField.getText();
-      if(!name.isEmpty() && !this.data.containsKey(name)) {
-         String old = this.spawn.name;
-         this.data.remove(old);
-         this.spawn.name = name;
-         this.data.put(this.spawn.name, Integer.valueOf(this.spawn.id));
-         this.scroll.replace(old, this.spawn.name);
-      } else {
-         guiNpcTextField.setText(this.spawn.name);
-      }
-
-   }
-
-   public void setData(Vector list, HashMap data) {
-      String name = this.scroll.getSelected();
-      this.data = data;
-      this.scroll.setList(list);
-      if(name != null) {
-         this.scroll.setSelected(name);
-      }
-
-      this.initGui();
-   }
-
-   public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
-      if(guiCustomScroll.id == 0) {
-         this.save();
-         String selected = this.scroll.getSelected();
-         this.spawn = new SpawnData();
-         Client.sendData(EnumPacketServer.NaturalSpawnGet, new Object[]{this.data.get(selected)});
-      }
-
-   }
-
-   public void save() {
-      GuiNpcTextField.unfocus();
-      if(this.spawn.id >= 0) {
-         Client.sendData(EnumPacketServer.NaturalSpawnSave, new Object[]{this.spawn.writeNBT(new NBTTagCompound())});
-      }
-
-   }
-
-   public void setSelected(String selected) {}
-
-   public void closeSubGui(SubGuiInterface gui) {
-      super.closeSubGui(gui);
-      if(gui instanceof GuiNpcMobSpawnerSelector) {
-         GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector)gui;
-         NBTTagCompound compound = selector.getCompound();
-         if(compound != null) {
-            this.spawn.compound1 = compound;
-         }
-
-         this.initGui();
-      }
-
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.spawn.readNBT(compound);
-      this.setSelected(this.spawn.name);
-      this.initGui();
-   }
-
-   public void mouseDragged(GuiNpcSlider guiNpcSlider) {
-      guiNpcSlider.displayString = StatCollector.translateToLocal("spawning.weightedChance") + ": " + (int)(guiNpcSlider.sliderValue * 100.0F);
-   }
-
-   public void mousePressed(GuiNpcSlider guiNpcSlider) {}
-
-   public void mouseReleased(GuiNpcSlider guiNpcSlider) {
-      this.spawn.itemWeight = (int)(guiNpcSlider.sliderValue * 100.0F);
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+		final String name = guiNpcTextField.getText();
+		if (name.isEmpty() || data.containsKey(name)) {
+			guiNpcTextField.setText(spawn.name);
+		} else {
+			final String old = spawn.name;
+			data.remove(old);
+			spawn.name = name;
+			data.put(spawn.name, spawn.id);
+			scroll.replace(old, spawn.name);
+		}
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui.global;
 
 import net.minecraft.client.gui.GuiButton;
@@ -5,8 +9,6 @@ import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.SubGuiMailmanSendSetup;
 import noppes.npcs.client.gui.SubGuiNpcCommand;
 import noppes.npcs.client.gui.SubGuiNpcFactionOptions;
-import noppes.npcs.client.gui.global.GuiNPCManageQuest;
-import noppes.npcs.client.gui.global.GuiNPCQuestSelection;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
@@ -16,74 +18,67 @@ import noppes.npcs.controllers.PlayerMail;
 import noppes.npcs.controllers.Quest;
 
 public class SubGuiNpcQuestAdvanced extends SubGuiInterface implements ITextfieldListener {
+	private Quest quest;
+	private GuiNPCManageQuest parent;
 
-   private Quest quest;
-   private GuiNPCManageQuest parent;
+	public SubGuiNpcQuestAdvanced(final Quest quest, final GuiNPCManageQuest parent) {
+		this.quest = quest;
+		this.parent = parent;
+		setBackground("menubg.png");
+		xSize = 256;
+		ySize = 216;
+		closeOnEsc = true;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 9) {
+			parent.setSubGui(new SubGuiNpcCommand(quest.command));
+		}
+		if (button.id == 10) {
+			parent.setSubGui(new SubGuiNpcFactionOptions(quest.factionOptions));
+		}
+		if ((button.id == 11) && (quest.id >= 0)) {
+			NoppesUtil.openGUI(player, new GuiNPCQuestSelection(npc, getParent(), quest.nextQuestid));
+		}
+		if ((button.id == 12) && (quest.id >= 0)) {
+			quest.nextQuestid = -1;
+			initGui();
+		}
+		if (button.id == 13) {
+			parent.setSubGui(new SubGuiMailmanSendSetup(quest.mail, getParent()));
+		}
+		if (button.id == 14) {
+			quest.mail = new PlayerMail();
+			initGui();
+		}
+		if (button.id == 66) {
+			close();
+		}
+	}
 
-   public SubGuiNpcQuestAdvanced(Quest quest, GuiNPCManageQuest parent) {
-      this.quest = quest;
-      this.parent = parent;
-      this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(10, "faction.options", guiLeft + 4, guiTop + 17));
+		addButton(new GuiNpcButton(10, guiLeft + 120, guiTop + 12, 50, 20, "selectServer.edit"));
+		addButton(new GuiNpcButton(13, guiLeft + 4, guiTop + 35, 164, 20, "mailbox.setup"));
+		addButton(new GuiNpcButton(14, guiLeft + 170, guiTop + 35, 20, 20, "X"));
+		if (!quest.mail.subject.isEmpty()) {
+			getButton(13).setDisplayText(quest.mail.subject);
+		}
+		addButton(new GuiNpcButton(11, guiLeft + 4, guiTop + 58, 164, 20, "quest.next"));
+		addButton(new GuiNpcButton(12, guiLeft + 170, guiTop + 58, 20, 20, "X"));
+		if (!quest.nextQuestTitle.isEmpty()) {
+			getButton(11).setDisplayText(quest.nextQuestTitle);
+		}
+		addLabel(new GuiNpcLabel(9, "advMode.command", guiLeft + 4, guiTop + 86));
+		addButton(new GuiNpcButton(9, guiLeft + 120, guiTop + 81, 50, 20, "selectServer.edit"));
+		addButton(new GuiNpcButton(66, guiLeft + 190, guiTop + 190, 60, 20, "gui.done"));
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(10, "faction.options", super.guiLeft + 4, super.guiTop + 17));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 120, super.guiTop + 12, 50, 20, "selectServer.edit"));
-      this.addButton(new GuiNpcButton(13, super.guiLeft + 4, super.guiTop + 35, 164, 20, "mailbox.setup"));
-      this.addButton(new GuiNpcButton(14, super.guiLeft + 170, super.guiTop + 35, 20, 20, "X"));
-      if(!this.quest.mail.subject.isEmpty()) {
-         this.getButton(13).setDisplayText(this.quest.mail.subject);
-      }
-
-      this.addButton(new GuiNpcButton(11, super.guiLeft + 4, super.guiTop + 58, 164, 20, "quest.next"));
-      this.addButton(new GuiNpcButton(12, super.guiLeft + 170, super.guiTop + 58, 20, 20, "X"));
-      if(!this.quest.nextQuestTitle.isEmpty()) {
-         this.getButton(11).setDisplayText(this.quest.nextQuestTitle);
-      }
-
-      this.addLabel(new GuiNpcLabel(9, "advMode.command", super.guiLeft + 4, super.guiTop + 86));
-      this.addButton(new GuiNpcButton(9, super.guiLeft + 120, super.guiTop + 81, 50, 20, "selectServer.edit"));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 190, super.guiTop + 190, 60, 20, "gui.done"));
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 9) {
-         this.parent.setSubGui(new SubGuiNpcCommand(this.quest.command));
-      }
-
-      if(button.field_146127_k == 10) {
-         this.parent.setSubGui(new SubGuiNpcFactionOptions(this.quest.factionOptions));
-      }
-
-      if(button.field_146127_k == 11 && this.quest.id >= 0) {
-         NoppesUtil.openGUI(super.player, new GuiNPCQuestSelection(super.npc, this.getParent(), this.quest.nextQuestid));
-      }
-
-      if(button.field_146127_k == 12 && this.quest.id >= 0) {
-         this.quest.nextQuestid = -1;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 13) {
-         this.parent.setSubGui(new SubGuiMailmanSendSetup(this.quest.mail, this.getParent()));
-      }
-
-      if(button.field_146127_k == 14) {
-         this.quest.mail = new PlayerMail();
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 66) {
-         this.close();
-      }
-
-   }
-
-   public void unFocused(GuiNpcTextField textfield) {}
+	@Override
+	public void unFocused(final GuiNpcTextField textfield) {
+	}
 }

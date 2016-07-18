@@ -1,8 +1,11 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IGuiError {
-
-   void setError(int var1, NBTTagCompound var2);
+	void setError(final int p0, final NBTTagCompound p1);
 }

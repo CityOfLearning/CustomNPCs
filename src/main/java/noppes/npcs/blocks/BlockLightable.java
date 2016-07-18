@@ -1,53 +1,102 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
-import noppes.npcs.blocks.BlockRotated;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import noppes.npcs.blocks.tiles.TileColorable;
 
 public abstract class BlockLightable extends BlockRotated {
+	public static final PropertyBool LIT;
 
-   protected BlockLightable(Block block, boolean lit) {
-      super(block);
-      if(lit) {
-         this.setLightLevel(1.0F);
-      }
+	static {
+		LIT = PropertyBool.create("lit");
+	}
 
-   }
+	protected BlockLightable(final Block block, final boolean lit) {
+		super(block);
+		setDefaultState(blockState.getBaseState().withProperty(BlockLightable.LIT, lit));
+		if (lit) {
+			setLightLevel(1.0f);
+		}
+	}
 
-   public abstract Block unlitBlock();
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+	}
 
-   public abstract Block litBlock();
+	@Override
+	protected ItemStack createStackedBlock(final IBlockState state) {
+		return new ItemStack(litBlock());
+	}
 
-   public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      TileEntity tile = world.getTileEntity(x, y, z);
-      if(this.litBlock() == this) {
-         world.setBlock(x, y, z, this.unlitBlock(), world.getBlockMetadata(x, y, z), 2);
-      } else {
-         world.setBlock(x, y, z, this.litBlock(), world.getBlockMetadata(x, y, z), 2);
-      }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public Item getItem(final World world, final BlockPos pos) {
+		return Item.getItemFromBlock(litBlock());
+	}
 
-      tile.validate();
-      world.setTileEntity(x, y, z, tile);
-      return true;
-   }
+	@Override
+	public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+		return Item.getItemFromBlock(litBlock());
+	}
 
-   public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-      return Item.getItemFromBlock(this.litBlock());
-   }
+	public abstract Block litBlock();
 
-   @SideOnly(Side.CLIENT)
-   public Item getItem(World p_149694_1_, int p_149694_2_, int p_149694_3_, int p_149694_4_) {
-      return Item.getItemFromBlock(this.litBlock());
-   }
+	@Override
+	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		final TileEntity tile = world.getTileEntity(pos);
+		if (litBlock() == this) {
+			world.setBlockState(pos, unlitBlock().getDefaultState().withProperty(BlockRotated.DAMAGE,
+					state.getValue(BlockRotated.DAMAGE)), 2);
+		} else {
+			world.setBlockState(pos,
+					litBlock().getDefaultState().withProperty(BlockRotated.DAMAGE, state.getValue(BlockRotated.DAMAGE)),
+					2);
+		}
+		tile.validate();
+		world.setTileEntity(pos, tile);
+		return true;
+	}
 
-   protected ItemStack createStackedBlock(int p_149644_1_) {
-      return new ItemStack(this.litBlock());
-   }
+	public void onPostBlockPlaced(final World world, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final ItemStack stack, final EnumFacing facing) {
+		final TileColorable tile = (TileColorable) world.getTileEntity(pos);
+		if (facing == EnumFacing.UP) {
+			tile.color = 0;
+		} else if (facing == EnumFacing.DOWN) {
+			tile.color = 1;
+		} else {
+			tile.color = 2;
+			if (facing == EnumFacing.NORTH) {
+				tile.rotation = 0;
+			} else if (facing == EnumFacing.EAST) {
+				tile.rotation = 2;
+			} else if (facing == EnumFacing.SOUTH) {
+				tile.rotation = 4;
+			} else if (facing == EnumFacing.WEST) {
+				tile.rotation = 6;
+			}
+		}
+	}
+
+	public abstract Block unlitBlock();
 }

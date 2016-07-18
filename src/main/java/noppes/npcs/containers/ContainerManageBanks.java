@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,47 +11,41 @@ import net.minecraft.item.ItemStack;
 import noppes.npcs.controllers.Bank;
 
 public class ContainerManageBanks extends Container {
+	public Bank bank;
 
-   public Bank bank = new Bank();
+	public ContainerManageBanks(final EntityPlayer player) {
+		bank = new Bank();
+		for (int i = 0; i < 6; ++i) {
+			final int x = 36;
+			int y = 38;
+			y += i * 22;
+			addSlotToContainer(new Slot(bank.currencyInventory, i, x, y));
+		}
+		for (int i = 0; i < 6; ++i) {
+			final int x = 142;
+			int y = 38;
+			y += i * 22;
+			addSlotToContainer(new Slot(bank.upgradeInventory, i, x, y));
+		}
+		for (int j1 = 0; j1 < 9; ++j1) {
+			addSlotToContainer(new Slot(player.inventory, j1, 8 + (j1 * 18), 171));
+		}
+	}
 
+	@Override
+	public boolean canInteractWith(final EntityPlayer entityplayer) {
+		return true;
+	}
 
-   public ContainerManageBanks(EntityPlayer player) {
-      int j1;
-      byte y;
-      int var6;
-      for(j1 = 0; j1 < 6; ++j1) {
-         byte x = 36;
-         y = 38;
-         var6 = y + j1 * 22;
-         this.addSlotToContainer(new Slot(this.bank.currencyInventory, j1, x, var6));
-      }
+	public void setBank(final Bank bank2) {
+		for (int i = 0; i < 6; ++i) {
+			bank.currencyInventory.setInventorySlotContents(i, bank2.currencyInventory.getStackInSlot(i));
+			bank.upgradeInventory.setInventorySlotContents(i, bank2.upgradeInventory.getStackInSlot(i));
+		}
+	}
 
-      for(j1 = 0; j1 < 6; ++j1) {
-         short var5 = 142;
-         y = 38;
-         var6 = y + j1 * 22;
-         this.addSlotToContainer(new Slot(this.bank.upgradeInventory, j1, var5, var6));
-      }
-
-      for(j1 = 0; j1 < 9; ++j1) {
-         this.addSlotToContainer(new Slot(player.inventory, j1, 8 + j1 * 18, 171));
-      }
-
-   }
-
-   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
-      return null;
-   }
-
-   public boolean canInteractWith(EntityPlayer entityplayer) {
-      return true;
-   }
-
-   public void setBank(Bank bank2) {
-      for(int i = 0; i < 6; ++i) {
-         this.bank.currencyInventory.setInventorySlotContents(i, bank2.currencyInventory.getStackInSlot(i));
-         this.bank.upgradeInventory.setInventorySlotContents(i, bank2.upgradeInventory.getStackInSlot(i));
-      }
-
-   }
+	@Override
+	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+		return null;
+	}
 }

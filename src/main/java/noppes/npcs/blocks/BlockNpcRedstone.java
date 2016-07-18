@@ -1,88 +1,130 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
-import noppes.npcs.CustomNpcs;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.Server;
+import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileRedstoneBlock;
 import noppes.npcs.constants.EnumGuiType;
-import noppes.npcs.constants.EnumPacketClient;
+import noppes.npcs.constants.EnumPacketServer;
+import noppes.npcs.util.IPermission;
 
-public class BlockNpcRedstone extends BlockContainer {
+public class BlockNpcRedstone extends BlockContainer implements IPermission {
+	public static final PropertyBool ACTIVE;
 
-   public BlockNpcRedstone() {
-      super(Material.rock);
-   }
+	static {
+		ACTIVE = PropertyBool.create("active");
+	}
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      if(par1World.isRemote) {
-         return false;
-      } else {
-         ItemStack currentItem = player.inventory.getCurrentItem();
-         if(currentItem != null && currentItem.getItem() == CustomItems.wand && CustomNpcsPermissions.hasPermission(player, "customnpcs.editblocks")) {
-            TileEntity tile = par1World.getTileEntity(i, j, k);
-            NBTTagCompound compound = new NBTTagCompound();
-            tile.writeToNBT(compound);
-            Server.sendData((EntityPlayerMP)player, EnumPacketClient.GUI_REDSTONE, new Object[]{compound});
-            return true;
-         } else {
-            return false;
-         }
-      }
-   }
+	public BlockNpcRedstone() {
+		super(Material.rock);
+	}
 
-   public void onBlockAdded(World par1World, int par2, int par3, int par4) {
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this);
-   }
+	@Override
+	public boolean canProvidePower() {
+		return true;
+	}
 
-   public void onBlockPlacedBy(World world, int i, int j, int k, EntityLivingBase entityliving, ItemStack item) {
-      if(entityliving instanceof EntityPlayer && world.isRemote) {
-         CustomNpcs.proxy.openGui(i, j, k, EnumGuiType.RedstoneBlock, (EntityPlayer)entityliving);
-      }
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockNpcRedstone.ACTIVE });
+	}
 
-   }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileRedstoneBlock();
+	}
 
-   public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5) {
-      this.onBlockAdded(par1World, par2, par3, par4);
-   }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return (state.getValue(BlockNpcRedstone.ACTIVE)) ? 1 : 0;
+	}
 
-   public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
-      return this.isActivated(par1IBlockAccess, par2, par3, par4) > 0?16739176:super.colorMultiplier(par1IBlockAccess, par2, par3, par4);
-   }
+	@Override
+	public int getRenderType() {
+		return 3;
+	}
 
-   public int isProvidingWeakPower(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5) {
-      return this.isActivated(par1IBlockAccess, par2, par3, par4);
-   }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, false);
+	}
 
-   public int isProvidingStrongPower(IBlockAccess par1World, int par2, int par3, int par4, int par5) {
-      return this.isActivated(par1World, par2, par3, par4);
-   }
+	@Override
+	public int getStrongPower(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state,
+			final EnumFacing side) {
+		return isActivated(state);
+	}
 
-   public boolean canProvidePower() {
-      return true;
-   }
+	@Override
+	public int getWeakPower(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state,
+			final EnumFacing side) {
+		return isActivated(state);
+	}
 
-   public int isActivated(IBlockAccess par1IBlockAccess, int par2, int par3, int par4) {
-      return par1IBlockAccess.getBlockMetadata(par2, par3, par4) == 1?15:0;
-   }
+	public int isActivated(final IBlockState state) {
+		return state.getValue(BlockNpcRedstone.ACTIVE) ? 15 : 0;
+	}
 
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileRedstoneBlock();
-   }
+	@Override
+	public boolean isAllowed(final EnumPacketServer e) {
+		return e == EnumPacketServer.SaveTileEntity;
+	}
+
+	@Override
+	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		if (par1World.isRemote) {
+			return false;
+		}
+		final ItemStack currentItem = player.inventory.getCurrentItem();
+		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
+				&& CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
+			NoppesUtilServer.sendOpenGui(player, EnumGuiType.RedstoneBlock, null, pos.getX(), pos.getY(), pos.getZ());
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onBlockAdded(final World par1World, final BlockPos pos, final IBlockState state) {
+		par1World.notifyNeighborsOfStateChange(pos, this);
+		par1World.notifyNeighborsOfStateChange(pos.down(), this);
+		par1World.notifyNeighborsOfStateChange(pos.up(), this);
+		par1World.notifyNeighborsOfStateChange(pos.west(), this);
+		par1World.notifyNeighborsOfStateChange(pos.east(), this);
+		par1World.notifyNeighborsOfStateChange(pos.south(), this);
+		par1World.notifyNeighborsOfStateChange(pos.north(), this);
+	}
+
+	@Override
+	public void onBlockDestroyedByPlayer(final World par1World, final BlockPos pos, final IBlockState state) {
+		onBlockAdded(par1World, pos, state);
+	}
+
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entityliving, final ItemStack item) {
+		if ((entityliving instanceof EntityPlayer) && !world.isRemote) {
+			NoppesUtilServer.sendOpenGui((EntityPlayer) entityliving, EnumGuiType.RedstoneBlock, null, pos.getX(),
+					pos.getY(), pos.getZ());
+		}
+	}
 }

@@ -1,23 +1,21 @@
+//
+
+//
+
 package noppes.npcs.constants;
 
-
 public enum EnumScriptType {
+	INIT("init"), TICK("tick"), INTERACT("interact"), DIALOG("dialog"), DAMAGED("damaged"), DIED("died"), ATTACK_MELEE(
+			"meleeAttack"), TARGET("target"), COLLIDE("collide"), KILL("kill"), DIALOG_OPTION(
+					"dialog_option"), TARGET_LOST("targetLost"), ROLE("role"), RANGED_LAUNCHED(
+							"rangedLaunched"), CLICKED("clicked"), FALLEN_UPON("fallenUpon"), RAIN_FILLED(
+									"rainFilled"), BROKEN("broken"), HARVESTED("harvested"), EXPLODED(
+											"exploded"), NEIGHBOR_CHANGED("neighborChanged"), REDSTONE(
+													"redstone"), DOOR_TOGGLE("doorToggle"), TIMER("timer");
 
-   INIT("INIT", 0),
-   TICK("TICK", 1),
-   INTERACT("INTERACT", 2),
-   DIALOG("DIALOG", 3),
-   DAMAGED("DAMAGED", 4),
-   KILLED("KILLED", 5),
-   ATTACK("ATTACK", 6),
-   TARGET("TARGET", 7),
-   COLLIDE("COLLIDE", 8),
-   KILLS("KILLS", 9),
-   DIALOG_OPTION("DIALOG_OPTION", 10);
-   // $FF: synthetic field
-   private static final EnumScriptType[] $VALUES = new EnumScriptType[]{INIT, TICK, INTERACT, DIALOG, DAMAGED, KILLED, ATTACK, TARGET, COLLIDE, KILLS, DIALOG_OPTION};
+	public String function;
 
-
-   private EnumScriptType(String var1, int var2) {}
-
+	private EnumScriptType(final String function) {
+		this.function = function;
+	}
 }

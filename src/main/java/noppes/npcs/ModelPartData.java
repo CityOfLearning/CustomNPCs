@@ -1,80 +1,82 @@
+//
+
+//
+
 package noppes.npcs;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ModelPartData {
+	private static Map<String, ResourceLocation> resources;
+	static {
+		ModelPartData.resources = new HashMap<String, ResourceLocation>();
+	}
+	public int color;
+	public int colorPattern;
+	public byte type;
+	public byte pattern;
+	public boolean playerTexture;
+	public String name;
 
-   public int color = 16777215;
-   public String texture;
-   public byte type = 0;
-   public boolean playerTexture;
-   private ResourceLocation location;
+	private ResourceLocation location;
 
+	public ModelPartData(final String name) {
+		color = 16777215;
+		colorPattern = 16777215;
+		type = 0;
+		pattern = 0;
+		playerTexture = false;
+		this.name = name;
+	}
 
-   public ModelPartData() {
-      this.playerTexture = true;
-   }
+	public String getColor() {
+		String str;
+		for (str = Integer.toHexString(color); str.length() < 6; str = "0" + str) {
+		}
+		return str;
+	}
 
-   public ModelPartData(String texture) {
-      this.texture = texture;
-      this.playerTexture = false;
-   }
+	public ResourceLocation getResource() {
+		if (location != null) {
+			return location;
+		}
+		final String texture = name + "/" + type;
+		if ((location = ModelPartData.resources.get(texture)) != null) {
+			return location;
+		}
+		location = new ResourceLocation("moreplayermodels:textures/" + texture + ".png");
+		ModelPartData.resources.put(texture, location);
+		return location;
+	}
 
-   public NBTTagCompound writeToNBT() {
-      NBTTagCompound compound = new NBTTagCompound();
-      compound.setByte("Type", this.type);
-      compound.setInteger("Color", this.color);
-      if(this.texture != null && !this.texture.isEmpty()) {
-         compound.setString("Texture", this.texture);
-      }
+	public void readFromNBT(final NBTTagCompound compound) {
+		type = compound.getByte("Type");
+		color = compound.getInteger("Color");
+		playerTexture = compound.getBoolean("PlayerTexture");
+		pattern = compound.getByte("Pattern");
+		location = null;
+	}
 
-      compound.setBoolean("PlayerTexture", this.playerTexture);
-      return compound;
-   }
+	public void setType(final int type) {
+		this.type = (byte) type;
+		location = null;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      this.type = compound.getByte("Type");
-      this.color = compound.getInteger("Color");
-      this.texture = compound.getString("Texture");
-      this.playerTexture = compound.getBoolean("PlayerTexture");
-      this.location = null;
-   }
+	@Override
+	public String toString() {
+		return "Color: " + color + " Type: " + type;
+	}
 
-   public ResourceLocation getResource() {
-      if(this.texture.isEmpty()) {
-         return null;
-      } else if(this.location != null) {
-         return this.location;
-      } else {
-         this.location = new ResourceLocation(this.texture);
-         return this.location;
-      }
-   }
-
-   public void setTexture(String texture, int type) {
-      this.type = (byte)type;
-      this.location = null;
-      if(texture.isEmpty()) {
-         this.playerTexture = true;
-         this.texture = texture;
-      } else {
-         this.texture = "moreplayermodels:textures/" + texture + ".png";
-         this.playerTexture = false;
-      }
-
-   }
-
-   public String toString() {
-      return "Color: " + this.color + " Type: " + this.type;
-   }
-
-   public String getColor() {
-      String str;
-      for(str = Integer.toHexString(this.color); str.length() < 6; str = "0" + str) {
-         ;
-      }
-
-      return str;
-   }
+	public NBTTagCompound writeToNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setByte("Type", type);
+		compound.setInteger("Color", color);
+		compound.setBoolean("PlayerTexture", playerTexture);
+		compound.setByte("Pattern", pattern);
+		return compound;
+	}
 }

@@ -1,45 +1,51 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.controllers.TransportCategory;
+import net.minecraft.util.BlockPos;
 
 public class TransportLocation {
+	public int id;
+	public String name;
+	public BlockPos pos;
+	public int type;
+	public int dimension;
+	public TransportCategory category;
 
-   public int id = -1;
-   public String name = "default name";
-   public double posX;
-   public double posY;
-   public double posZ;
-   public int type = 0;
-   public int dimension = 0;
-   public TransportCategory category;
+	public TransportLocation() {
+		id = -1;
+		name = "default name";
+		type = 0;
+		dimension = 0;
+	}
 
+	public boolean isDefault() {
+		return type == 1;
+	}
 
-   public void readNBT(NBTTagCompound compound) {
-      if(compound != null) {
-         this.id = compound.getInteger("Id");
-         this.posX = compound.getDouble("PosX");
-         this.posY = compound.getDouble("PosY");
-         this.posZ = compound.getDouble("PosZ");
-         this.type = compound.getInteger("Type");
-         this.dimension = compound.getInteger("Dimension");
-         this.name = compound.getString("Name");
-      }
-   }
+	public void readNBT(final NBTTagCompound compound) {
+		if (compound == null) {
+			return;
+		}
+		id = compound.getInteger("Id");
+		pos = new BlockPos(compound.getDouble("PosX"), compound.getDouble("PosY"), compound.getDouble("PosZ"));
+		type = compound.getInteger("Type");
+		dimension = compound.getInteger("Dimension");
+		name = compound.getString("Name");
+	}
 
-   public NBTTagCompound writeNBT() {
-      NBTTagCompound compound = new NBTTagCompound();
-      compound.setInteger("Id", this.id);
-      compound.setDouble("PosX", this.posX);
-      compound.setDouble("PosY", this.posY);
-      compound.setDouble("PosZ", this.posZ);
-      compound.setInteger("Type", this.type);
-      compound.setInteger("Dimension", this.dimension);
-      compound.setString("Name", this.name);
-      return compound;
-   }
-
-   public boolean isDefault() {
-      return this.type == 1;
-   }
+	public NBTTagCompound writeNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setInteger("Id", id);
+		compound.setDouble("PosX", pos.getX());
+		compound.setDouble("PosY", pos.getY());
+		compound.setDouble("PosZ", pos.getZ());
+		compound.setInteger("Type", type);
+		compound.setInteger("Dimension", dimension);
+		compound.setString("Name", name);
+		return compound;
+	}
 }

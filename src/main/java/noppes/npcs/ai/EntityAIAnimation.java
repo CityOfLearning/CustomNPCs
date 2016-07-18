@@ -1,65 +1,110 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
-import noppes.npcs.constants.EnumAnimation;
-import noppes.npcs.constants.EnumMovingType;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIAnimation extends EntityAIBase {
+	public static int getWalkingAnimationGuiIndex(final int animation) {
+		if (animation == 4) {
+			return 1;
+		}
+		if (animation == 6) {
+			return 2;
+		}
+		if (animation == 5) {
+			return 3;
+		}
+		if (animation == 7) {
+			return 4;
+		}
+		if (animation == 8) {
+			return 5;
+		}
+		return 0;
+	}
 
-   private EntityNPCInterface npc;
-   private boolean isAttacking = false;
-   private boolean isDead = false;
-   private boolean isAtStartpoint = false;
-   private boolean hasPath = false;
-   private int tick = 4;
+	public static boolean isWalkingAnimation(final int animation) {
+		return getWalkingAnimationGuiIndex(animation) != 0;
+	}
 
+	private EntityNPCInterface npc;
+	private boolean isAttacking;
+	private boolean isDead;
+	private boolean isAtStartpoint;
 
-   public EntityAIAnimation(EntityNPCInterface npc) {
-      this.npc = npc;
-   }
+	private boolean hasPath;
 
-   public boolean shouldExecute() {
-      this.isDead = !this.npc.isEntityAlive();
-      if(this.isDead) {
-         return this.npc.currentAnimation != EnumAnimation.LYING;
-      } else if(this.npc.stats.aimWhileShooting && this.npc.isAttacking()) {
-         return this.npc.currentAnimation != EnumAnimation.AIMING;
-      } else if(this.npc.ai.animationType == EnumAnimation.NONE) {
-         return this.npc.currentAnimation != EnumAnimation.NONE;
-      } else {
-         this.isAttacking = this.npc.isAttacking();
-         if(this.npc.ai.returnToStart) {
-            this.isAtStartpoint = this.npc.isVeryNearAssignedPlace();
-         }
+	public int temp;
 
-         this.hasPath = !this.npc.getNavigator().noPath();
-         return this.npc.ai.movingType == EnumMovingType.Standing && this.hasNavigation() && this.npc.currentAnimation.getWalkingAnimation() == 0?this.npc.currentAnimation != EnumAnimation.NONE:this.npc.currentAnimation != this.npc.ai.animationType;
-      }
-   }
+	public EntityAIAnimation(final EntityNPCInterface npc) {
+		isAttacking = false;
+		isDead = false;
+		isAtStartpoint = false;
+		hasPath = false;
+		temp = 0;
+		this.npc = npc;
+	}
 
-   public void updateTask() {
-      if(this.npc.stats.aimWhileShooting && this.npc.isAttacking()) {
-         this.setAnimation(EnumAnimation.AIMING);
-      } else {
-         EnumAnimation type = this.npc.ai.animationType;
-         if(this.isDead) {
-            type = EnumAnimation.LYING;
-         } else if(this.npc.ai.movingType == EnumMovingType.Standing && this.npc.ai.animationType.getWalkingAnimation() == 0 && this.hasNavigation()) {
-            type = EnumAnimation.NONE;
-         }
+	private boolean hasNavigation() {
+		return isAttacking || (npc.ai.returnToStart && !isAtStartpoint && !npc.isFollower()) || hasPath;
+	}
 
-         this.setAnimation(type);
-      }
-   }
+	@Override
+	public void resetTask() {
+	}
 
-   private void setAnimation(EnumAnimation animation) {
-      this.npc.setCurrentAnimation(animation);
-      this.npc.updateHitbox();
-      this.npc.setPosition(this.npc.posX, this.npc.posY, this.npc.posZ);
-   }
+	private void setAnimation(final int animation) {
+		npc.setCurrentAnimation(animation);
+		npc.updateHitbox();
+		npc.setPosition(npc.posX, npc.posY, npc.posZ);
+	}
 
-   private boolean hasNavigation() {
-      return this.isAttacking || this.npc.ai.returnToStart && !this.isAtStartpoint && !this.npc.isFollower() || this.hasPath;
-   }
+	@Override
+	public boolean shouldExecute() {
+		isDead = !npc.isEntityAlive();
+		if (isDead) {
+			return npc.currentAnimation != 2;
+		}
+		if (npc.stats.ranged.getHasAimAnimation() && npc.isAttacking()) {
+			return npc.currentAnimation != 6;
+		}
+		hasPath = !npc.getNavigator().noPath();
+		isAttacking = npc.isAttacking();
+		isAtStartpoint = (npc.ai.returnToStart && npc.isVeryNearAssignedPlace());
+		if (temp != 0) {
+			if (!hasNavigation()) {
+				return npc.currentAnimation != temp;
+			}
+			temp = 0;
+		}
+		if (hasNavigation() && !isWalkingAnimation(npc.currentAnimation)) {
+			return npc.currentAnimation != 0;
+		}
+		return npc.currentAnimation != npc.ai.animationType;
+	}
+
+	@Override
+	public void updateTask() {
+		if (npc.stats.ranged.getHasAimAnimation() && npc.isAttacking()) {
+			setAnimation(6);
+			return;
+		}
+		int type = npc.ai.animationType;
+		if (isDead) {
+			type = 2;
+		} else if (!isWalkingAnimation(npc.ai.animationType) && hasNavigation()) {
+			type = 0;
+		} else if (temp != 0) {
+			if (hasNavigation()) {
+				temp = 0;
+			} else {
+				type = temp;
+			}
+		}
+		setAnimation(type);
+	}
 }

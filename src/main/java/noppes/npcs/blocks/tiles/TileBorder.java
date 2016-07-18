@@ -1,8 +1,13 @@
+//
+
+//
+
 package noppes.npcs.blocks.tiles;
 
-import java.util.Iterator;
 import java.util.List;
-import net.minecraft.command.IEntitySelector;
+
+import com.google.common.base.Predicate;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityEnderPearl;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,105 +16,121 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ITickable;
+import noppes.npcs.CustomItems;
+import noppes.npcs.blocks.BlockBorder;
 import noppes.npcs.controllers.Availability;
 
-public class TileBorder extends TileEntity implements IEntitySelector {
+public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
+	public Availability availability;
+	public AxisAlignedBB boundingbox;
+	public int rotation;
+	public int height;
+	public String message;
 
-   public Availability availability = new Availability();
-   public AxisAlignedBB boundingbox;
-   public int rotation = 0;
-   public int height = 10;
-   public String message = "availability.areaNotAvailble";
+	public TileBorder() {
+		availability = new Availability();
+		rotation = 0;
+		height = 10;
+		message = "availability.areaNotAvailble";
+	}
 
+	@Override
+	public boolean apply(final Object ob) {
+		return isEntityApplicable((Entity) ob);
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      super.readFromNBT(compound);
-      this.readExtraNBT(compound);
-   }
+	@Override
+	public Packet getDescriptionPacket() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setInteger("Rotation", rotation);
+		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		return packet;
+	}
 
-   public void readExtraNBT(NBTTagCompound compound) {
-      this.availability.readFromNBT(compound.getCompoundTag("BorderAvailability"));
-      this.rotation = compound.getInteger("BorderRotation");
-      this.height = compound.getInteger("BorderHeight");
-      this.message = compound.getString("BorderMessage");
-   }
+	public boolean isEntityApplicable(final Entity var1) {
+		return (var1 instanceof EntityPlayerMP) || (var1 instanceof EntityEnderPearl);
+	}
 
-   public void writeToNBT(NBTTagCompound compound) {
-      super.writeToNBT(compound);
-      this.writeExtraNBT(compound);
-   }
+	@Override
+	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
+		final NBTTagCompound compound = pkt.getNbtCompound();
+		rotation = compound.getInteger("Rotation");
+	}
 
-   public void writeExtraNBT(NBTTagCompound compound) {
-      compound.setTag("BorderAvailability", this.availability.writeToNBT(new NBTTagCompound()));
-      compound.setInteger("BorderRotation", this.rotation);
-      compound.setInteger("BorderHeight", this.height);
-      compound.setString("BorderMessage", this.message);
-   }
+	public void readExtraNBT(final NBTTagCompound compound) {
+		availability.readFromNBT(compound.getCompoundTag("BorderAvailability"));
+		rotation = compound.getInteger("BorderRotation");
+		height = compound.getInteger("BorderHeight");
+		message = compound.getString("BorderMessage");
+	}
 
-   public void updateEntity() {
-      if(!super.worldObj.isRemote) {
-         AxisAlignedBB box = AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + this.height + 1), (double)(super.zCoord + 1));
-         List list = super.worldObj.selectEntitiesWithinAABB(Entity.class, box, this);
-         Iterator var3 = list.iterator();
+	@Override
+	public void readFromNBT(final NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		readExtraNBT(compound);
+		if (getWorld() != null) {
+			getWorld().setBlockState(getPos(),
+					CustomItems.border.getDefaultState().withProperty(BlockBorder.ROTATION, rotation));
+		}
+	}
 
-         while(var3.hasNext()) {
-            Entity entity = (Entity)var3.next();
-            if(entity instanceof EntityEnderPearl) {
-               EntityEnderPearl var9 = (EntityEnderPearl)entity;
-               if(var9.getThrower() instanceof EntityPlayer && !this.availability.isAvailable((EntityPlayer)var9.getThrower())) {
-                  entity.isDead = true;
-               }
-            } else {
-               EntityPlayer player = (EntityPlayer)entity;
-               if(!this.availability.isAvailable(player)) {
-                  int posX = super.xCoord;
-                  int posZ = super.zCoord;
-                  int posY = super.yCoord;
-                  if(this.rotation == 0) {
-                     --posZ;
-                  } else if(this.rotation == 2) {
-                     ++posZ;
-                  } else if(this.rotation == 1) {
-                     ++posX;
-                  } else if(this.rotation == 3) {
-                     --posX;
-                  }
+	@Override
+	public void update() {
+		if (worldObj.isRemote) {
+			return;
+		}
+		final AxisAlignedBB box = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1,
+				pos.getY() + height + 1, pos.getZ() + 1);
+		final List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, box, this);
+		for (final Entity entity : list) {
+			if (entity instanceof EntityEnderPearl) {
+				final EntityEnderPearl pearl = (EntityEnderPearl) entity;
+				if (!(pearl.getThrower() instanceof EntityPlayer)
+						|| availability.isAvailable((EntityPlayer) pearl.getThrower())) {
+					continue;
+				}
+				entity.isDead = true;
+			} else {
+				final EntityPlayer player = (EntityPlayer) entity;
+				if (availability.isAvailable(player)) {
+					continue;
+				}
+				BlockPos pos2 = new BlockPos(pos);
+				if (rotation == 0) {
+					pos2 = pos2.south();
+				} else if (rotation == 2) {
+					pos2 = pos2.north();
+				} else if (rotation == 1) {
+					pos2 = pos2.east();
+				} else if (rotation == 3) {
+					pos2 = pos2.west();
+				}
+				while (!worldObj.isAirBlock(pos2)) {
+					pos2 = pos2.up();
+				}
+				player.setPositionAndUpdate(pos2.getX() + 0.5, pos2.getY(), pos2.getZ() + 0.5);
+				if (message.isEmpty()) {
+					continue;
+				}
+				player.addChatComponentMessage(new ChatComponentTranslation(message, new Object[0]));
+			}
+		}
+	}
 
-                  while(!super.worldObj.isAirBlock(posX, posY, posZ)) {
-                     ++posY;
-                  }
+	public void writeExtraNBT(final NBTTagCompound compound) {
+		compound.setTag("BorderAvailability", availability.writeToNBT(new NBTTagCompound()));
+		compound.setInteger("BorderRotation", rotation);
+		compound.setInteger("BorderHeight", height);
+		compound.setString("BorderMessage", message);
+	}
 
-                  player.setPositionAndUpdate((double)posX + 0.5D, (double)posY, (double)posZ + 0.5D);
-                  if(!this.message.isEmpty()) {
-                     player.addChatComponentMessage(new ChatComponentTranslation(this.message, new Object[0]));
-                  }
-               }
-            }
-         }
-
-      }
-   }
-
-   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-      NBTTagCompound compound = pkt.getNbtCompound();
-      this.rotation = compound.getInteger("Rotation");
-   }
-
-   public Packet getDescriptionPacket() {
-      NBTTagCompound compound = new NBTTagCompound();
-      compound.setInteger("Rotation", this.rotation);
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
-      return packet;
-   }
-
-   public boolean canUpdate() {
-      return true;
-   }
-
-   public boolean isEntityApplicable(Entity var1) {
-      return var1 instanceof EntityPlayerMP || var1 instanceof EntityEnderPearl;
-   }
+	@Override
+	public void writeToNBT(final NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		writeExtraNBT(compound);
+	}
 }

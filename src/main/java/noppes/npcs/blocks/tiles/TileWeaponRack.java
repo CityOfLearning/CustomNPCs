@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.blocks.tiles;
 
 import net.minecraft.item.ItemBlock;
@@ -6,46 +10,46 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import noppes.npcs.blocks.tiles.TileNpcContainer;
 
 public class TileWeaponRack extends TileNpcContainer {
+	@Override
+	public Packet getDescriptionPacket() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		writeToNBT(compound);
+		compound.removeTag("ExtraData");
+		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		return packet;
+	}
 
-   public boolean isItemValidForSlot(int var1, ItemStack itemstack) {
-      return itemstack != null && itemstack.getItem() instanceof ItemBlock?false:super.isItemValidForSlot(var1, itemstack);
-   }
+	@Override
+	public String getName() {
+		return "tile.npcWeaponRack.name";
+	}
 
-   public int getSizeInventory() {
-      return 3;
-   }
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1);
+	}
 
-   public int getInventoryStackLimit() {
-      return 1;
-   }
+	@Override
+	public int getSizeInventory() {
+		return 3;
+	}
 
-   public AxisAlignedBB getRenderBoundingBox() {
-      return AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 2), (double)(super.zCoord + 1));
-   }
+	@Override
+	public boolean isItemValidForSlot(final int var1, final ItemStack itemstack) {
+		return ((itemstack == null) || !(itemstack.getItem() instanceof ItemBlock))
+				&& super.isItemValidForSlot(var1, itemstack);
+	}
 
-   public String getName() {
-      return "tile.npcWeaponRack.name";
-   }
-
-   public Packet getDescriptionPacket() {
-      NBTTagCompound compound = new NBTTagCompound();
-      this.writeToNBT(compound);
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
-      return packet;
-   }
-
-   public int powerProvided() {
-      int power = 0;
-
-      for(int i = 0; i < 3; ++i) {
-         if(this.getStackInSlot(i) != null) {
-            power += 5;
-         }
-      }
-
-      return power;
-   }
+	@Override
+	public int powerProvided() {
+		int power = 0;
+		for (int i = 0; i < 3; ++i) {
+			if (getStackInSlot(i) != null) {
+				power += 5;
+			}
+		}
+		return power;
+	}
 }

@@ -1,194 +1,200 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.ICompatibilty;
 import noppes.npcs.VersionCompatibility;
-import noppes.npcs.constants.EnumOptionType;
-import noppes.npcs.controllers.Availability;
-import noppes.npcs.controllers.DialogCategory;
-import noppes.npcs.controllers.DialogOption;
-import noppes.npcs.controllers.FactionOptions;
-import noppes.npcs.controllers.PlayerMail;
-import noppes.npcs.controllers.Quest;
-import noppes.npcs.controllers.QuestController;
+import noppes.npcs.api.constants.EnumOptionType;
+import noppes.npcs.api.handler.data.IDialog;
+import noppes.npcs.api.handler.data.IDialogOption;
 
-public class Dialog implements ICompatibilty {
+public class Dialog implements ICompatibilty, IDialog {
+	public int version;
+	public int id;
+	public String title;
+	public String text;
+	public int quest;
+	public DialogCategory category;
+	public HashMap<Integer, DialogOption> options;
+	public Availability availability;
+	public FactionOptions factionOptions;
+	public String sound;
+	public String command;
+	public PlayerMail mail;
+	public boolean hideNPC;
+	public boolean showWheel;
+	public boolean disableEsc;
 
-   public int version;
-   public int id;
-   public String title;
-   public String text;
-   public int quest;
-   public DialogCategory category;
-   public HashMap options;
-   public Availability availability;
-   public FactionOptions factionOptions;
-   public String sound;
-   public String command;
-   public PlayerMail mail;
-   public boolean hideNPC;
-   public boolean showWheel;
-   public boolean disableEsc;
+	public Dialog() {
+		version = VersionCompatibility.ModRev;
+		id = -1;
+		title = "";
+		text = "";
+		quest = -1;
+		options = new HashMap<Integer, DialogOption>();
+		availability = new Availability();
+		factionOptions = new FactionOptions();
+		command = "";
+		mail = new PlayerMail();
+		hideNPC = false;
+		showWheel = false;
+		disableEsc = false;
+	}
 
+	public Dialog copy(final EntityPlayer player) {
+		final Dialog dialog = new Dialog();
+		dialog.id = id;
+		dialog.text = text;
+		dialog.title = title;
+		dialog.category = category;
+		dialog.quest = quest;
+		dialog.sound = sound;
+		dialog.mail = mail;
+		dialog.command = command;
+		dialog.hideNPC = hideNPC;
+		dialog.showWheel = showWheel;
+		dialog.disableEsc = disableEsc;
+		for (final int slot : options.keySet()) {
+			final DialogOption option = options.get(slot);
+			if (option.optionType == EnumOptionType.DIALOG_OPTION) {
+				if (!option.hasDialog()) {
+					continue;
+				}
+				if (!option.isAvailable(player)) {
+					continue;
+				}
+			}
+			dialog.options.put(slot, option);
+		}
+		return dialog;
+	}
 
-   public Dialog() {
-      this.version = VersionCompatibility.ModRev;
-      this.id = -1;
-      this.title = "";
-      this.text = "";
-      this.quest = -1;
-      this.options = new HashMap();
-      this.availability = new Availability();
-      this.factionOptions = new FactionOptions();
-      this.command = "";
-      this.mail = new PlayerMail();
-      this.hideNPC = false;
-      this.showWheel = false;
-      this.disableEsc = false;
-   }
+	@Override
+	public int getId() {
+		return id;
+	}
 
-   public boolean hasDialogs(EntityPlayer player) {
-      Iterator var2 = this.options.values().iterator();
+	@Override
+	public String getName() {
+		return title;
+	}
 
-      DialogOption option;
-      do {
-         if(!var2.hasNext()) {
-            return false;
-         }
+	@Override
+	public List<IDialogOption> getOptions() {
+		return new ArrayList<IDialogOption>(options.values());
+	}
 
-         option = (DialogOption)var2.next();
-      } while(option == null || option.optionType != EnumOptionType.DialogOption || !option.hasDialog() || !option.isAvailable(player));
+	@Override
+	public Quest getQuest() {
+		if (QuestController.instance == null) {
+			return null;
+		}
+		return QuestController.instance.quests.get(quest);
+	}
 
-      return true;
-   }
+	@Override
+	public int getVersion() {
+		return version;
+	}
 
-   public void readNBT(NBTTagCompound compound) {
-      this.id = compound.getInteger("DialogId");
-      this.readNBTPartial(compound);
-   }
+	public boolean hasDialogs(final EntityPlayer player) {
+		for (final DialogOption option : options.values()) {
+			if ((option != null) && (option.optionType == EnumOptionType.DIALOG_OPTION) && option.hasDialog()
+					&& option.isAvailable(player)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-   public void readNBTPartial(NBTTagCompound compound) {
-      this.version = compound.getInteger("ModRev");
-      VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
-      this.title = compound.getString("DialogTitle");
-      this.text = compound.getString("DialogText");
-      this.quest = compound.getInteger("DialogQuest");
-      this.sound = compound.getString("DialogSound");
-      this.command = compound.getString("DialogCommand");
-      this.mail.readNBT(compound.getCompoundTag("DialogMail"));
-      this.hideNPC = compound.getBoolean("DialogHideNPC");
-      this.showWheel = compound.getBoolean("DialogShowWheel");
-      this.disableEsc = compound.getBoolean("DialogDisableEsc");
-      NBTTagList options = compound.getTagList("Options", 10);
-      HashMap newoptions = new HashMap();
+	public boolean hasOtherOptions() {
+		for (final DialogOption option : options.values()) {
+			if ((option != null) && (option.optionType != EnumOptionType.DISABLED)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-      for(int iii = 0; iii < options.tagCount(); ++iii) {
-         NBTTagCompound option = options.getCompoundTagAt(iii);
-         int opslot = option.getInteger("OptionSlot");
-         DialogOption dia = new DialogOption();
-         dia.readNBT(option.getCompoundTag("Option"));
-         newoptions.put(Integer.valueOf(opslot), dia);
-      }
+	public boolean hasQuest() {
+		return getQuest() != null;
+	}
 
-      this.options = newoptions;
-      this.availability.readFromNBT(compound);
-      this.factionOptions.readFromNBT(compound);
-   }
+	public void readNBT(final NBTTagCompound compound) {
+		id = compound.getInteger("DialogId");
+		readNBTPartial(compound);
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-      compound.setInteger("DialogId", this.id);
-      return this.writeToNBTPartial(compound);
-   }
+	public void readNBTPartial(final NBTTagCompound compound) {
+		version = compound.getInteger("ModRev");
+		VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
+		title = compound.getString("DialogTitle");
+		text = compound.getString("DialogText");
+		quest = compound.getInteger("DialogQuest");
+		sound = compound.getString("DialogSound");
+		command = compound.getString("DialogCommand");
+		mail.readNBT(compound.getCompoundTag("DialogMail"));
+		hideNPC = compound.getBoolean("DialogHideNPC");
+		showWheel = compound.getBoolean("DialogShowWheel");
+		disableEsc = compound.getBoolean("DialogDisableEsc");
+		final NBTTagList options = compound.getTagList("Options", 10);
+		final HashMap<Integer, DialogOption> newoptions = new HashMap<Integer, DialogOption>();
+		for (int iii = 0; iii < options.tagCount(); ++iii) {
+			final NBTTagCompound option = options.getCompoundTagAt(iii);
+			final int opslot = option.getInteger("OptionSlot");
+			final DialogOption dia = new DialogOption();
+			dia.readNBT(option.getCompoundTag("Option"));
+			newoptions.put(opslot, dia);
+			dia.slot = opslot;
+		}
+		this.options = newoptions;
+		availability.readFromNBT(compound);
+		factionOptions.readFromNBT(compound);
+	}
 
-   public NBTTagCompound writeToNBTPartial(NBTTagCompound compound) {
-      compound.setString("DialogTitle", this.title);
-      compound.setString("DialogText", this.text);
-      compound.setInteger("DialogQuest", this.quest);
-      compound.setString("DialogCommand", this.command);
-      compound.setTag("DialogMail", this.mail.writeNBT());
-      compound.setBoolean("DialogHideNPC", this.hideNPC);
-      compound.setBoolean("DialogShowWheel", this.showWheel);
-      compound.setBoolean("DialogDisableEsc", this.disableEsc);
-      if(this.sound != null && !this.sound.isEmpty()) {
-         compound.setString("DialogSound", this.sound);
-      }
+	@Override
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-      NBTTagList options = new NBTTagList();
-      Iterator var3 = this.options.keySet().iterator();
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+		compound.setInteger("DialogId", id);
+		return writeToNBTPartial(compound);
+	}
 
-      while(var3.hasNext()) {
-         int opslot = ((Integer)var3.next()).intValue();
-         NBTTagCompound listcompound = new NBTTagCompound();
-         listcompound.setInteger("OptionSlot", opslot);
-         listcompound.setTag("Option", ((DialogOption)this.options.get(Integer.valueOf(opslot))).writeNBT());
-         options.appendTag(listcompound);
-      }
-
-      compound.setTag("Options", options);
-      this.availability.writeToNBT(compound);
-      this.factionOptions.writeToNBT(compound);
-      compound.setInteger("ModRev", this.version);
-      return compound;
-   }
-
-   public boolean hasQuest() {
-      return this.getQuest() != null;
-   }
-
-   public Quest getQuest() {
-      return (Quest)QuestController.instance.quests.get(Integer.valueOf(this.quest));
-   }
-
-   public boolean hasOtherOptions() {
-      Iterator var1 = this.options.values().iterator();
-
-      DialogOption option;
-      do {
-         if(!var1.hasNext()) {
-            return false;
-         }
-
-         option = (DialogOption)var1.next();
-      } while(option == null || option.optionType == EnumOptionType.Disabled);
-
-      return true;
-   }
-
-   public Dialog copy(EntityPlayer player) {
-      Dialog dialog = new Dialog();
-      dialog.id = this.id;
-      dialog.text = this.text;
-      dialog.title = this.title;
-      dialog.category = this.category;
-      dialog.quest = this.quest;
-      dialog.sound = this.sound;
-      dialog.mail = this.mail;
-      dialog.command = this.command;
-      dialog.hideNPC = this.hideNPC;
-      dialog.showWheel = this.showWheel;
-      dialog.disableEsc = this.disableEsc;
-      Iterator var3 = this.options.keySet().iterator();
-
-      while(var3.hasNext()) {
-         int slot = ((Integer)var3.next()).intValue();
-         DialogOption option = (DialogOption)this.options.get(Integer.valueOf(slot));
-         if(option.optionType != EnumOptionType.DialogOption || option.hasDialog() && option.isAvailable(player)) {
-            dialog.options.put(Integer.valueOf(slot), option);
-         }
-      }
-
-      return dialog;
-   }
-
-   public int getVersion() {
-      return this.version;
-   }
-
-   public void setVersion(int version) {
-      this.version = version;
-   }
+	public NBTTagCompound writeToNBTPartial(final NBTTagCompound compound) {
+		compound.setString("DialogTitle", title);
+		compound.setString("DialogText", text);
+		compound.setInteger("DialogQuest", quest);
+		compound.setString("DialogCommand", command);
+		compound.setTag("DialogMail", mail.writeNBT());
+		compound.setBoolean("DialogHideNPC", hideNPC);
+		compound.setBoolean("DialogShowWheel", showWheel);
+		compound.setBoolean("DialogDisableEsc", disableEsc);
+		if ((sound != null) && !sound.isEmpty()) {
+			compound.setString("DialogSound", sound);
+		}
+		final NBTTagList options = new NBTTagList();
+		for (final int opslot : this.options.keySet()) {
+			final NBTTagCompound listcompound = new NBTTagCompound();
+			listcompound.setInteger("OptionSlot", opslot);
+			listcompound.setTag("Option", this.options.get(opslot).writeNBT());
+			options.appendTag(listcompound);
+		}
+		compound.setTag("Options", options);
+		availability.writeToNBT(compound);
+		factionOptions.writeToNBT(compound);
+		compound.setInteger("ModRev", version);
+		return compound;
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.constants;
 
 import net.minecraft.init.Items;
@@ -6,20 +10,12 @@ import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
 
 public enum EnumCompanionTalent {
+	INVENTORY(CustomItems.satchel), ARMOR(Items.iron_chestplate), SWORD(Items.diamond_sword), RANGED(
+			Items.bow), ACROBATS(Items.leather_boots), INTEL(CustomItems.letter);
 
-   INVENTORY("INVENTORY", 0, CustomItems.satchel),
-   ARMOR("ARMOR", 1, Items.iron_chestplate),
-   SWORD("SWORD", 2, Items.diamond_sword),
-   RANGED("RANGED", 3, Items.bow),
-   ACROBATS("ACROBATS", 4, Items.leather_boots),
-   INTEL("INTEL", 5, CustomItems.letter);
-   public ItemStack item;
-   // $FF: synthetic field
-   private static final EnumCompanionTalent[] $VALUES = new EnumCompanionTalent[]{INVENTORY, ARMOR, SWORD, RANGED, ACROBATS, INTEL};
+	public ItemStack item;
 
-
-   private EnumCompanionTalent(String var1, int var2, Item item) {
-      this.item = new ItemStack(item);
-   }
-
+	private EnumCompanionTalent(final Item item) {
+		this.item = new ItemStack(item);
+	}
 }

@@ -1,155 +1,150 @@
+//
+
+//
+
 package noppes.npcs.client.gui.mainmenu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.DataAI;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.SubGuiNpcMovement;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
+import noppes.npcs.client.gui.util.GuiNpcButtonYesNo;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.ITextfieldListener;
-import noppes.npcs.constants.EnumNavType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.entity.data.DataAI;
 
 public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IGuiData {
+	private String[] tacts;
+	private DataAI ai;
 
-   private DataAI ai;
+	public GuiNpcAI(final EntityNPCInterface npc) {
+		super(npc, 6);
+		tacts = new String[] { "aitactics.rush", "aitactics.stagger", "aitactics.orbit", "aitactics.hitandrun",
+				"aitactics.ambush", "aitactics.stalk", "gui.none" };
+		ai = npc.ai;
+		Client.sendData(EnumPacketServer.MainmenuAIGet, new Object[0]);
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 0) {
+			ai.onAttack = button.getValue();
+			initGui();
+		} else if (button.id == 1) {
+			ai.doorInteract = button.getValue();
+		} else if (button.id == 2) {
+			setSubGui(new SubGuiNpcMovement(ai));
+		} else if (button.id == 5) {
+			npc.ai.setAvoidsWater(button.getValue() == 1);
+		} else if (button.id == 6) {
+			ai.returnToStart = (button.getValue() == 1);
+		} else if (button.id == 7) {
+			ai.canSwim = (button.getValue() == 1);
+		} else if (button.id == 9) {
+			ai.findShelter = button.getValue();
+		} else if (button.id == 10) {
+			ai.directLOS = (button.getValue() == 1);
+		} else if (button.id == 15) {
+			ai.canLeap = (button.getValue() == 1);
+		} else if (button.id == 17) {
+			ai.tacticalVariant = button.getValue();
+			ai.directLOS = ((button.getValue() != 5) && ai.directLOS);
+			initGui();
+		} else if (button.id == 23) {
+			ai.attackInvisible = ((GuiNpcButtonYesNo) button).getBoolean();
+		}
+	}
 
-   public GuiNpcAI(EntityNPCInterface npc) {
-      super(npc, 6);
-      this.ai = npc.ai;
-      Client.sendData(EnumPacketServer.MainmenuAIGet, new Object[0]);
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(0, "ai.enemyresponse", guiLeft + 5, guiTop + 17));
+		addButton(new GuiNpcButton(0, guiLeft + 86, guiTop + 10, 60, 20,
+				new String[] { "gui.retaliate", "gui.panic", "gui.retreat", "gui.nothing" }, npc.ai.onAttack));
+		addLabel(new GuiNpcLabel(1, "ai.door", guiLeft + 5, guiTop + 40));
+		addButton(new GuiNpcButton(1, guiLeft + 86, guiTop + 35, 60, 20,
+				new String[] { "gui.break", "gui.open", "gui.disabled" }, npc.ai.doorInteract));
+		addLabel(new GuiNpcLabel(12, "ai.swim", guiLeft + 5, guiTop + 65));
+		addButton(new GuiNpcButton(7, guiLeft + 86, guiTop + 60, 60, 20, new String[] { "gui.no", "gui.yes" },
+				npc.ai.canSwim ? 1 : 0));
+		addLabel(new GuiNpcLabel(13, "ai.shelter", guiLeft + 5, guiTop + 90));
+		addButton(new GuiNpcButton(9, guiLeft + 86, guiTop + 85, 60, 20,
+				new String[] { "gui.darkness", "gui.sunlight", "gui.disabled" }, npc.ai.findShelter));
+		addLabel(new GuiNpcLabel(14, "ai.clearlos", guiLeft + 5, guiTop + 115));
+		addButton(new GuiNpcButton(10, guiLeft + 86, guiTop + 110, 60, 20, new String[] { "gui.no", "gui.yes" },
+				npc.ai.directLOS ? 1 : 0));
+		addButton(new GuiNpcButtonYesNo(23, guiLeft + 86, guiTop + 135, 60, 20, ai.attackInvisible));
+		addLabel(new GuiNpcLabel(23, "stats.attackInvisible", guiLeft + 5, guiTop + 140));
+		addLabel(new GuiNpcLabel(10, "ai.avoidwater", guiLeft + 150, guiTop + 17));
+		addButton(new GuiNpcButton(5, guiLeft + 230, guiTop + 10, 60, 20, new String[] { "gui.no", "gui.yes" },
+				ai.avoidsWater ? 1 : 0));
+		addLabel(new GuiNpcLabel(11, "ai.return", guiLeft + 150, guiTop + 40));
+		addButton(new GuiNpcButton(6, guiLeft + 230, guiTop + 35, 60, 20, new String[] { "gui.no", "gui.yes" },
+				npc.ai.returnToStart ? 1 : 0));
+		addLabel(new GuiNpcLabel(17, "ai.leapattarget", guiLeft + 150, guiTop + 65));
+		addButton(new GuiNpcButton(15, guiLeft + 230, guiTop + 60, 60, 20, new String[] { "gui.no", "gui.yes" },
+				npc.ai.canLeap ? 1 : 0));
+		addLabel(new GuiNpcLabel(19, "ai.tacticalvariant", guiLeft + 150, guiTop + 140));
+		addButton(new GuiNpcButton(17, guiLeft + 230, guiTop + 135, 60, 20, tacts, ai.tacticalVariant));
+		if ((ai.tacticalVariant != 0) && (ai.tacticalVariant != 6)) {
+			String label = "";
+			switch (ai.tacticalVariant) {
+			case 2: {
+				label = "gui.orbitdistance";
+				break;
+			}
+			case 3: {
+				label = "gui.fightifthisclose";
+				break;
+			}
+			case 4: {
+				label = "gui.ambushdistance";
+				break;
+			}
+			case 5: {
+				label = "gui.ambushdistance";
+				break;
+			}
+			default: {
+				label = "gui.engagedistance";
+				break;
+			}
+			}
+			addLabel(new GuiNpcLabel(21, label, guiLeft + 300, guiTop + 140));
+			addTextField(new GuiNpcTextField(3, this, fontRendererObj, guiLeft + 380, guiTop + 135, 30, 20,
+					ai.getTacticalRange() + ""));
+			getTextField(3).numbersOnly = true;
+			getTextField(3).setMinMaxDefault(1, npc.stats.aggroRange, 5);
+		}
+		getButton(17).setEnabled(ai.onAttack == 0);
+		getButton(15).setEnabled(ai.onAttack == 0);
+		getButton(10).setEnabled((ai.tacticalVariant != 5) || (ai.tacticalVariant != 6));
+		addLabel(new GuiNpcLabel(2, "ai.movement", guiLeft + 4, guiTop + 165));
+		addButton(new GuiNpcButton(2, guiLeft + 86, guiTop + 160, 60, 20, "selectServer.edit"));
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "ai.enemyresponse", super.guiLeft + 5, super.guiTop + 17));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 86, super.guiTop + 10, 60, 20, new String[]{"gui.retaliate", "gui.panic", "gui.retreat", "gui.nothing"}, super.npc.ai.onAttack));
-      this.addLabel(new GuiNpcLabel(1, "ai.door", super.guiLeft + 5, super.guiTop + 40));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 86, super.guiTop + 35, 60, 20, new String[]{"gui.break", "gui.open", "gui.disabled"}, super.npc.ai.doorInteract));
-      this.addLabel(new GuiNpcLabel(12, "ai.swim", super.guiLeft + 5, super.guiTop + 65));
-      this.addButton(new GuiNpcButton(7, super.guiLeft + 86, super.guiTop + 60, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.canSwim?1:0));
-      this.addLabel(new GuiNpcLabel(13, "ai.shelter", super.guiLeft + 5, super.guiTop + 90));
-      this.addButton(new GuiNpcButton(9, super.guiLeft + 86, super.guiTop + 85, 60, 20, new String[]{"gui.darkness", "gui.sunlight", "gui.disabled"}, super.npc.ai.findShelter));
-      this.addLabel(new GuiNpcLabel(14, "ai.clearlos", super.guiLeft + 5, super.guiTop + 115));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 86, super.guiTop + 110, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.directLOS?1:0));
-      this.addLabel(new GuiNpcLabel(18, "ai.sprint", super.guiLeft + 5, super.guiTop + 140));
-      this.addButton(new GuiNpcButton(16, super.guiLeft + 86, super.guiTop + 135, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.canSprint?1:0));
-      this.addLabel(new GuiNpcLabel(10, "ai.avoidwater", super.guiLeft + 150, super.guiTop + 17));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 230, super.guiTop + 10, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.getNavigator().getAvoidsWater()?1:0));
-      this.addLabel(new GuiNpcLabel(11, "ai.return", super.guiLeft + 150, super.guiTop + 40));
-      this.addButton(new GuiNpcButton(6, super.guiLeft + 230, super.guiTop + 35, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.returnToStart?1:0));
-      this.addLabel(new GuiNpcLabel(17, "ai.leapattarget", super.guiLeft + 150, super.guiTop + 65));
-      this.addButton(new GuiNpcButton(15, super.guiLeft + 230, super.guiTop + 60, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.canLeap?1:0));
-      this.addLabel(new GuiNpcLabel(15, "ai.indirect", super.guiLeft + 150, super.guiTop + 90));
-      this.addButton(new GuiNpcButton(13, super.guiLeft + 230, super.guiTop + 85, 60, 20, new String[]{"gui.no", "gui.whendistant", "gui.whenhidden"}, this.ai.canFireIndirect));
-      this.addLabel(new GuiNpcLabel(16, "ai.rangemelee", super.guiLeft + 150, super.guiTop + 115));
-      this.addButton(new GuiNpcButton(14, super.guiLeft + 230, super.guiTop + 110, 60, 20, new String[]{super.npc.inventory.getProjectile() == null?"gui.no":"gui.always", "gui.untilclose", "gui.whenavailable"}, this.ai.useRangeMelee));
-      if(this.ai.useRangeMelee >= 1) {
-         this.addLabel(new GuiNpcLabel(20, "gui.minrange", super.guiLeft + 300, super.guiTop + 115));
-         this.addTextField(new GuiNpcTextField(6, this, super.fontRendererObj, super.guiLeft + 380, super.guiTop + 110, 30, 20, this.ai.distanceToMelee + ""));
-         this.getTextField(6).numbersOnly = true;
-         this.getTextField(6).setMinMaxDefault(1, super.npc.stats.aggroRange, 5);
-      }
+	@Override
+	public void save() {
+		Client.sendData(EnumPacketServer.MainmenuAISave, ai.writeToNBT(new NBTTagCompound()));
+	}
 
-      this.addLabel(new GuiNpcLabel(19, "ai.tacticalvariant", super.guiLeft + 150, super.guiTop + 140));
-      this.addButton(new GuiNpcButton(17, super.guiLeft + 230, super.guiTop + 135, 60, 20, EnumNavType.names(), this.ai.tacticalVariant.ordinal()));
-      if(this.ai.tacticalVariant != EnumNavType.Default && this.ai.tacticalVariant != EnumNavType.None) {
-         String label = "";
-         switch(this.ai.tacticalVariant) {
-         case Surround:
-            label = "gui.orbitdistance";
-            break;
-         case HitNRun:
-            label = "gui.fightifthisclose";
-            break;
-         case Ambush:
-            label = "gui.ambushdistance";
-            break;
-         case Stalk:
-            label = "gui.ambushdistance";
-            break;
-         default:
-            label = "gui.engagedistance";
-         }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		ai.readToNBT(compound);
+		initGui();
+	}
 
-         this.addLabel(new GuiNpcLabel(21, label, super.guiLeft + 300, super.guiTop + 140));
-         this.addTextField(new GuiNpcTextField(3, this, super.fontRendererObj, super.guiLeft + 380, super.guiTop + 135, 30, 20, this.ai.tacticalRadius + ""));
-         this.getTextField(3).numbersOnly = true;
-         this.getTextField(3).setMinMaxDefault(1, super.npc.stats.aggroRange, 5);
-      }
-
-      this.addLabel(new GuiNpcLabel(22, "ai.cobwebAffected", super.guiLeft + 150, super.guiTop + 165));
-      this.addButton(new GuiNpcButton(22, super.guiLeft + 230, super.guiTop + 160, 60, 20, new String[]{"gui.no", "gui.yes"}, super.npc.ai.ignoreCobweb?0:1));
-      this.getButton(17).setEnabled(this.ai.onAttack == 0);
-      this.getButton(15).setEnabled(this.ai.onAttack == 0);
-      this.getButton(13).setEnabled(super.npc.inventory.getProjectile() != null);
-      this.getButton(14).setEnabled(super.npc.inventory.getProjectile() != null);
-      this.getButton(10).setEnabled(this.ai.tacticalVariant != EnumNavType.Stalk || this.ai.tacticalVariant != EnumNavType.None);
-      this.addLabel(new GuiNpcLabel(2, "ai.movement", super.guiLeft + 4, super.guiTop + 165));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 86, super.guiTop + 160, 60, 20, "selectServer.edit"));
-   }
-
-   public void unFocused(GuiNpcTextField textfield) {
-      if(textfield.id == 3) {
-         this.ai.tacticalRadius = textfield.getInteger();
-      }
-
-      if(textfield.id == 6) {
-         this.ai.distanceToMelee = textfield.getInteger();
-      }
-
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.ai.onAttack = button.getValue();
-         this.initGui();
-      } else if(button.field_146127_k == 1) {
-         this.ai.doorInteract = button.getValue();
-      } else if(button.field_146127_k == 2) {
-         this.setSubGui(new SubGuiNpcMovement(this.ai));
-      } else if(button.field_146127_k == 5) {
-         super.npc.setAvoidWater(button.getValue() == 1);
-      } else if(button.field_146127_k == 6) {
-         this.ai.returnToStart = button.getValue() == 1;
-      } else if(button.field_146127_k == 7) {
-         this.ai.canSwim = button.getValue() == 1;
-      } else if(button.field_146127_k == 9) {
-         this.ai.findShelter = button.getValue();
-      } else if(button.field_146127_k == 10) {
-         this.ai.directLOS = button.getValue() == 1;
-      } else if(button.field_146127_k == 13) {
-         this.ai.canFireIndirect = button.getValue();
-      } else if(button.field_146127_k == 14) {
-         this.ai.useRangeMelee = button.getValue();
-         this.initGui();
-      } else if(button.field_146127_k == 15) {
-         this.ai.canLeap = button.getValue() == 1;
-      } else if(button.field_146127_k == 16) {
-         this.ai.canSprint = button.getValue() == 1;
-      } else if(button.field_146127_k == 17) {
-         this.ai.tacticalVariant = EnumNavType.values()[button.getValue()];
-         this.ai.directLOS = EnumNavType.values()[button.getValue()] == EnumNavType.Stalk?false:this.ai.directLOS;
-         this.initGui();
-      } else if(button.field_146127_k == 22) {
-         this.ai.ignoreCobweb = button.getValue() == 0;
-      }
-
-   }
-
-   public void save() {
-      Client.sendData(EnumPacketServer.MainmenuAISave, new Object[]{this.ai.writeToNBT(new NBTTagCompound())});
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.ai.readToNBT(compound);
-      this.initGui();
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField textfield) {
+		if (textfield.id == 3) {
+			ai.setTacticalRange(textfield.getInteger());
+		}
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui.mainmenu;
 
 import net.minecraft.client.gui.GuiButton;
@@ -11,89 +15,82 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCGlobalMainMenu extends GuiNPCInterface2 {
+	public GuiNPCGlobalMainMenu(final EntityNPCInterface npc) {
+		super(npc, 5);
+	}
 
-   public GuiNPCGlobalMainMenu(EntityNPCInterface npc) {
-      super(npc, 5);
-   }
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 11) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageQuests);
+		}
+		if (id == 2) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageBanks);
+		}
+		if (id == 3) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageFactions);
+		}
+		if (id == 4) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageDialogs);
+		}
+		if (id == 12) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageTransport);
+		}
+		if (id == 13) {
+			NoppesUtil.openGUI(player, new GuiNpcManagePlayerData(npc, this));
+		}
+		if (id == 14) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageRecipes, 4, 0, 0);
+		}
+		if (id == 15) {
+			NoppesUtil.openGUI(player, new GuiNpcNaturalSpawns(npc));
+		}
+		if (id == 16) {
+			NoppesUtil.requestOpenGUI(EnumGuiType.ManageLinked);
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      int y = super.guiTop + 10;
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 85, y, "global.banks"));
-      GuiNpcButton var10001;
-      int var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(3, var10004, y, "menu.factions");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(4, var10004, y, "dialog.dialogs");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(11, var10004, y, "quest.quests");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(12, var10004, y, "global.transport");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(13, var10004, y, "global.playerdata");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(14, var10004, y, "global.recipes");
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(15, var10004, y, NoppesStringUtils.translate(new Object[]{"global.naturalspawn", "(WIP)"}));
-      this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcButton(16, var10004, y, "global.linked");
-      this.addButton(var10001);
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		int y = guiTop + 10;
+		addButton(new GuiNpcButton(2, guiLeft + 85, y, "global.banks"));
+		final int i = 3;
+		final int j = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i, j, y, "menu.factions"));
+		final int k = 4;
+		final int l = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(k, l, y, "dialog.dialogs"));
+		final int m = 11;
+		final int j2 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(m, j2, y, "quest.quests"));
+		final int i2 = 12;
+		final int j3 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i2, j3, y, "global.transport"));
+		final int i3 = 13;
+		final int j4 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i3, j4, y, "global.playerdata"));
+		final int i4 = 14;
+		final int j5 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i4, j5, y, "global.recipes"));
+		final int i5 = 15;
+		final int j6 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i5, j6, y, NoppesStringUtils.translate("global.naturalspawn", "(WIP)")));
+		final int i6 = 16;
+		final int j7 = guiLeft + 85;
+		y += 22;
+		addButton(new GuiNpcButton(i6, j7, y, "global.linked"));
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 11) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageQuests);
-      }
-
-      if(id == 2) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageBanks);
-      }
-
-      if(id == 3) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageFactions);
-      }
-
-      if(id == 4) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageDialogs);
-      }
-
-      if(id == 12) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageTransport);
-      }
-
-      if(id == 13) {
-         NoppesUtil.openGUI(super.player, new GuiNpcManagePlayerData(super.npc, this));
-      }
-
-      if(id == 14) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageRecipes, 4, 0, 0);
-      }
-
-      if(id == 15) {
-         NoppesUtil.openGUI(super.player, new GuiNpcNaturalSpawns(super.npc));
-      }
-
-      if(id == 16) {
-         NoppesUtil.requestOpenGUI(EnumGuiType.ManageLinked);
-      }
-
-   }
-
-   public void save() {}
+	@Override
+	public void save() {
+	}
 }

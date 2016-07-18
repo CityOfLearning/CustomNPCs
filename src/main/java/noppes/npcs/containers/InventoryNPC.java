@@ -1,90 +1,127 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryNPC implements IInventory {
+	private String inventoryTitle;
+	private int slotsCount;
+	private ItemStack[] inventoryContents;
+	private Container con;
 
-   private String inventoryTitle;
-   private int slotsCount;
-   private ItemStack[] inventoryContents;
-   private Container con;
+	public InventoryNPC(final String s, final int i, final Container con) {
+		this.con = con;
+		inventoryTitle = s;
+		slotsCount = i;
+		inventoryContents = new ItemStack[i];
+	}
 
+	@Override
+	public void clear() {
+	}
 
-   public InventoryNPC(String s, int i, Container con) {
-      this.con = con;
-      this.inventoryTitle = s;
-      this.slotsCount = i;
-      this.inventoryContents = new ItemStack[i];
-   }
+	@Override
+	public void closeInventory(final EntityPlayer player) {
+	}
 
-   public ItemStack getStackInSlot(int i) {
-      return this.inventoryContents[i];
-   }
+	@Override
+	public ItemStack decrStackSize(final int i, final int j) {
+		if (inventoryContents[i] == null) {
+			return null;
+		}
+		if (inventoryContents[i].stackSize <= j) {
+			final ItemStack itemstack = inventoryContents[i];
+			inventoryContents[i] = null;
+			return itemstack;
+		}
+		final ItemStack itemstack2 = inventoryContents[i].splitStack(j);
+		if (inventoryContents[i].stackSize == 0) {
+			inventoryContents[i] = null;
+		}
+		return itemstack2;
+	}
 
-   public ItemStack decrStackSize(int i, int j) {
-      if(this.inventoryContents[i] != null) {
-         ItemStack itemstack1;
-         if(this.inventoryContents[i].stackSize <= j) {
-            itemstack1 = this.inventoryContents[i];
-            this.inventoryContents[i] = null;
-            return itemstack1;
-         } else {
-            itemstack1 = this.inventoryContents[i].splitStack(j);
-            if(this.inventoryContents[i].stackSize == 0) {
-               this.inventoryContents[i] = null;
-            }
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(inventoryTitle);
+	}
 
-            return itemstack1;
-         }
-      } else {
-         return null;
-      }
-   }
+	@Override
+	public int getField(final int id) {
+		return 0;
+	}
 
-   public void setInventorySlotContents(int i, ItemStack itemstack) {
-      this.inventoryContents[i] = itemstack;
-      if(itemstack != null && itemstack.stackSize > this.getInventoryStackLimit()) {
-         itemstack.stackSize = this.getInventoryStackLimit();
-      }
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
 
-   }
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
 
-   public int getSizeInventory() {
-      return this.slotsCount;
-   }
+	@Override
+	public String getName() {
+		return null;
+	}
 
-   public int getInventoryStackLimit() {
-      return 64;
-   }
+	@Override
+	public int getSizeInventory() {
+		return slotsCount;
+	}
 
-   public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-      return false;
-   }
+	@Override
+	public ItemStack getStackInSlot(final int i) {
+		return inventoryContents[i];
+	}
 
-   public ItemStack getStackInSlotOnClosing(int i) {
-      return null;
-   }
+	@Override
+	public boolean hasCustomName() {
+		return true;
+	}
 
-   public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-      return true;
-   }
+	@Override
+	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+		return true;
+	}
 
-   public String getInventoryName() {
-      return this.inventoryTitle;
-   }
+	@Override
+	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+		return false;
+	}
 
-   public boolean isCustomInventoryName() {
-      return true;
-   }
+	@Override
+	public void markDirty() {
+		con.onCraftMatrixChanged(this);
+	}
 
-   public void markDirty() {
-      this.con.onCraftMatrixChanged(this);
-   }
+	@Override
+	public void openInventory(final EntityPlayer player) {
+	}
 
-   public void openChest() {}
+	@Override
+	public ItemStack removeStackFromSlot(final int i) {
+		return null;
+	}
 
-   public void closeChest() {}
+	@Override
+	public void setField(final int id, final int value) {
+	}
+
+	@Override
+	public void setInventorySlotContents(final int i, final ItemStack itemstack) {
+		inventoryContents[i] = itemstack;
+		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
+			itemstack.stackSize = getInventoryStackLimit();
+		}
+	}
 }

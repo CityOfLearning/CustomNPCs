@@ -1,10 +1,13 @@
+//
+
+//
+
 package noppes.npcs;
 
 import noppes.npcs.entity.EntityNPCInterface;
 
 public interface IChatMessages {
+	void addMessage(final String p0, final EntityNPCInterface p1);
 
-   void addMessage(String var1, EntityNPCInterface var2);
-
-   void renderMessages(double var1, double var3, double var5, float var7);
+	void renderMessages(final double p0, final double p1, final double p2, final float p3, final boolean p4);
 }

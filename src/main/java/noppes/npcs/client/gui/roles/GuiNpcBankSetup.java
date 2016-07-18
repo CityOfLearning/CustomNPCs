@@ -1,7 +1,12 @@
+//
+
+//
+
 package noppes.npcs.client.gui.roles;
 
 import java.util.HashMap;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.client.Client;
@@ -15,68 +20,74 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleBank;
 
 public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, ICustomScrollListener {
+	private GuiCustomScroll scroll;
+	private HashMap<String, Integer> data;
+	private RoleBank role;
 
-   private GuiCustomScroll scroll;
-   private HashMap data = new HashMap();
-   private RoleBank role;
+	public GuiNpcBankSetup(final EntityNPCInterface npc) {
+		super(npc);
+		data = new HashMap<String, Integer>();
+		role = (RoleBank) npc.roleInterface;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+	}
 
-   public GuiNpcBankSetup(EntityNPCInterface npc) {
-      super(npc);
-      Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
-      this.role = (RoleBank)npc.roleInterface;
-   }
+	@Override
+	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+		if (guiCustomScroll.id == 0) {
+			role.bankId = data.get(scroll.getSelected());
+			save();
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      if(this.scroll == null) {
-         this.scroll = new GuiCustomScroll(this, 0);
-      }
+	@Override
+	public void initGui() {
+		super.initGui();
+		if (scroll == null) {
+			scroll = new GuiCustomScroll(this, 0);
+		}
+		scroll.setSize(200, 152);
+		scroll.guiLeft = guiLeft + 85;
+		scroll.guiTop = guiTop + 20;
+		addScroll(scroll);
+	}
 
-      this.scroll.setSize(200, 152);
-      this.scroll.guiLeft = super.guiLeft + 85;
-      this.scroll.guiTop = super.guiTop + 20;
-      this.addScroll(this.scroll);
-   }
+	@Override
+	public void initPacket() {
+		Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {}
+	@Override
+	public void mouseClicked(final int i, final int j, final int k) {
+		super.mouseClicked(i, j, k);
+		if ((k == 0) && (scroll != null)) {
+			scroll.mouseClicked(i, j, k);
+		}
+	}
 
-   public void setData(Vector list, HashMap data) {
-      String name = null;
-      Bank bank = this.role.getBank();
-      if(bank != null) {
-         name = bank.name;
-      }
+	@Override
+	public void save() {
+		Client.sendData(EnumPacketServer.RoleSave, role.writeToNBT(new NBTTagCompound()));
+	}
 
-      this.data = data;
-      this.scroll.setList(list);
-      if(name != null) {
-         this.setSelected(name);
-      }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		String name = null;
+		final Bank bank = role.getBank();
+		if (bank != null) {
+			name = bank.name;
+		}
+		this.data = data;
+		scroll.setList(list);
+		if (name != null) {
+			setSelected(name);
+		}
+	}
 
-   }
-
-   public void mouseClicked(int i, int j, int k) {
-      super.mouseClicked(i, j, k);
-      if(k == 0 && this.scroll != null) {
-         this.scroll.mouseClicked(i, j, k);
-      }
-
-   }
-
-   public void setSelected(String selected) {
-      this.scroll.setSelected(selected);
-   }
-
-   public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
-      if(guiCustomScroll.id == 0) {
-         this.role.bankId = ((Integer)this.data.get(this.scroll.getSelected())).intValue();
-         this.save();
-      }
-
-   }
-
-   public void save() {
-      Client.sendData(EnumPacketServer.RoleSave, new Object[]{this.role.writeToNBT(new NBTTagCompound())});
-   }
+	@Override
+	public void setSelected(final String selected) {
+		scroll.setSelected(selected);
+	}
 }

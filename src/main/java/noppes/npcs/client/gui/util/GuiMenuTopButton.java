@@ -1,93 +1,104 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.client.gui.util.GuiNpcButton;
-import noppes.npcs.client.gui.util.IButtonListener;
-import org.lwjgl.opengl.GL11;
 
 public class GuiMenuTopButton extends GuiNpcButton {
+	public static final ResourceLocation resource;
+	static {
+		resource = new ResourceLocation("customnpcs", "textures/gui/menutopbutton.png");
+	}
+	protected int height;
+	public boolean active;
+	public boolean hover;
+	public boolean rotated;
 
-   public static final ResourceLocation resource = new ResourceLocation("customnpcs", "textures/gui/menutopbutton.png");
-   protected int field_146121_g;
-   public boolean active;
-   public boolean hover;
-   public boolean rotated;
-   public IButtonListener listener;
+	public IButtonListener listener;
 
+	public GuiMenuTopButton(final int i, final GuiButton parent, final String s) {
+		this(i, parent.xPosition + parent.width, parent.yPosition, s);
+	}
 
-   public GuiMenuTopButton(int i, int j, int k, String s) {
-      super(i, j, k, StatCollector.translateToLocal(s));
-      this.hover = false;
-      this.rotated = false;
-      this.active = false;
-      super.width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(super.displayString) + 12;
-      this.field_146121_g = 20;
-   }
+	public GuiMenuTopButton(final int i, final GuiButton parent, final String s, final IButtonListener listener) {
+		this(i, parent, s);
+		this.listener = listener;
+	}
 
-   public GuiMenuTopButton(int i, GuiButton parent, String s) {
-      this(i, parent.xPosition + parent.width, parent.yPosition, s);
-   }
+	public GuiMenuTopButton(final int i, final int j, final int k, final String s) {
+		super(i, j, k, StatCollector.translateToLocal(s));
+		hover = false;
+		rotated = false;
+		active = false;
+		width = Minecraft.getMinecraft().fontRendererObj.getStringWidth(displayString) + 12;
+		height = 20;
+	}
 
-   public GuiMenuTopButton(int i, GuiButton parent, String s, IButtonListener listener) {
-      this(i, parent, s);
-      this.listener = listener;
-   }
+	@Override
+	public void drawButton(final Minecraft minecraft, final int i, final int j) {
+		if (!getVisible()) {
+			return;
+		}
+		GlStateManager.pushMatrix();
+		minecraft.renderEngine.bindTexture(GuiMenuTopButton.resource);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		final int height = this.height - (active ? 0 : 2);
+		hover = ((i >= xPosition) && (j >= yPosition) && (i < (xPosition + getWidth())) && (j < (yPosition + height)));
+		final int k = getHoverState(hover);
+		this.drawTexturedModalRect(xPosition, yPosition, 0, k * 20, getWidth() / 2, height);
+		this.drawTexturedModalRect(xPosition + (getWidth() / 2), yPosition, 200 - (getWidth() / 2), k * 20,
+				getWidth() / 2, height);
+		mouseDragged(minecraft, i, j);
+		final FontRenderer fontrenderer = minecraft.fontRendererObj;
+		if (rotated) {
+			GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
+		}
+		if (active) {
+			drawCenteredString(fontrenderer, displayString, xPosition + (getWidth() / 2),
+					yPosition + ((height - 8) / 2), 16777120);
+		} else if (hover) {
+			drawCenteredString(fontrenderer, displayString, xPosition + (getWidth() / 2),
+					yPosition + ((height - 8) / 2), 16777120);
+		} else {
+			drawCenteredString(fontrenderer, displayString, xPosition + (getWidth() / 2),
+					yPosition + ((height - 8) / 2), 14737632);
+		}
+		GlStateManager.popMatrix();
+	}
 
-   public int getHoverState(boolean flag) {
-      byte byte0 = 1;
-      if(this.active) {
-         byte0 = 0;
-      } else if(flag) {
-         byte0 = 2;
-      }
+	@Override
+	public int getHoverState(final boolean flag) {
+		byte byte0 = 1;
+		if (active) {
+			byte0 = 0;
+		} else if (flag) {
+			byte0 = 2;
+		}
+		return byte0;
+	}
 
-      return byte0;
-   }
+	@Override
+	protected void mouseDragged(final Minecraft minecraft, final int i, final int j) {
+	}
 
-   public void drawButton(Minecraft minecraft, int i, int j) {
-      if(this.getVisible()) {
-         GL11.glPushMatrix();
-         minecraft.renderEngine.bindTexture(resource);
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         int height = this.field_146121_g - (this.active?0:2);
-         this.hover = i >= super.xPosition && j >= super.yPosition && i < super.xPosition + this.getWidth() && j < super.yPosition + height;
-         int k = this.getHoverState(this.hover);
-         this.drawTexturedModalRect(super.xPosition, super.yPosition, 0, k * 20, this.getWidth() / 2, height);
-         this.drawTexturedModalRect(super.xPosition + this.getWidth() / 2, super.yPosition, 200 - this.getWidth() / 2, k * 20, this.getWidth() / 2, height);
-         this.mouseDragged(minecraft, i, j);
-         FontRenderer fontrenderer = minecraft.fontRendererObj;
-         if(this.rotated) {
-            GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-         }
+	@Override
+	public boolean mousePressed(final Minecraft minecraft, final int i, final int j) {
+		final boolean bo = !active && getVisible() && hover;
+		if (bo && (listener != null)) {
+			listener.actionPerformed(this);
+			return false;
+		}
+		return bo;
+	}
 
-         if(this.active) {
-            this.drawCenteredString(fontrenderer, super.displayString, super.xPosition + this.getWidth() / 2, super.yPosition + (height - 8) / 2, 16777120);
-         } else if(this.hover) {
-            this.drawCenteredString(fontrenderer, super.displayString, super.xPosition + this.getWidth() / 2, super.yPosition + (height - 8) / 2, 16777120);
-         } else {
-            this.drawCenteredString(fontrenderer, super.displayString, super.xPosition + this.getWidth() / 2, super.yPosition + (height - 8) / 2, 14737632);
-         }
-
-         GL11.glPopMatrix();
-      }
-   }
-
-   protected void mouseDragged(Minecraft minecraft, int i, int j) {}
-
-   public void mouseReleased(int i, int j) {}
-
-   public boolean mousePressed(Minecraft minecraft, int i, int j) {
-      boolean bo = !this.active && this.getVisible() && this.hover;
-      if(bo && this.listener != null) {
-         this.listener.actionPerformed(this);
-         return false;
-      } else {
-         return bo;
-      }
-   }
-
+	@Override
+	public void mouseReleased(final int i, final int j) {
+	}
 }

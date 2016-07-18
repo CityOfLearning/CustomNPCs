@@ -1,6 +1,11 @@
+//
+
+//
+
 package noppes.npcs.client.gui.advanced;
 
 import java.util.HashMap;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,78 +22,76 @@ import noppes.npcs.controllers.DialogOption;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelectionListener, IGuiData {
+	private GuiScreen parent;
+	private HashMap<Integer, DialogOption> data;
+	private int selectedSlot;
 
-   private GuiScreen parent;
-   private HashMap data = new HashMap();
-   private int selectedSlot;
+	public GuiNPCDialogNpcOptions(final EntityNPCInterface npc, final GuiScreen parent) {
+		super(npc);
+		data = new HashMap<Integer, DialogOption>();
+		this.parent = parent;
+		drawDefaultBackground = true;
+		Client.sendData(EnumPacketServer.DialogNpcGet, new Object[0]);
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 1) {
+			NoppesUtil.openGUI(player, parent);
+		}
+		if ((id >= 0) && (id < 20)) {
+			close();
+			selectedSlot = id;
+			int dialogID = -1;
+			if (data.containsKey(id)) {
+				dialogID = data.get(id).dialogId;
+			}
+			NoppesUtil.openGUI(player, new GuiNPCDialogSelection(npc, this, dialogID));
+		}
+		if ((id >= 20) && (id < 40)) {
+			final int slot = id - 20;
+			data.remove(slot);
+			Client.sendData(EnumPacketServer.DialogNpcRemove, slot);
+			initGui();
+		}
+	}
 
-   public GuiNPCDialogNpcOptions(EntityNPCInterface npc, GuiScreen parent) {
-      super(npc);
-      this.parent = parent;
-      super.drawDefaultBackground = true;
-      Client.sendData(EnumPacketServer.DialogNpcGet, new Object[0]);
-   }
+	@Override
+	public void drawScreen(final int i, final int j, final float f) {
+		super.drawScreen(i, j, f);
+	}
 
-   public void initGui() {
-      super.initGui();
+	@Override
+	public void initGui() {
+		super.initGui();
+		for (int i = 0; i < 12; ++i) {
+			final int offset = (i >= 6) ? 200 : 0;
+			addButton(new GuiNpcButton(i + 20, guiLeft + 20 + offset, guiTop + 13 + ((i % 6) * 22), 20, 20, "X"));
+			addLabel(new GuiNpcLabel(i, "" + i, guiLeft + 6 + offset, guiTop + 18 + ((i % 6) * 22)));
+			String title = "dialog.selectoption";
+			if (data.containsKey(i)) {
+				title = data.get(i).title;
+			}
+			addButton(new GuiNpcButton(i, guiLeft + 44 + offset, guiTop + 13 + ((i % 6) * 22), 140, 20, title));
+		}
+	}
 
-      for(int i = 0; i < 12; ++i) {
-         int offset = i >= 6?200:0;
-         this.addButton(new GuiNpcButton(i + 20, super.guiLeft + 20 + offset, super.guiTop + 13 + i % 6 * 22, 20, 20, "X"));
-         this.addLabel(new GuiNpcLabel(i, "" + i, super.guiLeft + 6 + offset, super.guiTop + 18 + i % 6 * 22));
-         String title = "dialog.selectoption";
-         if(this.data.containsKey(Integer.valueOf(i))) {
-            title = ((DialogOption)this.data.get(Integer.valueOf(i))).title;
-         }
+	@Override
+	public void save() {
+	}
 
-         this.addButton(new GuiNpcButton(i, super.guiLeft + 44 + offset, super.guiTop + 13 + i % 6 * 22, 140, 20, title));
-      }
+	@Override
+	public void selected(final int id, final String name) {
+		Client.sendData(EnumPacketServer.DialogNpcSet, selectedSlot, id);
+	}
 
-   }
-
-   public void drawScreen(int i, int j, float f) {
-      super.drawScreen(i, j, f);
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 1) {
-         NoppesUtil.openGUI(super.player, this.parent);
-      }
-
-      int slot;
-      if(id >= 0 && id < 20) {
-         this.close();
-         this.selectedSlot = id;
-         slot = -1;
-         if(this.data.containsKey(Integer.valueOf(id))) {
-            slot = ((DialogOption)this.data.get(Integer.valueOf(id))).dialogId;
-         }
-
-         NoppesUtil.openGUI(super.player, new GuiNPCDialogSelection(super.npc, this, slot));
-      }
-
-      if(id >= 20 && id < 40) {
-         slot = id - 20;
-         this.data.remove(Integer.valueOf(slot));
-         Client.sendData(EnumPacketServer.DialogNpcRemove, new Object[]{Integer.valueOf(slot)});
-         this.initGui();
-      }
-
-   }
-
-   public void save() {}
-
-   public void selected(int id, String name) {
-      Client.sendData(EnumPacketServer.DialogNpcSet, new Object[]{Integer.valueOf(this.selectedSlot), Integer.valueOf(id)});
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      int pos = compound.getInteger("Position");
-      DialogOption dialog = new DialogOption();
-      dialog.readNBT(compound);
-      this.data.put(Integer.valueOf(pos), dialog);
-      this.initGui();
-   }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		final int pos = compound.getInteger("Position");
+		final DialogOption dialog = new DialogOption();
+		dialog.readNBT(compound);
+		data.put(pos, dialog);
+		initGui();
+	}
 }

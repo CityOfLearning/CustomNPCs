@@ -1,95 +1,99 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.ForgeChunkManager.Type;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.constants.EnumJobType;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class ChunkController implements LoadingCallback {
+public class ChunkController implements ForgeChunkManager.LoadingCallback {
+	public static ChunkController instance;
+	private HashMap<Entity, ForgeChunkManager.Ticket> tickets;
 
-   public static ChunkController instance;
-   private HashMap tickets = new HashMap();
+	public ChunkController() {
+		tickets = new HashMap<Entity, ForgeChunkManager.Ticket>();
+		ChunkController.instance = this;
+	}
 
+	public void clear() {
+		tickets = new HashMap<Entity, ForgeChunkManager.Ticket>();
+	}
 
-   public ChunkController() {
-      instance = this;
-   }
+	public void deleteNPC(final EntityNPCInterface npc) {
+		final ForgeChunkManager.Ticket ticket = tickets.get(npc);
+		if (ticket != null) {
+			tickets.remove(npc);
+			ForgeChunkManager.releaseTicket(ticket);
+		}
+	}
 
-   public void clear() {
-      this.tickets = new HashMap();
-   }
+	public ForgeChunkManager.Ticket getTicket(final EntityNPCInterface npc) {
+		ForgeChunkManager.Ticket ticket = tickets.get(npc);
+		if (ticket != null) {
+			return ticket;
+		}
+		if (size() >= CustomNpcs.ChuckLoaders) {
+			return null;
+		}
+		ticket = ForgeChunkManager.requestTicket(CustomNpcs.instance, npc.worldObj, ForgeChunkManager.Type.ENTITY);
+		if (ticket == null) {
+			return null;
+		}
+		ticket.bindEntity(npc);
+		ticket.setChunkListDepth(6);
+		tickets.put(npc, ticket);
+		return null;
+	}
 
-   public Ticket getTicket(EntityNPCInterface npc) {
-      Ticket ticket = (Ticket)this.tickets.get(npc);
-      if(ticket != null) {
-         return ticket;
-      } else if(this.size() >= CustomNpcs.ChuckLoaders) {
-         return null;
-      } else {
-         ticket = ForgeChunkManager.requestTicket(CustomNpcs.instance, npc.worldObj, Type.ENTITY);
-         ticket.bindEntity(npc);
-         ticket.setChunkListDepth(6);
-         this.tickets.put(npc, ticket);
-         return null;
-      }
-   }
+	public int size() {
+		return tickets.size();
+	}
 
-   public void deleteNPC(EntityNPCInterface npc) {
-      Ticket ticket = (Ticket)this.tickets.get(npc);
-      if(ticket != null) {
-         this.tickets.remove(npc);
-         ForgeChunkManager.releaseTicket(ticket);
-      }
+	@Override
+	public void ticketsLoaded(final List<ForgeChunkManager.Ticket> tickets, final World world) {
+		for (final ForgeChunkManager.Ticket ticket : tickets) {
+			if (!(ticket.getEntity() instanceof EntityNPCInterface)) {
+				continue;
+			}
+			final EntityNPCInterface npc = (EntityNPCInterface) ticket.getEntity();
+			if ((npc.advanced.job != 8) || tickets.contains(npc)) {
+				continue;
+			}
+			this.tickets.put(npc, ticket);
+			final double x = npc.posX / 16.0;
+			final double z = npc.posZ / 16.0;
+			ForgeChunkManager.forceChunk(ticket,
+					new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
+			ForgeChunkManager.forceChunk(ticket,
+					new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
+			ForgeChunkManager.forceChunk(ticket,
+					new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.ceiling_double_int(z)));
+			ForgeChunkManager.forceChunk(ticket,
+					new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor_double(z)));
+		}
+	}
 
-   }
-
-   public void ticketsLoaded(List tickets, World world) {
-      Iterator var3 = tickets.iterator();
-
-      while(var3.hasNext()) {
-         Ticket ticket = (Ticket)var3.next();
-         if(ticket.getEntity() instanceof EntityNPCInterface) {
-            EntityNPCInterface npc = (EntityNPCInterface)ticket.getEntity();
-            if(npc.advanced.job == EnumJobType.ChunkLoader && !tickets.contains(npc)) {
-               this.tickets.put(npc, ticket);
-               double x = npc.posX / 16.0D;
-               double z = npc.posZ / 16.0D;
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.ceiling_double_int(z)));
-               ForgeChunkManager.forceChunk(ticket, new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.floor_double(z)));
-            }
-         }
-      }
-
-   }
-
-   public int size() {
-      return this.tickets.size();
-   }
-
-   public void unload(int toRemove) {
-      Iterator ite = this.tickets.keySet().iterator();
-
-      for(int i = 0; ite.hasNext(); ++i) {
-         if(i >= toRemove) {
-            return;
-         }
-
-         Entity entity = (Entity)ite.next();
-         ForgeChunkManager.releaseTicket((Ticket)this.tickets.get(entity));
-         ite.remove();
-      }
-
-   }
+	public void unload(final int toRemove) {
+		final Iterator<Entity> ite = tickets.keySet().iterator();
+		int i = 0;
+		while (ite.hasNext()) {
+			if (i >= toRemove) {
+				return;
+			}
+			final Entity entity = ite.next();
+			ForgeChunkManager.releaseTicket(tickets.get(entity));
+			ite.remove();
+			++i;
+		}
+	}
 }

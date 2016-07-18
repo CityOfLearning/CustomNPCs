@@ -1,10 +1,14 @@
+//
+
+//
+
 package noppes.npcs.client.gui.global;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Vector;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.client.Client;
@@ -25,203 +29,186 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.controllers.Faction;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class GuiNPCManageFactions extends GuiNPCInterface2 implements IScrollData, ICustomScrollListener, ITextfieldListener, IGuiData, ISubGuiListener {
+public class GuiNPCManageFactions extends GuiNPCInterface2
+		implements IScrollData, ICustomScrollListener, ITextfieldListener, IGuiData, ISubGuiListener {
+	private GuiCustomScroll scrollFactions;
+	private HashMap<String, Integer> data;
+	private Faction faction;
+	private String selected;
 
-   private GuiCustomScroll scrollFactions;
-   private HashMap data = new HashMap();
-   private Faction faction = new Faction();
-   private String selected = null;
+	public GuiNPCManageFactions(final EntityNPCInterface npc) {
+		super(npc);
+		data = new HashMap<String, Integer>();
+		faction = new Faction();
+		selected = null;
+		Client.sendData(EnumPacketServer.FactionsGet, new Object[0]);
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 0) {
+			save();
+			String name;
+			for (name = "New"; data.containsKey(name); name += "_") {
+			}
+			final Faction faction = new Faction(-1, name, 65280, 1000);
+			final NBTTagCompound compound = new NBTTagCompound();
+			faction.writeNBT(compound);
+			Client.sendData(EnumPacketServer.FactionSave, compound);
+		}
+		if ((button.id == 1) && data.containsKey(scrollFactions.getSelected())) {
+			Client.sendData(EnumPacketServer.FactionRemove, data.get(selected));
+			scrollFactions.clear();
+			faction = new Faction();
+			initGui();
+		}
+		if (button.id == 2) {
+			setSubGui(new SubGuiNpcFactionPoints(faction));
+		}
+		if (button.id == 3) {
+			faction.hideFaction = (button.getValue() == 1);
+		}
+		if (button.id == 4) {
+			faction.getsAttacked = (button.getValue() == 1);
+		}
+		if (button.id == 10) {
+			setSubGui(new SubGuiColorSelector(faction.color));
+		}
+	}
 
-   public GuiNPCManageFactions(EntityNPCInterface npc) {
-      super(npc);
-      Client.sendData(EnumPacketServer.FactionsGet, new Object[0]);
-   }
+	@Override
+	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+		if (guiCustomScroll.id == 0) {
+			save();
+			selected = scrollFactions.getSelected();
+			Client.sendData(EnumPacketServer.FactionGet, data.get(selected));
+		} else if (guiCustomScroll.id == 1) {
+			final HashSet<Integer> set = new HashSet<Integer>();
+			for (final String s : guiCustomScroll.getSelectedList()) {
+				if (data.containsKey(s)) {
+					set.add(data.get(s));
+				}
+			}
+			faction.attackFactions = set;
+			save();
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 368, super.guiTop + 8, 45, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 368, super.guiTop + 32, 45, 20, "gui.remove"));
-      if(this.scrollFactions == null) {
-         this.scrollFactions = new GuiCustomScroll(this, 0);
-         this.scrollFactions.setSize(143, 208);
-      }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addButton(new GuiNpcButton(0, guiLeft + 368, guiTop + 8, 45, 20, "gui.add"));
+		addButton(new GuiNpcButton(1, guiLeft + 368, guiTop + 32, 45, 20, "gui.remove"));
+		if (scrollFactions == null) {
+			(scrollFactions = new GuiCustomScroll(this, 0)).setSize(143, 208);
+		}
+		scrollFactions.guiLeft = guiLeft + 220;
+		scrollFactions.guiTop = guiTop + 4;
+		addScroll(scrollFactions);
+		if (faction.id == -1) {
+			return;
+		}
+		addTextField(new GuiNpcTextField(0, this, guiLeft + 40, guiTop + 4, 136, 20, faction.name));
+		getTextField(0).setMaxStringLength(20);
+		addLabel(new GuiNpcLabel(0, "gui.name", guiLeft + 8, guiTop + 9));
+		addLabel(new GuiNpcLabel(10, "ID", guiLeft + 178, guiTop + 4));
+		addLabel(new GuiNpcLabel(11, faction.id + "", guiLeft + 178, guiTop + 14));
+		String color;
+		for (color = Integer.toHexString(faction.color); color.length() < 6; color = "0" + color) {
+		}
+		addButton(new GuiNpcButton(10, guiLeft + 40, guiTop + 26, 60, 20, color));
+		addLabel(new GuiNpcLabel(1, "gui.color", guiLeft + 8, guiTop + 31));
+		getButton(10).setTextColor(faction.color);
+		addLabel(new GuiNpcLabel(2, "faction.points", guiLeft + 8, guiTop + 53));
+		addButton(new GuiNpcButton(2, guiLeft + 100, guiTop + 48, 45, 20, "selectServer.edit"));
+		addLabel(new GuiNpcLabel(3, "faction.hidden", guiLeft + 8, guiTop + 75));
+		addButton(new GuiNpcButton(3, guiLeft + 100, guiTop + 70, 45, 20, new String[] { "gui.no", "gui.yes" },
+				faction.hideFaction ? 1 : 0));
+		addLabel(new GuiNpcLabel(4, "faction.attacked", guiLeft + 8, guiTop + 97));
+		addButton(new GuiNpcButton(4, guiLeft + 100, guiTop + 92, 45, 20, new String[] { "gui.no", "gui.yes" },
+				faction.getsAttacked ? 1 : 0));
+		addLabel(new GuiNpcLabel(6, "faction.hostiles", guiLeft + 8, guiTop + 145));
+		final ArrayList<String> hostileList = new ArrayList<String>(scrollFactions.getList());
+		hostileList.remove(faction.name);
+		final HashSet<String> set = new HashSet<String>();
+		for (final String s : data.keySet()) {
+			if (!s.equals(faction.name) && faction.attackFactions.contains(data.get(s))) {
+				set.add(s);
+			}
+		}
+		final GuiCustomScroll scrollHostileFactions = new GuiCustomScroll(this, 1, true);
+		scrollHostileFactions.setSize(163, 58);
+		scrollHostileFactions.guiLeft = guiLeft + 4;
+		scrollHostileFactions.guiTop = guiTop + 154;
+		scrollHostileFactions.setList(hostileList);
+		scrollHostileFactions.setSelectedList(set);
+		addScroll(scrollHostileFactions);
+	}
 
-      this.scrollFactions.guiLeft = super.guiLeft + 220;
-      this.scrollFactions.guiTop = super.guiTop + 4;
-      this.addScroll(this.scrollFactions);
-      if(this.faction.id != -1) {
-         this.addTextField(new GuiNpcTextField(0, this, super.guiLeft + 40, super.guiTop + 4, 136, 20, this.faction.name));
-         this.getTextField(0).setMaxStringLength(20);
-         this.addLabel(new GuiNpcLabel(0, "gui.name", super.guiLeft + 8, super.guiTop + 9));
-         this.addLabel(new GuiNpcLabel(10, "ID", super.guiLeft + 178, super.guiTop + 4));
-         this.addLabel(new GuiNpcLabel(11, this.faction.id + "", super.guiLeft + 178, super.guiTop + 14));
+	@Override
+	public void save() {
+		if ((selected != null) && data.containsKey(selected) && (faction != null)) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			faction.writeNBT(compound);
+			Client.sendData(EnumPacketServer.FactionSave, compound);
+		}
+	}
 
-         String color;
-         for(color = Integer.toHexString(this.faction.color); color.length() < 6; color = "0" + color) {
-            ;
-         }
+	@Override
+	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+		final String name = scrollFactions.getSelected();
+		this.data = data;
+		scrollFactions.setList(list);
+		if (name != null) {
+			scrollFactions.setSelected(name);
+		}
+	}
 
-         this.addButton(new GuiNpcButton(10, super.guiLeft + 40, super.guiTop + 26, 60, 20, color));
-         this.addLabel(new GuiNpcLabel(1, "gui.color", super.guiLeft + 8, super.guiTop + 31));
-         this.getButton(10).setTextColor(this.faction.color);
-         this.addLabel(new GuiNpcLabel(2, "faction.points", super.guiLeft + 8, super.guiTop + 53));
-         this.addButton(new GuiNpcButton(2, super.guiLeft + 100, super.guiTop + 48, 45, 20, "selectServer.edit"));
-         this.addLabel(new GuiNpcLabel(3, "faction.hidden", super.guiLeft + 8, super.guiTop + 75));
-         this.addButton(new GuiNpcButton(3, super.guiLeft + 100, super.guiTop + 70, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.hideFaction?1:0));
-         this.addLabel(new GuiNpcLabel(4, "faction.attacked", super.guiLeft + 8, super.guiTop + 97));
-         this.addButton(new GuiNpcButton(4, super.guiLeft + 100, super.guiTop + 92, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.getsAttacked?1:0));
-         this.addLabel(new GuiNpcLabel(6, "faction.hostiles", super.guiLeft + 8, super.guiTop + 145));
-         ArrayList hostileList = new ArrayList(this.scrollFactions.getList());
-         hostileList.remove(this.faction.name);
-         HashSet set = new HashSet();
-         Iterator scrollHostileFactions = this.data.keySet().iterator();
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		(faction = new Faction()).readNBT(compound);
+		setSelected(faction.name);
+		initGui();
+	}
 
-         while(scrollHostileFactions.hasNext()) {
-            String s = (String)scrollHostileFactions.next();
-            if(!s.equals(this.faction.name) && this.faction.attackFactions.contains(this.data.get(s))) {
-               set.add(s);
-            }
-         }
+	@Override
+	public void setSelected(final String selected) {
+		this.selected = selected;
+		scrollFactions.setSelected(selected);
+	}
 
-         GuiCustomScroll scrollHostileFactions1 = new GuiCustomScroll(this, 1, true);
-         scrollHostileFactions1.setSize(163, 58);
-         scrollHostileFactions1.guiLeft = super.guiLeft + 4;
-         scrollHostileFactions1.guiTop = super.guiTop + 154;
-         scrollHostileFactions1.setList(hostileList);
-         scrollHostileFactions1.setSelectedList(set);
-         this.addScroll(scrollHostileFactions1);
-      }
-   }
+	@Override
+	public void subGuiClosed(final SubGuiInterface subgui) {
+		if (subgui instanceof SubGuiColorSelector) {
+			faction.color = ((SubGuiColorSelector) subgui).color;
+			initGui();
+		}
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.save();
-
-         String name;
-         for(name = "New"; this.data.containsKey(name); name = name + "_") {
-            ;
-         }
-
-         Faction faction = new Faction(-1, name, '\uff00', 1000);
-         NBTTagCompound compound = new NBTTagCompound();
-         faction.writeNBT(compound);
-         Client.sendData(EnumPacketServer.FactionSave, new Object[]{compound});
-      }
-
-      if(button.field_146127_k == 1 && this.data.containsKey(this.scrollFactions.getSelected())) {
-         Client.sendData(EnumPacketServer.FactionRemove, new Object[]{this.data.get(this.selected)});
-         this.scrollFactions.clear();
-         this.faction = new Faction();
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 2) {
-         this.setSubGui(new SubGuiNpcFactionPoints(this.faction));
-      }
-
-      if(button.field_146127_k == 3) {
-         this.faction.hideFaction = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 4) {
-         this.faction.getsAttacked = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 10) {
-         this.setSubGui(new SubGuiColorSelector(this.faction.color));
-      }
-
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.faction = new Faction();
-      this.faction.readNBT(compound);
-      this.setSelected(this.faction.name);
-      this.initGui();
-   }
-
-   public void setData(Vector list, HashMap data) {
-      String name = this.scrollFactions.getSelected();
-      this.data = data;
-      this.scrollFactions.setList(list);
-      if(name != null) {
-         this.scrollFactions.setSelected(name);
-      }
-
-   }
-
-   public void setSelected(String selected) {
-      this.selected = selected;
-      this.scrollFactions.setSelected(selected);
-   }
-
-   public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
-      if(guiCustomScroll.id == 0) {
-         this.save();
-         this.selected = this.scrollFactions.getSelected();
-         Client.sendData(EnumPacketServer.FactionGet, new Object[]{this.data.get(this.selected)});
-      } else if(guiCustomScroll.id == 1) {
-         HashSet set = new HashSet();
-         Iterator var6 = guiCustomScroll.getSelectedList().iterator();
-
-         while(var6.hasNext()) {
-            String s = (String)var6.next();
-            if(this.data.containsKey(s)) {
-               set.add(this.data.get(s));
-            }
-         }
-
-         this.faction.attackFactions = set;
-         this.save();
-      }
-
-   }
-
-   public void save() {
-      if(this.selected != null && this.data.containsKey(this.selected) && this.faction != null) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.faction.writeNBT(compound);
-         Client.sendData(EnumPacketServer.FactionSave, new Object[]{compound});
-      }
-
-   }
-
-   public void unFocused(GuiNpcTextField guiNpcTextField) {
-      if(this.faction.id != -1) {
-         if(guiNpcTextField.id == 0) {
-            String color = guiNpcTextField.getText();
-            if(!color.isEmpty() && !this.data.containsKey(color)) {
-               String e = this.faction.name;
-               this.data.remove(this.faction.name);
-               this.faction.name = color;
-               this.data.put(this.faction.name, Integer.valueOf(this.faction.id));
-               this.selected = color;
-               this.scrollFactions.replace(e, this.faction.name);
-            }
-         } else if(guiNpcTextField.id == 1) {
-            boolean color1 = false;
-
-            int color2;
-            try {
-               color2 = Integer.parseInt(guiNpcTextField.getText(), 16);
-            } catch (NumberFormatException var4) {
-               color2 = 0;
-            }
-
-            this.faction.color = color2;
-            guiNpcTextField.setTextColor(this.faction.color);
-         }
-
-      }
-   }
-
-   public void subGuiClosed(SubGuiInterface subgui) {
-      if(subgui instanceof SubGuiColorSelector) {
-         this.faction.color = ((SubGuiColorSelector)subgui).color;
-         this.initGui();
-      }
-
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+		if (faction.id == -1) {
+			return;
+		}
+		if (guiNpcTextField.id == 0) {
+			final String name = guiNpcTextField.getText();
+			if (!name.isEmpty() && !data.containsKey(name)) {
+				final String old = faction.name;
+				data.remove(faction.name);
+				faction.name = name;
+				data.put(faction.name, faction.id);
+				selected = name;
+				scrollFactions.replace(old, faction.name);
+			}
+		} else if (guiNpcTextField.id == 1) {
+			int color = 0;
+			try {
+				color = Integer.parseInt(guiNpcTextField.getText(), 16);
+			} catch (NumberFormatException e) {
+				color = 0;
+			}
+			guiNpcTextField.setTextColor(faction.color = color);
+		}
+	}
 }

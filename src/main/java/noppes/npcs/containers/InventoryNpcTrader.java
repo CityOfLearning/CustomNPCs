@@ -1,80 +1,122 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import noppes.npcs.containers.ContainerNPCTrader;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryNpcTrader implements IInventory {
+	private String inventoryTitle;
+	private int slotsCount;
+	private ItemStack[] inventoryContents;
+	private ContainerNPCTrader con;
 
-   private String inventoryTitle;
-   private int slotsCount;
-   private ItemStack[] inventoryContents;
-   private ContainerNPCTrader con;
+	public InventoryNpcTrader(final String s, final int i, final ContainerNPCTrader con) {
+		this.con = con;
+		inventoryTitle = s;
+		slotsCount = i;
+		inventoryContents = new ItemStack[i];
+	}
 
+	@Override
+	public void clear() {
+	}
 
-   public InventoryNpcTrader(String s, int i, ContainerNPCTrader con) {
-      this.con = con;
-      this.inventoryTitle = s;
-      this.slotsCount = i;
-      this.inventoryContents = new ItemStack[i];
-   }
+	@Override
+	public void closeInventory(final EntityPlayer player) {
+	}
 
-   public ItemStack getStackInSlot(int i) {
-      ItemStack toBuy = this.inventoryContents[i];
-      return toBuy == null?null:ItemStack.copyItemStack(toBuy);
-   }
+	@Override
+	public ItemStack decrStackSize(final int i, final int j) {
+		if (inventoryContents[i] != null) {
+			final ItemStack itemstack = inventoryContents[i];
+			return ItemStack.copyItemStack(itemstack);
+		}
+		return null;
+	}
 
-   public ItemStack decrStackSize(int i, int j) {
-      if(this.inventoryContents[i] != null) {
-         ItemStack itemstack = this.inventoryContents[i];
-         return ItemStack.copyItemStack(itemstack);
-      } else {
-         return null;
-      }
-   }
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentText(inventoryTitle);
+	}
 
-   public void setInventorySlotContents(int i, ItemStack itemstack) {
-      if(itemstack != null) {
-         this.inventoryContents[i] = itemstack.copy();
-      }
+	@Override
+	public int getField(final int id) {
+		return 0;
+	}
 
-      this.markDirty();
-   }
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
 
-   public int getSizeInventory() {
-      return this.slotsCount;
-   }
+	@Override
+	public int getInventoryStackLimit() {
+		return 64;
+	}
 
-   public int getInventoryStackLimit() {
-      return 64;
-   }
+	@Override
+	public String getName() {
+		return null;
+	}
 
-   public boolean isUseableByPlayer(EntityPlayer entityplayer) {
-      return true;
-   }
+	@Override
+	public int getSizeInventory() {
+		return slotsCount;
+	}
 
-   public ItemStack getStackInSlotOnClosing(int i) {
-      return null;
-   }
+	@Override
+	public ItemStack getStackInSlot(final int i) {
+		final ItemStack toBuy = inventoryContents[i];
+		if (toBuy == null) {
+			return null;
+		}
+		return ItemStack.copyItemStack(toBuy);
+	}
 
-   public boolean isItemValidForSlot(int i, ItemStack itemstack) {
-      return true;
-   }
+	@Override
+	public boolean hasCustomName() {
+		return true;
+	}
 
-   public String getInventoryName() {
-      return this.inventoryTitle;
-   }
+	@Override
+	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+		return true;
+	}
 
-   public boolean isCustomInventoryName() {
-      return true;
-   }
+	@Override
+	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+		return true;
+	}
 
-   public void markDirty() {
-      this.con.onCraftMatrixChanged(this);
-   }
+	@Override
+	public void markDirty() {
+		con.onCraftMatrixChanged(this);
+	}
 
-   public void openChest() {}
+	@Override
+	public void openInventory(final EntityPlayer player) {
+	}
 
-   public void closeChest() {}
+	@Override
+	public ItemStack removeStackFromSlot(final int i) {
+		return null;
+	}
+
+	@Override
+	public void setField(final int id, final int value) {
+	}
+
+	@Override
+	public void setInventorySlotContents(final int i, final ItemStack itemstack) {
+		if (itemstack != null) {
+			inventoryContents[i] = itemstack.copy();
+		}
+		markDirty();
+	}
 }

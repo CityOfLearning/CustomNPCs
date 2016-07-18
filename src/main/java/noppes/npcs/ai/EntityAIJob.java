@@ -1,37 +1,51 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIJob extends EntityAIBase {
+	private EntityNPCInterface npc;
 
-   private EntityNPCInterface npc;
+	public EntityAIJob(final EntityNPCInterface npc) {
+		this.npc = npc;
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		return !npc.isKilled() && (npc.jobInterface != null) && npc.jobInterface.aiContinueExecute();
+	}
 
-   public EntityAIJob(EntityNPCInterface npc) {
-      this.npc = npc;
-   }
+	@Override
+	public int getMutexBits() {
+		if (npc.jobInterface == null) {
+			return super.getMutexBits();
+		}
+		return npc.jobInterface.getMutexBits();
+	}
 
-   public boolean shouldExecute() {
-      return !this.npc.isKilled() && this.npc.jobInterface != null?this.npc.jobInterface.aiShouldExecute():false;
-   }
+	@Override
+	public void resetTask() {
+		if (npc.jobInterface != null) {
+			npc.jobInterface.resetTask();
+		}
+	}
 
-   public void startExecuting() {
-      this.npc.jobInterface.aiStartExecuting();
-   }
+	@Override
+	public boolean shouldExecute() {
+		return !npc.isKilled() && (npc.jobInterface != null) && npc.jobInterface.aiShouldExecute();
+	}
 
-   public boolean continueExecuting() {
-      return !this.npc.isKilled() && this.npc.jobInterface != null?this.npc.jobInterface.aiContinueExecute():false;
-   }
+	@Override
+	public void startExecuting() {
+		npc.jobInterface.aiStartExecuting();
+	}
 
-   public void updateTask() {
-      this.npc.jobInterface.aiUpdateTask();
-   }
-
-   public void resetTask() {
-      if(this.npc.jobInterface != null) {
-         this.npc.jobInterface.resetTask();
-      }
-
-   }
+	@Override
+	public void updateTask() {
+		npc.jobInterface.aiUpdateTask();
+	}
 }

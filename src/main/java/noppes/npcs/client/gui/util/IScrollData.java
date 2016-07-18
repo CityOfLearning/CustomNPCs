@@ -1,11 +1,14 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
 import java.util.HashMap;
 import java.util.Vector;
 
 public interface IScrollData {
+	void setData(final Vector<String> p0, final HashMap<String, Integer> p1);
 
-   void setData(Vector var1, HashMap var2);
-
-   void setSelected(String var1);
+	void setSelected(final String p0);
 }

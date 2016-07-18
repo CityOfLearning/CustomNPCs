@@ -1,100 +1,106 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.Random;
+
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockAccess;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.NoppesUtilServer;
-import noppes.npcs.blocks.BlockLightable;
 import noppes.npcs.blocks.tiles.TileCampfire;
-import org.lwjgl.opengl.GL11;
 
 public class BlockCampfire extends BlockLightable {
+	public BlockCampfire(final boolean lit) {
+		super(Blocks.cobblestone, lit);
+		setBlockBounds(0.0f, 0.0f, 0.0f, 1.0f, 0.5f, 1.0f);
+		if (lit) {
+			setLightLevel(0.9375f);
+		}
+	}
 
-   public BlockCampfire(boolean lit) {
-      super(Blocks.cobblestone, lit);
-      this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-   }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileCampfire();
+	}
 
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileCampfire();
-   }
+	@Override
+	public Block litBlock() {
+		return CustomItems.campfire;
+	}
 
-   public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      ItemStack item = player.inventory.getCurrentItem();
-      if(item == null) {
-         return true;
-      } else {
-         world.getBlockMetadata(x, y, z);
-         if((item.getItem() == Items.flint || item.getItem() == Items.flint_and_steel) && this.unlitBlock() == this) {
-            if(world.rand.nextInt(3) == 0 && !world.isRemote) {
-               super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
-            }
+	@Override
+	public int maxRotation() {
+		return 8;
+	}
 
-            CustomNpcs.proxy.spawnParticle("largesmoke", (double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), 0.0D, 0.0D, 0.0D, 2.0F);
-            if(item.getItem() == Items.flint) {
-               NoppesUtilServer.consumeItemStack(1, player);
-            } else {
-               item.damageItem(1, player);
-            }
+	@Override
+	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		final ItemStack item = player.inventory.getCurrentItem();
+		if (item == null) {
+			return true;
+		}
+		if (((item.getItem() == Items.flint) || (item.getItem() == Items.flint_and_steel)) && (unlitBlock() == this)) {
+			if ((world.rand.nextInt(3) == 0) && !world.isRemote) {
+				super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+			}
+			CustomNpcs.proxy.spawnParticle(EnumParticleTypes.SMOKE_LARGE, pos.getX() + 0.5f, pos.getY() + 0.5f,
+					pos.getZ() + 0.5f, 0.0, 0.0, 0.0, 2.0f);
+			if (item.getItem() == Items.flint) {
+				NoppesUtilServer.consumeItemStack(1, player);
+			} else {
+				item.damageItem(1, player);
+			}
+			return true;
+		}
+		if ((item.getItem() == Item.getItemFromBlock(Blocks.sand)) && (litBlock() == this)) {
+			super.onBlockActivated(world, pos, state, player, side, hitX, hitY, hitZ);
+		}
+		return true;
+	}
 
-            return true;
-         } else {
-            if(item.getItem() == Item.getItemFromBlock(Blocks.sand) && this.litBlock() == this) {
-               super.onBlockActivated(world, x, y, z, player, par6, par7, par8, par9);
-            }
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void randomDisplayTick(final World world, final BlockPos pos, final IBlockState state, final Random random) {
+		if (state.getBlock() != CustomItems.campfire) {
+			return;
+		}
+		if (random.nextInt(36) == 0) {
+			world.playSound(pos.getX() + 0.5f, pos.getY() + 0.5f, pos.getZ() + 0.5f, "fire.fire",
+					1.0f + random.nextFloat(), 0.3f + (random.nextFloat() * 0.7f), false);
+		}
+		world.getTileEntity(pos);
+		final float xOffset = 0.5f;
+		final float yOffset = 0.7f;
+		final float zOffset = 0.5f;
+		final double d0 = pos.getX() + xOffset;
+		final double d2 = pos.getY() + yOffset;
+		final double d3 = pos.getZ() + zOffset;
+		GlStateManager.pushMatrix();
+		CustomNpcs.proxy.spawnParticle(EnumParticleTypes.SMOKE_LARGE, d0, d2, d3, 0.0, 0.0, 0.0, 2.0f);
+		CustomNpcs.proxy.spawnParticle(EnumParticleTypes.FLAME, d0, d2, d3, 0.0, 0.0, 0.0, 4.0f);
+		GlStateManager.popMatrix();
+	}
 
-            return true;
-         }
-      }
-   }
-
-   public int maxRotation() {
-      return 8;
-   }
-
-   @SideOnly(Side.CLIENT)
-   public void randomDisplayTick(World world, int x, int y, int z, Random random) {
-      int meta = world.getBlockMetadata(x, y, z);
-      if(meta != 1) {
-         if(random.nextInt(36) == 0) {
-            world.playSound((double)((float)x + 0.5F), (double)((float)y + 0.5F), (double)((float)z + 0.5F), "fire.fire", 1.0F + random.nextFloat(), 0.3F + random.nextFloat() * 0.7F, false);
-         }
-
-         TileCampfire tile = (TileCampfire)world.getTileEntity(x, y, z);
-         float xOffset = 0.5F;
-         float yOffset = 0.7F;
-         float zOffset = 0.5F;
-         double d0 = (double)((float)x + xOffset);
-         double d1 = (double)((float)y + yOffset);
-         double d2 = (double)((float)z + zOffset);
-         GL11.glPushMatrix();
-         CustomNpcs.proxy.spawnParticle("largesmoke", d0, d1, d2, 0.0D, 0.0D, 0.0D, 2.0F);
-         CustomNpcs.proxy.spawnParticle("flame", d0, d1, d2, 0.0D, 0.0D, 0.0D, 4.0F);
-         GL11.glPopMatrix();
-      }
-   }
-
-   public int getLightValue(IBlockAccess world, int x, int y, int z) {
-      int meta = world.getBlockMetadata(x, y, z);
-      return meta == 0?14:0;
-   }
-
-   public Block unlitBlock() {
-      return CustomItems.campfire_unlit;
-   }
-
-   public Block litBlock() {
-      return CustomItems.campfire;
-   }
+	@Override
+	public Block unlitBlock() {
+		return CustomItems.campfire_unlit;
+	}
 }

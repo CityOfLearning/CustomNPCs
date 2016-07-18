@@ -1,86 +1,110 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobInterface;
 import noppes.npcs.util.ValueUtil;
 
 public class JobPuppet extends JobInterface {
+	public static class PartConfig {
+		public float rotationX;
+		public float rotationY;
+		public float rotationZ;
+		public boolean disabled;
 
-   public JobPuppet.PartConfig head = new JobPuppet.PartConfig();
-   public JobPuppet.PartConfig larm = new JobPuppet.PartConfig();
-   public JobPuppet.PartConfig rarm = new JobPuppet.PartConfig();
-   public JobPuppet.PartConfig body = new JobPuppet.PartConfig();
-   public JobPuppet.PartConfig lleg = new JobPuppet.PartConfig();
-   public JobPuppet.PartConfig rleg = new JobPuppet.PartConfig();
-   public boolean whileStanding = true;
-   public boolean whileAttacking = false;
-   public boolean whileMoving = false;
+		public PartConfig() {
+			rotationX = 0.0f;
+			rotationY = 0.0f;
+			rotationZ = 0.0f;
+			disabled = false;
+		}
 
+		public void readNBT(final NBTTagCompound compound) {
+			rotationX = ValueUtil.correctFloat(compound.getFloat("RotationX"), -0.5f, 0.5f);
+			rotationY = ValueUtil.correctFloat(compound.getFloat("RotationY"), -0.5f, 0.5f);
+			rotationZ = ValueUtil.correctFloat(compound.getFloat("RotationZ"), -0.5f, 0.5f);
+			disabled = compound.getBoolean("Disabled");
+		}
 
-   public JobPuppet(EntityNPCInterface npc) {
-      super(npc);
-   }
+		public NBTTagCompound writeNBT() {
+			final NBTTagCompound compound = new NBTTagCompound();
+			compound.setFloat("RotationX", rotationX);
+			compound.setFloat("RotationY", rotationY);
+			compound.setFloat("RotationZ", rotationZ);
+			compound.setBoolean("Disabled", disabled);
+			return compound;
+		}
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-      compound.setTag("PuppetHead", this.head.writeNBT());
-      compound.setTag("PuppetLArm", this.larm.writeNBT());
-      compound.setTag("PuppetRArm", this.rarm.writeNBT());
-      compound.setTag("PuppetBody", this.body.writeNBT());
-      compound.setTag("PuppetLLeg", this.lleg.writeNBT());
-      compound.setTag("PuppetRLeg", this.rleg.writeNBT());
-      compound.setBoolean("PuppetStanding", this.whileStanding);
-      compound.setBoolean("PuppetAttacking", this.whileAttacking);
-      compound.setBoolean("PuppetMoving", this.whileMoving);
-      return compound;
-   }
+	public PartConfig head;
+	public PartConfig larm;
+	public PartConfig rarm;
+	public PartConfig body;
+	public PartConfig lleg;
+	public PartConfig rleg;
+	public boolean whileStanding;
+	public boolean whileAttacking;
 
-   public void readFromNBT(NBTTagCompound compound) {
-      this.head.readNBT(compound.getCompoundTag("PuppetHead"));
-      this.larm.readNBT(compound.getCompoundTag("PuppetLArm"));
-      this.rarm.readNBT(compound.getCompoundTag("PuppetRArm"));
-      this.body.readNBT(compound.getCompoundTag("PuppetBody"));
-      this.lleg.readNBT(compound.getCompoundTag("PuppetLLeg"));
-      this.rleg.readNBT(compound.getCompoundTag("PuppetRLeg"));
-      this.whileStanding = compound.getBoolean("PuppetStanding");
-      this.whileAttacking = compound.getBoolean("PuppetAttacking");
-      this.whileMoving = compound.getBoolean("PuppetMoving");
-   }
+	public boolean whileMoving;
 
-   public boolean aiShouldExecute() {
-      return false;
-   }
+	public JobPuppet(final EntityNPCInterface npc) {
+		super(npc);
+		head = new PartConfig();
+		larm = new PartConfig();
+		rarm = new PartConfig();
+		body = new PartConfig();
+		lleg = new PartConfig();
+		rleg = new PartConfig();
+		whileStanding = true;
+		whileAttacking = false;
+		whileMoving = false;
+	}
 
-   public void reset() {}
+	@Override
+	public boolean aiShouldExecute() {
+		return false;
+	}
 
-   public void delete() {}
+	@Override
+	public void delete() {
+	}
 
-   public boolean isActive() {
-      return !super.npc.isEntityAlive()?false:this.whileAttacking && super.npc.isAttacking() || this.whileMoving && super.npc.isWalking() || this.whileStanding && !super.npc.isWalking();
-   }
+	public boolean isActive() {
+		return npc.isEntityAlive() && ((whileAttacking && npc.isAttacking()) || (whileMoving && npc.isWalking())
+				|| (whileStanding && !npc.isWalking()));
+	}
 
-   public static class PartConfig {
+	@Override
+	public void readFromNBT(final NBTTagCompound compound) {
+		head.readNBT(compound.getCompoundTag("PuppetHead"));
+		larm.readNBT(compound.getCompoundTag("PuppetLArm"));
+		rarm.readNBT(compound.getCompoundTag("PuppetRArm"));
+		body.readNBT(compound.getCompoundTag("PuppetBody"));
+		lleg.readNBT(compound.getCompoundTag("PuppetLLeg"));
+		rleg.readNBT(compound.getCompoundTag("PuppetRLeg"));
+		whileStanding = compound.getBoolean("PuppetStanding");
+		whileAttacking = compound.getBoolean("PuppetAttacking");
+		whileMoving = compound.getBoolean("PuppetMoving");
+	}
 
-      public float rotationX = 0.0F;
-      public float rotationY = 0.0F;
-      public float rotationZ = 0.0F;
-      public boolean disabled = false;
+	@Override
+	public void reset() {
+	}
 
-
-      public NBTTagCompound writeNBT() {
-         NBTTagCompound compound = new NBTTagCompound();
-         compound.setFloat("RotationX", this.rotationX);
-         compound.setFloat("RotationY", this.rotationY);
-         compound.setFloat("RotationZ", this.rotationZ);
-         compound.setBoolean("Disabled", this.disabled);
-         return compound;
-      }
-
-      public void readNBT(NBTTagCompound compound) {
-         this.rotationX = ValueUtil.correctFloat(compound.getFloat("RotationX"), -0.5F, 0.5F);
-         this.rotationY = ValueUtil.correctFloat(compound.getFloat("RotationY"), -0.5F, 0.5F);
-         this.rotationZ = ValueUtil.correctFloat(compound.getFloat("RotationZ"), -0.5F, 0.5F);
-         this.disabled = compound.getBoolean("Disabled");
-      }
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+		compound.setTag("PuppetHead", head.writeNBT());
+		compound.setTag("PuppetLArm", larm.writeNBT());
+		compound.setTag("PuppetRArm", rarm.writeNBT());
+		compound.setTag("PuppetBody", body.writeNBT());
+		compound.setTag("PuppetLLeg", lleg.writeNBT());
+		compound.setTag("PuppetRLeg", rleg.writeNBT());
+		compound.setBoolean("PuppetStanding", whileStanding);
+		compound.setBoolean("PuppetAttacking", whileAttacking);
+		compound.setBoolean("PuppetMoving", whileMoving);
+		return compound;
+	}
 }

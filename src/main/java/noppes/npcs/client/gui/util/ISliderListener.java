@@ -1,12 +1,13 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
-import noppes.npcs.client.gui.util.GuiNpcSlider;
-
 public interface ISliderListener {
+	void mouseDragged(final GuiNpcSlider p0);
 
-   void mouseDragged(GuiNpcSlider var1);
+	void mousePressed(final GuiNpcSlider p0);
 
-   void mousePressed(GuiNpcSlider var1);
-
-   void mouseReleased(GuiNpcSlider var1);
+	void mouseReleased(final GuiNpcSlider p0);
 }

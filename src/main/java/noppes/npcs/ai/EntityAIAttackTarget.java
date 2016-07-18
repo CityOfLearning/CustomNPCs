@@ -1,104 +1,103 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.pathfinding.PathEntity;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.util.BlockPos;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIAttackTarget extends EntityAIBase {
+	private EntityNPCInterface npc;
+	private EntityLivingBase entityTarget;
+	private int attackTick;
+	private PathEntity entityPathEntity;
+	private int delayCounter;
+	private boolean navOverride;
 
-   World worldObj;
-   EntityNPCInterface attacker;
-   EntityLivingBase entityTarget;
-   int attackTick = 0;
-   PathEntity entityPathEntity;
-   private int field_75445_i;
-   private boolean navOverride = false;
+	public EntityAIAttackTarget(final EntityNPCInterface par1EntityLiving) {
+		navOverride = false;
+		attackTick = 0;
+		npc = par1EntityLiving;
+		setMutexBits(navOverride ? AiMutex.PATHING : (AiMutex.LOOK + AiMutex.PASSIVE));
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		entityTarget = npc.getAttackTarget();
+		if ((entityTarget == null) || !entityTarget.isEntityAlive()) {
+			return false;
+		}
+		if (!npc.isInRange(entityTarget, npc.stats.aggroRange)) {
+			return false;
+		}
+		final int melee = npc.stats.ranged.getMeleeRange();
+		return ((melee <= 0) || npc.isInRange(entityTarget, melee))
+				&& npc.isWithinHomeDistanceFromPosition(new BlockPos(entityTarget));
+	}
 
-   public EntityAIAttackTarget(EntityNPCInterface par1EntityLiving) {
-      this.attacker = par1EntityLiving;
-      this.worldObj = par1EntityLiving.worldObj;
-      this.setMutexBits(this.navOverride?AiMutex.PATHING:AiMutex.LOOK + AiMutex.PASSIVE);
-   }
+	public void navOverride(final boolean nav) {
+		navOverride = nav;
+		setMutexBits(navOverride ? AiMutex.PATHING : (AiMutex.LOOK + AiMutex.PASSIVE));
+	}
 
-   public boolean shouldExecute() {
-      EntityLivingBase entitylivingbase = this.attacker.getAttackTarget();
-      if(entitylivingbase == null) {
-         return false;
-      } else if(!entitylivingbase.isEntityAlive()) {
-         return false;
-      } else if(this.attacker.inventory.getProjectile() != null && this.attacker.ai.useRangeMelee == 0) {
-         return false;
-      } else {
-         double var2 = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.boundingBox.minY, entitylivingbase.posZ);
-         double var3 = (double)(this.attacker.ai.distanceToMelee * this.attacker.ai.distanceToMelee);
-         if(this.attacker.ai.useRangeMelee == 1 && var2 > var3) {
-            return false;
-         } else {
-            this.entityTarget = entitylivingbase;
-            this.entityPathEntity = this.attacker.getNavigator().getPathToEntityLiving(entitylivingbase);
-            return this.entityPathEntity != null;
-         }
-      }
-   }
+	@Override
+	public void resetTask() {
+		entityPathEntity = null;
+		entityTarget = null;
+		npc.setAttackTarget(null);
+		npc.getNavigator().clearPathEntity();
+	}
 
-   public boolean continueExecuting() {
-      this.entityTarget = this.attacker.getAttackTarget();
-      return this.entityTarget != null && this.entityTarget.isEntityAlive()?(this.attacker.getDistanceToEntity(this.entityTarget) > (float)this.attacker.stats.aggroRange?false:(this.attacker.ai.useRangeMelee == 1 && this.attacker.getDistanceSqToEntity(this.entityTarget) > (double)(this.attacker.ai.distanceToMelee * this.attacker.ai.distanceToMelee)?false:this.attacker.isWithinHomeDistance(MathHelper.floor_double(this.entityTarget.posX), MathHelper.floor_double(this.entityTarget.posY), MathHelper.floor_double(this.entityTarget.posZ)))):false;
-   }
+	@Override
+	public boolean shouldExecute() {
+		final EntityLivingBase entitylivingbase = npc.getAttackTarget();
+		if ((entitylivingbase == null) || !entitylivingbase.isEntityAlive()) {
+			return false;
+		}
+		final int melee = npc.stats.ranged.getMeleeRange();
+		if ((npc.inventory.getProjectile() != null) && ((melee <= 0) || !npc.isInRange(entitylivingbase, melee))) {
+			return false;
+		}
+		entityTarget = entitylivingbase;
+		entityPathEntity = npc.getNavigator().getPathToEntityLiving(entitylivingbase);
+		return entityPathEntity != null;
+	}
 
-   public void startExecuting() {
-      if(!this.navOverride) {
-         this.attacker.getNavigator().setPath(this.entityPathEntity, 1.3D);
-      }
+	@Override
+	public void startExecuting() {
+		if (!navOverride) {
+			npc.getNavigator().setPath(entityPathEntity, 1.3);
+		}
+		delayCounter = 0;
+	}
 
-      this.field_75445_i = 0;
-      if(this.attacker.getRangedTask() != null && this.attacker.ai.useRangeMelee == 2) {
-         this.attacker.getRangedTask().navOverride(true);
-      }
-
-   }
-
-   public void resetTask() {
-      this.entityPathEntity = null;
-      this.entityTarget = null;
-      this.attacker.setAttackTarget((EntityLivingBase)null);
-      this.attacker.getNavigator().clearPathEntity();
-      if(this.attacker.getRangedTask() != null && this.attacker.ai.useRangeMelee == 2) {
-         this.attacker.getRangedTask().navOverride(false);
-      }
-
-   }
-
-   public void updateTask() {
-      this.attacker.getLookHelper().setLookPositionWithEntity(this.entityTarget, 30.0F, 30.0F);
-      if(!this.navOverride && --this.field_75445_i <= 0) {
-         this.field_75445_i = 4 + this.attacker.getRNG().nextInt(7);
-         this.attacker.getNavigator().tryMoveToEntityLiving(this.entityTarget, 1.2999999523162842D);
-      }
-
-      this.attackTick = Math.max(this.attackTick - 1, 0);
-      double distance = this.attacker.getDistanceSq(this.entityTarget.posX, this.entityTarget.boundingBox.minY, this.entityTarget.posZ);
-      double range = (double)((float)(this.attacker.stats.attackRange * this.attacker.stats.attackRange) + this.entityTarget.width);
-      double minRange = (double)(this.attacker.width * 2.0F * this.attacker.width * 2.0F + this.entityTarget.width);
-      if(minRange > range) {
-         range = minRange;
-      }
-
-      if(distance <= range && this.attacker.canSee(this.entityTarget) && this.attackTick <= 0) {
-         this.attackTick = this.attacker.stats.attackSpeed;
-         this.attacker.swingItem();
-         this.attacker.attackEntityAsMob(this.entityTarget);
-      }
-
-   }
-
-   public void navOverride(boolean nav) {
-      this.navOverride = nav;
-      this.setMutexBits(this.navOverride?AiMutex.PATHING:AiMutex.LOOK + AiMutex.PASSIVE);
-   }
+	@Override
+	public void updateTask() {
+		npc.getLookHelper().setLookPositionWithEntity(entityTarget, 30.0f, 30.0f);
+		if (!navOverride && (--delayCounter <= 0)) {
+			delayCounter = 4 + npc.getRNG().nextInt(7);
+			npc.getNavigator().tryMoveToEntityLiving(entityTarget, 1.2999999523162842);
+		}
+		attackTick = Math.max(attackTick - 1, 0);
+		double y = entityTarget.posY;
+		if (entityTarget.getEntityBoundingBox() != null) {
+			y = entityTarget.getEntityBoundingBox().minY;
+		}
+		final double distance = npc.getDistanceSq(entityTarget.posX, y, entityTarget.posZ);
+		double range = (npc.stats.melee.getRange() * npc.stats.melee.getRange()) + entityTarget.width;
+		final double minRange = (npc.width * 2.0f * npc.width * 2.0f) + entityTarget.width;
+		if (minRange > range) {
+			range = minRange;
+		}
+		if ((distance <= range) && (npc.canSee(entityTarget) || (distance < minRange)) && (attackTick <= 0)) {
+			attackTick = npc.stats.melee.getDelay();
+			npc.swingItem();
+			npc.attackEntityAsMob(entityTarget);
+		}
+	}
 }

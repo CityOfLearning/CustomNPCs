@@ -1,162 +1,174 @@
+//
+
+//
+
 package noppes.npcs.client;
 
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.IChatComponent;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.IChatMessages;
-import noppes.npcs.client.TextBlockClient;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public class RenderChatMessages implements IChatMessages {
+	private Map<Long, TextBlockClient> messages;
+	private int boxLength;
+	private float scale;
+	private String lastMessage;
+	private long lastMessageTime;
 
-   private Map messages = new TreeMap();
-   private int boxLength = 46;
-   private float scale = 0.5F;
-   private String lastMessage = "";
-   private long lastMessageTime = 0L;
+	public RenderChatMessages() {
+		messages = new TreeMap<Long, TextBlockClient>();
+		boxLength = 46;
+		scale = 0.5f;
+		lastMessage = "";
+		lastMessageTime = 0L;
+	}
 
+	@Override
+	public void addMessage(final String message, final EntityNPCInterface npc) {
+		if (!CustomNpcs.EnableChatBubbles) {
+			return;
+		}
+		final long time = System.currentTimeMillis();
+		if (message.equals(lastMessage) && ((lastMessageTime + 5000L) > time)) {
+			return;
+		}
+		final Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>(this.messages);
+		messages.put(time, new TextBlockClient(message, boxLength * 4, true,
+				new Object[] { Minecraft.getMinecraft().thePlayer, npc }));
+		if (messages.size() > 3) {
+			messages.remove(messages.keySet().iterator().next());
+		}
+		this.messages = messages;
+		lastMessage = message;
+		lastMessageTime = time;
+	}
 
-   public void addMessage(String message, EntityNPCInterface npc) {
-      if(CustomNpcs.EnableChatBubbles) {
-         long time = System.currentTimeMillis();
-         if(!message.equals(this.lastMessage) || this.lastMessageTime + 1000L <= time) {
-            TreeMap messages = new TreeMap(this.messages);
-            messages.put(Long.valueOf(time), new TextBlockClient(message, this.boxLength * 4, new Object[]{Minecraft.getMinecraft().thePlayer, npc}));
-            if(messages.size() > 3) {
-               messages.remove(messages.keySet().iterator().next());
-            }
+	private void drawRect(int par0, int par1, int par2, int par3, final int par4, final double par5) {
+		if (par0 < par2) {
+			final int j1 = par0;
+			par0 = par2;
+			par2 = j1;
+		}
+		if (par1 < par3) {
+			final int j1 = par1;
+			par1 = par3;
+			par3 = j1;
+		}
+		final float f = ((par4 >> 24) & 0xFF) / 255.0f;
+		final float f2 = ((par4 >> 16) & 0xFF) / 255.0f;
+		final float f3 = ((par4 >> 8) & 0xFF) / 255.0f;
+		final float f4 = (par4 & 0xFF) / 255.0f;
+		final WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
+		GlStateManager.color(f2, f3, f4, f);
+		tessellator.begin(7, DefaultVertexFormats.POSITION);
+		tessellator.pos(par0, par3, par5).endVertex();
+		tessellator.pos(par2, par3, par5).endVertex();
+		tessellator.pos(par2, par1, par5).endVertex();
+		tessellator.pos(par0, par1, par5).endVertex();
+		Tessellator.getInstance().draw();
+	}
 
-            this.messages = messages;
-            this.lastMessage = message;
-            this.lastMessageTime = time;
-         }
-      }
-   }
+	private Map<Long, TextBlockClient> getMessages() {
+		final Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>();
+		final long time = System.currentTimeMillis();
+		for (final Map.Entry<Long, TextBlockClient> entry : this.messages.entrySet()) {
+			if (time > (entry.getKey() + 10000L)) {
+				continue;
+			}
+			messages.put(entry.getKey(), entry.getValue());
+		}
+		return this.messages = messages;
+	}
 
-   public void renderMessages(double par3, double par5, double par7, float textscale) {
-      Map messages = this.getMessages();
-      if(!messages.isEmpty()) {
-         FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
-         float var13 = 1.6F;
-         float var14 = 0.016666668F * var13;
-         GL11.glPushMatrix();
-         int size = 0;
+	private void render(final double par3, final double par5, final double par7, final float textscale,
+			final boolean depth) {
+		final FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+		final float var13 = 1.6f;
+		final float var14 = 0.016666668f * var13;
+		GlStateManager.pushMatrix();
+		int size = 0;
+		for (final TextBlockClient block : messages.values()) {
+			size += block.lines.size();
+		}
+		final Minecraft mc = Minecraft.getMinecraft();
+		final int textYSize = (int) (size * font.FONT_HEIGHT * scale);
+		GlStateManager.translate((float) par3 + 0.0f, (float) par5 + (textYSize * textscale * var14), (float) par7);
+		GlStateManager.scale(textscale, textscale, textscale);
+		GL11.glNormal3f(0.0f, 1.0f, 0.0f);
+		GlStateManager.rotate(-mc.getRenderManager().playerViewY, 0.0f, 1.0f, 0.0f);
+		GlStateManager.rotate(mc.getRenderManager().playerViewX, 1.0f, 0.0f, 0.0f);
+		GlStateManager.scale(-var14, -var14, var14);
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.depthMask(true);
+		GlStateManager.disableLighting();
+		GlStateManager.enableBlend();
+		if (depth) {
+			GlStateManager.enableDepth();
+		} else {
+			GlStateManager.disableDepth();
+		}
+		final int black = depth ? -16777216 : 1426063360;
+		final int white = depth ? -1140850689 : 1157627903;
+		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GlStateManager.disableTexture2D();
+		drawRect(-boxLength - 2, -2, boxLength + 2, textYSize + 1, white, 0.11);
+		drawRect(-boxLength - 1, -3, boxLength + 1, -2, black, 0.1);
+		drawRect(-boxLength - 1, textYSize + 2, -1, textYSize + 1, black, 0.1);
+		drawRect(3, textYSize + 2, boxLength + 1, textYSize + 1, black, 0.1);
+		drawRect(-boxLength - 3, -1, -boxLength - 2, textYSize, black, 0.1);
+		drawRect(boxLength + 3, -1, boxLength + 2, textYSize, black, 0.1);
+		drawRect(-boxLength - 2, -2, -boxLength - 1, -1, black, 0.1);
+		drawRect(boxLength + 2, -2, boxLength + 1, -1, black, 0.1);
+		drawRect(-boxLength - 2, textYSize + 1, -boxLength - 1, textYSize, black, 0.1);
+		drawRect(boxLength + 2, textYSize + 1, boxLength + 1, textYSize, black, 0.1);
+		drawRect(0, textYSize + 1, 3, textYSize + 4, white, 0.11);
+		drawRect(-1, textYSize + 4, 1, textYSize + 5, white, 0.11);
+		drawRect(-1, textYSize + 1, 0, textYSize + 4, black, 0.1);
+		drawRect(3, textYSize + 1, 4, textYSize + 3, black, 0.1);
+		drawRect(2, textYSize + 3, 3, textYSize + 4, black, 0.1);
+		drawRect(1, textYSize + 4, 2, textYSize + 5, black, 0.1);
+		drawRect(-2, textYSize + 4, -1, textYSize + 5, black, 0.1);
+		drawRect(-2, textYSize + 5, 1, textYSize + 6, black, 0.1);
+		GlStateManager.enableTexture2D();
+		GlStateManager.depthMask(true);
+		GlStateManager.scale(scale, scale, scale);
+		int index = 0;
+		for (final TextBlockClient block2 : messages.values()) {
+			for (final IChatComponent chat : block2.lines) {
+				final String message = chat.getFormattedText();
+				font.drawString(message, -font.getStringWidth(message) / 2, index * font.FONT_HEIGHT, black);
+				++index;
+			}
+		}
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.enableDepth();
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.popMatrix();
+	}
 
-         TextBlockClient index;
-         for(Iterator textYSize = messages.values().iterator(); textYSize.hasNext(); size += index.lines.size()) {
-            index = (TextBlockClient)textYSize.next();
-         }
-
-         int var20 = (int)((float)(size * font.FONT_HEIGHT) * this.scale);
-         GL11.glTranslatef((float)par3 + 0.0F, (float)par5 + (float)var20 * textscale * var14, (float)par7);
-         GL11.glScalef(textscale, textscale, textscale);
-         GL11.glNormal3f(0.0F, 1.0F, 0.0F);
-         GL11.glRotatef(-RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
-         GL11.glRotatef(RenderManager.instance.playerViewX, 1.0F, 0.0F, 0.0F);
-         GL11.glScalef(-var14, -var14, var14);
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         RenderHelper.disableStandardItemLighting();
-         GL11.glDisable(3008);
-         GL11.glDepthMask(true);
-         GL11.glEnable(3042);
-         GL11.glDepthFunc(515);
-         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
-         GL11.glDisable(3553);
-         this.drawRect(-this.boxLength - 2, -2, this.boxLength + 2, var20 + 1, -1140850689, 0.11D);
-         this.drawRect(-this.boxLength - 1, -3, this.boxLength + 1, -2, -16777216, 0.1D);
-         this.drawRect(-this.boxLength - 1, var20 + 2, -1, var20 + 1, -16777216, 0.1D);
-         this.drawRect(3, var20 + 2, this.boxLength + 1, var20 + 1, -16777216, 0.1D);
-         this.drawRect(-this.boxLength - 3, -1, -this.boxLength - 2, var20, -16777216, 0.1D);
-         this.drawRect(this.boxLength + 3, -1, this.boxLength + 2, var20, -16777216, 0.1D);
-         this.drawRect(-this.boxLength - 2, -2, -this.boxLength - 1, -1, -16777216, 0.1D);
-         this.drawRect(this.boxLength + 2, -2, this.boxLength + 1, -1, -16777216, 0.1D);
-         this.drawRect(-this.boxLength - 2, var20 + 1, -this.boxLength - 1, var20, -16777216, 0.1D);
-         this.drawRect(this.boxLength + 2, var20 + 1, this.boxLength + 1, var20, -16777216, 0.1D);
-         this.drawRect(0, var20 + 1, 3, var20 + 4, -1140850689, 0.11D);
-         this.drawRect(-1, var20 + 4, 1, var20 + 5, -1140850689, 0.11D);
-         this.drawRect(-1, var20 + 1, 0, var20 + 4, -16777216, 0.1D);
-         this.drawRect(3, var20 + 1, 4, var20 + 3, -16777216, 0.1D);
-         this.drawRect(2, var20 + 3, 3, var20 + 4, -16777216, 0.1D);
-         this.drawRect(1, var20 + 4, 2, var20 + 5, -16777216, 0.1D);
-         this.drawRect(-2, var20 + 4, -1, var20 + 5, -16777216, 0.1D);
-         this.drawRect(-2, var20 + 5, 1, var20 + 6, -16777216, 0.1D);
-         GL11.glEnable(3553);
-         GL11.glEnable(2929);
-         GL11.glDepthMask(true);
-         GL11.glScalef(this.scale, this.scale, this.scale);
-         int var21 = 0;
-         Iterator var15 = messages.values().iterator();
-
-         while(var15.hasNext()) {
-            TextBlockClient block = (TextBlockClient)var15.next();
-
-            for(Iterator var17 = block.lines.iterator(); var17.hasNext(); ++var21) {
-               IChatComponent chat = (IChatComponent)var17.next();
-               String message = chat.getFormattedText();
-               font.drawString(message, -font.getStringWidth(message) / 2, var21 * font.FONT_HEIGHT, 0);
-            }
-         }
-
-         GL11.glEnable(2896);
-         GL11.glDisable(3042);
-         GL11.glEnable(3008);
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         GL11.glPopMatrix();
-         RenderHelper.enableStandardItemLighting();
-      }
-   }
-
-   private void drawRect(int par0, int par1, int par2, int par3, int par4, double par5) {
-      int j1;
-      if(par0 < par2) {
-         j1 = par0;
-         par0 = par2;
-         par2 = j1;
-      }
-
-      if(par1 < par3) {
-         j1 = par1;
-         par1 = par3;
-         par3 = j1;
-      }
-
-      float f = (float)(par4 >> 24 & 255) / 255.0F;
-      float f1 = (float)(par4 >> 16 & 255) / 255.0F;
-      float f2 = (float)(par4 >> 8 & 255) / 255.0F;
-      float f3 = (float)(par4 & 255) / 255.0F;
-      Tessellator tessellator = Tessellator.instance;
-      GL11.glColor4f(f1, f2, f3, f);
-      tessellator.startDrawingQuads();
-      tessellator.addVertex((double)par0, (double)par3, par5);
-      tessellator.addVertex((double)par2, (double)par3, par5);
-      tessellator.addVertex((double)par2, (double)par1, par5);
-      tessellator.addVertex((double)par0, (double)par1, par5);
-      tessellator.draw();
-   }
-
-   private Map getMessages() {
-      TreeMap messages = new TreeMap();
-      long time = System.currentTimeMillis();
-      Iterator var4 = this.messages.keySet().iterator();
-
-      while(var4.hasNext()) {
-         long timestamp = ((Long)var4.next()).longValue();
-         if(time <= timestamp + 10000L) {
-            TextBlockClient message = (TextBlockClient)this.messages.get(Long.valueOf(timestamp));
-            messages.put(Long.valueOf(timestamp), message);
-         }
-      }
-
-      this.messages = messages;
-      return messages;
-   }
+	@Override
+	public void renderMessages(final double par3, final double par5, final double par7, final float textscale,
+			final boolean inRange) {
+		final Map<Long, TextBlockClient> messages = getMessages();
+		if (messages.isEmpty()) {
+			return;
+		}
+		if (inRange) {
+			render(par3, par5, par7, textscale, false);
+		}
+		render(par3, par5, par7, textscale, true);
+	}
 }

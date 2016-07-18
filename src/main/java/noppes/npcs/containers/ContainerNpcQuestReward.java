@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,38 +13,33 @@ import noppes.npcs.client.gui.global.GuiNPCManageQuest;
 import noppes.npcs.controllers.Quest;
 
 public class ContainerNpcQuestReward extends Container {
+	public ContainerNpcQuestReward(final EntityPlayer player) {
+		Quest quest = NoppesUtilServer.getEditingQuest(player);
+		if (player.worldObj.isRemote) {
+			quest = GuiNPCManageQuest.quest;
+		}
+		for (int l = 0; l < 3; ++l) {
+			for (int k1 = 0; k1 < 3; ++k1) {
+				addSlotToContainer(new Slot(quest.rewardItems, k1 + (l * 3), 105 + (k1 * 18), 17 + (l * 18)));
+			}
+		}
+		for (int i1 = 0; i1 < 3; ++i1) {
+			for (int l2 = 0; l2 < 9; ++l2) {
+				addSlotToContainer(new Slot(player.inventory, l2 + (i1 * 9) + 9, 8 + (l2 * 18), 84 + (i1 * 18)));
+			}
+		}
+		for (int j1 = 0; j1 < 9; ++j1) {
+			addSlotToContainer(new Slot(player.inventory, j1, 8 + (j1 * 18), 142));
+		}
+	}
 
-   public ContainerNpcQuestReward(EntityPlayer player) {
-      Quest quest = NoppesUtilServer.getEditingQuest(player);
-      if(player.worldObj.isRemote) {
-         quest = GuiNPCManageQuest.quest;
-      }
+	@Override
+	public boolean canInteractWith(final EntityPlayer entityplayer) {
+		return true;
+	}
 
-      int j1;
-      int l1;
-      for(j1 = 0; j1 < 3; ++j1) {
-         for(l1 = 0; l1 < 3; ++l1) {
-            this.addSlotToContainer(new Slot(quest.rewardItems, l1 + j1 * 3, 105 + l1 * 18, 17 + j1 * 18));
-         }
-      }
-
-      for(j1 = 0; j1 < 3; ++j1) {
-         for(l1 = 0; l1 < 9; ++l1) {
-            this.addSlotToContainer(new Slot(player.inventory, l1 + j1 * 9 + 9, 8 + l1 * 18, 84 + j1 * 18));
-         }
-      }
-
-      for(j1 = 0; j1 < 9; ++j1) {
-         this.addSlotToContainer(new Slot(player.inventory, j1, 8 + j1 * 18, 142));
-      }
-
-   }
-
-   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
-      return null;
-   }
-
-   public boolean canInteractWith(EntityPlayer entityplayer) {
-      return true;
-   }
+	@Override
+	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+		return null;
+	}
 }

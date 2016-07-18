@@ -1,90 +1,222 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
-import foxz.utils.Market;
-import java.util.Iterator;
+import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.CustomNpcs;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.api.CustomNPCsException;
+import noppes.npcs.api.IItemStack;
+import noppes.npcs.api.entity.data.role.IRoleTrader;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleInterface;
+import noppes.npcs.util.NBTJsonUtil;
 
-public class RoleTrader extends RoleInterface {
+public class RoleTrader extends RoleInterface implements IRoleTrader {
+	private static File getFile(final String name) {
+		final File dir = new File(CustomNpcs.getWorldSaveDirectory(), "markets");
+		if (!dir.exists()) {
+			dir.mkdir();
+		}
+		return new File(dir, name.toLowerCase() + ".json");
+	}
 
-   public String marketName = "";
-   public NpcMiscInventory inventoryCurrency = new NpcMiscInventory(36);
-   public NpcMiscInventory inventorySold = new NpcMiscInventory(18);
-   public boolean ignoreDamage = false;
-   public boolean ignoreNBT = false;
-   public boolean toSave = false;
+	public static void load(final RoleTrader role, final String name) {
+		if (role.npc.worldObj.isRemote) {
+			return;
+		}
+		final File file = getFile(name);
+		if (!file.exists()) {
+			return;
+		}
+		try {
+			role.readNBT(NBTJsonUtil.LoadFile(file));
+		} catch (Exception ex) {
+		}
+	}
 
+	public static void save(final RoleTrader r, final String name) {
+		if (name.isEmpty()) {
+			return;
+		}
+		final File file = getFile(name + "_new");
+		final File file2 = getFile(name);
+		try {
+			NBTJsonUtil.SaveFile(file, r.writeNBT(new NBTTagCompound()));
+			if (file2.exists()) {
+				file2.delete();
+			}
+			file.renameTo(file2);
+		} catch (Exception ex) {
+		}
+	}
 
-   public RoleTrader(EntityNPCInterface npc) {
-      super(npc);
-   }
+	public static void setMarket(final EntityNPCInterface npc, final String marketName) {
+		if (marketName.isEmpty()) {
+			return;
+		}
+		if (!getFile(marketName).exists()) {
+			save((RoleTrader) npc.roleInterface, marketName);
+		}
+		load((RoleTrader) npc.roleInterface, marketName);
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setTag("TraderCurrency", this.inventoryCurrency.getToNBT());
-      nbttagcompound.setTag("TraderSold", this.inventorySold.getToNBT());
-      nbttagcompound.setString("TraderMarket", this.marketName);
-      nbttagcompound.setBoolean("TraderIgnoreDamage", this.ignoreDamage);
-      nbttagcompound.setBoolean("TraderIgnoreNBT", this.ignoreNBT);
-      if(this.toSave && !super.npc.isRemote()) {
-         Market.save(this, this.marketName);
-      }
+	public String marketName;
+	public NpcMiscInventory inventoryCurrency;
 
-      this.toSave = false;
-      return nbttagcompound;
-   }
+	public NpcMiscInventory inventorySold;
 
-   public void readFromNBT(NBTTagCompound nbttagcompound) {
-      this.inventoryCurrency.setFromNBT(nbttagcompound.getCompoundTag("TraderCurrency"));
-      this.inventorySold.setFromNBT(nbttagcompound.getCompoundTag("TraderSold"));
-      this.marketName = nbttagcompound.getString("TraderMarket");
-      this.ignoreDamage = nbttagcompound.getBoolean("TraderIgnoreDamage");
-      this.ignoreNBT = nbttagcompound.getBoolean("TraderIgnoreNBT");
+	public boolean ignoreDamage;
 
-      try {
-         Market.load(this, this.marketName);
-      } catch (Exception var3) {
-         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, (String)null, var3);
-      }
+	public boolean ignoreNBT;
 
-   }
+	public boolean toSave;
 
-   public void interact(EntityPlayer player) {
-      super.npc.say(player, super.npc.advanced.getInteractLine());
+	public RoleTrader(final EntityNPCInterface npc) {
+		super(npc);
+		marketName = "";
+		ignoreDamage = false;
+		ignoreNBT = false;
+		toSave = false;
+		inventoryCurrency = new NpcMiscInventory(36);
+		inventorySold = new NpcMiscInventory(18);
+	}
 
-      try {
-         Market.load(this, this.marketName);
-      } catch (Exception var3) {
-         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, (String)null, var3);
-      }
+	@Override
+	public IItemStack getCurrency1(final int slot) {
+		final ItemStack item = inventoryCurrency.getStackInSlot(slot);
+		if (item == null) {
+			return null;
+		}
+		return new ItemStackWrapper(item);
+	}
 
-      NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerTrader, super.npc);
-   }
+	@Override
+	public IItemStack getCurrency2(final int slot) {
+		final ItemStack item = inventoryCurrency.getStackInSlot(slot + 18);
+		if (item == null) {
+			return null;
+		}
+		return new ItemStackWrapper(item);
+	}
 
-   public boolean hasCurrency(ItemStack itemstack) {
-      if(itemstack == null) {
-         return false;
-      } else {
-         Iterator var2 = this.inventoryCurrency.items.values().iterator();
+	@Override
+	public String getMarket() {
+		return marketName;
+	}
 
-         ItemStack item;
-         do {
-            if(!var2.hasNext()) {
-               return false;
-            }
+	@Override
+	public IItemStack getSold(final int slot) {
+		final ItemStack item = inventorySold.getStackInSlot(slot);
+		if (item == null) {
+			return null;
+		}
+		return new ItemStackWrapper(item);
+	}
 
-            item = (ItemStack)var2.next();
-         } while(item == null || !NoppesUtilPlayer.compareItems(item, itemstack, this.ignoreDamage, this.ignoreNBT));
+	public boolean hasCurrency(final ItemStack itemstack) {
+		if (itemstack == null) {
+			return false;
+		}
+		for (final ItemStack item : inventoryCurrency.items.values()) {
+			if ((item != null) && NoppesUtilPlayer.compareItems(item, itemstack, ignoreDamage, ignoreNBT)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-         return true;
-      }
-   }
+	@Override
+	public void interact(final EntityPlayer player) {
+		npc.say(player, npc.advanced.getInteractLine());
+		try {
+			load(this, marketName);
+		} catch (Exception ex) {
+			Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+		}
+		NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerTrader, npc);
+	}
+
+	@Override
+	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+		marketName = nbttagcompound.getString("TraderMarket");
+		readNBT(nbttagcompound);
+	}
+
+	public void readNBT(final NBTTagCompound nbttagcompound) {
+		inventoryCurrency.setFromNBT(nbttagcompound.getCompoundTag("TraderCurrency"));
+		inventorySold.setFromNBT(nbttagcompound.getCompoundTag("TraderSold"));
+		ignoreDamage = nbttagcompound.getBoolean("TraderIgnoreDamage");
+		ignoreNBT = nbttagcompound.getBoolean("TraderIgnoreNBT");
+	}
+
+	@Override
+	public void remove(final int slot) {
+		if ((slot >= 18) || (slot < 0)) {
+			throw new CustomNPCsException("Invalid slot: " + slot, new Object[0]);
+		}
+		inventoryCurrency.items.remove(slot);
+		inventoryCurrency.items.remove(slot + 18);
+		inventorySold.items.remove(slot);
+	}
+
+	@Override
+	public void set(final int slot, IItemStack currency, IItemStack currency2, final IItemStack sold) {
+		if (sold == null) {
+			throw new CustomNPCsException("Sold item was null", new Object[0]);
+		}
+		if ((slot >= 18) || (slot < 0)) {
+			throw new CustomNPCsException("Invalid slot: " + slot, new Object[0]);
+		}
+		if (currency == null) {
+			currency = currency2;
+			currency2 = null;
+		}
+		if (currency != null) {
+			inventoryCurrency.items.put(slot, currency.getMCItemStack());
+		} else {
+			inventoryCurrency.items.remove(slot);
+		}
+		if (currency2 != null) {
+			inventoryCurrency.items.put(slot + 18, currency2.getMCItemStack());
+		} else {
+			inventoryCurrency.items.remove(slot + 18);
+		}
+		inventorySold.items.put(slot, sold.getMCItemStack());
+	}
+
+	@Override
+	public void setMarket(final String name) {
+		load(this, marketName = name);
+	}
+
+	public NBTTagCompound writeNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setTag("TraderCurrency", inventoryCurrency.getToNBT());
+		nbttagcompound.setTag("TraderSold", inventorySold.getToNBT());
+		nbttagcompound.setBoolean("TraderIgnoreDamage", ignoreDamage);
+		nbttagcompound.setBoolean("TraderIgnoreNBT", ignoreNBT);
+		return nbttagcompound;
+	}
+
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setString("TraderMarket", marketName);
+		writeNBT(nbttagcompound);
+		if (toSave && !npc.isRemote()) {
+			save(this, marketName);
+		}
+		toSave = false;
+		return nbttagcompound;
+	}
 }

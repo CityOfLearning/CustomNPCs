@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,42 +12,36 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 public class ContainerNPCTraderSetup extends Container {
+	public RoleTrader role;
 
-   public RoleTrader role;
+	public ContainerNPCTraderSetup(final EntityNPCInterface npc, final EntityPlayer player) {
+		role = (RoleTrader) npc.roleInterface;
+		for (int i = 0; i < 18; ++i) {
+			int x = 7;
+			x += (i % 3) * 94;
+			int y = 15;
+			y += (i / 3) * 22;
+			addSlotToContainer(new Slot(role.inventoryCurrency, i + 18, x, y));
+			addSlotToContainer(new Slot(role.inventoryCurrency, i, x + 18, y));
+			addSlotToContainer(new Slot(role.inventorySold, i, x + 43, y));
+		}
+		for (int i2 = 0; i2 < 3; ++i2) {
+			for (int l1 = 0; l1 < 9; ++l1) {
+				addSlotToContainer(new Slot(player.inventory, l1 + (i2 * 9) + 9, 48 + (l1 * 18), 147 + (i2 * 18)));
+			}
+		}
+		for (int j1 = 0; j1 < 9; ++j1) {
+			addSlotToContainer(new Slot(player.inventory, j1, 48 + (j1 * 18), 205));
+		}
+	}
 
+	@Override
+	public boolean canInteractWith(final EntityPlayer entityplayer) {
+		return true;
+	}
 
-   public ContainerNPCTraderSetup(EntityNPCInterface npc, EntityPlayer player) {
-      this.role = (RoleTrader)npc.roleInterface;
-
-      int j1;
-      int var6;
-      for(j1 = 0; j1 < 18; ++j1) {
-         byte l1 = 7;
-         var6 = l1 + j1 % 3 * 94;
-         byte y = 15;
-         int var7 = y + j1 / 3 * 22;
-         this.addSlotToContainer(new Slot(this.role.inventoryCurrency, j1 + 18, var6, var7));
-         this.addSlotToContainer(new Slot(this.role.inventoryCurrency, j1, var6 + 18, var7));
-         this.addSlotToContainer(new Slot(this.role.inventorySold, j1, var6 + 43, var7));
-      }
-
-      for(j1 = 0; j1 < 3; ++j1) {
-         for(var6 = 0; var6 < 9; ++var6) {
-            this.addSlotToContainer(new Slot(player.inventory, var6 + j1 * 9 + 9, 48 + var6 * 18, 147 + j1 * 18));
-         }
-      }
-
-      for(j1 = 0; j1 < 9; ++j1) {
-         this.addSlotToContainer(new Slot(player.inventory, j1, 48 + j1 * 18, 205));
-      }
-
-   }
-
-   public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
-      return null;
-   }
-
-   public boolean canInteractWith(EntityPlayer entityplayer) {
-      return true;
-   }
+	@Override
+	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+		return null;
+	}
 }

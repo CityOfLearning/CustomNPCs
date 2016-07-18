@@ -1,70 +1,111 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.blocks.tiles.TileBlockAnvil;
+import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
 
-public class BlockCarpentryBench extends BlockContainer {
+public class BlockCarpentryBench extends BlockContainer implements ITileRenderer {
+	public static final PropertyInteger TYPE;
+	public static final PropertyInteger ROTATION;
+	static {
+		TYPE = PropertyInteger.create("type", 0, 1);
+		ROTATION = PropertyInteger.create("rotation", 0, 3);
+	}
 
-   public int renderId = -1;
+	private TileEntity renderTile;
 
+	public BlockCarpentryBench() {
+		super(Material.wood);
+	}
 
-   public BlockCarpentryBench() {
-      super(Material.wood);
-   }
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockCarpentryBench.TYPE, BlockCarpentryBench.ROTATION });
+	}
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      if(!par1World.isRemote) {
-         player.openGui(CustomNpcs.instance, EnumGuiType.PlayerAnvil.ordinal(), par1World, i, j, k);
-      }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileBlockAnvil();
+	}
 
-      return true;
-   }
+	@Override
+	public int damageDropped(final IBlockState state) {
+		return state.getValue(BlockCarpentryBench.TYPE);
+	}
 
-   public boolean isOpaqueCube() {
-      return false;
-   }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return state.getValue(BlockCarpentryBench.ROTATION) + (state.getValue(BlockCarpentryBench.TYPE) * 4);
+	}
 
-   public int getRenderType() {
-      return this.renderId;
-   }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockCarpentryBench.TYPE, (Integer.valueOf(meta) >> 2))
+				.withProperty(BlockCarpentryBench.ROTATION, (meta % 4));
+	}
 
-   public boolean renderAsNormalBlock() {
-      return false;
-   }
+	@Override
+	public void getSubBlocks(final Item par1, final CreativeTabs par2CreativeTabs, final List par3List) {
+		par3List.add(new ItemStack(par1, 1, 0));
+		par3List.add(new ItemStack(par1, 1, 1));
+	}
 
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {}
+	@Override
+	public TileEntity getTile() {
+		if (renderTile == null) {
+			renderTile = createNewTileEntity(null, 0);
+		}
+		return renderTile;
+	}
 
-   public int damageDropped(int par1) {
-      return par1 / 4;
-   }
+	@Override
+	public boolean isFullCube() {
+		return false;
+	}
 
-   public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
-      par3List.add(new ItemStack(par1, 1, 0));
-      par3List.add(new ItemStack(par1, 1, 1));
-   }
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLiving, ItemStack item) {
-      int var6 = MathHelper.floor_double((double)(par5EntityLiving.rotationYaw / 90.0F) + 0.5D) & 3;
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, var6 + item.getMetadata() * 4, 2);
-   }
+	@Override
+	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		if (!par1World.isRemote) {
+			player.openGui(CustomNpcs.instance, EnumGuiType.PlayerAnvil.ordinal(), par1World, pos.getX(), pos.getY(),
+					pos.getZ());
+		}
+		return true;
+	}
 
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileBlockAnvil();
-   }
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entity, final ItemStack stack) {
+		final int var6 = MathHelper.floor_double((entity.rotationYaw / 90.0f) + 0.5) & 0x3;
+		world.setBlockState(pos, state.withProperty(BlockCarpentryBench.TYPE, stack.getItemDamage())
+				.withProperty(BlockCarpentryBench.ROTATION, var6), 2);
+	}
 }

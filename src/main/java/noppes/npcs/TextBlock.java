@@ -1,11 +1,18 @@
+//
+
+//
+
 package noppes.npcs;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.util.IChatComponent;
+
 public class TextBlock {
+	public List<IChatComponent> lines;
 
-   public List lines = new ArrayList();
-
-
+	public TextBlock() {
+		lines = new ArrayList<IChatComponent>();
+	}
 }

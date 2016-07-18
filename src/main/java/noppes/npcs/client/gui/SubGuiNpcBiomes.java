@@ -1,6 +1,12 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.world.biome.BiomeGenBase;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
@@ -10,102 +16,83 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.controllers.SpawnData;
 
 public class SubGuiNpcBiomes extends SubGuiInterface {
+	private SpawnData data;
+	private GuiCustomScroll scroll1;
+	private GuiCustomScroll scroll2;
 
-   private SpawnData data;
-   private GuiCustomScroll scroll1;
-   private GuiCustomScroll scroll2;
+	public SubGuiNpcBiomes(final SpawnData data) {
+		this.data = data;
+		setBackground("menubg.png");
+		xSize = 346;
+		ySize = 216;
+		closeOnEsc = true;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if ((button.id == 1) && scroll1.hasSelected()) {
+			data.biomes.add(scroll1.getSelected());
+			scroll1.selected = -1;
+			scroll1.selected = -1;
+			initGui();
+		}
+		if ((button.id == 2) && scroll2.hasSelected()) {
+			data.biomes.remove(scroll2.getSelected());
+			scroll2.selected = -1;
+			initGui();
+		}
+		if (button.id == 3) {
+			data.biomes.clear();
+			for (final BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+				if (base != null) {
+					data.biomes.add(base.biomeName);
+				}
+			}
+			scroll1.selected = -1;
+			scroll1.selected = -1;
+			initGui();
+		}
+		if (button.id == 4) {
+			data.biomes.clear();
+			scroll1.selected = -1;
+			scroll1.selected = -1;
+			initGui();
+		}
+		if (button.id == 66) {
+			close();
+		}
+	}
 
-   public SubGuiNpcBiomes(SpawnData data) {
-      this.data = data;
-      this.setBackground("menubg.png");
-      super.xSize = 346;
-      super.ySize = 216;
-      super.closeOnEsc = true;
-   }
-
-   public void initGui() {
-      super.initGui();
-      if(this.scroll1 == null) {
-         this.scroll1 = new GuiCustomScroll(this, 0);
-         this.scroll1.setSize(140, 180);
-      }
-
-      this.scroll1.guiLeft = super.guiLeft + 4;
-      this.scroll1.guiTop = super.guiTop + 14;
-      this.addScroll(this.scroll1);
-      this.addLabel(new GuiNpcLabel(1, "spawning.availableBiomes", super.guiLeft + 4, super.guiTop + 4));
-      if(this.scroll2 == null) {
-         this.scroll2 = new GuiCustomScroll(this, 1);
-         this.scroll2.setSize(140, 180);
-      }
-
-      this.scroll2.guiLeft = super.guiLeft + 200;
-      this.scroll2.guiTop = super.guiTop + 14;
-      this.addScroll(this.scroll2);
-      this.addLabel(new GuiNpcLabel(2, "spawning.spawningBiomes", super.guiLeft + 200, super.guiTop + 4));
-      ArrayList biomes = new ArrayList();
-      BiomeGenBase[] var2 = BiomeGenBase.getBiomeGenArray();
-      int var3 = var2.length;
-
-      for(int var4 = 0; var4 < var3; ++var4) {
-         BiomeGenBase base = var2[var4];
-         if(base != null && !this.data.biomes.contains(base.biomeName)) {
-            biomes.add(base.biomeName);
-         }
-      }
-
-      this.scroll1.setList(biomes);
-      this.scroll2.setList(this.data.biomes);
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 145, super.guiTop + 40, 55, 20, ">"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 145, super.guiTop + 62, 55, 20, "<"));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 145, super.guiTop + 90, 55, 20, ">>"));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 145, super.guiTop + 112, 55, 20, "<<"));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 260, super.guiTop + 194, 60, 20, "gui.done"));
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 1 && this.scroll1.hasSelected()) {
-         this.data.biomes.add(this.scroll1.getSelected());
-         this.scroll1.selected = -1;
-         this.scroll1.selected = -1;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 2 && this.scroll2.hasSelected()) {
-         this.data.biomes.remove(this.scroll2.getSelected());
-         this.scroll2.selected = -1;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 3) {
-         this.data.biomes.clear();
-         BiomeGenBase[] var3 = BiomeGenBase.getBiomeGenArray();
-         int var4 = var3.length;
-
-         for(int var5 = 0; var5 < var4; ++var5) {
-            BiomeGenBase base = var3[var5];
-            if(base != null) {
-               this.data.biomes.add(base.biomeName);
-            }
-         }
-
-         this.scroll1.selected = -1;
-         this.scroll1.selected = -1;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 4) {
-         this.data.biomes.clear();
-         this.scroll1.selected = -1;
-         this.scroll1.selected = -1;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 66) {
-         this.close();
-      }
-
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		if (scroll1 == null) {
+			(scroll1 = new GuiCustomScroll(this, 0)).setSize(140, 180);
+		}
+		scroll1.guiLeft = guiLeft + 4;
+		scroll1.guiTop = guiTop + 14;
+		addScroll(scroll1);
+		addLabel(new GuiNpcLabel(1, "spawning.availableBiomes", guiLeft + 4, guiTop + 4));
+		if (scroll2 == null) {
+			(scroll2 = new GuiCustomScroll(this, 1)).setSize(140, 180);
+		}
+		scroll2.guiLeft = guiLeft + 200;
+		scroll2.guiTop = guiTop + 14;
+		addScroll(scroll2);
+		addLabel(new GuiNpcLabel(2, "spawning.spawningBiomes", guiLeft + 200, guiTop + 4));
+		final List<String> biomes = new ArrayList<String>();
+		for (final BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+			if ((base != null) && (base.biomeName != null) && !data.biomes.contains(base.biomeName)) {
+				biomes.add(base.biomeName);
+			}
+		}
+		scroll1.setList(biomes);
+		scroll2.setList(data.biomes);
+		addButton(new GuiNpcButton(1, guiLeft + 145, guiTop + 40, 55, 20, ">"));
+		addButton(new GuiNpcButton(2, guiLeft + 145, guiTop + 62, 55, 20, "<"));
+		addButton(new GuiNpcButton(3, guiLeft + 145, guiTop + 90, 55, 20, ">>"));
+		addButton(new GuiNpcButton(4, guiLeft + 145, guiTop + 112, 55, 20, "<<"));
+		addButton(new GuiNpcButton(66, guiLeft + 260, guiTop + 194, 60, 20, "gui.done"));
+	}
 }

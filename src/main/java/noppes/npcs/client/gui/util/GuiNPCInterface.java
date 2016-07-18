@@ -1,415 +1,468 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
+import java.awt.Toolkit;
+import java.awt.Window;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
+
+import com.google.common.collect.Lists;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.client.gui.util.GuiCustomScroll;
-import noppes.npcs.client.gui.util.GuiHoverText;
-import noppes.npcs.client.gui.util.GuiMenuSideButton;
-import noppes.npcs.client.gui.util.GuiMenuTopButton;
-import noppes.npcs.client.gui.util.GuiNpcButton;
-import noppes.npcs.client.gui.util.GuiNpcLabel;
-import noppes.npcs.client.gui.util.GuiNpcSlider;
-import noppes.npcs.client.gui.util.GuiNpcTextField;
-import noppes.npcs.client.gui.util.SubGuiInterface;
+import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.common.MinecraftForge;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public abstract class GuiNPCInterface extends GuiScreen {
-
-   public EntityClientPlayerMP player;
-   public boolean drawDefaultBackground;
-   public EntityNPCInterface npc;
-   private HashMap buttons;
-   private HashMap topbuttons;
-   private HashMap sidebuttons;
-   private HashMap textfields;
-   private HashMap labels;
-   private HashMap scrolls;
-   private HashMap sliders;
-   private HashMap extra;
-   public String title;
-   private ResourceLocation background;
-   public boolean closeOnEsc;
-   public int guiLeft;
-   public int guiTop;
-   public int xSize;
-   public int ySize;
-   private SubGuiInterface subgui;
-   public int mouseX;
-   public int mouseY;
-
-
-   public GuiNPCInterface(EntityNPCInterface npc) {
-      this.drawDefaultBackground = true;
-      this.buttons = new HashMap();
-      this.topbuttons = new HashMap();
-      this.sidebuttons = new HashMap();
-      this.textfields = new HashMap();
-      this.labels = new HashMap();
-      this.scrolls = new HashMap();
-      this.sliders = new HashMap();
-      this.extra = new HashMap();
-      this.background = null;
-      this.closeOnEsc = false;
-      this.player = Minecraft.getMinecraft().thePlayer;
-      this.npc = npc;
-      this.title = "";
-      this.xSize = 200;
-      this.ySize = 222;
-   }
-
-   public GuiNPCInterface() {
-      this((EntityNPCInterface)null);
-   }
-
-   public void setBackground(String texture) {
-      this.background = new ResourceLocation("customnpcs", "textures/gui/" + texture);
-   }
-
-   public ResourceLocation getResource(String texture) {
-      return new ResourceLocation("customnpcs", "textures/gui/" + texture);
-   }
-
-   public void initGui() {
-      super.initGui();
-      GuiNpcTextField.unfocus();
-      if(this.subgui != null) {
-         this.subgui.setWorldAndResolution(super.mc, super.width, super.height);
-         this.subgui.initGui();
-      }
-
-      this.guiLeft = (super.width - this.xSize) / 2;
-      this.guiTop = (super.height - this.ySize) / 2;
-      super.buttonList.clear();
-      this.labels.clear();
-      this.textfields.clear();
-      this.buttons.clear();
-      this.sidebuttons.clear();
-      this.topbuttons.clear();
-      this.scrolls.clear();
-      this.sliders.clear();
-      Keyboard.enableRepeatEvents(true);
-   }
-
-   public void updateScreen() {
-      if(this.subgui != null) {
-         this.subgui.updateScreen();
-      } else {
-         Iterator var1 = this.textfields.values().iterator();
-
-         while(var1.hasNext()) {
-            GuiNpcTextField tf = (GuiNpcTextField)var1.next();
-            if(tf.enabled) {
-               tf.updateCursorCounter();
-            }
-         }
-
-         super.updateScreen();
-      }
-
-   }
-
-   public void addExtra(GuiHoverText gui) {
-      gui.setWorldAndResolution(super.mc, 350, 250);
-      this.extra.put(Integer.valueOf(gui.id), gui);
-   }
-
-   public void mouseClicked(int i, int j, int k) {
-      if(this.subgui != null) {
-         this.subgui.mouseClicked(i, j, k);
-      } else {
-         Iterator var4 = (new ArrayList(this.textfields.values())).iterator();
-
-         while(var4.hasNext()) {
-            GuiNpcTextField scroll = (GuiNpcTextField)var4.next();
-            if(scroll.enabled) {
-               scroll.mouseClicked(i, j, k);
-            }
-         }
-
-         if(k == 0) {
-            var4 = (new ArrayList(this.scrolls.values())).iterator();
-
-            while(var4.hasNext()) {
-               GuiCustomScroll scroll1 = (GuiCustomScroll)var4.next();
-               scroll1.mouseClicked(i, j, k);
-            }
-         }
-
-         this.mouseEvent(i, j, k);
-         super.mouseClicked(i, j, k);
-      }
-
-   }
-
-   public void mouseEvent(int i, int j, int k) {}
-
-   protected void actionPerformed(GuiButton guibutton) {
-      if(this.subgui != null) {
-         this.subgui.buttonEvent(guibutton);
-      } else {
-         this.buttonEvent(guibutton);
-      }
-
-   }
-
-   public void buttonEvent(GuiButton guibutton) {}
-
-   public void keyTyped(char c, int i) {
-      if(this.subgui != null) {
-         this.subgui.keyTyped(c, i);
-      }
-
-      Iterator var3 = this.textfields.values().iterator();
-
-      while(var3.hasNext()) {
-         GuiNpcTextField tf = (GuiNpcTextField)var3.next();
-         tf.textboxKeyTyped(c, i);
-      }
-
-      if(this.closeOnEsc && (i == 1 || !GuiNpcTextField.isActive() && this.isInventoryKey(i))) {
-         this.close();
-      }
-
-   }
-
-   public void onGuiClosed() {
-      GuiNpcTextField.unfocus();
-   }
-
-   public void close() {
-      this.displayGuiScreen((GuiScreen)null);
-      super.mc.setIngameFocus();
-      this.save();
-   }
-
-   public void addButton(GuiNpcButton button) {
-      this.buttons.put(Integer.valueOf(button.field_146127_k), button);
-      super.buttonList.add(button);
-   }
-
-   public void addTopButton(GuiMenuTopButton button) {
-      this.topbuttons.put(Integer.valueOf(button.field_146127_k), button);
-      super.buttonList.add(button);
-   }
-
-   public void addSideButton(GuiMenuSideButton button) {
-      this.sidebuttons.put(Integer.valueOf(button.field_146127_k), button);
-      super.buttonList.add(button);
-   }
-
-   public GuiNpcButton getButton(int i) {
-      return (GuiNpcButton)this.buttons.get(Integer.valueOf(i));
-   }
-
-   public GuiMenuSideButton getSideButton(int i) {
-      return (GuiMenuSideButton)this.sidebuttons.get(Integer.valueOf(i));
-   }
-
-   public GuiMenuTopButton getTopButton(int i) {
-      return (GuiMenuTopButton)this.topbuttons.get(Integer.valueOf(i));
-   }
-
-   public void addTextField(GuiNpcTextField tf) {
-      this.textfields.put(Integer.valueOf(tf.id), tf);
-   }
-
-   public GuiNpcTextField getTextField(int i) {
-      return (GuiNpcTextField)this.textfields.get(Integer.valueOf(i));
-   }
-
-   public void addLabel(GuiNpcLabel label) {
-      this.labels.put(Integer.valueOf(label.id), label);
-   }
-
-   public GuiNpcLabel getLabel(int i) {
-      return (GuiNpcLabel)this.labels.get(Integer.valueOf(i));
-   }
-
-   public void addSlider(GuiNpcSlider slider) {
-      this.sliders.put(Integer.valueOf(slider.field_146127_k), slider);
-      super.buttonList.add(slider);
-   }
-
-   public GuiNpcSlider getSlider(int i) {
-      return (GuiNpcSlider)this.sliders.get(Integer.valueOf(i));
-   }
-
-   public void addScroll(GuiCustomScroll scroll) {
-      scroll.setWorldAndResolution(super.mc, 350, 250);
-      this.scrolls.put(Integer.valueOf(scroll.id), scroll);
-   }
-
-   public GuiCustomScroll getScroll(int id) {
-      return (GuiCustomScroll)this.scrolls.get(Integer.valueOf(id));
-   }
-
-   public abstract void save();
-
-   public void drawScreen(int i, int j, float f) {
-      this.mouseX = i;
-      this.mouseY = j;
-      if(this.drawDefaultBackground && this.subgui == null) {
-         this.drawDefaultBackground();
-      }
-
-      if(this.background != null && super.mc.renderEngine != null) {
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         super.mc.renderEngine.bindTexture(this.background);
-         if(this.xSize > 256) {
-            this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 250, this.ySize);
-            this.drawTexturedModalRect(this.guiLeft + 250, this.guiTop, 256 - (this.xSize - 250), 0, this.xSize - 250, this.ySize);
-         } else {
-            this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
-         }
-      }
-
-      this.drawCenteredString(super.fontRendererObj, this.title, super.width / 2, this.guiTop + 4, 16777215);
-      Iterator var4 = this.labels.values().iterator();
-
-      while(var4.hasNext()) {
-         GuiNpcLabel gui = (GuiNpcLabel)var4.next();
-         gui.drawLabel(this, super.fontRendererObj);
-      }
-
-      var4 = this.textfields.values().iterator();
-
-      while(var4.hasNext()) {
-         GuiNpcTextField gui1 = (GuiNpcTextField)var4.next();
-         gui1.drawTextBox(i, j);
-      }
-
-      var4 = this.scrolls.values().iterator();
-
-      while(var4.hasNext()) {
-         GuiCustomScroll gui2 = (GuiCustomScroll)var4.next();
-         gui2.drawScreen(i, j, f, this.hasSubGui()?0:Mouse.getDWheel());
-      }
-
-      var4 = this.extra.values().iterator();
-
-      while(var4.hasNext()) {
-         GuiScreen gui3 = (GuiScreen)var4.next();
-         gui3.drawScreen(i, j, f);
-      }
-
-      super.drawScreen(i, j, f);
-      if(this.subgui != null) {
-         this.subgui.drawScreen(i, j, f);
-      }
-
-   }
-
-   public FontRenderer getFontRenderer() {
-      return super.fontRendererObj;
-   }
-
-   public void elementClicked() {
-      if(this.subgui != null) {
-         this.subgui.elementClicked();
-      }
-
-   }
-
-   public boolean doesGuiPauseGame() {
-      return false;
-   }
-
-   public void doubleClicked() {}
-
-   public boolean isInventoryKey(int i) {
-      return i == super.mc.gameSettings.keyBindInventory.getKeyCode();
-   }
-
-   public void drawDefaultBackground() {
-      super.drawDefaultBackground();
-   }
-
-   public void displayGuiScreen(GuiScreen gui) {
-      super.mc.displayGuiScreen(gui);
-   }
-
-   public void setSubGui(SubGuiInterface gui) {
-      this.subgui = gui;
-      this.subgui.setWorldAndResolution(super.mc, super.width, super.height);
-      this.subgui.parent = this;
-      this.initGui();
-   }
-
-   public void closeSubGui(SubGuiInterface gui) {
-      this.subgui = null;
-   }
-
-   public boolean hasSubGui() {
-      return this.subgui != null;
-   }
-
-   public SubGuiInterface getSubGui() {
-      return this.hasSubGui() && this.subgui.hasSubGui()?this.subgui.getSubGui():this.subgui;
-   }
-
-   public void drawNpc(int x, int y) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      GL11.glEnable(2903);
-      GL11.glPushMatrix();
-      GL11.glTranslatef((float)(this.guiLeft + x), (float)(this.guiTop + y), 50.0F);
-      float scale = 1.0F;
-      if((double)this.npc.height > 2.4D) {
-         scale = 2.0F / this.npc.height;
-      }
-
-      GL11.glScalef(-30.0F * scale, 30.0F * scale, 30.0F * scale);
-      GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-      float f2 = this.npc.renderYawOffset;
-      float f3 = this.npc.rotationYaw;
-      float f4 = this.npc.rotationPitch;
-      float f7 = this.npc.rotationYawHead;
-      float f5 = (float)(this.guiLeft + x) - (float)this.mouseX;
-      float f6 = (float)(this.guiTop + y - 50) - (float)this.mouseY;
-      GL11.glRotatef(135.0F, 0.0F, 1.0F, 0.0F);
-      RenderHelper.enableStandardItemLighting();
-      GL11.glRotatef(-135.0F, 0.0F, 1.0F, 0.0F);
-      GL11.glRotatef(-((float)Math.atan((double)(f6 / 40.0F))) * 20.0F, 1.0F, 0.0F, 0.0F);
-      this.npc.renderYawOffset = (float)Math.atan((double)(f5 / 40.0F)) * 20.0F;
-      this.npc.rotationYaw = (float)Math.atan((double)(f5 / 40.0F)) * 40.0F;
-      this.npc.rotationPitch = -((float)Math.atan((double)(f6 / 40.0F))) * 20.0F;
-      this.npc.rotationYawHead = this.npc.rotationYaw;
-      GL11.glTranslatef(0.0F, this.npc.yOffset, 0.0F);
-      RenderManager.instance.playerViewY = 180.0F;
-      RenderManager.instance.renderEntityWithPosYaw(this.npc, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
-      this.npc.renderYawOffset = f2;
-      this.npc.rotationYaw = f3;
-      this.npc.rotationPitch = f4;
-      this.npc.rotationYawHead = f7;
-      GL11.glPopMatrix();
-      RenderHelper.disableStandardItemLighting();
-      GL11.glDisable('\u803a');
-      OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
-      GL11.glDisable(3553);
-      OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
-   }
-
-   public void openLink(String link) {
-      try {
-         Class throwable = Class.forName("java.awt.Desktop");
-         Object object = throwable.getMethod("getDesktop", new Class[0]).invoke((Object)null, new Object[0]);
-         throwable.getMethod("browse", new Class[]{URI.class}).invoke(object, new Object[]{new URI(link)});
-      } catch (Throwable var4) {
-         ;
-      }
-
-   }
+	public static Window AWTWindow;
+	public EntityPlayerSP player;
+	public boolean drawDefaultBackground;
+	public EntityNPCInterface npc;
+	private Map<Integer, GuiNpcButton> buttons;
+	private Map<Integer, GuiMenuTopButton> topbuttons;
+	private Map<Integer, GuiMenuSideButton> sidebuttons;
+	private Map<Integer, GuiNpcTextField> textfields;
+	private Map<Integer, GuiNpcLabel> labels;
+	private Map<Integer, GuiCustomScroll> scrolls;
+	private Map<Integer, GuiNpcSlider> sliders;
+	private Map<Integer, GuiScreen> extra;
+	public String title;
+	public ResourceLocation background;
+	public boolean closeOnEsc;
+	public int guiLeft;
+	public int guiTop;
+	public int xSize;
+	public int ySize;
+	private SubGuiInterface subgui;
+	public int mouseX;
+	public int mouseY;
+	public float bgScale;
+	private GuiButton selectedButton;
+
+	public GuiNPCInterface() {
+		this(null);
+	}
+
+	public GuiNPCInterface(final EntityNPCInterface npc) {
+		drawDefaultBackground = true;
+		buttons = new ConcurrentHashMap<Integer, GuiNpcButton>();
+		topbuttons = new ConcurrentHashMap<Integer, GuiMenuTopButton>();
+		sidebuttons = new ConcurrentHashMap<Integer, GuiMenuSideButton>();
+		textfields = new ConcurrentHashMap<Integer, GuiNpcTextField>();
+		labels = new ConcurrentHashMap<Integer, GuiNpcLabel>();
+		scrolls = new ConcurrentHashMap<Integer, GuiCustomScroll>();
+		sliders = new ConcurrentHashMap<Integer, GuiNpcSlider>();
+		extra = new ConcurrentHashMap<Integer, GuiScreen>();
+		background = null;
+		closeOnEsc = false;
+		bgScale = 1.0f;
+		player = Minecraft.getMinecraft().thePlayer;
+		this.npc = npc;
+		title = "";
+		xSize = 200;
+		ySize = 222;
+		mc = Minecraft.getMinecraft();
+		itemRender = mc.getRenderItem();
+		fontRendererObj = mc.fontRendererObj;
+	}
+
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		if (subgui != null) {
+			subgui.buttonEvent(guibutton);
+		} else {
+			buttonEvent(guibutton);
+		}
+	}
+
+	public void addButton(final GuiNpcButton button) {
+		buttons.put(button.id, button);
+		buttonList.add(button);
+	}
+
+	public void addExtra(final GuiHoverText gui) {
+		gui.setWorldAndResolution(mc, 350, 250);
+		extra.put(gui.id, gui);
+	}
+
+	public void addLabel(final GuiNpcLabel label) {
+		labels.put(label.id, label);
+	}
+
+	public void addScroll(final GuiCustomScroll scroll) {
+		scroll.setWorldAndResolution(mc, 350, 250);
+		scrolls.put(scroll.id, scroll);
+	}
+
+	public void addSideButton(final GuiMenuSideButton button) {
+		sidebuttons.put(button.id, button);
+		buttonList.add(button);
+	}
+
+	public void addSlider(final GuiNpcSlider slider) {
+		sliders.put(slider.id, slider);
+		buttonList.add(slider);
+	}
+
+	public void addTextField(final GuiNpcTextField tf) {
+		textfields.put(tf.id, tf);
+	}
+
+	public void addTopButton(final GuiMenuTopButton button) {
+		topbuttons.put(button.id, button);
+		buttonList.add(button);
+	}
+
+	public void buttonEvent(final GuiButton guibutton) {
+	}
+
+	public void close() {
+		displayGuiScreen(null);
+		mc.setIngameFocus();
+		save();
+	}
+
+	public void closeSubGui(final SubGuiInterface gui) {
+		subgui = null;
+	}
+
+	public void displayGuiScreen(final GuiScreen gui) {
+		mc.displayGuiScreen(gui);
+	}
+
+	@Override
+	public boolean doesGuiPauseGame() {
+		return false;
+	}
+
+	public void doubleClicked() {
+	}
+
+	@Override
+	public void drawDefaultBackground() {
+		super.drawDefaultBackground();
+	}
+
+	public void drawNpc(final EntityLivingBase entity, final int x, final int y, final float zoomed,
+			final int rotation) {
+		EntityNPCInterface npc = null;
+		if (entity instanceof EntityNPCInterface) {
+			npc = (EntityNPCInterface) entity;
+		}
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		GlStateManager.enableColorMaterial();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(guiLeft + x, guiTop + y, 50.0f);
+		float scale = 1.0f;
+		if (entity.height > 2.4) {
+			scale = 2.0f / entity.height;
+		}
+		GlStateManager.scale(-30.0f * scale * zoomed, 30.0f * scale * zoomed, 30.0f * scale * zoomed);
+		GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+		RenderHelper.enableStandardItemLighting();
+		final float f2 = entity.renderYawOffset;
+		final float f3 = entity.rotationYaw;
+		final float f4 = entity.rotationPitch;
+		final float f5 = entity.rotationYawHead;
+		final float f6 = (guiLeft + x) - mouseX;
+		final float f7 = (guiTop + y) - (50.0f * scale * zoomed) - mouseY;
+		int orientation = 0;
+		if (npc != null) {
+			orientation = npc.ai.orientation;
+			npc.ai.orientation = rotation;
+		}
+		GlStateManager.rotate(135.0f, 0.0f, 1.0f, 0.0f);
+		GlStateManager.rotate(-135.0f, 0.0f, 1.0f, 0.0f);
+		GlStateManager.rotate(-(float) Math.atan(f7 / 40.0f) * 20.0f, 1.0f, 0.0f, 0.0f);
+		entity.renderYawOffset = rotation;
+		entity.rotationYaw = ((float) Math.atan(f6 / 80.0f) * 40.0f) + rotation;
+		entity.rotationPitch = -(float) Math.atan(f7 / 40.0f) * 20.0f;
+		entity.rotationYawHead = entity.rotationYaw;
+		mc.getRenderManager().playerViewY = 180.0f;
+		mc.getRenderManager().renderEntityWithPosYaw(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f);
+		final float n = f2;
+		entity.renderYawOffset = n;
+		entity.prevRenderYawOffset = n;
+		final float n2 = f3;
+		entity.rotationYaw = n2;
+		entity.prevRotationYaw = n2;
+		final float n3 = f4;
+		entity.rotationPitch = n3;
+		entity.prevRotationPitch = n3;
+		final float n4 = f5;
+		entity.rotationYawHead = n4;
+		entity.prevRotationYawHead = n4;
+		if (npc != null) {
+			npc.ai.orientation = orientation;
+		}
+		GlStateManager.popMatrix();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableRescaleNormal();
+		GlStateManager.setActiveTexture(OpenGlHelper.lightmapTexUnit);
+		GlStateManager.disableTexture2D();
+		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
+	}
+
+	public void drawNpc(final int x, final int y) {
+		this.drawNpc(npc, x, y, 1.0f, 0);
+	}
+
+	@Override
+	public void drawScreen(final int i, final int j, final float f) {
+		if (GuiNPCInterface.AWTWindow != null) {
+			if (!GuiNPCInterface.AWTWindow.isVisible()) {
+				GuiNPCInterface.AWTWindow.dispose();
+				GuiNPCInterface.AWTWindow = null;
+			} else if (Display.isActive()) {
+				Toolkit.getDefaultToolkit().beep();
+				GuiNPCInterface.AWTWindow.setVisible(true);
+			}
+		}
+		mouseX = i;
+		mouseY = j;
+		if (drawDefaultBackground && (subgui == null)) {
+			drawDefaultBackground();
+		}
+		if ((background != null) && (mc.renderEngine != null)) {
+			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(guiLeft, guiTop, 0.0f);
+			GlStateManager.scale(bgScale, bgScale, bgScale);
+			mc.renderEngine.bindTexture(background);
+			if (xSize > 256) {
+				this.drawTexturedModalRect(0, 0, 0, 0, 250, ySize);
+				this.drawTexturedModalRect(250, 0, 256 - (xSize - 250), 0, xSize - 250, ySize);
+			} else {
+				this.drawTexturedModalRect(0, 0, 0, 0, xSize, ySize);
+			}
+			GlStateManager.popMatrix();
+		}
+		drawCenteredString(fontRendererObj, title, width / 2, 8, 16777215);
+		for (final GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
+			label.drawLabel(this, fontRendererObj);
+		}
+		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			tf.drawTextBox(i, j);
+		}
+		for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+			scroll.drawScreen(i, j, f, (!hasSubGui() && scroll.isMouseOver(i, j)) ? Mouse.getDWheel() : 0);
+		}
+		for (final GuiScreen gui : new ArrayList<GuiScreen>(extra.values())) {
+			gui.drawScreen(i, j, f);
+		}
+		super.drawScreen(i, j, f);
+		if (subgui != null) {
+			subgui.drawScreen(i, j, f);
+		}
+	}
+
+	public void elementClicked() {
+		if (subgui != null) {
+			subgui.elementClicked();
+		}
+	}
+
+	public GuiNpcButton getButton(final int i) {
+		return buttons.get(i);
+	}
+
+	public FontRenderer getFontRenderer() {
+		return fontRendererObj;
+	}
+
+	public GuiNpcLabel getLabel(final int i) {
+		return labels.get(i);
+	}
+
+	public ResourceLocation getResource(final String texture) {
+		return new ResourceLocation("customnpcs", "textures/gui/" + texture);
+	}
+
+	public GuiCustomScroll getScroll(final int id) {
+		return scrolls.get(id);
+	}
+
+	public GuiMenuSideButton getSideButton(final int i) {
+		return sidebuttons.get(i);
+	}
+
+	public GuiNpcSlider getSlider(final int i) {
+		return sliders.get(i);
+	}
+
+	public SubGuiInterface getSubGui() {
+		if (hasSubGui() && subgui.hasSubGui()) {
+			return subgui.getSubGui();
+		}
+		return subgui;
+	}
+
+	public GuiNpcTextField getTextField(final int i) {
+		return textfields.get(i);
+	}
+
+	public GuiMenuTopButton getTopButton(final int i) {
+		return topbuttons.get(i);
+	}
+
+	public boolean hasSubGui() {
+		return subgui != null;
+	}
+
+	@Override
+	public void initGui() {
+		super.initGui();
+		GuiNpcTextField.unfocus();
+		if (subgui != null) {
+			subgui.setWorldAndResolution(mc, width, height);
+			subgui.initGui();
+		}
+		guiLeft = (width - xSize) / 2;
+		guiTop = (height - ySize) / 2;
+		buttonList = Lists.newArrayList();
+		buttons = new ConcurrentHashMap<Integer, GuiNpcButton>();
+		topbuttons = new ConcurrentHashMap<Integer, GuiMenuTopButton>();
+		sidebuttons = new ConcurrentHashMap<Integer, GuiMenuSideButton>();
+		textfields = new ConcurrentHashMap<Integer, GuiNpcTextField>();
+		labels = new ConcurrentHashMap<Integer, GuiNpcLabel>();
+		scrolls = new ConcurrentHashMap<Integer, GuiCustomScroll>();
+		sliders = new ConcurrentHashMap<Integer, GuiNpcSlider>();
+		extra = new ConcurrentHashMap<Integer, GuiScreen>();
+	}
+
+	public void initPacket() {
+	}
+
+	public boolean isInventoryKey(final int i) {
+		return i == mc.gameSettings.keyBindInventory.getKeyCode();
+	}
+
+	@Override
+	public void keyTyped(final char c, final int i) {
+		if (GuiNPCInterface.AWTWindow != null) {
+			return;
+		}
+		if (subgui != null) {
+			subgui.keyTyped(c, i);
+		}
+		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			tf.textboxKeyTyped(c, i);
+		}
+		if (closeOnEsc && ((i == 1) || (!GuiNpcTextField.isActive() && isInventoryKey(i)))) {
+			close();
+		}
+	}
+
+	@Override
+	public void mouseClicked(final int i, final int j, final int k) {
+		if (GuiNPCInterface.AWTWindow != null) {
+			return;
+		}
+		if (subgui != null) {
+			subgui.mouseClicked(i, j, k);
+		} else {
+			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+				if (tf.enabled) {
+					tf.mouseClicked(i, j, k);
+				}
+			}
+			mouseEvent(i, j, k);
+			if (k == 0) {
+				for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+					scroll.mouseClicked(i, j, k);
+				}
+				for (GuiButton guibutton : buttonList) {
+					if (guibutton.mousePressed(mc, mouseX, mouseY)) {
+						final GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(
+								this, guibutton, buttonList);
+						if (MinecraftForge.EVENT_BUS.post(event)) {
+							break;
+						}
+						guibutton = event.button;
+						(selectedButton = guibutton).playPressSound(mc.getSoundHandler());
+						actionPerformed(guibutton);
+						if (equals(mc.currentScreen)) {
+							MinecraftForge.EVENT_BUS
+									.post(new GuiScreenEvent.ActionPerformedEvent.Post(this, event.button, buttonList));
+							break;
+						}
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	public void mouseEvent(final int i, final int j, final int k) {
+	}
+
+	@Override
+	public void mouseReleased(final int mouseX, final int mouseY, final int state) {
+		if ((selectedButton != null) && (state == 0)) {
+			selectedButton.mouseReleased(mouseX, mouseY);
+			selectedButton = null;
+		}
+	}
+
+	@Override
+	public void onGuiClosed() {
+		GuiNpcTextField.unfocus();
+	}
+
+	public void openLink(final String link) {
+		try {
+			final Class oclass = Class.forName("java.awt.Desktop");
+			final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+			oclass.getMethod("browse", URI.class).invoke(object, new URI(link));
+		} catch (Throwable t) {
+		}
+	}
+
+	public abstract void save();
+
+	public void setBackground(final String texture) {
+		background = new ResourceLocation("customnpcs", "textures/gui/" + texture);
+	}
+
+	public void setSubGui(final SubGuiInterface gui) {
+		(subgui = gui).setWorldAndResolution(mc, width, height);
+		((GuiNPCInterface) (subgui.parent = this)).initGui();
+	}
+
+	@Override
+	public void setWorldAndResolution(final Minecraft mc, final int width, final int height) {
+		super.setWorldAndResolution(mc, width, height);
+		initPacket();
+	}
+
+	@Override
+	public void updateScreen() {
+		if (subgui != null) {
+			subgui.updateScreen();
+		} else {
+			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+				if (tf.enabled) {
+					tf.updateCursorCounter();
+				}
+			}
+			super.updateScreen();
+		}
+	}
 }

@@ -1,26 +1,28 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.controllers.Quest;
 
 public class QuestData {
+	public Quest quest;
+	public boolean isCompleted;
+	public NBTTagCompound extraData;
 
-   public Quest quest;
-   public boolean isCompleted;
-   public NBTTagCompound extraData = new NBTTagCompound();
+	public QuestData(final Quest quest) {
+		extraData = new NBTTagCompound();
+		this.quest = quest;
+	}
 
+	public void readEntityFromNBT(final NBTTagCompound nbttagcompound) {
+		isCompleted = nbttagcompound.getBoolean("QuestCompleted");
+		extraData = nbttagcompound.getCompoundTag("ExtraData");
+	}
 
-   public QuestData(Quest quest) {
-      this.quest = quest;
-   }
-
-   public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setBoolean("QuestCompleted", this.isCompleted);
-      nbttagcompound.setTag("ExtraData", this.extraData);
-   }
-
-   public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
-      this.isCompleted = nbttagcompound.getBoolean("QuestCompleted");
-      this.extraData = nbttagcompound.getCompoundTag("ExtraData");
-   }
+	public void writeEntityToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setBoolean("QuestCompleted", isCompleted);
+		nbttagcompound.setTag("ExtraData", extraData);
+	}
 }

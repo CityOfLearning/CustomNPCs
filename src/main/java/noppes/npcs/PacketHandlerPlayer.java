@@ -1,10 +1,12 @@
+//
+
+//
+
 package noppes.npcs;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.network.FMLNetworkEvent.ServerCustomPacketEvent;
-import io.netty.buffer.ByteBuf;
-import java.io.IOException;
 import java.util.Iterator;
+
+import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemEditableBook;
@@ -13,21 +15,20 @@ import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetHandlerPlayServer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
-import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
-import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.NoppesUtilServer;
-import noppes.npcs.Server;
+import net.minecraft.util.BlockPos;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.constants.EnumQuestType;
-import noppes.npcs.constants.EnumRoleType;
 import noppes.npcs.containers.ContainerMail;
+import noppes.npcs.containers.ContainerTradingBlock;
 import noppes.npcs.controllers.BankData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerFactionData;
@@ -39,258 +40,241 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleCompanion;
 
 public class PacketHandlerPlayer {
+	@SubscribeEvent
+	public void onServerPacket(final FMLNetworkEvent.ServerCustomPacketEvent event) {
+		final EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
+		final ByteBuf buffer = event.packet.payload();
+		MinecraftServer.getServer().addScheduledTask(new Runnable() {
+			@Override
+			public void run() {
+				EnumPlayerPacket type = null;
+				try {
+					type = EnumPlayerPacket.values()[buffer.readInt()];
+					PacketHandlerPlayer.this.player(buffer, player, type);
+				} catch (Exception e) {
+					LogWriter.error("Error with EnumPlayerPacket." + type, e);
+				}
+			}
+		});
+	}
 
-   @SubscribeEvent
-   public void onServerPacket(ServerCustomPacketEvent event) {
-      EntityPlayerMP player = ((NetHandlerPlayServer)event.handler).playerEntity;
-      ByteBuf buffer = event.packet.payload();
-
-      try {
-         this.player(buffer, player, EnumPlayerPacket.values()[buffer.readInt()]);
-      } catch (IOException var5) {
-         LogWriter.except(var5);
-      }
-
-   }
-
-   private void player(ByteBuf buffer, EntityPlayerMP player, EnumPlayerPacket type) throws IOException {
-      EntityNPCInterface x;
-      int y;
-      int z;
-      if(type == EnumPlayerPacket.CompanionTalentExp) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Companion || player != x.getOwner()) {
-            return;
-         }
-
-         y = buffer.readInt();
-         z = buffer.readInt();
-         RoleCompanion tileentity = (RoleCompanion)x.roleInterface;
-         if(z <= 0 || !tileentity.canAddExp(-z) || y < 0 || y >= EnumCompanionTalent.values().length) {
-            return;
-         }
-
-         EnumCompanionTalent tile = EnumCompanionTalent.values()[y];
-         tileentity.addExp(-z);
-         tileentity.addTalentExp(tile, z);
-      } else if(type == EnumPlayerPacket.CompanionOpenInv) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Companion || player != x.getOwner()) {
-            return;
-         }
-
-         NoppesUtilServer.sendOpenGui(player, EnumGuiType.CompanionInv, x);
-      } else if(type == EnumPlayerPacket.FollowerHire) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Follower) {
-            return;
-         }
-
-         NoppesUtilPlayer.hireFollower(player, x);
-      } else if(type == EnumPlayerPacket.FollowerExtend) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Follower) {
-            return;
-         }
-
-         NoppesUtilPlayer.extendFollower(player, x);
-         Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{x.roleInterface.writeToNBT(new NBTTagCompound())});
-      } else if(type == EnumPlayerPacket.FollowerState) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Follower) {
-            return;
-         }
-
-         NoppesUtilPlayer.changeFollowerState(player, x);
-         Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{x.roleInterface.writeToNBT(new NBTTagCompound())});
-      } else if(type == EnumPlayerPacket.RoleGet) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role == EnumRoleType.None) {
-            return;
-         }
-
-         Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{x.roleInterface.writeToNBT(new NBTTagCompound())});
-      } else if(type == EnumPlayerPacket.Transport) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Transporter) {
-            return;
-         }
-
-         NoppesUtilPlayer.transport(player, x, Server.readString(buffer));
-      } else if(type == EnumPlayerPacket.BankUpgrade) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Bank) {
-            return;
-         }
-
-         NoppesUtilPlayer.bankUpgrade(player, x);
-      } else if(type == EnumPlayerPacket.BankUnlock) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Bank) {
-            return;
-         }
-
-         NoppesUtilPlayer.bankUnlock(player, x);
-      } else if(type == EnumPlayerPacket.BankSlotOpen) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null || x.advanced.role != EnumRoleType.Bank) {
-            return;
-         }
-
-         y = buffer.readInt();
-         z = buffer.readInt();
-         BankData tileentity1 = PlayerDataController.instance.getBankData(player, z).getBankOrDefault(z);
-         tileentity1.openBankGui(player, x, z, y);
-      } else if(type == EnumPlayerPacket.Dialog) {
-         x = NoppesUtilServer.getEditingNpc(player);
-         if(x == null) {
-            return;
-         }
-
-         NoppesUtilPlayer.dialogSelected(buffer.readInt(), buffer.readInt(), player, x);
-      } else if(type == EnumPlayerPacket.CheckQuestCompletion) {
-         PlayerQuestData x1 = PlayerDataController.instance.getPlayerData(player).questData;
-         x1.checkQuestCompletion(player, (EnumQuestType)null);
-      } else if(type == EnumPlayerPacket.QuestLog) {
-         NoppesUtilPlayer.sendQuestLogData(player);
-      } else if(type == EnumPlayerPacket.QuestCompletion) {
-         NoppesUtilPlayer.questCompletion(player, buffer.readInt());
-      } else if(type == EnumPlayerPacket.FactionsGet) {
-         PlayerFactionData x2 = PlayerDataController.instance.getPlayerData(player).factionData;
-         Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{x2.getPlayerGuiData()});
-      } else if(type == EnumPlayerPacket.MailGet) {
-         PlayerMailData x3 = PlayerDataController.instance.getPlayerData(player).mailData;
-         Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{x3.saveNBTData(new NBTTagCompound())});
-      } else {
-         PlayerMail sign;
-         long x4;
-         String z1;
-         PlayerMailData tileentity2;
-         Iterator tile1;
-         if(type == EnumPlayerPacket.MailDelete) {
-            x4 = buffer.readLong();
-            z1 = Server.readString(buffer);
-            tileentity2 = PlayerDataController.instance.getPlayerData(player).mailData;
-            tile1 = tileentity2.playermail.iterator();
-
-            while(tile1.hasNext()) {
-               sign = (PlayerMail)tile1.next();
-               if(sign.time == x4 && sign.sender.equals(z1)) {
-                  tile1.remove();
-               }
-            }
-
-            Server.sendData(player, EnumPacketClient.GUI_DATA, new Object[]{tileentity2.saveNBTData(new NBTTagCompound())});
-         } else if(type == EnumPlayerPacket.MailSend) {
-            if(!(player.openContainer instanceof ContainerMail)) {
-               return;
-            }
-
-            String x5 = PlayerDataController.instance.hasPlayer(Server.readString(buffer));
-            if(x5.isEmpty()) {
-               NoppesUtilServer.sendGuiError(player, 0);
-               return;
-            }
-
-            PlayerMail y1 = new PlayerMail();
-            z1 = player.getDisplayName();
-            if(!z1.equals(player.getCommandSenderName())) {
-               z1 = z1 + "(" + player.getCommandSenderName() + ")";
-            }
-
-            y1.readNBT(Server.readNBT(buffer));
-            y1.sender = z1;
-            y1.items = ((ContainerMail)player.openContainer).mail.items;
-            if(y1.subject.isEmpty()) {
-               NoppesUtilServer.sendGuiError(player, 1);
-               return;
-            }
-
-            PlayerDataController.instance.addPlayerMessage(x5, y1);
-            NBTTagCompound tileentity3 = new NBTTagCompound();
-            tileentity3.setString("username", x5);
-            NoppesUtilServer.sendGuiClose(player, 1, tileentity3);
-         } else if(type == EnumPlayerPacket.MailboxOpenMail) {
-            x4 = buffer.readLong();
-            z1 = Server.readString(buffer);
-            player.closeContainer();
-            tileentity2 = PlayerDataController.instance.getPlayerData(player).mailData;
-            tile1 = tileentity2.playermail.iterator();
-
-            while(tile1.hasNext()) {
-               sign = (PlayerMail)tile1.next();
-               if(sign.time == x4 && sign.sender.equals(z1)) {
-                  ContainerMail.staticmail = sign;
-                  player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 0, 0, 0);
-                  break;
-               }
-            }
-         } else if(type == EnumPlayerPacket.MailRead) {
-            x4 = buffer.readLong();
-            z1 = Server.readString(buffer);
-            tileentity2 = PlayerDataController.instance.getPlayerData(player).mailData;
-            tile1 = tileentity2.playermail.iterator();
-
-            while(tile1.hasNext()) {
-               sign = (PlayerMail)tile1.next();
-               if(sign.time == x4 && sign.sender.equals(z1)) {
-                  sign.beenRead = true;
-                  if(sign.hasQuest()) {
-                     PlayerQuestController.addActiveQuest(sign.getQuest(), player);
-                  }
-               }
-            }
-         } else {
-            int x6;
-            TileEntity tileentity4;
-            if(type == EnumPlayerPacket.SignSave) {
-               x6 = buffer.readInt();
-               y = buffer.readInt();
-               z = buffer.readInt();
-               tileentity4 = player.worldObj.getTileEntity(x6, y, z);
-               if(tileentity4 == null || !(tileentity4 instanceof TileBigSign)) {
-                  return;
-               }
-
-               TileBigSign tile2 = (TileBigSign)tileentity4;
-               if(tile2.canEdit) {
-                  tile2.setText(Server.readString(buffer));
-                  tile2.canEdit = false;
-                  player.worldObj.markBlockForUpdate(x6, y, z);
-               }
-            } else if(type == EnumPlayerPacket.SaveBook) {
-               x6 = buffer.readInt();
-               y = buffer.readInt();
-               z = buffer.readInt();
-               tileentity4 = player.worldObj.getTileEntity(x6, y, z);
-               if(!(tileentity4 instanceof TileBook)) {
-                  return;
-               }
-
-               TileBook tile3 = (TileBook)tileentity4;
-               if(tile3.book.getItem() == Items.written_book) {
-                  return;
-               }
-
-               boolean sign1 = buffer.readBoolean();
-               ItemStack book = ItemStack.loadItemStackFromNBT(Server.readNBT(buffer));
-               if(book == null) {
-                  return;
-               }
-
-               if(book.getItem() == Items.writable_book && !sign1 && ItemWritableBook.validBookPageTagContents(book.getTagCompound())) {
-                  tile3.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
-               }
-
-               if(book.getItem() == Items.written_book && sign1 && ItemEditableBook.validBookTagContents(book.getTagCompound())) {
-                  tile3.book.setTagInfo("author", new NBTTagString(player.getCommandSenderName()));
-                  tile3.book.setTagInfo("title", new NBTTagString(book.getTagCompound().getString("title")));
-                  tile3.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
-                  tile3.book.setItem(Items.written_book);
-               }
-            }
-         }
-      }
-
-   }
+	private void player(final ByteBuf buffer, final EntityPlayerMP player, final EnumPlayerPacket type)
+			throws Exception {
+		if (type == EnumPlayerPacket.CompanionTalentExp) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 6) || (player != npc.getOwner())) {
+				return;
+			}
+			final int id = buffer.readInt();
+			final int exp = buffer.readInt();
+			final RoleCompanion role = (RoleCompanion) npc.roleInterface;
+			if ((exp <= 0) || !role.canAddExp(-exp) || (id < 0) || (id >= EnumCompanionTalent.values().length)) {
+				return;
+			}
+			final EnumCompanionTalent talent = EnumCompanionTalent.values()[id];
+			role.addExp(-exp);
+			role.addTalentExp(talent, exp);
+		} else if (type == EnumPlayerPacket.CompanionOpenInv) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 6) || (player != npc.getOwner())) {
+				return;
+			}
+			NoppesUtilServer.sendOpenGui(player, EnumGuiType.CompanionInv, npc);
+		} else if (type == EnumPlayerPacket.TradeAccept) {
+			if (!(player.openContainer instanceof ContainerTradingBlock)) {
+				return;
+			}
+			final ContainerTradingBlock con = (ContainerTradingBlock) player.openContainer;
+			if (!con.tile.isFull()) {
+				return;
+			}
+			final ContainerTradingBlock con2 = (ContainerTradingBlock) con.tile.other(player).openContainer;
+			if (con.state == 0) {
+				con.setState(2);
+				con2.setState(1);
+			} else if ((con.state == 1) || (con.state == 2)) {
+				con.setState(3);
+				con2.setState(3);
+				for (int i = 0; i < 9; ++i) {
+					final ItemStack item = con.craftMatrix.getStackInSlot(i);
+					con.craftMatrix.setInventorySlotContents(i, con2.craftMatrix.getStackInSlot(i));
+					con2.craftMatrix.setInventorySlotContents(i, item);
+				}
+			}
+		} else if (type == EnumPlayerPacket.FollowerHire) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 2)) {
+				return;
+			}
+			NoppesUtilPlayer.hireFollower(player, npc);
+		} else if (type == EnumPlayerPacket.FollowerExtend) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 2)) {
+				return;
+			}
+			NoppesUtilPlayer.extendFollower(player, npc);
+			Server.sendData(player, EnumPacketClient.GUI_DATA, npc.roleInterface.writeToNBT(new NBTTagCompound()));
+		} else if (type == EnumPlayerPacket.FollowerState) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 2)) {
+				return;
+			}
+			NoppesUtilPlayer.changeFollowerState(player, npc);
+			Server.sendData(player, EnumPacketClient.GUI_DATA, npc.roleInterface.writeToNBT(new NBTTagCompound()));
+		} else if (type == EnumPlayerPacket.RoleGet) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role == 0)) {
+				return;
+			}
+			Server.sendData(player, EnumPacketClient.GUI_DATA, npc.roleInterface.writeToNBT(new NBTTagCompound()));
+		} else if (type == EnumPlayerPacket.Transport) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 4)) {
+				return;
+			}
+			NoppesUtilPlayer.transport(player, npc, Server.readString(buffer));
+		} else if (type == EnumPlayerPacket.BankUpgrade) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 3)) {
+				return;
+			}
+			NoppesUtilPlayer.bankUpgrade(player, npc);
+		} else if (type == EnumPlayerPacket.BankUnlock) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 3)) {
+				return;
+			}
+			NoppesUtilPlayer.bankUnlock(player, npc);
+		} else if (type == EnumPlayerPacket.BankSlotOpen) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if ((npc == null) || (npc.advanced.role != 3)) {
+				return;
+			}
+			final int slot = buffer.readInt();
+			final int bankId = buffer.readInt();
+			final BankData data = PlayerDataController.instance.getBankData(player, bankId).getBankOrDefault(bankId);
+			data.openBankGui(player, npc, bankId, slot);
+		} else if (type == EnumPlayerPacket.Dialog) {
+			final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+			if (npc == null) {
+				return;
+			}
+			NoppesUtilPlayer.dialogSelected(buffer.readInt(), buffer.readInt(), player, npc);
+		} else if (type == EnumPlayerPacket.CheckQuestCompletion) {
+			final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+			playerdata.checkQuestCompletion(player, null);
+		} else if (type == EnumPlayerPacket.QuestLog) {
+			NoppesUtilPlayer.sendQuestLogData(player);
+		} else if (type == EnumPlayerPacket.QuestCompletion) {
+			NoppesUtilPlayer.questCompletion(player, buffer.readInt());
+		} else if (type == EnumPlayerPacket.FactionsGet) {
+			final PlayerFactionData data2 = PlayerDataController.instance.getPlayerData(player).factionData;
+			Server.sendData(player, EnumPacketClient.GUI_DATA, data2.getPlayerGuiData());
+		} else if (type == EnumPlayerPacket.MailGet) {
+			final PlayerMailData data3 = PlayerDataController.instance.getPlayerData(player).mailData;
+			Server.sendData(player, EnumPacketClient.GUI_DATA, data3.saveNBTData(new NBTTagCompound()));
+		} else if (type == EnumPlayerPacket.MailDelete) {
+			final long time = buffer.readLong();
+			final String username = Server.readString(buffer);
+			final PlayerMailData data4 = PlayerDataController.instance.getPlayerData(player).mailData;
+			final Iterator<PlayerMail> it = data4.playermail.iterator();
+			while (it.hasNext()) {
+				final PlayerMail mail = it.next();
+				if ((mail.time == time) && mail.sender.equals(username)) {
+					it.remove();
+				}
+			}
+			Server.sendData(player, EnumPacketClient.GUI_DATA, data4.saveNBTData(new NBTTagCompound()));
+		} else if (type == EnumPlayerPacket.MailSend) {
+			final String username2 = PlayerDataController.instance.hasPlayer(Server.readString(buffer));
+			if (username2.isEmpty()) {
+				NoppesUtilServer.sendGuiError(player, 0);
+				return;
+			}
+			final PlayerMail mail2 = new PlayerMail();
+			String s = player.getDisplayNameString();
+			if (!s.equals(player.getName())) {
+				s = s + "(" + player.getName() + ")";
+			}
+			mail2.readNBT(Server.readNBT(buffer));
+			mail2.sender = s;
+			mail2.items = ((ContainerMail) player.openContainer).mail.items;
+			if (mail2.subject.isEmpty()) {
+				NoppesUtilServer.sendGuiError(player, 1);
+				return;
+			}
+			final NBTTagCompound comp = new NBTTagCompound();
+			comp.setString("username", username2);
+			NoppesUtilServer.sendGuiClose(player, 1, comp);
+			final EntityNPCInterface npc2 = NoppesUtilServer.getEditingNpc(player);
+			if ((npc2 != null)
+					&& EventHooks.onNPCRole(npc2, new RoleEvent.MailmanEvent(player, npc2.wrappedNPC, mail2))) {
+				return;
+			}
+			PlayerDataController.instance.addPlayerMessage(username2, mail2);
+		} else if (type == EnumPlayerPacket.MailboxOpenMail) {
+			final long time = buffer.readLong();
+			final String username = Server.readString(buffer);
+			player.closeContainer();
+			final PlayerMailData data4 = PlayerDataController.instance.getPlayerData(player).mailData;
+			for (final PlayerMail mail : data4.playermail) {
+				if ((mail.time == time) && mail.sender.equals(username)) {
+					ContainerMail.staticmail = mail;
+					player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 0, 0, 0);
+					break;
+				}
+			}
+		} else if (type == EnumPlayerPacket.MailRead) {
+			final long time = buffer.readLong();
+			final String username = Server.readString(buffer);
+			final PlayerMailData data4 = PlayerDataController.instance.getPlayerData(player).mailData;
+			for (final PlayerMail mail : data4.playermail) {
+				if ((mail.time == time) && mail.sender.equals(username)) {
+					mail.beenRead = true;
+					if (!mail.hasQuest()) {
+						continue;
+					}
+					PlayerQuestController.addActiveQuest(mail.getQuest(), player);
+				}
+			}
+		} else if (type == EnumPlayerPacket.SignSave) {
+			final BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+			final TileEntity tile = player.worldObj.getTileEntity(pos);
+			if ((tile == null) || !(tile instanceof TileBigSign)) {
+				return;
+			}
+			final TileBigSign sign = (TileBigSign) tile;
+			if (sign.canEdit) {
+				sign.setText(Server.readString(buffer));
+				sign.canEdit = false;
+				player.worldObj.markBlockForUpdate(pos);
+			}
+		} else if (type == EnumPlayerPacket.SaveBook) {
+			final BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+			final TileEntity tileentity = player.worldObj.getTileEntity(pos);
+			if (!(tileentity instanceof TileBook)) {
+				return;
+			}
+			final TileBook tile2 = (TileBook) tileentity;
+			if (tile2.book.getItem() == Items.written_book) {
+				return;
+			}
+			final boolean sign2 = buffer.readBoolean();
+			final ItemStack book = ItemStack.loadItemStackFromNBT(Server.readNBT(buffer));
+			if (book == null) {
+				return;
+			}
+			if ((book.getItem() == Items.writable_book) && !sign2
+					&& ItemWritableBook.isNBTValid(book.getTagCompound())) {
+				tile2.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
+			}
+			if ((book.getItem() == Items.written_book) && sign2
+					&& ItemEditableBook.validBookTagContents(book.getTagCompound())) {
+				tile2.book.setTagInfo("author", new NBTTagString(player.getName()));
+				tile2.book.setTagInfo("title", new NBTTagString(book.getTagCompound().getString("title")));
+				tile2.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
+				tile2.book.setItem(Items.written_book);
+			}
+		}
+	}
 }

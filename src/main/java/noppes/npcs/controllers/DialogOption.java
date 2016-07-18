@@ -1,67 +1,90 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.constants.EnumOptionType;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogController;
+import noppes.npcs.api.constants.EnumOptionType;
+import noppes.npcs.api.handler.data.IDialogOption;
 
-public class DialogOption {
+public class DialogOption implements IDialogOption {
+	public int dialogId;
+	public String title;
+	public EnumOptionType optionType;
+	public int optionColor;
+	public String command;
+	public int slot;
 
-   public int dialogId = -1;
-   public String title = "Talk";
-   public EnumOptionType optionType;
-   public int optionColor;
-   public String command;
+	public DialogOption() {
+		dialogId = -1;
+		title = "Talk";
+		optionType = EnumOptionType.DIALOG_OPTION;
+		optionColor = 14737632;
+		command = "";
+		slot = -1;
+	}
 
+	public Dialog getDialog() {
+		if (!hasDialog()) {
+			return null;
+		}
+		return DialogController.instance.dialogs.get(dialogId);
+	}
 
-   public DialogOption() {
-      this.optionType = EnumOptionType.Disabled;
-      this.optionColor = 14737632;
-      this.command = "";
-   }
+	@Override
+	public String getName() {
+		return title;
+	}
 
-   public void readNBT(NBTTagCompound compound) {
-      if(compound != null) {
-         this.title = compound.getString("Title");
-         this.dialogId = compound.getInteger("Dialog");
-         this.optionColor = compound.getInteger("DialogColor");
-         this.optionType = EnumOptionType.values()[compound.getInteger("OptionType")];
-         this.command = compound.getString("DialogCommand");
-         if(this.optionColor == 0) {
-            this.optionColor = 14737632;
-         }
+	@Override
+	public int getSlot() {
+		return slot;
+	}
 
-      }
-   }
+	@Override
+	public EnumOptionType getType() {
+		return optionType;
+	}
 
-   public NBTTagCompound writeNBT() {
-      NBTTagCompound compound = new NBTTagCompound();
-      compound.setString("Title", this.title);
-      compound.setInteger("OptionType", this.optionType.ordinal());
-      compound.setInteger("Dialog", this.dialogId);
-      compound.setInteger("DialogColor", this.optionColor);
-      compound.setString("DialogCommand", this.command);
-      return compound;
-   }
+	public boolean hasDialog() {
+		if (dialogId <= 0) {
+			return false;
+		}
+		if (!DialogController.instance.hasDialog(dialogId)) {
+			dialogId = -1;
+			return false;
+		}
+		return true;
+	}
 
-   public boolean hasDialog() {
-      if(this.dialogId <= 0) {
-         return false;
-      } else if(!DialogController.instance.hasDialog(this.dialogId)) {
-         this.dialogId = -1;
-         return false;
-      } else {
-         return true;
-      }
-   }
+	public boolean isAvailable(final EntityPlayer player) {
+		final Dialog dialog = getDialog();
+		return (dialog != null) && dialog.availability.isAvailable(player);
+	}
 
-   public Dialog getDialog() {
-      return !this.hasDialog()?null:(Dialog)DialogController.instance.dialogs.get(Integer.valueOf(this.dialogId));
-   }
+	public void readNBT(final NBTTagCompound compound) {
+		if (compound == null) {
+			return;
+		}
+		title = compound.getString("Title");
+		dialogId = compound.getInteger("Dialog");
+		optionColor = compound.getInteger("DialogColor");
+		optionType = EnumOptionType.values()[compound.getInteger("OptionType")];
+		command = compound.getString("DialogCommand");
+		if (optionColor == 0) {
+			optionColor = 14737632;
+		}
+	}
 
-   public boolean isAvailable(EntityPlayer player) {
-      Dialog dialog = this.getDialog();
-      return dialog == null?false:dialog.availability.isAvailable(player);
-   }
+	public NBTTagCompound writeNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setString("Title", title);
+		compound.setInteger("OptionType", optionType.ordinal());
+		compound.setInteger("Dialog", dialogId);
+		compound.setInteger("DialogColor", optionColor);
+		compound.setString("DialogCommand", command);
+		return compound;
+	}
 }

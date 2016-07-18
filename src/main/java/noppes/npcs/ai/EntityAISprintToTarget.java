@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -6,43 +10,45 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAISprintToTarget extends EntityAIBase {
+	private EntityNPCInterface npc;
 
-   EntityNPCInterface runner;
-   EntityLivingBase runTarget;
+	public EntityAISprintToTarget(final EntityNPCInterface par1EntityLiving) {
+		npc = par1EntityLiving;
+		setMutexBits(AiMutex.PASSIVE);
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		return npc.isEntityAlive() && npc.onGround && (npc.hurtTime <= 0) && (npc.motionX != 0.0)
+				&& (npc.motionZ != 0.0);
+	}
 
-   public EntityAISprintToTarget(EntityNPCInterface par1EntityLiving) {
-      this.runner = par1EntityLiving;
-      this.setMutexBits(AiMutex.PASSIVE + AiMutex.PATHING);
-   }
+	@Override
+	public void resetTask() {
+		npc.setSprinting(false);
+	}
 
-   public boolean shouldExecute() {
-      this.runTarget = this.runner.getAttackTarget();
-      if(this.runTarget == null) {
-         return false;
-      } else if(this.runner.getNavigator().noPath()) {
-         return false;
-      } else {
-         switch(this.runner.ai.onAttack) {
-         case 0:
-            return this.runner.getDistanceSqToEntity(this.runTarget) >= 64.0D?this.runner.onGround:false;
-         case 2:
-            return this.runner.getDistanceSqToEntity(this.runTarget) <= 49.0D?this.runner.onGround:false;
-         default:
-            return false;
-         }
-      }
-   }
+	@Override
+	public boolean shouldExecute() {
+		final EntityLivingBase runTarget = npc.getAttackTarget();
+		if ((runTarget == null) || npc.getNavigator().noPath()) {
+			return false;
+		}
+		switch (npc.ai.onAttack) {
+		case 0: {
+			return !npc.isInRange(runTarget, 8.0) && npc.onGround;
+		}
+		case 2: {
+			return npc.isInRange(runTarget, 7.0) && npc.onGround;
+		}
+		default: {
+			return false;
+		}
+		}
+	}
 
-   public boolean continueExecuting() {
-      return this.runner.isEntityAlive() && this.runner.onGround && this.runner.hurtTime <= 0 && this.runner.motionX != 0.0D && this.runner.motionZ != 0.0D;
-   }
-
-   public void startExecuting() {
-      this.runner.setSprinting(true);
-   }
-
-   public void resetTask() {
-      this.runner.setSprinting(false);
-   }
+	@Override
+	public void startExecuting() {
+		npc.setSprinting(true);
+	}
 }

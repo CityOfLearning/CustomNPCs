@@ -1,35 +1,41 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
+import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCOrcMale extends EntityNPCInterface {
+	public EntityNPCOrcMale(final World world) {
+		super(world);
+		scaleY = 1.0f;
+		final float n = 1.2f;
+		scaleZ = n;
+		scaleX = n;
+		display.setSkinTexture("customnpcs:textures/entity/orcmale/StrandedOrc.png");
+	}
 
-   public EntityNPCOrcMale(World world) {
-      super(world);
-      super.scaleY = 1.0F;
-      super.scaleX = super.scaleZ = 1.2F;
-      super.display.texture = "customnpcs:textures/entity/orcmale/StrandedOrc.png";
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.legs.setScale(1.2F, 1.05F);
-         data.arms.setScale(1.2F, 1.05F);
-         data.body.setScale(1.4F, 1.1F, 1.5F);
-         data.head.setScale(1.2F, 1.1F);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.getPartConfig(EnumParts.LEG_LEFT).setScale(1.2f, 1.05f);
+			data.getPartConfig(EnumParts.ARM_LEFT).setScale(1.2f, 1.05f);
+			data.getPartConfig(EnumParts.BODY).setScale(1.4f, 1.1f, 1.5f);
+			data.getPartConfig(EnumParts.HEAD).setScale(1.2f, 1.1f);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 }

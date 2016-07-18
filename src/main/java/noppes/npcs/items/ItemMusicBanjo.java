@@ -1,13 +1,16 @@
+//
+
+//
+
 package noppes.npcs.items;
 
-import noppes.npcs.items.ItemMusic;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ItemMusicBanjo extends ItemMusic {
-
-   public void renderSpecial() {
-      GL11.glScalef(0.85F, 0.85F, 0.85F);
-      GL11.glTranslatef(0.1F, 0.4F, -0.14F);
-      GL11.glRotatef(-90.0F, -1.0F, 0.0F, 0.0F);
-   }
+	@Override
+	public void renderSpecial() {
+		GlStateManager.scale(0.85f, 0.85f, 0.85f);
+		GlStateManager.translate(0.1f, 0.4f, -0.14f);
+		GlStateManager.rotate(-90.0f, -1.0f, 0.0f, 0.0f);
+	}
 }

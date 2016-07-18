@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,34 +11,38 @@ import noppes.npcs.controllers.BankController;
 import noppes.npcs.controllers.BankData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleInterface;
 
 public class RoleBank extends RoleInterface {
+	public int bankId;
 
-   public int bankId = -1;
+	public RoleBank(final EntityNPCInterface npc) {
+		super(npc);
+		bankId = -1;
+	}
 
+	public Bank getBank() {
+		final Bank bank = BankController.getInstance().banks.get(bankId);
+		if (bank != null) {
+			return bank;
+		}
+		return BankController.getInstance().banks.values().iterator().next();
+	}
 
-   public RoleBank(EntityNPCInterface npc) {
-      super(npc);
-   }
+	@Override
+	public void interact(final EntityPlayer player) {
+		final BankData data = PlayerDataController.instance.getBankData(player, bankId).getBankOrDefault(bankId);
+		data.openBankGui(player, npc, bankId, 0);
+		npc.say(player, npc.advanced.getInteractLine());
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setInteger("RoleBankID", this.bankId);
-      return nbttagcompound;
-   }
+	@Override
+	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+		bankId = nbttagcompound.getInteger("RoleBankID");
+	}
 
-   public void readFromNBT(NBTTagCompound nbttagcompound) {
-      this.bankId = nbttagcompound.getInteger("RoleBankID");
-   }
-
-   public void interact(EntityPlayer player) {
-      BankData data = PlayerDataController.instance.getBankData(player, this.bankId).getBankOrDefault(this.bankId);
-      data.openBankGui(player, super.npc, this.bankId, 0);
-      super.npc.say(player, super.npc.advanced.getInteractLine());
-   }
-
-   public Bank getBank() {
-      Bank bank = (Bank)BankController.getInstance().banks.get(Integer.valueOf(this.bankId));
-      return bank != null?bank:(Bank)BankController.getInstance().banks.values().iterator().next();
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setInteger("RoleBankID", bankId);
+		return nbttagcompound;
+	}
 }

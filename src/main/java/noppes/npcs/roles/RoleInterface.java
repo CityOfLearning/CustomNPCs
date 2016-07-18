@@ -1,45 +1,60 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import java.util.HashMap;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.api.entity.data.INPCRole;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public abstract class RoleInterface {
+public abstract class RoleInterface implements INPCRole {
+	public EntityNPCInterface npc;
+	public HashMap<String, String> dataString;
 
-   public EntityNPCInterface npc;
-   public HashMap dataString = new HashMap();
+	public RoleInterface(final EntityNPCInterface npc) {
+		dataString = new HashMap<String, String>();
+		this.npc = npc;
+	}
 
+	public boolean aiContinueExecute() {
+		return false;
+	}
 
-   public RoleInterface(EntityNPCInterface npc) {
-      this.npc = npc;
-   }
+	public boolean aiShouldExecute() {
+		return false;
+	}
 
-   public abstract NBTTagCompound writeToNBT(NBTTagCompound var1);
+	public void aiStartExecuting() {
+	}
 
-   public abstract void readFromNBT(NBTTagCompound var1);
+	public void aiUpdateTask() {
+	}
 
-   public abstract void interact(EntityPlayer var1);
+	public void clientUpdate() {
+	}
 
-   public void killed() {}
+	public boolean defendOwner() {
+		return false;
+	}
 
-   public void delete() {}
+	public void delete() {
+	}
 
-   public boolean aiShouldExecute() {
-      return false;
-   }
+	@Override
+	public int getType() {
+		return npc.advanced.role;
+	}
 
-   public boolean aiContinueExecute() {
-      return false;
-   }
+	public abstract void interact(final EntityPlayer p0);
 
-   public void aiStartExecuting() {}
+	public void killed() {
+	}
 
-   public void aiUpdateTask() {}
+	public abstract void readFromNBT(final NBTTagCompound p0);
 
-   public boolean defendOwner() {
-      return false;
-   }
-
-   public void clientUpdate() {}
+	public abstract NBTTagCompound writeToNBT(final NBTTagCompound p0);
 }

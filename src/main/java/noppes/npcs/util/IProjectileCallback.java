@@ -1,10 +1,13 @@
+//
+
+//
+
 package noppes.npcs.util;
 
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.BlockPos;
 import noppes.npcs.entity.EntityProjectile;
 
 public interface IProjectileCallback {
-
-   boolean onImpact(EntityProjectile var1, EntityLivingBase var2, ItemStack var3);
+	boolean onImpact(final EntityProjectile p0, final BlockPos p1, final Entity p2);
 }

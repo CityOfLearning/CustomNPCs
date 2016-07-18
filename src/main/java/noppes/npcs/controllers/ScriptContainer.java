@@ -1,96 +1,162 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
+import java.util.Map;
+
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
+
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import noppes.npcs.NBTTags;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.NoppesUtilServer;
+import noppes.npcs.api.constants.AnimationType;
+import noppes.npcs.api.constants.EntityType;
+import noppes.npcs.api.constants.JobType;
+import noppes.npcs.api.constants.ParticleType;
+import noppes.npcs.api.constants.PotionEffectType;
+import noppes.npcs.api.constants.RoleType;
+import noppes.npcs.api.constants.TacticalType;
+import noppes.npcs.constants.EnumScriptType;
 
 public class ScriptContainer {
+	private static final AnimationType animations;
+	private static final EntityType entities;
+	private static final JobType jobs;
+	private static final RoleType roles;
+	private static final TacticalType tacticalVariantTypes;
+	private static final PotionEffectType potionEffectTypes;
+	private static final ParticleType particleTypes;
+	static {
+		animations = new AnimationType();
+		entities = new EntityType();
+		jobs = new JobType();
+		roles = new RoleType();
+		tacticalVariantTypes = new TacticalType();
+		potionEffectTypes = new PotionEffectType();
+		particleTypes = new ParticleType();
+	}
+	public String fullscript;
+	public String script;
+	public Map<Long, String> console;
+	public boolean errored;
+	public List<String> scripts;
+	private List<Integer> unknownFunctions;
+	private long lastCreated;
+	private String currentScriptLanguage;
+	public ScriptEngine engine;
+	private IScriptHandler handler;
 
-   public String fullscript = "";
-   public String script = "";
-   public String console = "";
-   public boolean errored = false;
-   public List scripts = new ArrayList();
-   private long lastCreated = 0L;
-   private CompiledScript compScript = null;
+	private boolean init;
 
+	public ScriptContainer(final IScriptHandler handler) {
+		fullscript = "";
+		script = "";
+		console = new HashMap<Long, String>();
+		errored = false;
+		scripts = new ArrayList<String>();
+		unknownFunctions = new ArrayList<Integer>();
+		lastCreated = 0L;
+		currentScriptLanguage = null;
+		engine = null;
+		this.handler = null;
+		init = false;
+		this.handler = handler;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      this.script = compound.getString("Script");
-      this.console = compound.getString("ScriptConsole");
-      this.scripts = NBTTags.getStringList(compound.getTagList("ScriptList", 10));
-      this.lastCreated = 0L;
-   }
+	public void appandConsole(final String message) {
+		if ((message == null) || message.isEmpty()) {
+			return;
+		}
+		console.put(System.currentTimeMillis(), message);
+	}
 
-   public void writeToNBT(NBTTagCompound compound) {
-      compound.setString("Script", this.script);
-      compound.setString("ScriptConsole", this.console);
-      compound.setTag("ScriptList", NBTTags.nbtStringList(this.scripts));
-   }
+	public String getCode() {
+		if (ScriptController.Instance.lastLoaded > lastCreated) {
+			lastCreated = ScriptController.Instance.lastLoaded;
+			fullscript = script;
+			if (!fullscript.isEmpty()) {
+				fullscript += "\n";
+			}
+			for (final String loc : scripts) {
+				final String code = ScriptController.Instance.scripts.get(loc);
+				if ((code != null) && !code.isEmpty()) {
+					fullscript = fullscript + code + "\n";
+				}
+			}
+			unknownFunctions = new ArrayList<Integer>();
+			init = false;
+		}
+		return fullscript;
+	}
 
-   public String getCode() {
-      if(ScriptController.Instance.lastLoaded > this.lastCreated) {
-         this.lastCreated = ScriptController.Instance.lastLoaded;
-         this.fullscript = this.script;
-         if(!this.fullscript.isEmpty()) {
-            this.fullscript = this.fullscript + "\n";
-         }
+	public boolean hasCode() {
+		return !getCode().isEmpty();
+	}
 
-         Iterator var1 = this.scripts.iterator();
+	public void readFromNBT(final NBTTagCompound compound) {
+		script = compound.getString("Script");
+		console = NBTTags.GetLongStringMap(compound.getTagList("Console", 10));
+		scripts = NBTTags.getStringList(compound.getTagList("ScriptList", 10));
+		lastCreated = 0L;
+	}
 
-         while(var1.hasNext()) {
-            String loc = (String)var1.next();
-            String code = (String)ScriptController.Instance.scripts.get(loc);
-            if(code != null && !code.isEmpty()) {
-               this.fullscript = this.fullscript + code + "\n";
-            }
-         }
+	public void run(final EnumScriptType type, final Event event) {
+		if (!hasCode() || unknownFunctions.contains(type.ordinal())) {
+			return;
+		}
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw);
+		engine.getContext().setWriter(pw);
+		engine.getContext().setErrorWriter(pw);
+		try {
+			if (!init) {
+				engine.eval(getCode());
+				init = true;
+			}
+			((Invocable) engine).invokeFunction(type.function, event);
+		} catch (NoSuchMethodException e2) {
+			unknownFunctions.add(type.ordinal());
+		} catch (Exception e) {
+			errored = true;
+			e.printStackTrace(pw);
+			NoppesUtilServer.NotifyOPs(handler.noticeString() + " script errored", new Object[0]);
+		}
+		appandConsole(sw.getBuffer().toString().trim());
+		pw.close();
+	}
 
-         this.compScript = null;
-      }
+	public void setEngine(final String scriptLanguage) {
+		if ((currentScriptLanguage != null) && currentScriptLanguage.equals(scriptLanguage)) {
+			return;
+		}
+		engine = ScriptController.Instance.getEngineByName(scriptLanguage);
+		if (engine == null) {
+			errored = true;
+			return;
+		}
+		engine.put("AnimationType", ScriptContainer.animations);
+		engine.put("EntityType", ScriptContainer.entities);
+		engine.put("RoleType", ScriptContainer.roles);
+		engine.put("JobType", ScriptContainer.jobs);
+		engine.put("TacticalVariantType", ScriptContainer.tacticalVariantTypes);
+		engine.put("PotionEffectType", ScriptContainer.potionEffectTypes);
+		engine.put("ParticleType", ScriptContainer.particleTypes);
+		currentScriptLanguage = scriptLanguage;
+		init = false;
+	}
 
-      return this.fullscript;
-   }
-
-   public void run(ScriptEngine engine) {
-      StringWriter sw = new StringWriter();
-      PrintWriter pw = new PrintWriter(sw);
-      engine.getContext().setWriter(pw);
-      engine.getContext().setErrorWriter(pw);
-
-      try {
-         if(this.compScript == null && engine instanceof Compilable) {
-            this.compScript = ((Compilable)engine).compile(this.getCode());
-         }
-
-         if(this.compScript != null) {
-            this.compScript.eval(engine.getContext());
-         } else {
-            engine.eval(this.getCode());
-         }
-      } catch (Exception var5) {
-         this.errored = true;
-         this.appandConsole(var5.getMessage());
-      }
-
-      this.appandConsole(sw.getBuffer().toString().trim());
-   }
-
-   public void appandConsole(String message) {
-      if(!message.isEmpty()) {
-         this.console = message + "\n" + this.console;
-      }
-   }
-
-   public boolean hasCode() {
-      return !this.getCode().isEmpty();
-   }
+	public void writeToNBT(final NBTTagCompound compound) {
+		compound.setString("Script", script);
+		compound.setTag("Console", NBTTags.NBTLongStringMap(console));
+		compound.setTag("ScriptList", NBTTags.nbtStringList(scripts));
+	}
 }

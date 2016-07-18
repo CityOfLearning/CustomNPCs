@@ -1,10 +1,14 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -18,307 +22,282 @@ import noppes.npcs.controllers.Line;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerItemGiverData;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobInterface;
 
 public class JobItemGiver extends JobInterface {
+	public int cooldownType;
+	public int givingMethod;
+	public int cooldown;
+	public NpcMiscInventory inventory;
+	public int itemGiverId;
+	public List<String> lines;
+	private int ticks;
+	private List<EntityPlayer> recentlyChecked;
+	private List<EntityPlayer> toCheck;
+	public Availability availability;
 
-   public int cooldownType = 0;
-   public int givingMethod = 0;
-   public int cooldown = 10;
-   public NpcMiscInventory inventory = new NpcMiscInventory(9);
-   public int itemGiverId = 0;
-   public List lines = new ArrayList();
-   private int ticks = 10;
-   private List recentlyChecked = new ArrayList();
-   private List toCheck;
-   public Availability availability = new Availability();
+	public JobItemGiver(final EntityNPCInterface npc) {
+		super(npc);
+		cooldownType = 0;
+		givingMethod = 0;
+		cooldown = 10;
+		itemGiverId = 0;
+		lines = new ArrayList<String>();
+		ticks = 10;
+		recentlyChecked = new ArrayList<EntityPlayer>();
+		availability = new Availability();
+		inventory = new NpcMiscInventory(9);
+		lines.add("Have these items {player}");
+	}
 
+	@Override
+	public boolean aiContinueExecute() {
+		return false;
+	}
 
-   public JobItemGiver(EntityNPCInterface npc) {
-      super(npc);
-      this.lines.add("Have these items {player}");
-   }
+	@Override
+	public boolean aiShouldExecute() {
+		if (npc.isAttacking()) {
+			return false;
+		}
+		--ticks;
+		if (ticks > 0) {
+			return false;
+		}
+		ticks = 10;
+		(toCheck = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+				npc.getEntityBoundingBox().expand(3.0, 3.0, 3.0))).removeAll(recentlyChecked);
+		final List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0));
+		recentlyChecked.retainAll(listMax);
+		recentlyChecked.addAll(toCheck);
+		return toCheck.size() > 0;
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
-      nbttagcompound.setInteger("igCooldownType", this.cooldownType);
-      nbttagcompound.setInteger("igGivingMethod", this.givingMethod);
-      nbttagcompound.setInteger("igCooldown", this.cooldown);
-      nbttagcompound.setInteger("ItemGiverId", this.itemGiverId);
-      nbttagcompound.setTag("igLines", NBTTags.nbtStringList(this.lines));
-      nbttagcompound.setTag("igJobInventory", this.inventory.getToNBT());
-      nbttagcompound.setTag("igAvailability", this.availability.writeToNBT(new NBTTagCompound()));
-      return nbttagcompound;
-   }
+	@Override
+	public void aiStartExecuting() {
+		for (final EntityPlayer player : toCheck) {
+			if (npc.canSee(player) && availability.isAvailable(player)) {
+				recentlyChecked.add(player);
+				interact(player);
+			}
+		}
+	}
 
-   public void readFromNBT(NBTTagCompound nbttagcompound) {
-      this.itemGiverId = nbttagcompound.getInteger("ItemGiverId");
-      this.cooldownType = nbttagcompound.getInteger("igCooldownType");
-      this.givingMethod = nbttagcompound.getInteger("igGivingMethod");
-      this.cooldown = nbttagcompound.getInteger("igCooldown");
-      this.lines = NBTTags.getStringList(nbttagcompound.getTagList("igLines", 10));
-      this.inventory.setFromNBT(nbttagcompound.getCompoundTag("igJobInventory"));
-      if(this.itemGiverId == 0 && GlobalDataController.instance != null) {
-         this.itemGiverId = GlobalDataController.instance.incrementItemGiverId();
-      }
+	private boolean canPlayerInteract(final PlayerItemGiverData data) {
+		if (inventory.items.isEmpty()) {
+			return false;
+		}
+		if (isOnTimer()) {
+			return !data.hasInteractedBefore(this)
+					|| ((data.getTime(this) + (cooldown * 1000)) < System.currentTimeMillis());
+		}
+		if (isGiveOnce()) {
+			return !data.hasInteractedBefore(this);
+		}
+		return isDaily() && (!data.hasInteractedBefore(this) || (getDay() > data.getTime(this)));
+	}
 
-      this.availability.readFromNBT(nbttagcompound.getCompoundTag("igAvailability"));
-   }
+	@Override
+	public void delete() {
+	}
 
-   public NBTTagList newHashMapNBTList(HashMap lines) {
-      NBTTagList nbttaglist = new NBTTagList();
-      Iterator var4 = lines.keySet().iterator();
+	private int freeInventorySlots(final EntityPlayer player) {
+		int i = 0;
+		for (final ItemStack is : player.inventory.mainInventory) {
+			if (is == null) {
+				++i;
+			}
+		}
+		return i;
+	}
 
-      while(var4.hasNext()) {
-         String s = (String)var4.next();
-         NBTTagCompound nbttagcompound = new NBTTagCompound();
-         nbttagcompound.setString("Line", s);
-         nbttagcompound.setLong("Time", ((Long)lines.get(s)).longValue());
-         nbttaglist.appendTag(nbttagcompound);
-      }
+	private int getDay() {
+		return (int) (npc.worldObj.getTotalWorldTime() / 24000L);
+	}
 
-      return nbttaglist;
-   }
+	public HashMap<String, Long> getNBTLines(final NBTTagList tagList) {
+		final HashMap<String, Long> map = new HashMap<String, Long>();
+		for (int i = 0; i < tagList.tagCount(); ++i) {
+			final NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+			final String line = nbttagcompound.getString("Line");
+			final long time = nbttagcompound.getLong("Time");
+			map.put(line, time);
+		}
+		return map;
+	}
 
-   public HashMap getNBTLines(NBTTagList tagList) {
-      HashMap map = new HashMap();
+	private boolean giveItems(final EntityPlayer player) {
+		final PlayerItemGiverData data = PlayerDataController.instance.getPlayerData(player).itemgiverData;
+		if (!canPlayerInteract(data)) {
+			return false;
+		}
+		final Vector<ItemStack> items = new Vector<ItemStack>();
+		Vector<ItemStack> toGive = new Vector<ItemStack>();
+		for (final ItemStack is : inventory.items.values()) {
+			if (is != null) {
+				items.add(is.copy());
+			}
+		}
+		if (items.isEmpty()) {
+			return false;
+		}
+		if (isAllGiver()) {
+			toGive = items;
+		} else if (isRemainingGiver()) {
+			for (final ItemStack is : items) {
+				if (!playerHasItem(player, is.getItem())) {
+					toGive.add(is);
+				}
+			}
+		} else if (isRandomGiver()) {
+			toGive.add(items.get(npc.worldObj.rand.nextInt(items.size())).copy());
+		} else if (isGiverWhenNotOwnedAny()) {
+			boolean ownsItems = false;
+			for (final ItemStack is2 : items) {
+				if (playerHasItem(player, is2.getItem())) {
+					ownsItems = true;
+					break;
+				}
+			}
+			if (ownsItems) {
+				return false;
+			}
+			toGive = items;
+		} else if (isChainedGiver()) {
+			final int itemIndex = data.getItemIndex(this);
+			int i = 0;
+			for (final ItemStack item : inventory.items.values()) {
+				if (i == itemIndex) {
+					toGive.add(item);
+					break;
+				}
+				++i;
+			}
+		}
+		if (toGive.isEmpty()) {
+			return false;
+		}
+		if (givePlayerItems(player, toGive)) {
+			if (!lines.isEmpty()) {
+				npc.say(player, new Line(lines.get(npc.getRNG().nextInt(lines.size()))));
+			}
+			if (isDaily()) {
+				data.setTime(this, getDay());
+			} else {
+				data.setTime(this, System.currentTimeMillis());
+			}
+			if (isChainedGiver()) {
+				data.setItemIndex(this, (data.getItemIndex(this) + 1) % inventory.items.size());
+			}
+			return true;
+		}
+		return false;
+	}
 
-      for(int i = 0; i < tagList.tagCount(); ++i) {
-         NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
-         String line = nbttagcompound.getString("Line");
-         long time = nbttagcompound.getLong("Time");
-         map.put(line, Long.valueOf(time));
-      }
+	private boolean givePlayerItems(final EntityPlayer player, final Vector<ItemStack> toGive) {
+		if (toGive.isEmpty()) {
+			return false;
+		}
+		if (freeInventorySlots(player) < toGive.size()) {
+			return false;
+		}
+		for (final ItemStack is : toGive) {
+			npc.givePlayerItem(player, is);
+		}
+		return true;
+	}
 
-      return map;
-   }
+	private boolean interact(final EntityPlayer player) {
+		if (!giveItems(player)) {
+			npc.say(player, npc.advanced.getInteractLine());
+		}
+		return true;
+	}
 
-   private boolean giveItems(EntityPlayer player) {
-      PlayerItemGiverData data = PlayerDataController.instance.getPlayerData(player).itemgiverData;
-      if(!this.canPlayerInteract(data)) {
-         return false;
-      } else {
-         Vector items = new Vector();
-         Vector toGive = new Vector();
-         Iterator itemIndex = this.inventory.items.values().iterator();
+	private boolean isAllGiver() {
+		return givingMethod == 1;
+	}
 
-         ItemStack i;
-         while(itemIndex.hasNext()) {
-            i = (ItemStack)itemIndex.next();
-            if(i != null) {
-               items.add(i.copy());
-            }
-         }
+	private boolean isChainedGiver() {
+		return givingMethod == 4;
+	}
 
-         if(items.isEmpty()) {
-            return false;
-         } else {
-            if(this.isAllGiver()) {
-               toGive = items;
-            } else if(this.isRemainingGiver()) {
-               itemIndex = items.iterator();
+	private boolean isDaily() {
+		return cooldownType == 2;
+	}
 
-               while(itemIndex.hasNext()) {
-                  i = (ItemStack)itemIndex.next();
-                  if(!this.playerHasItem(player, i.getItem())) {
-                     toGive.add(i);
-                  }
-               }
-            } else if(this.isRandomGiver()) {
-               toGive.add(((ItemStack)items.get(super.npc.worldObj.rand.nextInt(items.size()))).copy());
-            } else if(this.isGiverWhenNotOwnedAny()) {
-               boolean var9 = false;
-               Iterator var11 = items.iterator();
+	private boolean isGiveOnce() {
+		return cooldownType == 1;
+	}
 
-               while(var11.hasNext()) {
-                  ItemStack is = (ItemStack)var11.next();
-                  if(this.playerHasItem(player, is.getItem())) {
-                     var9 = true;
-                     break;
-                  }
-               }
+	private boolean isGiverWhenNotOwnedAny() {
+		return givingMethod == 3;
+	}
 
-               if(var9) {
-                  return false;
-               }
+	public boolean isOnTimer() {
+		return cooldownType == 0;
+	}
 
-               toGive = items;
-            } else if(this.isChainedGiver()) {
-               int var10 = data.getItemIndex(this);
-               int var12 = 0;
+	private boolean isRandomGiver() {
+		return givingMethod == 0;
+	}
 
-               for(Iterator var13 = this.inventory.items.values().iterator(); var13.hasNext(); ++var12) {
-                  ItemStack item = (ItemStack)var13.next();
-                  if(var12 == var10) {
-                     toGive.add(item);
-                     break;
-                  }
-               }
-            }
+	private boolean isRemainingGiver() {
+		return givingMethod == 2;
+	}
 
-            if(toGive.isEmpty()) {
-               return false;
-            } else if(this.givePlayerItems(player, toGive)) {
-               if(!this.lines.isEmpty()) {
-                  super.npc.say(player, new Line((String)this.lines.get(super.npc.getRNG().nextInt(this.lines.size()))));
-               }
+	@Override
+	public void killed() {
+	}
 
-               if(this.isDaily()) {
-                  data.setTime(this, (long)this.getDay());
-               } else {
-                  data.setTime(this, System.currentTimeMillis());
-               }
+	public NBTTagList newHashMapNBTList(final HashMap<String, Long> lines) {
+		final NBTTagList nbttaglist = new NBTTagList();
+		for (final String s : lines.keySet()) {
+			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+			nbttagcompound.setString("Line", s);
+			nbttagcompound.setLong("Time", lines.get(s));
+			nbttaglist.appendTag(nbttagcompound);
+		}
+		return nbttaglist;
+	}
 
-               if(this.isChainedGiver()) {
-                  data.setItemIndex(this, (data.getItemIndex(this) + 1) % this.inventory.items.size());
-               }
+	private boolean playerHasItem(final EntityPlayer player, final Item item) {
+		for (final ItemStack is : player.inventory.mainInventory) {
+			if ((is != null) && (is.getItem() == item)) {
+				return true;
+			}
+		}
+		for (final ItemStack is : player.inventory.armorInventory) {
+			if ((is != null) && (is.getItem() == item)) {
+				return true;
+			}
+		}
+		return false;
+	}
 
-               return true;
-            } else {
-               return false;
-            }
-         }
-      }
-   }
+	@Override
+	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+		itemGiverId = nbttagcompound.getInteger("ItemGiverId");
+		cooldownType = nbttagcompound.getInteger("igCooldownType");
+		givingMethod = nbttagcompound.getInteger("igGivingMethod");
+		cooldown = nbttagcompound.getInteger("igCooldown");
+		lines = NBTTags.getStringList(nbttagcompound.getTagList("igLines", 10));
+		inventory.setFromNBT(nbttagcompound.getCompoundTag("igJobInventory"));
+		if ((itemGiverId == 0) && (GlobalDataController.instance != null)) {
+			itemGiverId = GlobalDataController.instance.incrementItemGiverId();
+		}
+		availability.readFromNBT(nbttagcompound.getCompoundTag("igAvailability"));
+	}
 
-   private int getDay() {
-      return (int)(super.npc.worldObj.getTotalWorldTime() / 24000L);
-   }
-
-   private boolean canPlayerInteract(PlayerItemGiverData data) {
-      return this.inventory.items.isEmpty()?false:(this.isOnTimer()?(!data.hasInteractedBefore(this)?true:data.getTime(this) + (long)(this.cooldown * 1000) < System.currentTimeMillis()):(this.isGiveOnce()?!data.hasInteractedBefore(this):(this.isDaily()?(!data.hasInteractedBefore(this)?true:(long)this.getDay() > data.getTime(this)):false)));
-   }
-
-   private boolean givePlayerItems(EntityPlayer player, Vector toGive) {
-      if(toGive.isEmpty()) {
-         return false;
-      } else if(this.freeInventorySlots(player) < toGive.size()) {
-         return false;
-      } else {
-         Iterator var3 = toGive.iterator();
-
-         while(var3.hasNext()) {
-            ItemStack is = (ItemStack)var3.next();
-            super.npc.givePlayerItem(player, is);
-         }
-
-         return true;
-      }
-   }
-
-   private boolean playerHasItem(EntityPlayer player, Item item) {
-      ItemStack[] var3 = player.inventory.mainInventory;
-      int var4 = var3.length;
-
-      int var5;
-      ItemStack is;
-      for(var5 = 0; var5 < var4; ++var5) {
-         is = var3[var5];
-         if(is != null && is.getItem() == item) {
-            return true;
-         }
-      }
-
-      var3 = player.inventory.armorInventory;
-      var4 = var3.length;
-
-      for(var5 = 0; var5 < var4; ++var5) {
-         is = var3[var5];
-         if(is != null && is.getItem() == item) {
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   private int freeInventorySlots(EntityPlayer player) {
-      int i = 0;
-      ItemStack[] var3 = player.inventory.mainInventory;
-      int var4 = var3.length;
-
-      for(int var5 = 0; var5 < var4; ++var5) {
-         ItemStack is = var3[var5];
-         if(is == null) {
-            ++i;
-         }
-      }
-
-      return i;
-   }
-
-   private boolean isRandomGiver() {
-      return this.givingMethod == 0;
-   }
-
-   private boolean isAllGiver() {
-      return this.givingMethod == 1;
-   }
-
-   private boolean isRemainingGiver() {
-      return this.givingMethod == 2;
-   }
-
-   private boolean isGiverWhenNotOwnedAny() {
-      return this.givingMethod == 3;
-   }
-
-   private boolean isChainedGiver() {
-      return this.givingMethod == 4;
-   }
-
-   public boolean isOnTimer() {
-      return this.cooldownType == 0;
-   }
-
-   private boolean isGiveOnce() {
-      return this.cooldownType == 1;
-   }
-
-   private boolean isDaily() {
-      return this.cooldownType == 2;
-   }
-
-   public boolean aiShouldExecute() {
-      if(super.npc.isAttacking()) {
-         return false;
-      } else {
-         --this.ticks;
-         if(this.ticks > 0) {
-            return false;
-         } else {
-            this.ticks = 10;
-            this.toCheck = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(3.0D, 3.0D, 3.0D));
-            this.toCheck.removeAll(this.recentlyChecked);
-            List listMax = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(10.0D, 10.0D, 10.0D));
-            this.recentlyChecked.retainAll(listMax);
-            this.recentlyChecked.addAll(this.toCheck);
-            return this.toCheck.size() > 0;
-         }
-      }
-   }
-
-   public void aiStartExecuting() {
-      Iterator var1 = this.toCheck.iterator();
-
-      while(var1.hasNext()) {
-         EntityPlayer player = (EntityPlayer)var1.next();
-         if(super.npc.canSee(player) && this.availability.isAvailable(player)) {
-            this.recentlyChecked.add(player);
-            this.interact(player);
-         }
-      }
-
-   }
-
-   public void killed() {}
-
-   private boolean interact(EntityPlayer player) {
-      if(!this.giveItems(player)) {
-         super.npc.say(player, super.npc.advanced.getInteractLine());
-      }
-
-      return true;
-   }
-
-   public void delete() {}
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+		nbttagcompound.setInteger("igCooldownType", cooldownType);
+		nbttagcompound.setInteger("igGivingMethod", givingMethod);
+		nbttagcompound.setInteger("igCooldown", cooldown);
+		nbttagcompound.setInteger("ItemGiverId", itemGiverId);
+		nbttagcompound.setTag("igLines", NBTTags.nbtStringList(lines));
+		nbttagcompound.setTag("igJobInventory", inventory.getToNBT());
+		nbttagcompound.setTag("igAvailability", availability.writeToNBT(new NBTTagCompound()));
+		return nbttagcompound;
+	}
 }

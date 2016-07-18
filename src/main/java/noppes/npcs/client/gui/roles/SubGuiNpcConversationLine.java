@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui.roles;
 
 import net.minecraft.client.gui.GuiButton;
@@ -10,53 +14,52 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 
 public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextfieldListener {
+	public String line;
+	public String sound;
+	private GuiNpcSoundSelection gui;
 
-   public String line;
-   public String sound;
-   private GuiNpcSoundSelection gui;
+	public SubGuiNpcConversationLine(final String line, final String sound) {
+		this.line = line;
+		this.sound = sound;
+		setBackground("menubg.png");
+		xSize = 256;
+		ySize = 216;
+		closeOnEsc = true;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 1) {
+			NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(parent, sound));
+		}
+		if (id == 2) {
+			sound = "";
+			initGui();
+		}
+		if (id == 66) {
+			close();
+		}
+	}
 
-   public SubGuiNpcConversationLine(String line, String sound) {
-      this.line = line;
-      this.sound = sound;
-      this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
-   }
+	@Override
+	public void elementClicked() {
+		sound = gui.getSelected();
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "Line", super.guiLeft + 4, super.guiTop + 10));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 22, 200, 20, this.line));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 4, super.guiTop + 55, 90, 20, "Select Sound"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 96, super.guiTop + 55, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(1, this.sound, super.guiLeft + 4, super.guiTop + 81));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 162, super.guiTop + 192, 90, 20, "gui.done"));
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(0, "Line", guiLeft + 4, guiTop + 10));
+		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 4, guiTop + 22, 200, 20, line));
+		addButton(new GuiNpcButton(1, guiLeft + 4, guiTop + 55, 90, 20, "Select Sound"));
+		addButton(new GuiNpcButton(2, guiLeft + 96, guiTop + 55, 20, 20, "X"));
+		addLabel(new GuiNpcLabel(1, sound, guiLeft + 4, guiTop + 81));
+		addButton(new GuiNpcButton(66, guiLeft + 162, guiTop + 192, 90, 20, "gui.done"));
+	}
 
-   public void unFocused(GuiNpcTextField textfield) {
-      this.line = textfield.getText();
-   }
-
-   public void elementClicked() {
-      this.sound = this.gui.getSelected();
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 1) {
-         NoppesUtil.openGUI(super.player, this.gui = new GuiNpcSoundSelection(super.npc, super.parent, this.sound));
-      }
-
-      if(id == 2) {
-         this.sound = "";
-         this.initGui();
-      }
-
-      if(id == 66) {
-         this.close();
-      }
-
-   }
+	@Override
+	public void unFocused(final GuiNpcTextField textfield) {
+		line = textfield.getText();
+	}
 }

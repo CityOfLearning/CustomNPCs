@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui.advanced;
 
 import net.minecraft.client.gui.GuiButton;
@@ -8,97 +12,96 @@ import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.controllers.TransformData;
+import noppes.npcs.controllers.DataTransform;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCNightSetup extends GuiNPCInterface2 implements IGuiData {
+	private DataTransform data;
 
-   private TransformData data;
+	public GuiNPCNightSetup(final EntityNPCInterface npc) {
+		super(npc);
+		data = npc.transform;
+		Client.sendData(EnumPacketServer.TransformGet, new Object[0]);
+	}
 
+	@Override
+	public void buttonEvent(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 0) {
+			data.hasDisplay = (button.getValue() == 1);
+		}
+		if (button.id == 1) {
+			data.hasStats = (button.getValue() == 1);
+		}
+		if (button.id == 2) {
+			data.hasAi = (button.getValue() == 1);
+		}
+		if (button.id == 3) {
+			data.hasInv = (button.getValue() == 1);
+		}
+		if (button.id == 4) {
+			data.hasAdvanced = (button.getValue() == 1);
+		}
+		if (button.id == 5) {
+			data.hasRole = (button.getValue() == 1);
+		}
+		if (button.id == 6) {
+			data.hasJob = (button.getValue() == 1);
+		}
+		if (button.id == 10) {
+			data.editingModus = (button.getValue() == 1);
+			save();
+			initGui();
+		}
+		if (button.id == 11) {
+			Client.sendData(EnumPacketServer.TransformLoad, false);
+		}
+		if (button.id == 12) {
+			Client.sendData(EnumPacketServer.TransformLoad, true);
+		}
+	}
 
-   public GuiNPCNightSetup(EntityNPCInterface npc) {
-      super(npc);
-      this.data = npc.transform;
-      Client.sendData(EnumPacketServer.TransformGet, new Object[0]);
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(0, "menu.display", guiLeft + 4, guiTop + 25));
+		addButton(new GuiNpcButton(0, guiLeft + 104, guiTop + 20, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasDisplay ? 1 : 0));
+		addLabel(new GuiNpcLabel(1, "menu.stats", guiLeft + 4, guiTop + 47));
+		addButton(new GuiNpcButton(1, guiLeft + 104, guiTop + 42, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasStats ? 1 : 0));
+		addLabel(new GuiNpcLabel(2, "menu.ai", guiLeft + 4, guiTop + 69));
+		addButton(new GuiNpcButton(2, guiLeft + 104, guiTop + 64, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasAi ? 1 : 0));
+		addLabel(new GuiNpcLabel(3, "menu.inventory", guiLeft + 4, guiTop + 91));
+		addButton(new GuiNpcButton(3, guiLeft + 104, guiTop + 86, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasInv ? 1 : 0));
+		addLabel(new GuiNpcLabel(4, "menu.advanced", guiLeft + 4, guiTop + 113));
+		addButton(new GuiNpcButton(4, guiLeft + 104, guiTop + 108, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasAdvanced ? 1 : 0));
+		addLabel(new GuiNpcLabel(5, "role.name", guiLeft + 4, guiTop + 135));
+		addButton(new GuiNpcButton(5, guiLeft + 104, guiTop + 130, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasRole ? 1 : 0));
+		addLabel(new GuiNpcLabel(6, "job.name", guiLeft + 4, guiTop + 157));
+		addButton(new GuiNpcButton(6, guiLeft + 104, guiTop + 152, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.hasJob ? 1 : 0));
+		addLabel(new GuiNpcLabel(10, "advanced.editingmode", guiLeft + 170, guiTop + 9));
+		addButton(new GuiNpcButton(10, guiLeft + 244, guiTop + 4, 50, 20, new String[] { "gui.no", "gui.yes" },
+				data.editingModus ? 1 : 0));
+		if (data.editingModus) {
+			addButton(new GuiNpcButton(11, guiLeft + 170, guiTop + 34, "advanced.loadday"));
+			addButton(new GuiNpcButton(12, guiLeft + 170, guiTop + 56, "advanced.loadnight"));
+		}
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "menu.display", super.guiLeft + 4, super.guiTop + 25));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 104, super.guiTop + 20, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasDisplay?1:0));
-      this.addLabel(new GuiNpcLabel(1, "menu.stats", super.guiLeft + 4, super.guiTop + 47));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 104, super.guiTop + 42, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasStats?1:0));
-      this.addLabel(new GuiNpcLabel(2, "menu.ai", super.guiLeft + 4, super.guiTop + 69));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 104, super.guiTop + 64, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasAi?1:0));
-      this.addLabel(new GuiNpcLabel(3, "menu.inventory", super.guiLeft + 4, super.guiTop + 91));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 104, super.guiTop + 86, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasInv?1:0));
-      this.addLabel(new GuiNpcLabel(4, "menu.advanced", super.guiLeft + 4, super.guiTop + 113));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 104, super.guiTop + 108, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasAdvanced?1:0));
-      this.addLabel(new GuiNpcLabel(5, "role.name", super.guiLeft + 4, super.guiTop + 135));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 104, super.guiTop + 130, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasRole?1:0));
-      this.addLabel(new GuiNpcLabel(6, "job.name", super.guiLeft + 4, super.guiTop + 157));
-      this.addButton(new GuiNpcButton(6, super.guiLeft + 104, super.guiTop + 152, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.hasJob?1:0));
-      this.addLabel(new GuiNpcLabel(10, "advanced.editingmode", super.guiLeft + 170, super.guiTop + 9));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 244, super.guiTop + 4, 50, 20, new String[]{"gui.no", "gui.yes"}, this.data.editingModus?1:0));
-      if(this.data.editingModus) {
-         this.addButton(new GuiNpcButton(11, super.guiLeft + 170, super.guiTop + 34, "advanced.loadday"));
-         this.addButton(new GuiNpcButton(12, super.guiLeft + 170, super.guiTop + 56, "advanced.loadnight"));
-      }
+	@Override
+	public void save() {
+		Client.sendData(EnumPacketServer.TransformSave, data.writeOptions(new NBTTagCompound()));
+	}
 
-   }
-
-   public void buttonEvent(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.data.hasDisplay = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 1) {
-         this.data.hasStats = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 2) {
-         this.data.hasAi = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 3) {
-         this.data.hasInv = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 4) {
-         this.data.hasAdvanced = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 5) {
-         this.data.hasRole = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 6) {
-         this.data.hasJob = button.getValue() == 1;
-      }
-
-      if(button.field_146127_k == 10) {
-         this.data.editingModus = button.getValue() == 1;
-         this.save();
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 11) {
-         Client.sendData(EnumPacketServer.TransformLoad, new Object[]{Boolean.valueOf(false)});
-      }
-
-      if(button.field_146127_k == 12) {
-         Client.sendData(EnumPacketServer.TransformLoad, new Object[]{Boolean.valueOf(true)});
-      }
-
-   }
-
-   public void save() {
-      Client.sendData(EnumPacketServer.TransformSave, new Object[]{this.data.writeOptions(new NBTTagCompound())});
-   }
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.data.readOptions(compound);
-      this.initGui();
-   }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		data.readOptions(compound);
+		initGui();
+	}
 }

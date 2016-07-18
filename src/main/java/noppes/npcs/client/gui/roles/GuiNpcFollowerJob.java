@@ -1,8 +1,12 @@
+//
+
+//
+
 package noppes.npcs.client.gui.roles;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
@@ -15,45 +19,45 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobFollower;
 
 public class GuiNpcFollowerJob extends GuiNPCInterface2 implements ICustomScrollListener {
+	private JobFollower job;
+	private GuiCustomScroll scroll;
 
-   private JobFollower job;
-   private GuiCustomScroll scroll;
+	public GuiNpcFollowerJob(final EntityNPCInterface npc) {
+		super(npc);
+		job = (JobFollower) npc.jobInterface;
+	}
 
+	@Override
+	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+		getTextField(1).setText(guiCustomScroll.getSelected());
+	}
 
-   public GuiNpcFollowerJob(EntityNPCInterface npc) {
-      super(npc);
-      this.job = (JobFollower)npc.jobInterface;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(1, "gui.name", guiLeft + 6, guiTop + 110));
+		addTextField(new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 50, guiTop + 105, 200, 20, job.name));
+		(scroll = new GuiCustomScroll(this, 0)).setSize(143, 208);
+		scroll.guiLeft = guiLeft + 268;
+		scroll.guiTop = guiTop + 4;
+		addScroll(scroll);
+		final List<String> names = new ArrayList<String>();
+		final List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
+		for (final EntityNPCInterface npc : list) {
+			if (npc != this.npc) {
+				if (names.contains(npc.display.getName())) {
+					continue;
+				}
+				names.add(npc.display.getName());
+			}
+		}
+		scroll.setList(names);
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(1, "gui.name", super.guiLeft + 6, super.guiTop + 110));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 50, super.guiTop + 105, 200, 20, this.job.name));
-      this.scroll = new GuiCustomScroll(this, 0);
-      this.scroll.setSize(143, 208);
-      this.scroll.guiLeft = super.guiLeft + 268;
-      this.scroll.guiTop = super.guiTop + 4;
-      this.addScroll(this.scroll);
-      ArrayList names = new ArrayList();
-      List list = super.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, super.npc.boundingBox.expand(40.0D, 40.0D, 40.0D));
-      Iterator var3 = list.iterator();
-
-      while(var3.hasNext()) {
-         EntityNPCInterface npc = (EntityNPCInterface)var3.next();
-         if(npc != super.npc && !names.contains(npc.display.name)) {
-            names.add(npc.display.name);
-         }
-      }
-
-      this.scroll.setList(names);
-   }
-
-   public void save() {
-      this.job.name = this.getTextField(1).getText();
-      Client.sendData(EnumPacketServer.JobSave, new Object[]{this.job.writeToNBT(new NBTTagCompound())});
-   }
-
-   public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
-      this.getTextField(1).setText(guiCustomScroll.getSelected());
-   }
+	@Override
+	public void save() {
+		job.name = getTextField(1).getText();
+		Client.sendData(EnumPacketServer.JobSave, job.writeToNBT(new NBTTagCompound()));
+	}
 }

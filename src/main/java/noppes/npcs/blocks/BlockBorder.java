@@ -1,96 +1,128 @@
+//
+
+//
+
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
-import noppes.npcs.CustomNpcs;
+import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBorder;
 import noppes.npcs.constants.EnumGuiType;
+import noppes.npcs.constants.EnumPacketServer;
+import noppes.npcs.util.IPermission;
 
-public class BlockBorder extends BlockContainer {
+public class BlockBorder extends BlockContainer implements IPermission {
+	public static final PropertyInteger ROTATION;
 
-   public int renderId = -1;
+	static {
+		ROTATION = PropertyInteger.create("rotation", 0, 3);
+	}
 
+	public BlockBorder() {
+		super(Material.rock);
+		setBlockUnbreakable();
+	}
 
-   public BlockBorder() {
-      super(Material.rock);
-      this.setBlockUnbreakable();
-   }
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this, new IProperty[] { BlockBorder.ROTATION });
+	}
 
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int side, int meta) {
-      return side == 1?super.blockIcon:Blocks.iron_block.getIcon(side, meta);
-   }
+	@Override
+	public TileEntity createNewTileEntity(final World var1, final int var2) {
+		return new TileBorder();
+	}
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
-      ItemStack currentItem = player.inventory.getCurrentItem();
-      if(currentItem != null && currentItem.getItem() == CustomItems.wand) {
-         CustomNpcs.proxy.openGui(i, j, k, EnumGuiType.Border, player);
-         return true;
-      } else {
-         return false;
-      }
-   }
+	@Override
+	public int getMetaFromState(final IBlockState state) {
+		return state.getValue(BlockBorder.ROTATION);
+	}
 
-   public void onBlockPlacedBy(World par1World, int x, int y, int z, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-      l %= 4;
-      TileBorder tile = (TileBorder)par1World.getTileEntity(x, y, z);
-      TileBorder adjacent = this.getTile(par1World, x - 1, y, z);
-      if(adjacent == null) {
-         adjacent = this.getTile(par1World, x, y, z - 1);
-      }
+	@Override
+	public int getRenderType() {
+		return 3;
+	}
 
-      if(adjacent == null) {
-         adjacent = this.getTile(par1World, x, y, z + 1);
-      }
+	@Override
+	public IBlockState getStateFromMeta(final int meta) {
+		return getDefaultState().withProperty(BlockBorder.ROTATION, meta);
+	}
 
-      if(adjacent == null) {
-         adjacent = this.getTile(par1World, x + 1, y, z);
-      }
+	private TileBorder getTile(final World world, final BlockPos pos) {
+		final TileEntity tile = world.getTileEntity(pos);
+		if ((tile != null) && (tile instanceof TileBorder)) {
+			return (TileBorder) tile;
+		}
+		return null;
+	}
 
-      if(adjacent != null) {
-         NBTTagCompound compound = new NBTTagCompound();
-         adjacent.writeExtraNBT(compound);
-         tile.readExtraNBT(compound);
-      }
+	@Override
+	public boolean isAllowed(final EnumPacketServer e) {
+		return e == EnumPacketServer.SaveTileEntity;
+	}
 
-      tile.rotation = l;
-      if(par5EntityLivingBase instanceof EntityPlayer && par1World.isRemote) {
-         CustomNpcs.proxy.openGui(x, y, z, EnumGuiType.Border, (EntityPlayer)par5EntityLivingBase);
-      }
+	@Override
+	public boolean isFullCube() {
+		return false;
+	}
 
-   }
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
-   private TileBorder getTile(World world, int x, int y, int z) {
-      TileEntity tile = world.getTileEntity(x, y, z);
-      return tile != null && tile instanceof TileBorder?(TileBorder)tile:null;
-   }
+	@Override
+	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
+			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+		final ItemStack currentItem = player.inventory.getCurrentItem();
+		if (!world.isRemote && (currentItem != null) && (currentItem.getItem() == CustomItems.wand)) {
+			NoppesUtilServer.sendOpenGui(player, EnumGuiType.Border, null, pos.getX(), pos.getY(), pos.getZ());
+			return true;
+		}
+		return false;
+	}
 
-   public int getRenderType() {
-      return this.renderId;
-   }
-
-   public boolean isOpaqueCube() {
-      return false;
-   }
-
-   public boolean renderAsNormalBlock() {
-      return false;
-   }
-
-   public TileEntity createNewTileEntity(World var1, int var2) {
-      return new TileBorder();
-   }
+	@Override
+	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
+			final EntityLivingBase entity, final ItemStack stack) {
+		int l = MathHelper.floor_double(((entity.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
+		l %= 4;
+		world.setBlockState(pos, state.withProperty(BlockBorder.ROTATION, l));
+		final TileBorder tile = (TileBorder) world.getTileEntity(pos);
+		TileBorder adjacent = getTile(world, pos.west());
+		if (adjacent == null) {
+			adjacent = getTile(world, pos.south());
+		}
+		if (adjacent == null) {
+			adjacent = getTile(world, pos.north());
+		}
+		if (adjacent == null) {
+			adjacent = getTile(world, pos.east());
+		}
+		if (adjacent != null) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			adjacent.writeExtraNBT(compound);
+			tile.readExtraNBT(compound);
+		}
+		tile.rotation = l;
+		if ((entity instanceof EntityPlayer) && !world.isRemote) {
+			NoppesUtilServer.sendOpenGui((EntityPlayer) entity, EnumGuiType.Border, null, pos.getX(), pos.getY(),
+					pos.getZ());
+		}
+	}
 }

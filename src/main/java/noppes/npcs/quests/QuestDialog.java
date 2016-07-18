@@ -1,65 +1,66 @@
+//
+
+//
+
 package noppes.npcs.quests;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Vector;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.NBTTags;
 import noppes.npcs.controllers.Dialog;
 import noppes.npcs.controllers.DialogController;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.quests.QuestInterface;
 
 public class QuestDialog extends QuestInterface {
+	public HashMap<Integer, Integer> dialogs;
 
-   public HashMap dialogs = new HashMap();
+	public QuestDialog() {
+		dialogs = new HashMap<Integer, Integer>();
+	}
 
+	@Override
+	public Vector<String> getQuestLogStatus(final EntityPlayer player) {
+		final Vector<String> vec = new Vector<String>();
+		for (final int dialogId : dialogs.values()) {
+			final Dialog dialog = DialogController.instance.dialogs.get(dialogId);
+			if (dialog == null) {
+				continue;
+			}
+			String title = dialog.title;
+			if (PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(dialogId)) {
+				title += " (read)";
+			} else {
+				title += " (unread)";
+			}
+			vec.add(title);
+		}
+		return vec;
+	}
 
-   public void readEntityFromNBT(NBTTagCompound compound) {
-      this.dialogs = NBTTags.getIntegerIntegerMap(compound.getTagList("QuestDialogs", 10));
-   }
+	@Override
+	public void handleComplete(final EntityPlayer player) {
+	}
 
-   public void writeEntityToNBT(NBTTagCompound compound) {
-      compound.setTag("QuestDialogs", NBTTags.nbtIntegerIntegerMap(this.dialogs));
-   }
+	@Override
+	public boolean isCompleted(final EntityPlayer player) {
+		for (final int dialogId : dialogs.values()) {
+			if (!PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(dialogId)) {
+				return false;
+			}
+		}
+		return true;
+	}
 
-   public boolean isCompleted(EntityPlayer player) {
-      Iterator var2 = this.dialogs.values().iterator();
+	@Override
+	public void readEntityFromNBT(final NBTTagCompound compound) {
+		dialogs = NBTTags.getIntegerIntegerMap(compound.getTagList("QuestDialogs", 10));
+	}
 
-      int dialogId;
-      do {
-         if(!var2.hasNext()) {
-            return true;
-         }
-
-         dialogId = ((Integer)var2.next()).intValue();
-      } while(PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(Integer.valueOf(dialogId)));
-
-      return false;
-   }
-
-   public void handleComplete(EntityPlayer player) {}
-
-   public Vector getQuestLogStatus(EntityPlayer player) {
-      Vector vec = new Vector();
-      Iterator var3 = this.dialogs.values().iterator();
-
-      while(var3.hasNext()) {
-         int dialogId = ((Integer)var3.next()).intValue();
-         Dialog dialog = (Dialog)DialogController.instance.dialogs.get(Integer.valueOf(dialogId));
-         if(dialog != null) {
-            String title = dialog.title;
-            if(PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(Integer.valueOf(dialogId))) {
-               title = title + " (read)";
-            } else {
-               title = title + " (unread)";
-            }
-
-            vec.add(title);
-         }
-      }
-
-      return vec;
-   }
+	@Override
+	public void writeEntityToNBT(final NBTTagCompound compound) {
+		compound.setTag("QuestDialogs", NBTTags.nbtIntegerIntegerMap(dialogs));
+	}
 }

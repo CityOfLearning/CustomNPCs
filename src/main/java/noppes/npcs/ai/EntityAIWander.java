@@ -1,133 +1,137 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.command.IEntitySelector;
+
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.ai.RandomPositionGeneratorAlt;
 import noppes.npcs.ai.selector.NPCInteractSelector;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.controllers.Line;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIWander extends EntityAIBase {
+	private EntityNPCInterface entity;
+	public final NPCInteractSelector selector;
+	private double xPosition;
+	private double yPosition;
+	private double zPosition;
+	private EntityNPCInterface nearbyNPC;
 
-   private EntityNPCInterface entity;
-   public final IEntitySelector selector;
-   private double xPosition;
-   private double yPosition;
-   private double zPosition;
-   private EntityNPCInterface nearbyNPC;
+	public EntityAIWander(final EntityNPCInterface npc) {
+		entity = npc;
+		setMutexBits(AiMutex.PASSIVE);
+		selector = new NPCInteractSelector(npc);
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		return ((nearbyNPC == null) || (selector.apply(nearbyNPC) && !entity.isInRange(nearbyNPC, entity.width)))
+				&& !entity.getNavigator().noPath() && entity.isEntityAlive() && !entity.isInteracting();
+	}
 
-   public EntityAIWander(EntityNPCInterface npc) {
-      this.entity = npc;
-      this.setMutexBits(AiMutex.PASSIVE);
-      this.selector = new NPCInteractSelector(npc);
-   }
+	private EntityNPCInterface getNearbyNPC() {
+		final List<Entity> list = entity.worldObj.getEntitiesInAABBexcluding(entity,
+				entity.getEntityBoundingBox().expand(entity.ai.walkingRange,
+						(entity.ai.walkingRange > 7) ? 7.0 : ((double) entity.ai.walkingRange), entity.ai.walkingRange),
+				selector);
+		final Iterator<Entity> ita = list.iterator();
+		while (ita.hasNext()) {
+			final EntityNPCInterface npc = (EntityNPCInterface) ita.next();
+			if (!npc.ai.stopAndInteract || npc.isAttacking() || !npc.isEntityAlive()
+					|| entity.faction.isAggressiveToNpc(npc)) {
+				ita.remove();
+			}
+		}
+		if (list.isEmpty()) {
+			return null;
+		}
+		return (EntityNPCInterface) list.get(entity.getRNG().nextInt(list.size()));
+	}
 
-   public boolean shouldExecute() {
-      if(this.entity.getAge() < 100 && this.entity.getNavigator().noPath() && !this.entity.isInteracting() && this.entity.getRNG().nextInt(80) == 0) {
-         if(this.entity.ai.npcInteracting && this.entity.getRNG().nextInt(4) == 1) {
-            this.nearbyNPC = this.getNearbyNPC();
-         }
+	private Vec3 getVec() {
+		if (entity.ai.walkingRange <= 0) {
+			return RandomPositionGeneratorAlt.findRandomTarget(entity, CustomNpcs.NpcNavRange, 7);
+		}
+		final double distance = entity.getDistanceSq(entity.getStartXPos(), entity.getStartYPos(),
+				entity.getStartZPos());
+		int range = (int) MathHelper.sqrt_double((entity.ai.walkingRange * entity.ai.walkingRange) - distance);
+		if (range > CustomNpcs.NpcNavRange) {
+			range = CustomNpcs.NpcNavRange;
+		}
+		if (range < 3) {
+			range = entity.ai.walkingRange;
+			if (range > CustomNpcs.NpcNavRange) {
+				range = CustomNpcs.NpcNavRange;
+			}
+			final Vec3 start = new Vec3(entity.getStartXPos(), entity.getStartYPos(), entity.getStartZPos());
+			return RandomPositionGeneratorAlt.findRandomTargetBlockTowards(entity, range / 2,
+					((range / 2) > 7) ? 7 : (range / 2), start);
+		}
+		return RandomPositionGeneratorAlt.findRandomTarget(entity, range, ((range / 2) > 7) ? 7 : (range / 2));
+	}
 
-         if(this.nearbyNPC != null) {
-            this.xPosition = (double)MathHelper.floor_double(this.nearbyNPC.posX);
-            this.yPosition = (double)MathHelper.floor_double(this.nearbyNPC.posY);
-            this.zPosition = (double)MathHelper.floor_double(this.nearbyNPC.posZ);
-            this.nearbyNPC.addInteract(this.entity);
-         } else {
-            Vec3 vec = this.getVec();
-            if(vec == null) {
-               return false;
-            }
+	@Override
+	public void resetTask() {
+		if ((nearbyNPC != null) && entity.isInRange(nearbyNPC, 3.5)) {
+			final Line line = new Line(".........");
+			line.hideText = true;
+			if (entity.getRNG().nextBoolean()) {
+				entity.saySurrounding(line);
+			} else {
+				nearbyNPC.saySurrounding(line);
+			}
+			entity.addInteract(nearbyNPC);
+			nearbyNPC.addInteract(entity);
+		}
+		nearbyNPC = null;
+	}
 
-            this.xPosition = vec.xCoord;
-            this.yPosition = vec.yCoord;
-            this.zPosition = vec.zCoord;
-         }
+	@Override
+	public boolean shouldExecute() {
+		if ((entity.getAge() >= 100) || !entity.getNavigator().noPath() || entity.isInteracting()
+				|| (entity.getRNG().nextInt(80) != 0)) {
+			return false;
+		}
+		if (entity.ai.npcInteracting && (entity.getRNG().nextInt(4) == 1)) {
+			nearbyNPC = getNearbyNPC();
+		}
+		if (nearbyNPC != null) {
+			xPosition = MathHelper.floor_double(nearbyNPC.posX);
+			yPosition = MathHelper.floor_double(nearbyNPC.posY);
+			zPosition = MathHelper.floor_double(nearbyNPC.posZ);
+			nearbyNPC.addInteract(entity);
+		} else {
+			final Vec3 vec = getVec();
+			if (vec == null) {
+				return false;
+			}
+			xPosition = vec.xCoord;
+			yPosition = vec.yCoord;
+			if (entity.canFly()) {
+				yPosition = entity.getStartYPos() + (entity.getRNG().nextFloat() * 0.75 * entity.ai.walkingRange);
+			}
+			zPosition = vec.zCoord;
+		}
+		return true;
+	}
 
-         return true;
-      } else {
-         return false;
-      }
-   }
+	@Override
+	public void startExecuting() {
+		entity.getNavigator().tryMoveToXYZ(xPosition, yPosition, zPosition, 1.0);
+	}
 
-   public void updateTask() {
-      if(this.nearbyNPC != null) {
-         this.nearbyNPC.getNavigator().clearPathEntity();
-      }
-
-   }
-
-   private EntityNPCInterface getNearbyNPC() {
-      List list = this.entity.worldObj.getEntitiesWithinAABBExcludingEntity(this.entity, this.entity.boundingBox.expand((double)this.entity.ai.walkingRange, this.entity.ai.walkingRange > 7?7.0D:(double)this.entity.ai.walkingRange, (double)this.entity.ai.walkingRange), this.selector);
-      Iterator ita = list.iterator();
-
-      while(ita.hasNext()) {
-         EntityNPCInterface npc = (EntityNPCInterface)ita.next();
-         if(!npc.ai.stopAndInteract || npc.isAttacking() || !npc.isEntityAlive() || this.entity.faction.isAggressiveToNpc(npc)) {
-            ita.remove();
-         }
-      }
-
-      if(list.isEmpty()) {
-         return null;
-      } else {
-         return (EntityNPCInterface)list.get(this.entity.getRNG().nextInt(list.size()));
-      }
-   }
-
-   private Vec3 getVec() {
-      if(this.entity.ai.walkingRange > 0) {
-         double distance = this.entity.getDistanceSq((double)this.entity.getStartXPos(), this.entity.getStartYPos(), (double)this.entity.getStartZPos());
-         int range = (int)MathHelper.sqrt_double((double)(this.entity.ai.walkingRange * this.entity.ai.walkingRange) - distance);
-         if(range > CustomNpcs.NpcNavRange) {
-            range = CustomNpcs.NpcNavRange;
-         }
-
-         if(range < 3) {
-            range = this.entity.ai.walkingRange;
-            if(range > CustomNpcs.NpcNavRange) {
-               range = CustomNpcs.NpcNavRange;
-            }
-
-            Vec3 start = Vec3.createVectorHelper((double)this.entity.getStartXPos(), this.entity.getStartYPos(), (double)this.entity.getStartZPos());
-            return RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.entity, range / 2, range / 2 > 7?7:range / 2, start);
-         } else {
-            return RandomPositionGeneratorAlt.findRandomTarget(this.entity, range, range / 2 > 7?7:range / 2);
-         }
-      } else {
-         return RandomPositionGeneratorAlt.findRandomTarget(this.entity, CustomNpcs.NpcNavRange, 7);
-      }
-   }
-
-   public boolean continueExecuting() {
-      return this.nearbyNPC != null && !this.selector.isEntityApplicable(this.nearbyNPC)?false:!this.entity.getNavigator().noPath() && this.entity.isEntityAlive() && !this.entity.isInteracting();
-   }
-
-   public void startExecuting() {
-      this.entity.getNavigator().tryMoveToXYZ(this.xPosition, this.yPosition, this.zPosition, 1.0D);
-   }
-
-   public void resetTask() {
-      if(this.nearbyNPC != null && this.entity.getDistanceSqToEntity(this.nearbyNPC) < 12.0D) {
-         Line line = new Line(".........");
-         line.hideText = true;
-         if(this.entity.getRNG().nextBoolean()) {
-            this.entity.saySurrounding(line);
-         } else {
-            this.nearbyNPC.saySurrounding(line);
-         }
-
-         this.entity.addInteract(this.nearbyNPC);
-         this.nearbyNPC.addInteract(this.entity);
-      }
-
-      this.nearbyNPC = null;
-   }
+	@Override
+	public void updateTask() {
+		if (nearbyNPC != null) {
+			nearbyNPC.getNavigator().clearPathEntity();
+		}
+	}
 }

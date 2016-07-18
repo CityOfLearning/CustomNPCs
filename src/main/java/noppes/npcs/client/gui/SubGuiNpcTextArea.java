@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
@@ -7,49 +11,57 @@ import noppes.npcs.client.gui.util.GuiNpcTextArea;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 
 public class SubGuiNpcTextArea extends SubGuiInterface {
+	public String text;
+	private GuiNpcTextArea textarea;
 
-   public String text;
+	public SubGuiNpcTextArea(final String text) {
+		this.text = text;
+		setBackground("bgfilled.png");
+		xSize = 256;
+		ySize = 256;
+		closeOnEsc = true;
+	}
 
+	@Override
+	public void buttonEvent(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 100) {
+			NoppesStringUtils.setClipboardContents(getTextField(2).getText());
+		}
+		if (id == 101) {
+			getTextField(2).setText(NoppesStringUtils.getClipboardContents());
+		}
+		if (id == 102) {
+			getTextField(2).setText("");
+		}
+		if (id == 0) {
+			close();
+		}
+	}
 
-   public SubGuiNpcTextArea(String text) {
-      this.text = text;
-      this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
-   }
+	@Override
+	public void close() {
+		text = getTextField(2).getText();
+		super.close();
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addTextField(new GuiNpcTextArea(2, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 4, 186, 208, this.text));
-      super.buttonList.add(new GuiNpcButton(102, super.guiLeft + 196, super.guiTop + 20, 56, 20, "gui.clear"));
-      super.buttonList.add(new GuiNpcButton(101, super.guiLeft + 196, super.guiTop + 43, 56, 20, "gui.paste"));
-      super.buttonList.add(new GuiNpcButton(100, super.guiLeft + 196, super.guiTop + 66, 56, 20, "gui.copy"));
-      super.buttonList.add(new GuiNpcButton(0, super.guiLeft + 196, super.guiTop + 160, 56, 20, "gui.close"));
-   }
-
-   public void close() {
-      this.text = this.getTextField(2).getText();
-      super.close();
-   }
-
-   public void buttonEvent(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 100) {
-         NoppesStringUtils.setClipboardContents(this.getTextField(2).getText());
-      }
-
-      if(id == 101) {
-         this.getTextField(2).setText(NoppesStringUtils.getClipboardContents());
-      }
-
-      if(id == 102) {
-         this.getTextField(2).setText("");
-      }
-
-      if(id == 0) {
-         this.close();
-      }
-
-   }
+	@Override
+	public void initGui() {
+		xSize = (int) (width * 0.88);
+		ySize = (int) (xSize * 0.56);
+		bgScale = xSize / 440.0f;
+		super.initGui();
+		if (textarea != null) {
+			text = textarea.getText();
+		}
+		final int yoffset = (int) (ySize * 0.02);
+		addTextField(textarea = new GuiNpcTextArea(2, this, guiLeft + yoffset, guiTop + yoffset,
+				xSize - 100 - (yoffset * 2), ySize - (yoffset * 2), text));
+		buttonList.add(new GuiNpcButton(102, (guiLeft + xSize) - 90 - yoffset, guiTop + 20, 56, 20, "gui.clear"));
+		buttonList.add(new GuiNpcButton(101, (guiLeft + xSize) - 90 - yoffset, guiTop + 43, 56, 20, "gui.paste"));
+		buttonList.add(new GuiNpcButton(100, (guiLeft + xSize) - 90 - yoffset, guiTop + 66, 56, 20, "gui.copy"));
+		buttonList.add(new GuiNpcButton(0, (guiLeft + xSize) - 90 - yoffset, guiTop + 160, 56, 20, "gui.close"));
+		xSize = 420;
+		ySize = 256;
+	}
 }

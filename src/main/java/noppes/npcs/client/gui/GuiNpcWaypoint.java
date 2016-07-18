@@ -1,49 +1,62 @@
+//
+
+//
+
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import noppes.npcs.blocks.tiles.TileWaypoint;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
+import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPacketServer;
 
-public class GuiNpcWaypoint extends GuiNPCInterface {
+public class GuiNpcWaypoint extends GuiNPCInterface implements IGuiData {
+	private TileWaypoint tile;
 
-   private TileWaypoint tile;
+	public GuiNpcWaypoint(final int x, final int y, final int z) {
+		tile = (TileWaypoint) player.worldObj.getTileEntity(new BlockPos(x, y, z));
+		Client.sendData(EnumPacketServer.GetTileEntity, x, y, z);
+		xSize = 265;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final int id = guibutton.id;
+		if (id == 0) {
+			close();
+		}
+	}
 
-   public GuiNpcWaypoint(int x, int y, int z) {
-      this.tile = (TileWaypoint)super.player.worldObj.getTileEntity(x, y, z);
-      super.xSize = 265;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addLabel(new GuiNpcLabel(0, "gui.name", guiLeft + 1, guiTop + 76, 16777215));
+		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 60, guiTop + 71, 200, 20, tile.name));
+		addLabel(new GuiNpcLabel(1, "gui.range", guiLeft + 1, guiTop + 97, 16777215));
+		addTextField(
+				new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 60, guiTop + 92, 200, 20, tile.range + ""));
+		getTextField(1).numbersOnly = true;
+		getTextField(1).setMinMaxDefault(2, 60, 10);
+		addButton(new GuiNpcButton(0, guiLeft + 40, guiTop + 190, 120, 20, "Done"));
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "gui.name", super.guiLeft + 1, super.guiTop + 76, 16777215));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 71, 200, 20, this.tile.name));
-      this.addLabel(new GuiNpcLabel(1, "gui.range", super.guiLeft + 1, super.guiTop + 97, 16777215));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 92, 200, 20, this.tile.range + ""));
-      this.getTextField(1).numbersOnly = true;
-      this.getTextField(1).setMinMaxDefault(2, 60, 10);
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 40, super.guiTop + 190, 120, 20, "Done"));
-   }
+	@Override
+	public void save() {
+		tile.name = getTextField(0).getText();
+		tile.range = getTextField(1).getInteger();
+		final NBTTagCompound compound = new NBTTagCompound();
+		tile.writeToNBT(compound);
+		Client.sendData(EnumPacketServer.SaveTileEntity, compound);
+	}
 
-   protected void actionPerformed(GuiButton guibutton) {
-      int id = guibutton.id;
-      if(id == 0) {
-         this.close();
-      }
-
-   }
-
-   public void save() {
-      this.tile.name = this.getTextField(0).getText();
-      this.tile.range = this.getTextField(1).getInteger();
-      NBTTagCompound compound = new NBTTagCompound();
-      this.tile.writeToNBT(compound);
-      Client.sendData(EnumPacketServer.SaveTileEntity, new Object[]{compound});
-   }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		tile.readFromNBT(compound);
+	}
 }

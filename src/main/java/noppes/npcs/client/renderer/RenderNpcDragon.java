@@ -1,18 +1,21 @@
+//
+
+//
+
 package noppes.npcs.client.renderer;
 
 import net.minecraft.client.model.ModelBase;
-import noppes.npcs.client.renderer.RenderNPCInterface;
+import net.minecraft.client.renderer.GlStateManager;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
-public class RenderNpcDragon extends RenderNPCInterface {
+public class RenderNpcDragon<T extends EntityNPCInterface> extends RenderNPCInterface<T> {
+	public RenderNpcDragon(final ModelBase model, final float f) {
+		super(model, f);
+	}
 
-   public RenderNpcDragon(ModelBase model, float f) {
-      super(model, f);
-   }
-
-   protected void renderPlayerScale(EntityNPCInterface npc, float f) {
-      GL11.glTranslatef(0.0F, 0.0F, 0.120000005F * (float)npc.display.modelSize);
-      super.renderPlayerScale(npc, f);
-   }
+	@Override
+	protected void preRenderCallback(final T npc, final float f) {
+		GlStateManager.translate(0.0f, 0.0f, 0.120000005f * npc.display.getSize());
+		super.preRenderCallback(npc, f);
+	}
 }

@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -5,43 +9,33 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 public class ModelWallBanner extends ModelBase {
+	ModelRenderer MiddleStick;
+	ModelRenderer StickDecoration;
+	ModelRenderer TopDecoration;
+	ModelRenderer FlagPole1;
+	ModelRenderer FlagPole2;
 
-   ModelRenderer MiddleStick = new ModelRenderer(this, 56, 0);
-   ModelRenderer StickDecoration;
-   ModelRenderer TopDecoration;
-   ModelRenderer FlagPole1;
-   ModelRenderer FlagPole2;
+	public ModelWallBanner() {
+		(MiddleStick = new ModelRenderer(this, 56, 0)).addBox(-1.0f, 0.0f, -1.0f, 2, 3, 2);
+		MiddleStick.setRotationPoint(0.0f, -9.0f, 6.5f);
+		(StickDecoration = new ModelRenderer(this, 11, 12)).addBox(0.0f, 0.0f, 0.0f, 16, 3, 3);
+		StickDecoration.setRotationPoint(-8.0f, -7.5f, 5.0f);
+		(TopDecoration = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
+		TopDecoration.setRotationPoint(-0.5f, -10.0f, 6.0f);
+		(FlagPole1 = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
+		FlagPole1.setRotationPoint(-7.0f, -6.5f, 4.0f);
+		(FlagPole2 = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
+		FlagPole2.setRotationPoint(6.0f, -6.5f, 4.0f);
+	}
 
-
-   public ModelWallBanner() {
-      this.MiddleStick.addBox(-1.0F, 0.0F, -1.0F, 2, 3, 2);
-      this.MiddleStick.setRotationPoint(0.0F, -9.0F, 6.5F);
-      this.StickDecoration = new ModelRenderer(this, 11, 12);
-      this.StickDecoration.addBox(0.0F, 0.0F, 0.0F, 16, 3, 3);
-      this.StickDecoration.setRotationPoint(-8.0F, -7.5F, 5.0F);
-      this.TopDecoration = new ModelRenderer(this, 45, 19);
-      this.TopDecoration.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
-      this.TopDecoration.setRotationPoint(-0.5F, -10.0F, 6.0F);
-      this.FlagPole1 = new ModelRenderer(this, 45, 19);
-      this.FlagPole1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
-      this.FlagPole1.setRotationPoint(-7.0F, -6.5F, 4.0F);
-      this.FlagPole2 = new ModelRenderer(this, 45, 19);
-      this.FlagPole2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
-      this.FlagPole2.setRotationPoint(6.0F, -6.5F, 4.0F);
-   }
-
-   public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
-      super.render(entity, f, f1, f2, f3, f4, f5);
-      this.MiddleStick.render(f5);
-      this.StickDecoration.render(f5);
-      this.TopDecoration.render(f5);
-      this.FlagPole1.render(f5);
-      this.FlagPole2.render(f5);
-   }
-
-   private void setRotation(ModelRenderer model, float x, float y, float z) {
-      model.rotateAngleX = x;
-      model.rotateAngleY = y;
-      model.rotateAngleZ = z;
-   }
+	@Override
+	public void render(final Entity entity, final float f, final float f1, final float f2, final float f3,
+			final float f4, final float f5) {
+		super.render(entity, f, f1, f2, f3, f4, f5);
+		MiddleStick.render(f5);
+		StickDecoration.render(f5);
+		TopDecoration.render(f5);
+		FlagPole1.render(f5);
+		FlagPole2.render(f5);
+	}
 }

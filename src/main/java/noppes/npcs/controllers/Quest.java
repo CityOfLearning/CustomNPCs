@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -7,171 +11,178 @@ import noppes.npcs.ICompatibilty;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.Server;
 import noppes.npcs.VersionCompatibility;
+import noppes.npcs.api.constants.EnumQuestType;
+import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumQuestCompletion;
 import noppes.npcs.constants.EnumQuestRepeat;
-import noppes.npcs.constants.EnumQuestType;
-import noppes.npcs.controllers.FactionOptions;
-import noppes.npcs.controllers.PlayerMail;
-import noppes.npcs.controllers.QuestCategory;
-import noppes.npcs.controllers.QuestController;
-import noppes.npcs.controllers.QuestData;
 import noppes.npcs.quests.QuestDialog;
 import noppes.npcs.quests.QuestInterface;
 import noppes.npcs.quests.QuestItem;
 import noppes.npcs.quests.QuestKill;
 import noppes.npcs.quests.QuestLocation;
 
-public class Quest implements ICompatibilty {
+public class Quest implements ICompatibilty, IQuest {
+	public int version;
+	public int id;
+	public EnumQuestType type;
+	public EnumQuestRepeat repeat;
+	public EnumQuestCompletion completion;
+	public String title;
+	public QuestCategory category;
+	public String logText;
+	public String completeText;
+	public String completerNpc;
+	public int nextQuestid;
+	public String nextQuestTitle;
+	public PlayerMail mail;
+	public String command;
+	public QuestInterface questInterface;
+	public int rewardExp;
+	public NpcMiscInventory rewardItems;
+	public boolean randomReward;
+	public FactionOptions factionOptions;
 
-   public int version;
-   public int id;
-   public EnumQuestType type;
-   public EnumQuestRepeat repeat;
-   public EnumQuestCompletion completion;
-   public String title;
-   public QuestCategory category;
-   public String logText;
-   public String completeText;
-   public String completerNpc;
-   public int nextQuestid;
-   public String nextQuestTitle;
-   public PlayerMail mail;
-   public String command;
-   public QuestInterface questInterface;
-   public int rewardExp;
-   public NpcMiscInventory rewardItems;
-   public boolean randomReward;
-   public FactionOptions factionOptions;
+	public Quest() {
+		version = VersionCompatibility.ModRev;
+		id = -1;
+		type = EnumQuestType.ITEM;
+		repeat = EnumQuestRepeat.NONE;
+		completion = EnumQuestCompletion.Npc;
+		title = "default";
+		logText = "";
+		completeText = "";
+		completerNpc = "";
+		nextQuestid = -1;
+		nextQuestTitle = "";
+		mail = new PlayerMail();
+		command = "";
+		questInterface = new QuestItem();
+		rewardExp = 0;
+		rewardItems = new NpcMiscInventory(9);
+		randomReward = false;
+		factionOptions = new FactionOptions();
+	}
 
+	public boolean complete(final EntityPlayer player, final QuestData data) {
+		if (completion == EnumQuestCompletion.Instant) {
+			Server.sendData((EntityPlayerMP) player, EnumPacketClient.QUEST_COMPLETION,
+					data.quest.writeToNBT(new NBTTagCompound()));
+			return true;
+		}
+		return false;
+	}
 
-   public Quest() {
-      this.version = VersionCompatibility.ModRev;
-      this.id = -1;
-      this.type = EnumQuestType.Item;
-      this.repeat = EnumQuestRepeat.NONE;
-      this.completion = EnumQuestCompletion.Npc;
-      this.title = "default";
-      this.logText = "";
-      this.completeText = "";
-      this.completerNpc = "";
-      this.nextQuestid = -1;
-      this.nextQuestTitle = "";
-      this.mail = new PlayerMail();
-      this.command = "";
-      this.questInterface = new QuestItem();
-      this.rewardExp = 0;
-      this.rewardItems = new NpcMiscInventory(9);
-      this.randomReward = false;
-      this.factionOptions = new FactionOptions();
-   }
+	public Quest copy() {
+		final Quest quest = new Quest();
+		quest.readNBT(writeToNBT(new NBTTagCompound()));
+		return quest;
+	}
 
-   public void readNBT(NBTTagCompound compound) {
-      this.id = compound.getInteger("Id");
-      this.readNBTPartial(compound);
-   }
+	@Override
+	public int getId() {
+		return id;
+	}
 
-   public void readNBTPartial(NBTTagCompound compound) {
-      this.version = compound.getInteger("ModRev");
-      VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
-      this.setType(EnumQuestType.values()[compound.getInteger("Type")]);
-      this.title = compound.getString("Title");
-      this.logText = compound.getString("Text");
-      this.completeText = compound.getString("CompleteText");
-      this.completerNpc = compound.getString("CompleterNpc");
-      this.command = compound.getString("QuestCommand");
-      this.nextQuestid = compound.getInteger("NextQuestId");
-      this.nextQuestTitle = compound.getString("NextQuestTitle");
-      if(this.hasNewQuest()) {
-         this.nextQuestTitle = this.getNextQuest().title;
-      } else {
-         this.nextQuestTitle = "";
-      }
+	@Override
+	public String getName() {
+		return title;
+	}
 
-      this.randomReward = compound.getBoolean("RandomReward");
-      this.rewardExp = compound.getInteger("RewardExp");
-      this.rewardItems.setFromNBT(compound.getCompoundTag("Rewards"));
-      this.completion = EnumQuestCompletion.values()[compound.getInteger("QuestCompletion")];
-      this.repeat = EnumQuestRepeat.values()[compound.getInteger("QuestRepeat")];
-      this.questInterface.readEntityFromNBT(compound);
-      this.factionOptions.readFromNBT(compound.getCompoundTag("QuestFactionPoints"));
-      this.mail.readNBT(compound.getCompoundTag("QuestMail"));
-   }
+	public Quest getNextQuest() {
+		return (QuestController.instance == null) ? null : QuestController.instance.quests.get(nextQuestid);
+	}
 
-   public void setType(EnumQuestType questType) {
-      this.type = questType;
-      if(this.type == EnumQuestType.Item) {
-         this.questInterface = new QuestItem();
-      } else if(this.type == EnumQuestType.Dialog) {
-         this.questInterface = new QuestDialog();
-      } else if(this.type != EnumQuestType.Kill && this.type != EnumQuestType.AreaKill) {
-         if(this.type == EnumQuestType.Location) {
-            this.questInterface = new QuestLocation();
-         }
-      } else {
-         this.questInterface = new QuestKill();
-      }
+	@Override
+	public EnumQuestType getType() {
+		return type;
+	}
 
-      if(this.questInterface != null) {
-         this.questInterface.questId = this.id;
-      }
+	@Override
+	public int getVersion() {
+		return version;
+	}
 
-   }
+	public boolean hasNewQuest() {
+		return getNextQuest() != null;
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-      compound.setInteger("Id", this.id);
-      return this.writeToNBTPartial(compound);
-   }
+	public void readNBT(final NBTTagCompound compound) {
+		id = compound.getInteger("Id");
+		readNBTPartial(compound);
+	}
 
-   public NBTTagCompound writeToNBTPartial(NBTTagCompound compound) {
-      compound.setInteger("ModRev", this.version);
-      compound.setInteger("Type", this.type.ordinal());
-      compound.setString("Title", this.title);
-      compound.setString("Text", this.logText);
-      compound.setString("CompleteText", this.completeText);
-      compound.setString("CompleterNpc", this.completerNpc);
-      compound.setInteger("NextQuestId", this.nextQuestid);
-      compound.setString("NextQuestTitle", this.nextQuestTitle);
-      compound.setInteger("RewardExp", this.rewardExp);
-      compound.setTag("Rewards", this.rewardItems.getToNBT());
-      compound.setString("QuestCommand", this.command);
-      compound.setBoolean("RandomReward", this.randomReward);
-      compound.setInteger("QuestCompletion", this.completion.ordinal());
-      compound.setInteger("QuestRepeat", this.repeat.ordinal());
-      this.questInterface.writeEntityToNBT(compound);
-      compound.setTag("QuestFactionPoints", this.factionOptions.writeToNBT(new NBTTagCompound()));
-      compound.setTag("QuestMail", this.mail.writeNBT());
-      return compound;
-   }
+	public void readNBTPartial(final NBTTagCompound compound) {
+		version = compound.getInteger("ModRev");
+		VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
+		setType(EnumQuestType.values()[compound.getInteger("Type")]);
+		title = compound.getString("Title");
+		logText = compound.getString("Text");
+		completeText = compound.getString("CompleteText");
+		completerNpc = compound.getString("CompleterNpc");
+		command = compound.getString("QuestCommand");
+		nextQuestid = compound.getInteger("NextQuestId");
+		nextQuestTitle = compound.getString("NextQuestTitle");
+		if (hasNewQuest()) {
+			nextQuestTitle = getNextQuest().title;
+		} else {
+			nextQuestTitle = "";
+		}
+		randomReward = compound.getBoolean("RandomReward");
+		rewardExp = compound.getInteger("RewardExp");
+		rewardItems.setFromNBT(compound.getCompoundTag("Rewards"));
+		completion = EnumQuestCompletion.values()[compound.getInteger("QuestCompletion")];
+		repeat = EnumQuestRepeat.values()[compound.getInteger("QuestRepeat")];
+		questInterface.readEntityFromNBT(compound);
+		factionOptions.readFromNBT(compound.getCompoundTag("QuestFactionPoints"));
+		mail.readNBT(compound.getCompoundTag("QuestMail"));
+	}
 
-   public boolean hasNewQuest() {
-      return this.getNextQuest() != null;
-   }
+	public void setType(final EnumQuestType questType) {
+		type = questType;
+		if (type == EnumQuestType.ITEM) {
+			questInterface = new QuestItem();
+		} else if (type == EnumQuestType.DIALOG) {
+			questInterface = new QuestDialog();
+		} else if ((type == EnumQuestType.KILL) || (type == EnumQuestType.AREA_KILL)) {
+			questInterface = new QuestKill();
+		} else if (type == EnumQuestType.LOCATION) {
+			questInterface = new QuestLocation();
+		}
+		if (questInterface != null) {
+			questInterface.questId = id;
+		}
+	}
 
-   public Quest getNextQuest() {
-      return QuestController.instance == null?null:(Quest)QuestController.instance.quests.get(Integer.valueOf(this.nextQuestid));
-   }
+	@Override
+	public void setVersion(final int version) {
+		this.version = version;
+	}
 
-   public boolean complete(EntityPlayer player, QuestData data) {
-      if(this.completion == EnumQuestCompletion.Instant) {
-         Server.sendData((EntityPlayerMP)player, EnumPacketClient.QUEST_COMPLETION, new Object[]{data.quest.writeToNBT(new NBTTagCompound())});
-         return true;
-      } else {
-         return false;
-      }
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+		compound.setInteger("Id", id);
+		return writeToNBTPartial(compound);
+	}
 
-   public Quest copy() {
-      Quest quest = new Quest();
-      quest.readNBT(this.writeToNBT(new NBTTagCompound()));
-      return quest;
-   }
-
-   public int getVersion() {
-      return this.version;
-   }
-
-   public void setVersion(int version) {
-      this.version = version;
-   }
+	public NBTTagCompound writeToNBTPartial(final NBTTagCompound compound) {
+		compound.setInteger("ModRev", version);
+		compound.setInteger("Type", type.ordinal());
+		compound.setString("Title", title);
+		compound.setString("Text", logText);
+		compound.setString("CompleteText", completeText);
+		compound.setString("CompleterNpc", completerNpc);
+		compound.setInteger("NextQuestId", nextQuestid);
+		compound.setString("NextQuestTitle", nextQuestTitle);
+		compound.setInteger("RewardExp", rewardExp);
+		compound.setTag("Rewards", rewardItems.getToNBT());
+		compound.setString("QuestCommand", command);
+		compound.setBoolean("RandomReward", randomReward);
+		compound.setInteger("QuestCompletion", completion.ordinal());
+		compound.setInteger("QuestRepeat", repeat.ordinal());
+		questInterface.writeEntityToNBT(compound);
+		compound.setTag("QuestFactionPoints", factionOptions.writeToNBT(new NBTTagCompound()));
+		compound.setTag("QuestMail", mail.writeNBT());
+		return compound;
+	}
 }

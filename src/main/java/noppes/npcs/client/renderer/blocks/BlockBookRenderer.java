@@ -1,78 +1,55 @@
+//
+
+//
+
 package noppes.npcs.client.renderer.blocks;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBook;
-import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.CustomItems;
-import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.client.model.blocks.ModelInk;
-import noppes.npcs.client.renderer.blocks.BlockRendererInterface;
-import org.lwjgl.opengl.GL11;
 
 public class BlockBookRenderer extends BlockRendererInterface {
+	private final ModelInk ink;
+	private final ResourceLocation resource;
+	private final ResourceLocation resource2;
+	private final ModelBook book;
 
-   private final ModelInk ink = new ModelInk();
-   private final ResourceLocation resource = new ResourceLocation("textures/entity/enchanting_table_book.png");
-   private final ResourceLocation resource2 = new ResourceLocation("customnpcs:textures/models/Ink.png");
-   private final ModelBook book = new ModelBook();
+	public BlockBookRenderer() {
+		ink = new ModelInk();
+		resource = new ResourceLocation("textures/entity/enchanting_table_book.png");
+		resource2 = new ResourceLocation("customnpcs:textures/models/Ink.png");
+		book = new ModelBook();
+	}
 
-
-   public BlockBookRenderer() {
-      ((BlockRotated)CustomItems.book).renderId = RenderingRegistry.getNextAvailableRenderId();
-      RenderingRegistry.registerBlockHandler(this);
-   }
-
-   public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8) {
-      TileColorable tile = (TileColorable)var1;
-      GL11.glDisable('\u803a');
-      GL11.glPushMatrix();
-      GL11.glTranslatef((float)var2 + 0.5F, (float)var4 + 1.5F, (float)var6 + 0.5F);
-      GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glRotatef((float)(90 * tile.rotation - 90), 0.0F, 1.0F, 0.0F);
-      GL11.glColor3f(1.0F, 1.0F, 1.0F);
-      TextureManager manager = Minecraft.getMinecraft().getTextureManager();
-      manager.bindTexture(this.resource2);
-      if(!this.playerTooFar(tile)) {
-         GL11.glEnable(3042);
-         GL11.glBlendFunc(770, 771);
-      }
-
-      this.ink.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-      manager.bindTexture(this.resource);
-      GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glTranslatef(-1.49F, -0.18F, 0.0F);
-      this.book.render((Entity)null, 0.0F, 0.0F, 1.0F, 1.24F, 1.0F, 0.0625F);
-      GL11.glDisable(3042);
-      GL11.glPopMatrix();
-   }
-
-   public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-      GL11.glPushMatrix();
-      GL11.glTranslatef(0.2F, 1.7F, 0.0F);
-      GL11.glScalef(1.4F, 1.4F, 1.4F);
-      GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-      GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-      GL11.glColor3f(1.0F, 1.0F, 1.0F);
-      GL11.glEnable(2884);
-      TextureManager manager = Minecraft.getMinecraft().getTextureManager();
-      manager.bindTexture(this.resource2);
-      this.ink.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-      manager.bindTexture(this.resource);
-      GL11.glRotatef(-90.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glTranslatef(-1.45F, -0.18F, 0.0F);
-      this.book.render((Entity)null, 0.0F, 0.0F, 1.0F, 1.24F, 1.0F, 0.0625F);
-      GL11.glPopMatrix();
-   }
-
-   public int getRenderId() {
-      return CustomItems.book.getRenderType();
-   }
+	@Override
+	public void renderTileEntityAt(final TileEntity var1, final double var2, final double var4, final double var6,
+			final float var8, final int blockDamage) {
+		final TileColorable tile = (TileColorable) var1;
+		GlStateManager.enableLighting();
+		GlStateManager.disableBlend();
+		GlStateManager.pushMatrix();
+		GlStateManager.translate((float) var2 + 0.5f, (float) var4 + 1.5f, (float) var6 + 0.5f);
+		GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
+		GlStateManager.rotate((90 * tile.rotation) - 90, 0.0f, 1.0f, 0.0f);
+		GlStateManager.color(1.0f, 1.0f, 1.0f);
+		final TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+		manager.bindTexture(resource2);
+		if (!playerTooFar(tile)) {
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(770, 771);
+		}
+		ink.render(null, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
+		manager.bindTexture(resource);
+		GlStateManager.rotate(-90.0f, 0.0f, 0.0f, 1.0f);
+		GlStateManager.translate(-1.49f, -0.18f, 0.0f);
+		book.render((Entity) null, 0.0f, 0.0f, 1.0f, 1.24f, 1.0f, 0.0625f);
+		GlStateManager.disableBlend();
+		GlStateManager.popMatrix();
+	}
 }

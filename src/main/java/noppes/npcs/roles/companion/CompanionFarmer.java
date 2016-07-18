@@ -1,26 +1,36 @@
+//
+
+//
+
 package noppes.npcs.roles.companion;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.roles.companion.CompanionJobInterface;
 
 public class CompanionFarmer extends CompanionJobInterface {
+	public boolean isStanding;
 
-   public boolean isStanding = false;
+	public CompanionFarmer() {
+		isStanding = false;
+	}
 
+	@Override
+	public NBTTagCompound getNBT() {
+		final NBTTagCompound compound = new NBTTagCompound();
+		compound.setBoolean("CompanionFarmerStanding", isStanding);
+		return compound;
+	}
 
-   public NBTTagCompound getNBT() {
-      NBTTagCompound compound = new NBTTagCompound();
-      compound.setBoolean("CompanionFarmerStanding", this.isStanding);
-      return compound;
-   }
+	@Override
+	public boolean isSelfSufficient() {
+		return isStanding;
+	}
 
-   public void setNBT(NBTTagCompound compound) {
-      this.isStanding = compound.getBoolean("CompanionFarmerStanding");
-   }
+	@Override
+	public void onUpdate() {
+	}
 
-   public boolean isSelfSufficient() {
-      return this.isStanding;
-   }
-
-   public void onUpdate() {}
+	@Override
+	public void setNBT(final NBTTagCompound compound) {
+		isStanding = compound.getBoolean("CompanionFarmerStanding");
+	}
 }

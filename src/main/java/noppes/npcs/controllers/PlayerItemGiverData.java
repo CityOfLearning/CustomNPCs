@@ -1,43 +1,54 @@
+//
+
+//
+
 package noppes.npcs.controllers;
 
 import java.util.HashMap;
+
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.NBTTags;
 import noppes.npcs.roles.JobItemGiver;
 
 public class PlayerItemGiverData {
+	private HashMap<Integer, Long> itemgivers;
+	private HashMap<Integer, Integer> chained;
 
-   private HashMap itemgivers = new HashMap();
-   private HashMap chained = new HashMap();
+	public PlayerItemGiverData() {
+		itemgivers = new HashMap<Integer, Long>();
+		chained = new HashMap<Integer, Integer>();
+	}
 
+	public int getItemIndex(final JobItemGiver jobItemGiver) {
+		if (chained.containsKey(jobItemGiver.itemGiverId)) {
+			return chained.get(jobItemGiver.itemGiverId);
+		}
+		return 0;
+	}
 
-   public void loadNBTData(NBTTagCompound compound) {
-      this.chained = NBTTags.getIntegerIntegerMap(compound.getTagList("ItemGiverChained", 10));
-      this.itemgivers = NBTTags.getIntegerLongMap(compound.getTagList("ItemGiversList", 10));
-   }
+	public long getTime(final JobItemGiver jobItemGiver) {
+		return itemgivers.get(jobItemGiver.itemGiverId);
+	}
 
-   public void saveNBTData(NBTTagCompound compound) {
-      compound.setTag("ItemGiverChained", NBTTags.nbtIntegerIntegerMap(this.chained));
-      compound.setTag("ItemGiversList", NBTTags.nbtIntegerLongMap(this.itemgivers));
-   }
+	public boolean hasInteractedBefore(final JobItemGiver jobItemGiver) {
+		return itemgivers.containsKey(jobItemGiver.itemGiverId);
+	}
 
-   public boolean hasInteractedBefore(JobItemGiver jobItemGiver) {
-      return this.itemgivers.containsKey(Integer.valueOf(jobItemGiver.itemGiverId));
-   }
+	public void loadNBTData(final NBTTagCompound compound) {
+		chained = NBTTags.getIntegerIntegerMap(compound.getTagList("ItemGiverChained", 10));
+		itemgivers = NBTTags.getIntegerLongMap(compound.getTagList("ItemGiversList", 10));
+	}
 
-   public long getTime(JobItemGiver jobItemGiver) {
-      return ((Long)this.itemgivers.get(Integer.valueOf(jobItemGiver.itemGiverId))).longValue();
-   }
+	public void saveNBTData(final NBTTagCompound compound) {
+		compound.setTag("ItemGiverChained", NBTTags.nbtIntegerIntegerMap(chained));
+		compound.setTag("ItemGiversList", NBTTags.nbtIntegerLongMap(itemgivers));
+	}
 
-   public void setTime(JobItemGiver jobItemGiver, long day) {
-      this.itemgivers.put(Integer.valueOf(jobItemGiver.itemGiverId), Long.valueOf(day));
-   }
+	public void setItemIndex(final JobItemGiver jobItemGiver, final int i) {
+		chained.put(jobItemGiver.itemGiverId, i);
+	}
 
-   public int getItemIndex(JobItemGiver jobItemGiver) {
-      return this.chained.containsKey(Integer.valueOf(jobItemGiver.itemGiverId))?((Integer)this.chained.get(Integer.valueOf(jobItemGiver.itemGiverId))).intValue():0;
-   }
-
-   public void setItemIndex(JobItemGiver jobItemGiver, int i) {
-      this.chained.put(Integer.valueOf(jobItemGiver.itemGiverId), Integer.valueOf(i));
-   }
+	public void setTime(final JobItemGiver jobItemGiver, final long day) {
+		itemgivers.put(jobItemGiver.itemGiverId, day);
+	}
 }

@@ -1,6 +1,11 @@
+//
+
+//
+
 package noppes.npcs.ai;
 
 import java.util.Random;
+
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
@@ -8,94 +13,105 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIOrbitTarget extends EntityAIBase {
+	private EntityNPCInterface npc;
+	private EntityLivingBase targetEntity;
+	private double movePosX;
+	private double movePosY;
+	private double movePosZ;
+	private double speed;
+	private float distance;
+	private int delay;
+	private float angle;
+	private int direction;
+	private float targetDistance;
+	private boolean decay;
+	private boolean canNavigate;
+	private float decayRate;
+	private int tick;
 
-   private EntityNPCInterface theEntity;
-   private EntityLivingBase targetEntity;
-   private double movePosX;
-   private double movePosY;
-   private double movePosZ;
-   private double speed;
-   private float distance;
-   private int delay = 0;
-   private float angle = 0.0F;
-   private int direction = 1;
-   private float targetDistance;
-   private boolean decay;
-   private boolean canNavigate = true;
-   private float decayRate = 1.0F;
-   private int tick = 0;
+	public EntityAIOrbitTarget(final EntityNPCInterface par1EntityCreature, final double par2, final boolean par5) {
+		delay = 0;
+		angle = 0.0f;
+		direction = 1;
+		canNavigate = true;
+		decayRate = 1.0f;
+		tick = 0;
+		npc = par1EntityCreature;
+		speed = par2;
+		decay = par5;
+		setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
+	}
 
+	@Override
+	public boolean continueExecuting() {
+		return targetEntity.isEntityAlive() && !npc.isInRange(targetEntity, distance / 2.0f)
+				&& npc.isInRange(targetEntity, distance * 1.5) && !npc.isInWater() && canNavigate;
+	}
 
-   public EntityAIOrbitTarget(EntityNPCInterface par1EntityCreature, double par2, float par4, boolean par5) {
-      this.theEntity = par1EntityCreature;
-      this.speed = par2;
-      this.distance = par4;
-      this.decay = par5;
-      this.setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
-   }
+	@Override
+	public void resetTask() {
+		npc.getNavigator().clearPathEntity();
+		delay = 60;
+		if (npc.getRangedTask() != null) {
+			npc.getRangedTask().navOverride(false);
+		}
+	}
 
-   public boolean shouldExecute() {
-      if(--this.delay > 0) {
-         return false;
-      } else {
-         this.targetEntity = this.theEntity.getAttackTarget();
-         if(this.targetEntity == null) {
-            return false;
-         } else {
-            double d0 = (double)this.theEntity.getDistanceToEntity(this.targetEntity);
-            return d0 >= (double)(this.distance / 2.0F) && (this.theEntity.inventory.getProjectile() != null || d0 <= (double)this.distance);
-         }
-      }
-   }
+	@Override
+	public boolean shouldExecute() {
+		final int delay = this.delay - 1;
+		this.delay = delay;
+		if (delay > 0) {
+			return false;
+		}
+		this.delay = 10;
+		targetEntity = npc.getAttackTarget();
+		if (targetEntity == null) {
+			return false;
+		}
+		if (decay) {
+			distance = npc.ai.getTacticalRange();
+		} else {
+			distance = npc.stats.ranged.getRange();
+		}
+		return !npc.isInRange(targetEntity, distance / 2.0f)
+				&& ((npc.inventory.getProjectile() != null) || npc.isInRange(targetEntity, distance));
+	}
 
-   public boolean continueExecuting() {
-      double d0 = (double)this.targetEntity.getDistanceToEntity(this.theEntity);
-      return this.targetEntity.isEntityAlive() && d0 >= (double)(this.distance / 2.0F) && d0 <= (double)(this.distance * 1.5F) && !this.theEntity.isInWater() && this.canNavigate;
-   }
+	@Override
+	public void startExecuting() {
+		canNavigate = true;
+		final Random random = npc.getRNG();
+		direction = ((random.nextInt(10) > 5) ? 1 : -1);
+		decayRate = random.nextFloat() + (distance / 16.0f);
+		targetDistance = npc.getDistanceToEntity(targetEntity);
+		final double d0 = npc.posX - targetEntity.posX;
+		final double d2 = npc.posZ - targetEntity.posZ;
+		angle = (float) ((Math.atan2(d2, d0) * 180.0) / 3.141592653589793);
+		if (npc.getRangedTask() != null) {
+			npc.getRangedTask().navOverride(true);
+		}
+	}
 
-   public void resetTask() {
-      this.theEntity.getNavigator().clearPathEntity();
-      this.delay = 60;
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(false);
-      }
-
-   }
-
-   public void startExecuting() {
-      this.canNavigate = true;
-      Random random = this.theEntity.getRNG();
-      this.direction = random.nextInt(10) > 5?1:-1;
-      this.decayRate = random.nextFloat() + this.distance / 16.0F;
-      this.targetDistance = this.theEntity.getDistanceToEntity(this.targetEntity);
-      double d0 = this.theEntity.posX - this.targetEntity.posX;
-      double d1 = this.theEntity.posZ - this.targetEntity.posZ;
-      this.angle = (float)(Math.atan2(d1, d0) * 180.0D / 3.141592653589793D);
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(true);
-      }
-
-   }
-
-   public void updateTask() {
-      this.theEntity.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
-      if(this.theEntity.getNavigator().noPath() && this.tick >= 0 && this.theEntity.onGround && !this.theEntity.isInWater()) {
-         double d0 = (double)this.targetDistance * (double)MathHelper.cos(this.angle / 180.0F * 3.1415927F);
-         double d1 = (double)this.targetDistance * (double)MathHelper.sin(this.angle / 180.0F * 3.1415927F);
-         this.movePosX = this.targetEntity.posX + d0;
-         this.movePosY = this.targetEntity.boundingBox.maxY;
-         this.movePosZ = this.targetEntity.posZ + d1;
-         this.theEntity.getNavigator().tryMoveToXYZ(this.movePosX, this.movePosY, this.movePosZ, this.speed);
-         this.angle += 15.0F * (float)this.direction;
-         this.tick = MathHelper.ceiling_double_int(this.theEntity.getDistance(this.movePosX, this.movePosY, this.movePosZ) / (double)(this.theEntity.getSpeed() / 20.0F));
-         if(this.decay) {
-            this.targetDistance -= this.decayRate;
-         }
-      }
-
-      if(this.tick >= 0) {
-         --this.tick;
-      }
-
-   }
+	@Override
+	public void updateTask() {
+		npc.getLookHelper().setLookPositionWithEntity(targetEntity, 30.0f, 30.0f);
+		if (npc.getNavigator().noPath() && (tick >= 0) && npc.onGround && !npc.isInWater()) {
+			final double d0 = targetDistance * MathHelper.cos((angle / 180.0f) * 3.1415927f);
+			final double d2 = targetDistance * MathHelper.sin((angle / 180.0f) * 3.1415927f);
+			movePosX = targetEntity.posX + d0;
+			movePosY = targetEntity.getEntityBoundingBox().maxY;
+			movePosZ = targetEntity.posZ + d2;
+			npc.getNavigator().tryMoveToXYZ(movePosX, movePosY, movePosZ, speed);
+			angle += 15.0f * direction;
+			tick = MathHelper
+					.ceiling_double_int(npc.getDistance(movePosX, movePosY, movePosZ) / (npc.getSpeed() / 20.0f));
+			if (decay) {
+				targetDistance -= decayRate;
+			}
+		}
+		if (tick >= 0) {
+			--tick;
+		}
+	}
 }

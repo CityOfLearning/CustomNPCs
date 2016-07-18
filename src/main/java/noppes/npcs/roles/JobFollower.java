@@ -1,74 +1,110 @@
+//
+
+//
+
 package noppes.npcs.roles;
 
-import java.util.Iterator;
 import java.util.List;
+
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.api.entity.ICustomNpc;
+import noppes.npcs.api.entity.data.role.IJobFollower;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobInterface;
 
-public class JobFollower extends JobInterface {
+public class JobFollower extends JobInterface implements IJobFollower {
+	public EntityNPCInterface following;
+	private int ticks;
+	private int range;
+	public String name;
 
-   public EntityNPCInterface following = null;
-   private int ticks = 40;
-   private int range = 20;
-   public String name = "";
+	public JobFollower(final EntityNPCInterface npc) {
+		super(npc);
+		following = null;
+		ticks = 40;
+		range = 20;
+		name = "";
+	}
 
+	@Override
+	public boolean aiShouldExecute() {
+		if (npc.isAttacking()) {
+			return false;
+		}
+		--ticks;
+		if (ticks > 0) {
+			return false;
+		}
+		ticks = 10;
+		following = null;
+		final List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+				npc.getEntityBoundingBox().expand(getRange(), getRange(), getRange()));
+		for (final EntityNPCInterface entity : list) {
+			if (entity != npc) {
+				if (entity.isKilled()) {
+					continue;
+				}
+				if (entity.display.getName().equalsIgnoreCase(name)) {
+					following = entity;
+					break;
+				}
+				continue;
+			}
+		}
+		return false;
+	}
 
-   public JobFollower(EntityNPCInterface npc) {
-      super(npc);
-   }
+	@Override
+	public String getFollowing() {
+		return name;
+	}
 
-   public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-      compound.setString("FollowingEntityName", this.name);
-      return compound;
-   }
+	@Override
+	public ICustomNpc getFollowingNpc() {
+		if (following == null) {
+			return null;
+		}
+		return following.wrappedNPC;
+	}
 
-   public void readFromNBT(NBTTagCompound compound) {
-      this.name = compound.getString("FollowingEntityName");
-   }
+	private int getRange() {
+		if (range > CustomNpcs.NpcNavRange) {
+			return CustomNpcs.NpcNavRange;
+		}
+		return range;
+	}
 
-   public boolean aiShouldExecute() {
-      if(super.npc.isAttacking()) {
-         return false;
-      } else {
-         --this.ticks;
-         if(this.ticks > 0) {
-            return false;
-         } else {
-            this.ticks = 10;
-            this.following = null;
-            List list = super.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, super.npc.boundingBox.expand((double)this.getRange(), (double)this.getRange(), (double)this.getRange()));
-            Iterator var2 = list.iterator();
+	public boolean hasOwner() {
+		return !name.isEmpty();
+	}
 
-            while(var2.hasNext()) {
-               EntityNPCInterface entity = (EntityNPCInterface)var2.next();
-               if(entity != super.npc && !entity.isKilled() && entity.display.name.equalsIgnoreCase(this.name)) {
-                  this.following = entity;
-                  break;
-               }
-            }
+	@Override
+	public boolean isFollowing() {
+		return following != null;
+	}
 
-            return false;
-         }
-      }
-   }
+	@Override
+	public void readFromNBT(final NBTTagCompound compound) {
+		name = compound.getString("FollowingEntityName");
+	}
 
-   private int getRange() {
-      return this.range > CustomNpcs.NpcNavRange?CustomNpcs.NpcNavRange:this.range;
-   }
+	@Override
+	public void reset() {
+	}
 
-   public boolean isFollowing() {
-      return this.following != null;
-   }
+	@Override
+	public void resetTask() {
+		following = null;
+	}
 
-   public void reset() {}
+	@Override
+	public void setFollowing(final String name) {
+		this.name = name;
+	}
 
-   public void resetTask() {
-      this.following = null;
-   }
-
-   public boolean hasOwner() {
-      return !this.name.isEmpty();
-   }
+	@Override
+	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+		compound.setString("FollowingEntityName", name);
+		return compound;
+	}
 }

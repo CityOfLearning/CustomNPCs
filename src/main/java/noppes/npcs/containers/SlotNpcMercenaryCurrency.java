@@ -1,6 +1,9 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
-import java.util.Iterator;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
@@ -8,34 +11,30 @@ import net.minecraft.item.ItemStack;
 import noppes.npcs.roles.RoleFollower;
 
 class SlotNpcMercenaryCurrency extends Slot {
+	RoleFollower role;
 
-   RoleFollower role;
+	public SlotNpcMercenaryCurrency(final RoleFollower role, final IInventory inv, final int i, final int j,
+			final int k) {
+		super(inv, i, j, k);
+		this.role = role;
+	}
 
+	@Override
+	public int getSlotStackLimit() {
+		return 64;
+	}
 
-   public SlotNpcMercenaryCurrency(RoleFollower role, IInventory inv, int i, int j, int k) {
-      super(inv, i, j, k);
-      this.role = role;
-   }
-
-   public int getSlotStackLimit() {
-      return 64;
-   }
-
-   public boolean isItemValid(ItemStack itemstack) {
-      Item item = itemstack.getItem();
-      Iterator var3 = this.role.inventory.items.values().iterator();
-
-      ItemStack is;
-      do {
-         do {
-            if(!var3.hasNext()) {
-               return false;
-            }
-
-            is = (ItemStack)var3.next();
-         } while(item != is.getItem());
-      } while(itemstack.getHasSubtypes() && itemstack.getMetadata() != is.getMetadata());
-
-      return true;
-   }
+	@Override
+	public boolean isItemValid(final ItemStack itemstack) {
+		final Item item = itemstack.getItem();
+		for (final ItemStack is : role.inventory.items.values()) {
+			if (item == is.getItem()) {
+				if (itemstack.getHasSubtypes() && (itemstack.getItemDamage() != is.getItemDamage())) {
+					continue;
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 }

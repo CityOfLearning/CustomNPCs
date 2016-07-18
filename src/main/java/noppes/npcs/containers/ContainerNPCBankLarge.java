@@ -1,23 +1,28 @@
+//
+
+//
+
 package noppes.npcs.containers;
 
 import net.minecraft.entity.player.EntityPlayer;
-import noppes.npcs.containers.ContainerNPCBankInterface;
 
 public class ContainerNPCBankLarge extends ContainerNPCBankInterface {
+	public ContainerNPCBankLarge(final EntityPlayer player, final int slot, final int bankid) {
+		super(player, slot, bankid);
+	}
 
-   public ContainerNPCBankLarge(EntityPlayer player, int slot, int bankid) {
-      super(player, slot, bankid);
-   }
+	@Override
+	public int getRowNumber() {
+		return 6;
+	}
 
-   public boolean isUpgraded() {
-      return true;
-   }
+	@Override
+	public boolean isAvailable() {
+		return true;
+	}
 
-   public boolean isAvailable() {
-      return true;
-   }
-
-   public int getRowNumber() {
-      return 6;
-   }
+	@Override
+	public boolean isUpgraded() {
+		return true;
+	}
 }

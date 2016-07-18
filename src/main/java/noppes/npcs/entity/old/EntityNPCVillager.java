@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.entity.passive.EntityVillager;
@@ -8,24 +12,23 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCVillager extends EntityNPCInterface {
+	public EntityNPCVillager(final World world) {
+		super(world);
+		display.setSkinTexture("textures/entity/villager/villager.png");
+	}
 
-   public EntityNPCVillager(World world) {
-      super(world);
-      super.display.texture = "textures/entity/villager/villager.png";
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.setEntityClass(EntityVillager.class);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.setEntityClass(EntityVillager.class);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 }

@@ -1,117 +1,114 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
+
+import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.client.gui.util.ISliderListener;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNpcSlider extends GuiButton {
+	private ISliderListener listener;
+	public int id;
+	public float sliderValue;
+	public boolean dragging;
 
-   private ISliderListener listener;
-   public int field_146127_k;
-   public float sliderValue;
-   public boolean dragging;
+	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos, final float sliderValue) {
+		this(parent, id, xPos, yPos, "", sliderValue);
+		if (listener != null) {
+			listener.mouseDragged(this);
+		}
+	}
 
+	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos, final int width,
+			final int height, final float sliderValue) {
+		this(parent, id, xPos, yPos, "", sliderValue);
+		this.width = width;
+		this.height = height;
+		if (listener != null) {
+			listener.mouseDragged(this);
+		}
+	}
 
-   public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, String displayString, float sliderValue) {
-      super(id, xPos, yPos, 150, 20, NoppesStringUtils.translate(new Object[]{displayString}));
-      this.sliderValue = 1.0F;
-      this.field_146127_k = id;
-      this.sliderValue = sliderValue;
-      if(parent instanceof ISliderListener) {
-         this.listener = (ISliderListener)parent;
-      }
+	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos,
+			final String displayString, final float sliderValue) {
+		super(id, xPos, yPos, 150, 20, NoppesStringUtils.translate(displayString));
+		this.sliderValue = 1.0f;
+		this.id = id;
+		this.sliderValue = sliderValue;
+		if (parent instanceof ISliderListener) {
+			listener = (ISliderListener) parent;
+		}
+	}
 
-   }
+	public String getDisplayString() {
+		return displayString;
+	}
 
-   public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, float sliderValue) {
-      this(parent, id, xPos, yPos, "", sliderValue);
-      if(this.listener != null) {
-         this.listener.mouseDragged(this);
-      }
+	@Override
+	public int getHoverState(final boolean par1) {
+		return 0;
+	}
 
-   }
+	@Override
+	public void mouseDragged(final Minecraft mc, final int par2, final int par3) {
+		if (!visible) {
+			return;
+		}
+		mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
+		if (dragging) {
+			sliderValue = (par2 - (xPosition + 4)) / (width - 8);
+			if (sliderValue < 0.0f) {
+				sliderValue = 0.0f;
+			}
+			if (sliderValue > 1.0f) {
+				sliderValue = 1.0f;
+			}
+			if (listener != null) {
+				listener.mouseDragged(this);
+			}
+			if (!Mouse.isButtonDown(0)) {
+				mouseReleased(0, 0);
+			}
+		}
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		this.drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)), yPosition, 0, 66, 4, 20);
+		this.drawTexturedModalRect(xPosition + (int) (sliderValue * (width - 8)) + 4, yPosition, 196, 66, 4, 20);
+	}
 
-   public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, int width, int height, float sliderValue) {
-      this(parent, id, xPos, yPos, "", sliderValue);
-      super.width = width;
-      super.height = height;
-      if(this.listener != null) {
-         this.listener.mouseDragged(this);
-      }
+	@Override
+	public boolean mousePressed(final Minecraft par1Minecraft, final int par2, final int par3) {
+		if (enabled && visible && (par2 >= xPosition) && (par3 >= yPosition) && (par2 < (xPosition + width))
+				&& (par3 < (yPosition + height))) {
+			sliderValue = (par2 - (xPosition + 4)) / (width - 8);
+			if (sliderValue < 0.0f) {
+				sliderValue = 0.0f;
+			}
+			if (sliderValue > 1.0f) {
+				sliderValue = 1.0f;
+			}
+			if (listener != null) {
+				listener.mousePressed(this);
+			}
+			return dragging = true;
+		}
+		return false;
+	}
 
-   }
+	@Override
+	public void mouseReleased(final int par1, final int par2) {
+		dragging = false;
+		if (listener != null) {
+			listener.mouseReleased(this);
+		}
+	}
 
-   public void mouseDragged(Minecraft mc, int par2, int par3) {
-      if(super.visible) {
-         mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
-         if(this.dragging) {
-            this.sliderValue = (float)(par2 - (super.xPosition + 4)) / (float)(super.width - 8);
-            if(this.sliderValue < 0.0F) {
-               this.sliderValue = 0.0F;
-            }
-
-            if(this.sliderValue > 1.0F) {
-               this.sliderValue = 1.0F;
-            }
-
-            if(this.listener != null) {
-               this.listener.mouseDragged(this);
-            }
-
-            if(!Mouse.isButtonDown(0)) {
-               this.drawButtonForegroundLayer(0, 0);
-            }
-         }
-
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         this.drawTexturedModalRect(super.xPosition + (int)(this.sliderValue * (float)(super.width - 8)), super.yPosition, 0, 66, 4, 20);
-         this.drawTexturedModalRect(super.xPosition + (int)(this.sliderValue * (float)(super.width - 8)) + 4, super.yPosition, 196, 66, 4, 20);
-      }
-   }
-
-   public String getDisplayString() {
-      return super.displayString;
-   }
-
-   public void setString(String str) {
-      super.displayString = NoppesStringUtils.translate(new Object[]{str});
-   }
-
-   public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
-      if(super.enabled && super.visible && par2 >= super.xPosition && par3 >= super.yPosition && par2 < super.xPosition + super.width && par3 < super.yPosition + super.height) {
-         this.sliderValue = (float)(par2 - (super.xPosition + 4)) / (float)(super.width - 8);
-         if(this.sliderValue < 0.0F) {
-            this.sliderValue = 0.0F;
-         }
-
-         if(this.sliderValue > 1.0F) {
-            this.sliderValue = 1.0F;
-         }
-
-         if(this.listener != null) {
-            this.listener.mousePressed(this);
-         }
-
-         this.dragging = true;
-         return true;
-      } else {
-         return false;
-      }
-   }
-
-   public void drawButtonForegroundLayer(int par1, int par2) {
-      this.dragging = false;
-      if(this.listener != null) {
-         this.listener.mouseReleased(this);
-      }
-
-   }
-
-   public int getHoverState(boolean par1) {
-      return 0;
-   }
+	public void setString(final String str) {
+		displayString = NoppesStringUtils.translate(str);
+	}
 }

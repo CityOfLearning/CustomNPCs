@@ -1,13 +1,27 @@
+//
+
+//
+
 package noppes.npcs.util;
 
-
 public class ValueUtil {
+	public static float correctFloat(final float given, final float min, final float max) {
+		if (given < min) {
+			return min;
+		}
+		if (given > max) {
+			return max;
+		}
+		return given;
+	}
 
-   public static float correctFloat(float given, float min, float max) {
-      return given < min?min:(given > max?max:given);
-   }
-
-   public static int CorrectInt(int given, int min, int max) {
-      return given < min?min:(given > max?max:given);
-   }
+	public static int CorrectInt(final int given, final int min, final int max) {
+		if (given < min) {
+			return min;
+		}
+		if (given > max) {
+			return max;
+		}
+		return given;
+	}
 }

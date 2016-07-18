@@ -1,8 +1,9 @@
+//
+
+//
+
 package noppes.npcs.client.gui.util;
 
-import noppes.npcs.client.gui.util.SubGuiInterface;
-
 public interface ISubGuiListener {
-
-   void subGuiClosed(SubGuiInterface var1);
+	void subGuiClosed(final SubGuiInterface p0);
 }

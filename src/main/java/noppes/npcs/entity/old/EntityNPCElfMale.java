@@ -1,36 +1,40 @@
+//
+
+//
+
 package noppes.npcs.entity.old;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
+import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCElfMale extends EntityNPCInterface {
+	public EntityNPCElfMale(final World world) {
+		super(world);
+		scaleX = 0.85f;
+		scaleY = 1.07f;
+		scaleZ = 0.85f;
+		display.setSkinTexture("customnpcs:textures/entity/elfmale/ElfMale.png");
+	}
 
-   public EntityNPCElfMale(World world) {
-      super(world);
-      super.scaleX = 0.85F;
-      super.scaleY = 1.07F;
-      super.scaleZ = 0.85F;
-      super.display.texture = "customnpcs:textures/entity/elfmale/ElfMale.png";
-   }
-
-   public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
-         NBTTagCompound compound = new NBTTagCompound();
-         this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
-         npc.readFromNBT(compound);
-         ModelData data = npc.modelData;
-         data.legs.setScale(0.85F, 1.15F);
-         data.arms.setScale(0.85F, 1.15F);
-         data.body.setScale(0.85F, 1.15F);
-         data.head.setScale(0.85F, 0.95F);
-         super.worldObj.spawnEntityInWorld(npc);
-      }
-
-      super.onUpdate();
-   }
+	@Override
+	public void onUpdate() {
+		isDead = true;
+		if (!worldObj.isRemote) {
+			final NBTTagCompound compound = new NBTTagCompound();
+			writeToNBT(compound);
+			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			npc.readFromNBT(compound);
+			final ModelData data = npc.modelData;
+			data.getPartConfig(EnumParts.LEG_LEFT).setScale(0.85f, 1.15f);
+			data.getPartConfig(EnumParts.ARM_LEFT).setScale(0.85f, 1.15f);
+			data.getPartConfig(EnumParts.BODY).setScale(0.85f, 1.15f);
+			data.getPartConfig(EnumParts.HEAD).setScale(0.85f, 0.95f);
+			worldObj.spawnEntityInWorld(npc);
+		}
+		super.onUpdate();
+	}
 }

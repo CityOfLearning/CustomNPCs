@@ -1,0 +1,24 @@
+//
+
+//
+
+package noppes.npcs.api.wrapper;
+
+import net.minecraft.entity.monster.EntityMob;
+import noppes.npcs.api.entity.IMonster;
+
+public class MonsterWrapper<T extends EntityMob> extends EntityLivingWrapper<T> implements IMonster {
+	public MonsterWrapper(final T entity) {
+		super(entity);
+	}
+
+	@Override
+	public int getType() {
+		return 3;
+	}
+
+	@Override
+	public boolean typeOf(final int type) {
+		return (type == 3) || super.typeOf(type);
+	}
+}

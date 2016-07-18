@@ -1,8 +1,11 @@
+//
+
+//
+
 package noppes.npcs.client.gui.player;
 
-import java.util.Iterator;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,100 +20,109 @@ import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerNPCFollower;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleFollower;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData {
+	private final ResourceLocation resource;
+	private EntityNPCInterface npc;
+	private RoleFollower role;
 
-   private final ResourceLocation resource = new ResourceLocation("customnpcs", "textures/gui/follower.png");
-   private EntityNPCInterface npc;
-   private RoleFollower role;
+	public GuiNpcFollower(final EntityNPCInterface npc, final ContainerNPCFollower container) {
+		super(npc, container);
+		resource = new ResourceLocation("customnpcs", "textures/gui/follower.png");
+		this.npc = npc;
+		role = (RoleFollower) npc.roleInterface;
+		closeOnEsc = true;
+		NoppesUtilPlayer.sendData(EnumPlayerPacket.RoleGet, new Object[0]);
+	}
 
+	@Override
+	public void actionPerformed(final GuiButton guibutton) {
+		super.actionPerformed(guibutton);
+		final int id = guibutton.id;
+		if (id == 4) {
+			NoppesUtilPlayer.sendData(EnumPlayerPacket.FollowerState, new Object[0]);
+		}
+		if (id == 5) {
+			NoppesUtilPlayer.sendData(EnumPlayerPacket.FollowerExtend, new Object[0]);
+		}
+	}
 
-   public GuiNpcFollower(EntityNPCInterface npc, ContainerNPCFollower container) {
-      super(npc, container);
-      this.npc = npc;
-      this.role = (RoleFollower)npc.roleInterface;
-      super.closeOnEsc = true;
-      NoppesUtilPlayer.sendData(EnumPlayerPacket.RoleGet, new Object[0]);
-   }
+	@Override
+	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
+		mc.renderEngine.bindTexture(resource);
+		final int l = guiLeft;
+		final int i2 = guiTop;
+		this.drawTexturedModalRect(l, i2, 0, 0, xSize, ySize);
+		int index = 0;
+		if (!role.infiniteDays) {
+			for (final int id : role.inventory.items.keySet()) {
+				final ItemStack itemstack = role.inventory.items.get(id);
+				if (itemstack == null) {
+					continue;
+				}
+				int days = 1;
+				if (role.rates.containsKey(id)) {
+					days = role.rates.get(id);
+				}
+				final int yOffset = index * 20;
+				final int x = guiLeft + 68;
+				final int y = guiTop + yOffset + 4;
+				GlStateManager.enableRescaleNormal();
+				RenderHelper.enableGUIStandardItemLighting();
+				itemRender.renderItemAndEffectIntoGUI(itemstack, x + 11, y);
+				itemRender.renderItemOverlays(fontRendererObj, itemstack, x + 11, y);
+				RenderHelper.disableStandardItemLighting();
+				GlStateManager.disableRescaleNormal();
+				final String daysS = days + " " + ((days == 1) ? StatCollector.translateToLocal("follower.day")
+						: StatCollector.translateToLocal("follower.days"));
+				fontRendererObj.drawString(" = " + daysS, x + 27, y + 4, CustomNpcResourceListener.DefaultTextColor);
+				++index;
+			}
+		}
+		drawNpc(33, 131);
+	}
 
-   public void initGui() {
-      super.initGui();
-      super.buttonList.clear();
-      this.addButton(new GuiNpcButton(4, super.field_147003_i + 100, super.field_147009_r + 110, 50, 20, new String[]{StatCollector.translateToLocal("follower.waiting"), StatCollector.translateToLocal("follower.following")}, this.role.isFollowing?1:0));
-      if(!this.role.infiniteDays) {
-         this.addButton(new GuiNpcButton(5, super.field_147003_i + 8, super.field_147009_r + 30, 50, 20, StatCollector.translateToLocal("follower.hire")));
-      }
+	@Override
+	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+		fontRendererObj.drawString(
+				StatCollector.translateToLocal("follower.health") + ": " + npc.getHealth() + "/" + npc.getMaxHealth(),
+				62, 70, CustomNpcResourceListener.DefaultTextColor);
+		if (!role.infiniteDays) {
+			if (role.getDays() <= 1) {
+				fontRendererObj.drawString(
+						StatCollector.translateToLocal("follower.daysleft") + ": "
+								+ StatCollector.translateToLocal("follower.lastday"),
+						62, 94, CustomNpcResourceListener.DefaultTextColor);
+			} else {
+				fontRendererObj.drawString(
+						StatCollector.translateToLocal("follower.daysleft") + ": " + (role.getDays() - 1), 62, 94,
+						CustomNpcResourceListener.DefaultTextColor);
+			}
+		}
+	}
 
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		buttonList.clear();
+		addButton(new GuiNpcButton(4, guiLeft + 100, guiTop + 110, 50, 20,
+				new String[] { StatCollector.translateToLocal("follower.waiting"),
+						StatCollector.translateToLocal("follower.following") },
+				role.isFollowing ? 1 : 0));
+		if (!role.infiniteDays) {
+			addButton(new GuiNpcButton(5, guiLeft + 8, guiTop + 30, 50, 20,
+					StatCollector.translateToLocal("follower.hire")));
+		}
+	}
 
-   public void actionPerformed(GuiButton guibutton) {
-      super.actionPerformed(guibutton);
-      int id = guibutton.id;
-      if(id == 4) {
-         NoppesUtilPlayer.sendData(EnumPlayerPacket.FollowerState, new Object[0]);
-      }
+	@Override
+	public void save() {
+	}
 
-      if(id == 5) {
-         NoppesUtilPlayer.sendData(EnumPlayerPacket.FollowerExtend, new Object[0]);
-      }
-
-   }
-
-   protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-      super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.health") + ": " + this.npc.getHealth() + "/" + this.npc.getMaxHealth(), 62, 70, CustomNpcResourceListener.DefaultTextColor);
-      if(!this.role.infiniteDays) {
-         if(this.role.getDaysLeft() <= 1) {
-            super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + StatCollector.translateToLocal("follower.lastday"), 62, 94, CustomNpcResourceListener.DefaultTextColor);
-         } else {
-            super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + (this.role.getDaysLeft() - 1), 62, 94, CustomNpcResourceListener.DefaultTextColor);
-         }
-      }
-
-   }
-
-   protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      int l = super.field_147003_i;
-      int i1 = super.field_147009_r;
-      this.drawTexturedModalRect(l, i1, 0, 0, super.xSize, super.ySize);
-      int index = 0;
-      if(!this.role.infiniteDays) {
-         Iterator var7 = this.role.inventory.items.keySet().iterator();
-
-         while(var7.hasNext()) {
-            int id = ((Integer)var7.next()).intValue();
-            ItemStack itemstack = (ItemStack)this.role.inventory.items.get(Integer.valueOf(id));
-            if(itemstack != null) {
-               int days = 1;
-               if(this.role.rates.containsKey(Integer.valueOf(id))) {
-                  days = ((Integer)this.role.rates.get(Integer.valueOf(id))).intValue();
-               }
-
-               int yOffset = index * 20;
-               int x = super.field_147003_i + 68;
-               int y = super.field_147009_r + yOffset + 4;
-               GL11.glEnable('\u803a');
-               RenderHelper.enableGUIStandardItemLighting();
-               GuiScreen.itemRender.renderItemIntoGUI(super.fontRendererObj, super.mc.renderEngine, itemstack, x + 11, y);
-               GuiScreen.itemRender.renderItemOverlayIntoGUI(super.fontRendererObj, super.mc.renderEngine, itemstack, x + 11, y);
-               RenderHelper.disableStandardItemLighting();
-               GL11.glDisable('\u803a');
-               String daysS = days + " " + (days == 1?StatCollector.translateToLocal("follower.day"):StatCollector.translateToLocal("follower.days"));
-               super.fontRendererObj.drawString(" = " + daysS, x + 27, y + 4, CustomNpcResourceListener.DefaultTextColor);
-               ++index;
-            }
-         }
-      }
-
-      this.drawNpc(33, 131);
-   }
-
-   public void save() {}
-
-   public void setGuiData(NBTTagCompound compound) {
-      this.npc.roleInterface.readFromNBT(compound);
-      this.initGui();
-   }
+	@Override
+	public void setGuiData(final NBTTagCompound compound) {
+		npc.roleInterface.readFromNBT(compound);
+		initGui();
+	}
 }

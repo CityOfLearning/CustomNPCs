@@ -1,3 +1,7 @@
+//
+
+//
+
 package noppes.npcs.client.gui.roles;
 
 import net.minecraft.client.gui.GuiButton;
@@ -15,80 +19,83 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobBard;
 
 public class GuiNpcBard extends GuiNPCInterface2 {
+	private JobBard job;
+	private GuiNpcSoundSelection gui;
 
-   private JobBard job;
-   private GuiNpcSoundSelection gui;
+	public GuiNpcBard(final EntityNPCInterface npc) {
+		super(npc);
+		job = (JobBard) npc.jobInterface;
+	}
 
+	@Override
+	protected void actionPerformed(final GuiButton guibutton) {
+		final GuiNpcButton button = (GuiNpcButton) guibutton;
+		if (button.id == 0) {
+			gui = new GuiNpcSoundSelection(this, job.song);
+			NoppesUtil.openGUI(player, gui);
+			job.song = "";
+			MusicController.Instance.stopMusic();
+		}
+		if (button.id == 1) {
+			job.song = "";
+			getLabel(0).label = "";
+			MusicController.Instance.stopMusic();
+		}
+		if (button.id == 2) {
+			job.setInstrument(button.getValue());
+		}
+		if (button.id == 3) {
+			job.isStreamer = (button.getValue() == 0);
+			initGui();
+		}
+		if (button.id == 4) {
+			job.hasOffRange = (button.getValue() == 1);
+			initGui();
+		}
+	}
 
-   public GuiNpcBard(EntityNPCInterface npc) {
-      super(npc);
-      this.job = (JobBard)npc.jobInterface;
-   }
+	@Override
+	public void elementClicked() {
+		job.song = gui.getSelected();
+	}
 
-   public void initGui() {
-      super.initGui();
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 55, super.guiTop + 15, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(0, this.job.song, super.guiLeft + 80, super.guiTop + 20));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 75, super.guiTop + 50, "gui.selectSound"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 75, super.guiTop + 71, new String[]{"gui.none", "item.npcBanjo.name", "item.npcViolin.name", "item.npcGuitar.name", "item.npcFrenchHorn.name", "item.npcHarp.name"}, this.job.getInstrument().ordinal()));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 75, super.guiTop + 92, new String[]{"bard.jukebox", "bard.background"}, this.job.isStreamer?0:1));
-      this.addLabel(new GuiNpcLabel(2, "bard.ondistance", super.guiLeft + 60, super.guiTop + 143));
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 160, super.guiTop + 138, 40, 20, this.job.minRange + ""));
-      this.getTextField(2).numbersOnly = true;
-      this.getTextField(2).setMinMaxDefault(2, 64, 5);
-      this.addLabel(new GuiNpcLabel(4, "bard.hasoff", super.guiLeft + 60, super.guiTop + 166));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 160, super.guiTop + 161, 60, 20, new String[]{"gui.no", "gui.yes"}, this.job.hasOffRange?1:0));
-      this.addLabel(new GuiNpcLabel(3, "bard.offdistance", super.guiLeft + 60, super.guiTop + 189));
-      this.addTextField(new GuiNpcTextField(3, this, super.fontRendererObj, super.guiLeft + 160, super.guiTop + 184, 40, 20, this.job.maxRange + ""));
-      this.getTextField(3).numbersOnly = true;
-      this.getTextField(3).setMinMaxDefault(2, 64, 10);
-      this.getLabel(3).enabled = this.job.hasOffRange;
-      this.getTextField(3).enabled = this.job.hasOffRange;
-   }
+	@Override
+	public void initGui() {
+		super.initGui();
+		addButton(new GuiNpcButton(1, guiLeft + 55, guiTop + 15, 20, 20, "X"));
+		addLabel(new GuiNpcLabel(0, job.song, guiLeft + 80, guiTop + 20));
+		addButton(new GuiNpcButton(0, guiLeft + 75, guiTop + 50, "gui.selectSound"));
+		addButton(new GuiNpcButton(2, guiLeft + 75,
+				guiTop + 71, new String[] { "gui.none", "item.npcBanjo.name", "item.npcViolin.name",
+						"item.npcGuitar.name", "item.npcHarp.name", "item.npcFrenchHorn.name" },
+				job.getInstrument().ordinal()));
+		addButton(new GuiNpcButton(3, guiLeft + 75, guiTop + 92, new String[] { "bard.jukebox", "bard.background" },
+				job.isStreamer ? 0 : 1));
+		addLabel(new GuiNpcLabel(2, "bard.ondistance", guiLeft + 60, guiTop + 143));
+		addTextField(
+				new GuiNpcTextField(2, this, fontRendererObj, guiLeft + 160, guiTop + 138, 40, 20, job.minRange + ""));
+		getTextField(2).numbersOnly = true;
+		getTextField(2).setMinMaxDefault(2, 64, 5);
+		addLabel(new GuiNpcLabel(4, "bard.hasoff", guiLeft + 60, guiTop + 166));
+		addButton(new GuiNpcButton(4, guiLeft + 160, guiTop + 161, 60, 20, new String[] { "gui.no", "gui.yes" },
+				job.hasOffRange ? 1 : 0));
+		addLabel(new GuiNpcLabel(3, "bard.offdistance", guiLeft + 60, guiTop + 189));
+		addTextField(
+				new GuiNpcTextField(3, this, fontRendererObj, guiLeft + 160, guiTop + 184, 40, 20, job.maxRange + ""));
+		getTextField(3).numbersOnly = true;
+		getTextField(3).setMinMaxDefault(2, 64, 10);
+		getLabel(3).enabled = job.hasOffRange;
+		getTextField(3).enabled = job.hasOffRange;
+	}
 
-   public void elementClicked() {
-      this.job.song = this.gui.getSelected();
-   }
-
-   protected void actionPerformed(GuiButton guibutton) {
-      GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.gui = new GuiNpcSoundSelection(super.npc, this, this.job.song);
-         NoppesUtil.openGUI(super.player, this.gui);
-         this.job.song = "";
-         MusicController.Instance.stopMusic();
-      }
-
-      if(button.field_146127_k == 1) {
-         this.job.song = "";
-         this.getLabel(0).label = "";
-         MusicController.Instance.stopMusic();
-      }
-
-      if(button.field_146127_k == 2) {
-         this.job.setInstrument(button.getValue());
-      }
-
-      if(button.field_146127_k == 3) {
-         this.job.isStreamer = button.getValue() == 0;
-         this.initGui();
-      }
-
-      if(button.field_146127_k == 4) {
-         this.job.hasOffRange = button.getValue() == 1;
-         this.initGui();
-      }
-
-   }
-
-   public void save() {
-      this.job.minRange = this.getTextField(2).getInteger();
-      this.job.maxRange = this.getTextField(3).getInteger();
-      if(this.job.minRange > this.job.maxRange) {
-         this.job.maxRange = this.job.minRange;
-      }
-
-      MusicController.Instance.stopMusic();
-      Client.sendData(EnumPacketServer.JobSave, new Object[]{this.job.writeToNBT(new NBTTagCompound())});
-   }
+	@Override
+	public void save() {
+		job.minRange = getTextField(2).getInteger();
+		job.maxRange = getTextField(3).getInteger();
+		if (job.minRange > job.maxRange) {
+			job.maxRange = job.minRange;
+		}
+		MusicController.Instance.stopMusic();
+		Client.sendData(EnumPacketServer.JobSave, job.writeToNBT(new NBTTagCompound()));
+	}
 }
