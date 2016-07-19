@@ -21,7 +21,7 @@ public class VersionChecker extends Thread {
 		revision = 12;
 	}
 
-	private boolean hasUpdate() { 
+	private boolean hasUpdate() {
 		try {
 			final URL url = new URL("https://dl.dropboxusercontent.com/u/3096920/update/minecraft/1.8/CustomNPCs.txt");
 			final URLConnection yc = url.openConnection();
@@ -39,11 +39,11 @@ public class VersionChecker extends Thread {
 
 	@Override
 	public void run() {
-		final String name = "§2CustomNpcs§f";
-		final String link = "§9§nClick here";
+		final String name = "\u00a72CustomNpcs\u00a7f";
+		final String link = "\u00a79\u00a7nClick here";
 		String text = name + " installed. For more info " + link;
 		if (hasUpdate()) {
-			text = name + '§' + "4 update available " + link;
+			text = name + '\u00a7' + "4 update available " + link;
 		}
 		try {
 			Minecraft.getMinecraft();
