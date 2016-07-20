@@ -31,7 +31,6 @@ import noppes.npcs.Server;
 import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.gui.GuiNpcMobSpawnerAdd;
-import noppes.npcs.client.gui.player.GuiBook;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.IGuiClose;
@@ -201,12 +200,6 @@ public class PacketHandlerClient extends PacketHandlerServer {
 		} else if (type == EnumPacketClient.VILLAGER_LIST) {
 			final MerchantRecipeList merchantrecipelist = MerchantRecipeList.readFromBuf(new PacketBuffer(buffer));
 			ServerEventsHandler.Merchant.setRecipes(merchantrecipelist);
-		} else if (type == EnumPacketClient.OPEN_BOOK) {
-			final int x = buffer.readInt();
-			final int y = buffer.readInt();
-			final int z = buffer.readInt();
-			NoppesUtil.openGUI(player,
-					new GuiBook(player, ItemStack.loadItemStackFromNBT(Server.readNBT(buffer)), x, y, z));
 		} else if (type == EnumPacketClient.CONFIG) {
 			final int config = buffer.readInt();
 			if (config == 0) {

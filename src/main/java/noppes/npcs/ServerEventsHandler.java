@@ -34,7 +34,6 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.api.constants.EnumQuestType;
-import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.PlayerData;
@@ -278,34 +277,6 @@ public class ServerEventsHandler {
 				Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound2);
 			}
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH, new Object[0]);
-		}
-		if (((block == CustomItems.banner) || (block == CustomItems.wallBanner) || (block == CustomItems.sign))
-				&& (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
-			final ItemStack item = player.inventory.getCurrentItem();
-			if ((item == null) || (item.getItem() == null)) {
-				return;
-			}
-			final int meta = block.getMetaFromState(state);
-			if (meta >= 7) {
-				pos = pos.down();
-			}
-			final TileBanner tile = (TileBanner) player.worldObj.getTileEntity(pos);
-			if (!tile.canEdit()) {
-				if ((item.getItem() == CustomItems.wand)
-						&& CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
-					tile.time = System.currentTimeMillis();
-					if (player.worldObj.isRemote) {
-						player.addChatComponentMessage(
-								new ChatComponentTranslation("availability.editIcon", new Object[0]));
-					}
-				}
-				return;
-			}
-			if (!player.worldObj.isRemote) {
-				tile.icon = item.copy();
-				player.worldObj.markBlockForUpdate(pos);
-				event.setCanceled(true);
-			}
 		}
 	}
 

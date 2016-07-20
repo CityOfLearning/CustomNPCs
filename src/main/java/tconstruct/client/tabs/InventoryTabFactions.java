@@ -20,11 +20,9 @@ import noppes.npcs.util.CustomNPCsScheduler;
 
 public class InventoryTabFactions extends AbstractTab {
 	public InventoryTabFactions() {
-		super(0, 0, 0, new ItemStack(CustomItems.wallBanner, 1, 1));
+		super(0, 0, 0, new ItemStack(Blocks.wall_banner, 1, 1));
 		displayString = NoppesStringUtils.translate("menu.factions");
-		if (CustomItems.wallBanner == null) {
 			renderStack = new ItemStack(Blocks.wall_banner);
-		}
 	}
 
 	@Override

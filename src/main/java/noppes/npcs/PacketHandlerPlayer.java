@@ -21,8 +21,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.api.event.RoleEvent;
-import noppes.npcs.blocks.tiles.TileBigSign;
-import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
@@ -237,44 +235,6 @@ public class PacketHandlerPlayer {
 					PlayerQuestController.addActiveQuest(mail.getQuest(), player);
 				}
 			}
-		} else if (type == EnumPlayerPacket.SignSave) {
-			final BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
-			final TileEntity tile = player.worldObj.getTileEntity(pos);
-			if ((tile == null) || !(tile instanceof TileBigSign)) {
-				return;
-			}
-			final TileBigSign sign = (TileBigSign) tile;
-			if (sign.canEdit) {
-				sign.setText(Server.readString(buffer));
-				sign.canEdit = false;
-				player.worldObj.markBlockForUpdate(pos);
-			}
-		} else if (type == EnumPlayerPacket.SaveBook) {
-			final BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
-			final TileEntity tileentity = player.worldObj.getTileEntity(pos);
-			if (!(tileentity instanceof TileBook)) {
-				return;
-			}
-			final TileBook tile2 = (TileBook) tileentity;
-			if (tile2.book.getItem() == Items.written_book) {
-				return;
-			}
-			final boolean sign2 = buffer.readBoolean();
-			final ItemStack book = ItemStack.loadItemStackFromNBT(Server.readNBT(buffer));
-			if (book == null) {
-				return;
-			}
-			if ((book.getItem() == Items.writable_book) && !sign2
-					&& ItemWritableBook.isNBTValid(book.getTagCompound())) {
-				tile2.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
-			}
-			if ((book.getItem() == Items.written_book) && sign2
-					&& ItemEditableBook.validBookTagContents(book.getTagCompound())) {
-				tile2.book.setTagInfo("author", new NBTTagString(player.getName()));
-				tile2.book.setTagInfo("title", new NBTTagString(book.getTagCompound().getString("title")));
-				tile2.book.setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
-				tile2.book.setItem(Items.written_book);
-			}
-		}
+		} 
 	}
 }

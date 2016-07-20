@@ -16,7 +16,7 @@ public class ItemMusic extends ItemNpcInterface {
 
 	public ItemMusic() {
 		shouldRotate = false;
-		setCreativeTab(CustomItems.tabBlocks);
+		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ import net.minecraftforge.fml.common.network.IGuiHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.containers.ContainerCarpentryBench;
-import noppes.npcs.containers.ContainerCrate;
 import noppes.npcs.containers.ContainerMail;
 import noppes.npcs.containers.ContainerManageBanks;
 import noppes.npcs.containers.ContainerManageRecipes;
@@ -108,10 +107,6 @@ public class CommonProxy implements IGuiHandler {
 		}
 		if (gui == EnumGuiType.MerchantAdd) {
 			return new ContainerMerchantAdd(player, ServerEventsHandler.Merchant, player.worldObj);
-		}
-		if (gui == EnumGuiType.Crate) {
-			return new ContainerCrate((IInventory) player.inventory,
-					(IInventory) player.worldObj.getTileEntity(new BlockPos(x, y, z)));
 		}
 		if (gui == EnumGuiType.PlayerMailman) {
 			return new ContainerMail(player, x == 1, y == 1);
