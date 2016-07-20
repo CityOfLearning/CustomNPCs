@@ -25,7 +25,7 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 	private HashMap<String, Integer> data;
 	private DataAI ai;
 
-	public GuiNpcPather(final EntityNPCInterface npc) {
+	public GuiNpcPather(EntityNPCInterface npc) {
 		data = new HashMap<String, Integer>();
 		drawDefaultBackground = false;
 		xSize = 176;
@@ -35,19 +35,19 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (scroll.selected < 0) {
 			return;
 		}
-		final int id = guibutton.id;
+		int id = guibutton.id;
 		if (id == 0) {
-			final List<int[]> list = ai.getMovingPath();
-			final int selected = scroll.selected;
+			List<int[]> list = ai.getMovingPath();
+			int selected = scroll.selected;
 			if (list.size() <= (selected + 1)) {
 				return;
 			}
-			final int[] a = list.get(selected);
-			final int[] b = list.get(selected + 1);
+			int[] a = list.get(selected);
+			int[] b = list.get(selected + 1);
 			list.set(selected, b);
 			list.set(selected + 1, a);
 			ai.setMovingPath(list);
@@ -58,10 +58,10 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 			if ((scroll.selected - 1) < 0) {
 				return;
 			}
-			final List<int[]> list = ai.getMovingPath();
-			final int selected = scroll.selected;
-			final int[] a = list.get(selected);
-			final int[] b = list.get(selected - 1);
+			List<int[]> list = ai.getMovingPath();
+			int selected = scroll.selected;
+			int[] a = list.get(selected);
+			int[] b = list.get(selected - 1);
 			list.set(selected, b);
 			list.set(selected - 1, a);
 			ai.setMovingPath(list);
@@ -69,7 +69,7 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 			scroll.selected = selected - 1;
 		}
 		if (id == 2) {
-			final List<int[]> list = ai.getMovingPath();
+			List<int[]> list = ai.getMovingPath();
 			if (list.size() <= 1) {
 				return;
 			}
@@ -79,15 +79,15 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 		}
 	}
 
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 		(scroll = new GuiCustomScroll(this, 0)).setSize(160, 164);
-		final List<String> list = new ArrayList<String>();
-		for (final int[] arr : ai.getMovingPath()) {
+		List<String> list = new ArrayList<String>();
+		for (int[] arr : ai.getMovingPath()) {
 			list.add("x:" + arr[0] + " y:" + arr[1] + " z:" + arr[2]);
 		}
 		scroll.setUnsortedList(list);
@@ -105,27 +105,27 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.mouseClicked(i, j, k);
 	}
 
 	@Override
 	public void save() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setTag("MovingPathNew", NBTTags.nbtIntegerArraySet(ai.getMovingPath()));
 		Client.sendData(EnumPacketServer.MovingPathSave, compound);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		ai.readToNBT(compound);
 		initGui();
 	}

@@ -49,7 +49,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	private EntityLivingBase target;
 	public boolean despawnOnTargetLost;
 
-	public JobSpawner(final EntityNPCInterface npc) {
+	public JobSpawner(EntityNPCInterface npc) {
 		super(npc);
 		number = 0;
 		spawned = new ArrayList<EntityLivingBase>();
@@ -86,8 +86,8 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	@Override
 	public void aiStartExecuting() {
 		number = 0;
-		for (final EntityLivingBase entity : spawned) {
-			final int i = entity.getEntityData().getInteger("NpcSpawnerNr");
+		for (EntityLivingBase entity : spawned) {
+			int i = entity.getEntityData().getInteger("NpcSpawnerNr");
 			if (i > number) {
 				number = i;
 			}
@@ -115,7 +115,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 				}
 			}
 			if (spawnType == 2) {
-				final ArrayList<NBTTagCompound> list = new ArrayList<NBTTagCompound>();
+				ArrayList<NBTTagCompound> list = new ArrayList<NBTTagCompound>();
 				if ((compound1 != null) && compound1.hasKey("id")) {
 					list.add(compound1);
 				}
@@ -135,7 +135,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 					list.add(compound6);
 				}
 				if (!list.isEmpty()) {
-					final NBTTagCompound compound = list.get(npc.getRNG().nextInt(list.size()));
+					NBTTagCompound compound = list.get(npc.getRNG().nextInt(list.size()));
 					this.spawnEntity(compound);
 				} else if (!doesntDie) {
 					npc.setDead();
@@ -147,9 +147,9 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	public void checkSpawns() {
-		final Iterator<EntityLivingBase> iterator = spawned.iterator();
+		Iterator<EntityLivingBase> iterator = spawned.iterator();
 		while (iterator.hasNext()) {
-			final EntityLivingBase spawn = iterator.next();
+			EntityLivingBase spawn = iterator.next();
 			if (shouldDelete(spawn)) {
 				spawn.isDead = true;
 				iterator.remove();
@@ -159,9 +159,9 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		}
 	}
 
-	public void checkTarget(final EntityLivingBase entity) {
+	public void checkTarget(EntityLivingBase entity) {
 		if (entity instanceof EntityLiving) {
-			final EntityLiving liv = (EntityLiving) entity;
+			EntityLiving liv = (EntityLiving) entity;
 			if ((liv.getAttackTarget() == null) || (npc.getRNG().nextInt(100) == 1)) {
 				liv.setAttackTarget(target);
 			}
@@ -170,7 +170,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		}
 	}
 
-	public void cleanCompound(final NBTTagCompound compound) {
+	public void cleanCompound(NBTTagCompound compound) {
 		compound.removeTag("SpawnerNBT1");
 		compound.removeTag("SpawnerNBT2");
 		compound.removeTag("SpawnerNBT3");
@@ -179,7 +179,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		compound.removeTag("SpawnerNBT6");
 	}
 
-	private NBTTagCompound getCompound(final int i) {
+	private NBTTagCompound getCompound(int i) {
 		if ((i <= 1) && (compound1 != null) && compound1.hasKey("id")) {
 			number = 1;
 			return compound1;
@@ -208,10 +208,10 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	private List<EntityLivingBase> getNearbySpawned() {
-		final List<EntityLivingBase> spawnList = new ArrayList<EntityLivingBase>();
-		final List<EntityLivingBase> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
+		List<EntityLivingBase> spawnList = new ArrayList<EntityLivingBase>();
+		List<EntityLivingBase> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
 				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
-		for (final EntityLivingBase entity : list) {
+		for (EntityLivingBase entity : list) {
 			if (entity.getEntityData().getString("NpcSpawnerId").equals(id) && !entity.isDead) {
 				spawnList.add(entity);
 			}
@@ -224,7 +224,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		if (target != null) {
 			return target;
 		}
-		for (final EntityLivingBase entity : spawned) {
+		for (EntityLivingBase entity : spawned) {
 			target = this.getTarget(entity);
 			if (target != null) {
 				return target;
@@ -233,7 +233,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		return null;
 	}
 
-	private EntityLivingBase getTarget(final EntityLivingBase entity) {
+	private EntityLivingBase getTarget(EntityLivingBase entity) {
 		if (entity instanceof EntityLiving) {
 			target = ((EntityLiving) entity).getAttackTarget();
 			if ((target != null) && !target.isDead && (target.getHealth() > 0.0f)) {
@@ -247,7 +247,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		return null;
 	}
 
-	private String getTitle(final NBTTagCompound compound) {
+	private String getTitle(NBTTagCompound compound) {
 		if ((compound != null) && compound.hasKey("ClonedName")) {
 			return compound.getString("ClonedName");
 		}
@@ -255,7 +255,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	public NBTTagCompound getTitles() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setString("Title1", getTitle(compound1));
 		compound.setString("Title2", getTitle(compound2));
 		compound.setString("Title3", getTitle(compound3));
@@ -271,11 +271,11 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 				&& ((compound5 == null) || !compound5.hasKey("id")) && ((compound6 == null) || !compound6.hasKey("id"));
 	}
 
-	public boolean isOnCooldown(final String name) {
+	public boolean isOnCooldown(String name) {
 		if (!cooldown.containsKey(name)) {
 			return false;
 		}
-		final long time = cooldown.get(name);
+		long time = cooldown.get(name);
 		return System.currentTimeMillis() < (time + 1200000L);
 	}
 
@@ -285,7 +285,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		compound1 = compound.getCompoundTag("SpawnerNBT1");
 		compound2 = compound.getCompoundTag("SpawnerNBT2");
 		compound3 = compound.getCompoundTag("SpawnerNBT3");
@@ -303,7 +303,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 
 	@Override
 	public void removeAllSpawned() {
-		for (final EntityLivingBase entity : spawned) {
+		for (EntityLivingBase entity : spawned) {
 			entity.isDead = true;
 		}
 		spawned = new ArrayList<EntityLivingBase>();
@@ -315,7 +315,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		if (spawned.isEmpty()) {
 			spawned = getNearbySpawned();
 		}
-		for (final EntityLivingBase entity : spawned) {
+		for (EntityLivingBase entity : spawned) {
 			entity.isDead = true;
 		}
 		spawned.clear();
@@ -327,13 +327,13 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		reset();
 	}
 
-	private void saveCompound(final NBTTagCompound save, final String name, final NBTTagCompound compound) {
+	private void saveCompound(NBTTagCompound save, String name, NBTTagCompound compound) {
 		if (save != null) {
 			compound.setTag(name, save);
 		}
 	}
 
-	public void setJobCompound(final int i, final NBTTagCompound compound) {
+	public void setJobCompound(int i, NBTTagCompound compound) {
 		if (i == 1) {
 			compound1 = compound;
 		}
@@ -354,7 +354,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		}
 	}
 
-	private void setTarget(final EntityLivingBase base, final EntityLivingBase target) {
+	private void setTarget(EntityLivingBase base, EntityLivingBase target) {
 		if (base instanceof EntityLiving) {
 			((EntityLiving) base).setAttackTarget(target);
 		} else {
@@ -362,43 +362,43 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		}
 	}
 
-	public boolean shouldDelete(final EntityLivingBase entity) {
+	public boolean shouldDelete(EntityLivingBase entity) {
 		return !npc.isInRange(entity, 60.0) || entity.isDead || (entity.getHealth() <= 0.0f)
 				|| (despawnOnTargetLost && (this.getTarget(npc) == null));
 	}
 
 	@Override
-	public IEntityLivingBase spawnEntity(final int i) {
-		final NBTTagCompound compound = getCompound(i + 1);
+	public IEntityLivingBase spawnEntity(int i) {
+		NBTTagCompound compound = getCompound(i + 1);
 		if (compound == null) {
 			return null;
 		}
-		final EntityLivingBase base = this.spawnEntity(compound);
+		EntityLivingBase base = this.spawnEntity(compound);
 		if (base == null) {
 			return null;
 		}
 		return (IEntityLivingBase) NpcAPI.Instance().getIEntity(base);
 	}
 
-	private EntityLivingBase spawnEntity(final NBTTagCompound compound) {
+	private EntityLivingBase spawnEntity(NBTTagCompound compound) {
 		if ((compound == null) || !compound.hasKey("id")) {
 			return null;
 		}
-		final double x = ((npc.posX + xOffset) - 0.5) + npc.getRNG().nextFloat();
-		final double y = npc.posY + yOffset;
-		final double z = ((npc.posZ + zOffset) - 0.5) + npc.getRNG().nextFloat();
-		final Entity entity = NoppesUtilServer.spawnClone(compound, MathHelper.floor_double(x),
-				MathHelper.floor_double(y), MathHelper.floor_double(z), npc.worldObj);
+		double x = ((npc.posX + xOffset) - 0.5) + npc.getRNG().nextFloat();
+		double y = npc.posY + yOffset;
+		double z = ((npc.posZ + zOffset) - 0.5) + npc.getRNG().nextFloat();
+		Entity entity = NoppesUtilServer.spawnClone(compound, MathHelper.floor_double(x), MathHelper.floor_double(y),
+				MathHelper.floor_double(z), npc.worldObj);
 		if ((entity == null) || !(entity instanceof EntityLivingBase)) {
 			return null;
 		}
-		final EntityLivingBase living = (EntityLivingBase) entity;
+		EntityLivingBase living = (EntityLivingBase) entity;
 		living.getEntityData().setString("NpcSpawnerId", id);
 		living.getEntityData().setInteger("NpcSpawnerNr", number);
 		setTarget(living, npc.getAttackTarget());
 		living.setPosition(x, y, z);
 		if (living instanceof EntityNPCInterface) {
-			final EntityNPCInterface snpc = (EntityNPCInterface) living;
+			EntityNPCInterface snpc = (EntityNPCInterface) living;
 			snpc.stats.spawnCycle = 3;
 			snpc.ai.returnToStart = false;
 		}
@@ -407,7 +407,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		saveCompound(compound1, "SpawnerNBT1", compound);
 		saveCompound(compound2, "SpawnerNBT2", compound);
 		saveCompound(compound3, "SpawnerNBT3", compound);

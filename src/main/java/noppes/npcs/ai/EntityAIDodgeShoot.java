@@ -16,7 +16,7 @@ public class EntityAIDodgeShoot extends EntityAIBase {
 	private double yPosition;
 	private double zPosition;
 
-	public EntityAIDodgeShoot(final EntityNPCInterface par1EntityNPCInterface) {
+	public EntityAIDodgeShoot(EntityNPCInterface par1EntityNPCInterface) {
 		entity = par1EntityNPCInterface;
 		setMutexBits(AiMutex.PASSIVE);
 	}
@@ -28,7 +28,7 @@ public class EntityAIDodgeShoot extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		final EntityLivingBase var1 = entity.getAttackTarget();
+		EntityLivingBase var1 = entity.getAttackTarget();
 		if ((var1 == null) || !var1.isEntityAlive()) {
 			return false;
 		}
@@ -38,8 +38,7 @@ public class EntityAIDodgeShoot extends EntityAIBase {
 		if (entity.getRangedTask() == null) {
 			return false;
 		}
-		final Vec3 vec = entity.getRangedTask().hasFired() ? RandomPositionGeneratorAlt.findRandomTarget(entity, 4, 1)
-				: null;
+		Vec3 vec = entity.getRangedTask().hasFired() ? RandomPositionGeneratorAlt.findRandomTarget(entity, 4, 1) : null;
 		if (vec == null) {
 			return false;
 		}

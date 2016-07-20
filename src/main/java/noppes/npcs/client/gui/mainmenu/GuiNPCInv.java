@@ -29,7 +29,7 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 	private ContainerNPCInv container;
 	private ResourceLocation slot;
 
-	public GuiNPCInv(final EntityNPCInterface npc, final ContainerNPCInv container) {
+	public GuiNPCInv(EntityNPCInterface npc, ContainerNPCInv container) {
 		super(npc, container, 3);
 		chances = new HashMap<Integer, Integer>();
 		setBackground("npcinv.png");
@@ -40,19 +40,19 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 10) {
 			npc.inventory.lootMode = ((GuiNpcButton) guibutton).getValue();
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(slot);
 		for (int id = 4; id <= 6; ++id) {
-			final Slot slot = container.getSlot(id);
+			Slot slot = container.getSlot(id);
 			if (slot.getHasStack()) {
 				this.drawTexturedModalRect((guiLeft + slot.xDisplayPosition) - 1, (guiTop + slot.yDisplayPosition) - 1,
 						0, 0, 18, 18);
@@ -61,8 +61,8 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
-		final int showname = npc.display.getShowName();
+	public void drawScreen(int i, int j, float f) {
+		int showname = npc.display.getShowName();
 		npc.display.setShowName(1);
 		drawNpc(50, 84);
 		npc.display.setShowName(showname);
@@ -95,24 +95,23 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 				chance = 100;
 			}
 			chances.put(i, chance);
-			final GuiNpcSlider slider = new GuiNpcSlider(this, i, guiLeft + 211, guiTop + 14 + (i * 21),
-					chance / 100.0f);
+			GuiNpcSlider slider = new GuiNpcSlider(this, i, guiLeft + 211, guiTop + 14 + (i * 21), chance / 100.0f);
 			addSlider(slider);
 		}
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider guiNpcSlider) {
+	public void mouseDragged(GuiNpcSlider guiNpcSlider) {
 		guiNpcSlider.displayString = StatCollector.translateToLocal("inv.dropChance") + ": "
 				+ (int) (guiNpcSlider.sliderValue * 100.0f) + "%";
 	}
 
 	@Override
-	public void mousePressed(final GuiNpcSlider guiNpcSlider) {
+	public void mousePressed(GuiNpcSlider guiNpcSlider) {
 	}
 
 	@Override
-	public void mouseReleased(final GuiNpcSlider guiNpcSlider) {
+	public void mouseReleased(GuiNpcSlider guiNpcSlider) {
 		chances.put(guiNpcSlider.id, (int) (guiNpcSlider.sliderValue * 100.0f));
 	}
 
@@ -124,7 +123,7 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		npc.inventory.readEntityFromNBT(compound);
 		initGui();
 	}

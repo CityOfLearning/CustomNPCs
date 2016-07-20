@@ -66,7 +66,7 @@ public class Quest implements ICompatibilty, IQuest {
 		factionOptions = new FactionOptions();
 	}
 
-	public boolean complete(final EntityPlayer player, final QuestData data) {
+	public boolean complete(EntityPlayer player, QuestData data) {
 		if (completion == EnumQuestCompletion.Instant) {
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.QUEST_COMPLETION,
 					data.quest.writeToNBT(new NBTTagCompound()));
@@ -76,7 +76,7 @@ public class Quest implements ICompatibilty, IQuest {
 	}
 
 	public Quest copy() {
-		final Quest quest = new Quest();
+		Quest quest = new Quest();
 		quest.readNBT(writeToNBT(new NBTTagCompound()));
 		return quest;
 	}
@@ -109,12 +109,12 @@ public class Quest implements ICompatibilty, IQuest {
 		return getNextQuest() != null;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		id = compound.getInteger("Id");
 		readNBTPartial(compound);
 	}
 
-	public void readNBTPartial(final NBTTagCompound compound) {
+	public void readNBTPartial(NBTTagCompound compound) {
 		version = compound.getInteger("ModRev");
 		VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
 		setType(EnumQuestType.values()[compound.getInteger("Type")]);
@@ -140,7 +140,7 @@ public class Quest implements ICompatibilty, IQuest {
 		mail.readNBT(compound.getCompoundTag("QuestMail"));
 	}
 
-	public void setType(final EnumQuestType questType) {
+	public void setType(EnumQuestType questType) {
 		type = questType;
 		if (type == EnumQuestType.ITEM) {
 			questInterface = new QuestItem();
@@ -157,17 +157,17 @@ public class Quest implements ICompatibilty, IQuest {
 	}
 
 	@Override
-	public void setVersion(final int version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("Id", id);
 		return writeToNBTPartial(compound);
 	}
 
-	public NBTTagCompound writeToNBTPartial(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBTPartial(NBTTagCompound compound) {
 		compound.setInteger("ModRev", version);
 		compound.setInteger("Type", type.ordinal());
 		compound.setString("Title", title);

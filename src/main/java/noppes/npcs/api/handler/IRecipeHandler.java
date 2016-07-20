@@ -10,12 +10,11 @@ import net.minecraft.item.ItemStack;
 import noppes.npcs.api.handler.data.IRecipe;
 
 public interface IRecipeHandler {
-	IRecipe addRecipe(final String p0, final boolean p1, final ItemStack p2, final int p3, final int p4,
-			final ItemStack... p5);
+	IRecipe addRecipe(String p0, boolean p1, ItemStack p2, int p3, int p4, ItemStack... p5);
 
-	IRecipe addRecipe(final String p0, final boolean p1, final ItemStack p2, final Object... p3);
+	IRecipe addRecipe(String p0, boolean p1, ItemStack p2, Object... p3);
 
-	IRecipe delete(final int p0);
+	IRecipe delete(int p0);
 
 	List<IRecipe> getCarpentryList();
 

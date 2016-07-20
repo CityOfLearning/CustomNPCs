@@ -59,12 +59,12 @@ public class DialogOption implements IDialogOption {
 		return true;
 	}
 
-	public boolean isAvailable(final EntityPlayer player) {
-		final Dialog dialog = getDialog();
+	public boolean isAvailable(EntityPlayer player) {
+		Dialog dialog = getDialog();
 		return (dialog != null) && dialog.availability.isAvailable(player);
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		if (compound == null) {
 			return;
 		}
@@ -79,7 +79,7 @@ public class DialogOption implements IDialogOption {
 	}
 
 	public NBTTagCompound writeNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setString("Title", title);
 		compound.setInteger("OptionType", optionType.ordinal());
 		compound.setInteger("Dialog", dialogId);

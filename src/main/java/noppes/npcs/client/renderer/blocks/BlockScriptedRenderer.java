@@ -30,11 +30,11 @@ public class BlockScriptedRenderer extends BlockRendererInterface {
 	}
 
 	private boolean overrideModel() {
-		final ItemStack held = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
+		ItemStack held = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
 		return (held != null) && ((held.getItem() == CustomItems.wand) || (held.getItem() == CustomItems.scripter));
 	}
 
-	private void renderBlock(final TileScripted tile, final Block b, final IBlockState state) {
+	private void renderBlock(TileScripted tile, Block b, IBlockState state) {
 		GlStateManager.pushMatrix();
 		bindTexture(TextureMap.locationBlocksTexture);
 		GlStateManager.translate(-0.5f, 0.0f, 0.5f);
@@ -45,14 +45,13 @@ public class BlockScriptedRenderer extends BlockRendererInterface {
 		GlStateManager.popMatrix();
 	}
 
-	private void renderItem(final ItemStack item) {
+	private void renderItem(ItemStack item) {
 		Minecraft.getMinecraft().getRenderItem().renderItem(item, ItemCameraTransforms.TransformType.NONE);
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double x, final double y, final double z,
-			final float var8, final int blockDamage) {
-		final TileScripted tile = (TileScripted) var1;
+	public void renderTileEntityAt(TileEntity var1, double x, double y, double z, float var8, int blockDamage) {
+		TileScripted tile = (TileScripted) var1;
 		GlStateManager.pushMatrix();
 		GlStateManager.disableBlend();
 		RenderHelper.enableStandardItemLighting();
@@ -66,7 +65,7 @@ public class BlockScriptedRenderer extends BlockRendererInterface {
 			GlStateManager.rotate(tile.rotationX, 1.0f, 0.0f, 0.0f);
 			GlStateManager.rotate(tile.rotationZ, 0.0f, 0.0f, 1.0f);
 			GlStateManager.scale(tile.scaleX, tile.scaleY, tile.scaleZ);
-			final Block b = Block.getBlockFromItem(tile.itemModel.getItem());
+			Block b = Block.getBlockFromItem(tile.itemModel.getItem());
 			if (b == null) {
 				GlStateManager.translate(0.0, 0.5, 0.0);
 				renderItem(tile.itemModel);
@@ -75,12 +74,12 @@ public class BlockScriptedRenderer extends BlockRendererInterface {
 				GlStateManager.scale(2.0f, 2.0f, 2.0f);
 				renderItem(tile.itemModel);
 			} else {
-				final IBlockState state = b.getStateFromMeta(tile.itemModel.getItemDamage());
+				IBlockState state = b.getStateFromMeta(tile.itemModel.getItemDamage());
 				renderBlock(tile, b, state);
 				if (b.hasTileEntity(state) && !tile.renderTileErrored) {
 					try {
 						if (tile.renderTile == null) {
-							final TileEntity entity = b.createTileEntity(getWorld(), state);
+							TileEntity entity = b.createTileEntity(getWorld(), state);
 							entity.setPos(tile.getPos());
 							entity.setWorldObj(getWorld());
 							ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, entity,
@@ -91,7 +90,7 @@ public class BlockScriptedRenderer extends BlockRendererInterface {
 								tile.renderTileUpdate = (ITickable) entity;
 							}
 						}
-						final TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance
+						TileEntitySpecialRenderer renderer = TileEntityRendererDispatcher.instance
 								.getSpecialRenderer(tile.renderTile);
 						if (renderer != null) {
 							renderer.renderTileEntityAt(tile.renderTile, -0.5, 0.0, -0.5, var8, blockDamage);

@@ -52,35 +52,35 @@ public class ServerEventsHandler {
 	public static EntityVillager Merchant;
 	public static Entity mounted;
 
-	private void doFactionPoints(final EntityPlayer player, final EntityNPCInterface npc) {
+	private void doFactionPoints(EntityPlayer player, EntityNPCInterface npc) {
 		npc.advanced.factions.addPoints(player);
 	}
 
-	private void doQuest(final EntityPlayer player, final EntityLivingBase entity, final boolean all) {
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+	private void doQuest(EntityPlayer player, EntityLivingBase entity, boolean all) {
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
 		boolean change = false;
-		final String entityName = EntityList.getEntityString(entity);
-		for (final QuestData data : playerdata.activeQuests.values()) {
+		String entityName = EntityList.getEntityString(entity);
+		for (QuestData data : playerdata.activeQuests.values()) {
 			if ((data.quest.type != EnumQuestType.KILL) && (data.quest.type != EnumQuestType.AREA_KILL)) {
 				continue;
 			}
 			if ((data.quest.type == EnumQuestType.AREA_KILL) && all) {
-				final List<EntityPlayer> list = player.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+				List<EntityPlayer> list = player.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 						entity.getEntityBoundingBox().expand(10.0, 10.0, 10.0));
-				for (final EntityPlayer pl : list) {
+				for (EntityPlayer pl : list) {
 					if (pl != player) {
 						doQuest(pl, entity, false);
 					}
 				}
 			}
 			String name = entityName;
-			final QuestKill quest = (QuestKill) data.quest.questInterface;
+			QuestKill quest = (QuestKill) data.quest.questInterface;
 			if (quest.targets.containsKey(entity.getName())) {
 				name = entity.getName();
 			} else if (!quest.targets.containsKey(name)) {
 				continue;
 			}
-			final HashMap<String, Integer> killed = quest.getKilled(data);
+			HashMap<String, Integer> killed = quest.getKilled(data);
 			if (killed.containsKey(name) && (killed.get(name) >= quest.targets.get(name))) {
 				continue;
 			}
@@ -99,13 +99,13 @@ public class ServerEventsHandler {
 	}
 
 	@SubscribeEvent
-	public void invoke(final EntityInteractEvent event) {
-		final ItemStack item = event.entityPlayer.getCurrentEquippedItem();
+	public void invoke(EntityInteractEvent event) {
+		ItemStack item = event.entityPlayer.getCurrentEquippedItem();
 		if (item == null) {
 			return;
 		}
-		final boolean isRemote = event.entityPlayer.worldObj.isRemote;
-		final boolean npcInteracted = event.target instanceof EntityNPCInterface;
+		boolean isRemote = event.entityPlayer.worldObj.isRemote;
+		boolean npcInteracted = event.target instanceof EntityNPCInterface;
 		if (!isRemote && CustomNpcs.OpsOnly && !MinecraftServer.getServer().getConfigurationManager()
 				.canSendCommands(event.entityPlayer.getGameProfile())) {
 			return;
@@ -118,11 +118,11 @@ public class ServerEventsHandler {
 			NoppesUtilServer.sendOpenGui(event.entityPlayer, EnumGuiType.MainMenuDisplay,
 					(EntityNPCInterface) event.target);
 		} else if ((item.getItem() == CustomItems.cloner) && !isRemote && !(event.target instanceof EntityPlayer)) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			if (!event.target.writeToNBTOptional(compound)) {
 				return;
 			}
-			final PlayerData data = PlayerDataController.instance.getPlayerData(event.entityPlayer);
+			PlayerData data = PlayerDataController.instance.getPlayerData(event.entityPlayer);
 			ServerCloneController.Instance.cleanTags(compound);
 			if (!Server.sendDataChecked((EntityPlayerMP) event.entityPlayer, EnumPacketClient.CLONE, compound)) {
 				event.entityPlayer.addChatMessage(new ChatComponentText("Entity too big to clone"));
@@ -156,9 +156,9 @@ public class ServerEventsHandler {
 			event.setCanceled(true);
 			ServerEventsHandler.Merchant = (EntityVillager) event.target;
 			if (!isRemote) {
-				final EntityPlayerMP player = (EntityPlayerMP) event.entityPlayer;
+				EntityPlayerMP player = (EntityPlayerMP) event.entityPlayer;
 				player.openGui(CustomNpcs.instance, EnumGuiType.MerchantAdd.ordinal(), player.worldObj, 0, 0, 0);
-				final MerchantRecipeList merchantrecipelist = ServerEventsHandler.Merchant.getRecipes(player);
+				MerchantRecipeList merchantrecipelist = ServerEventsHandler.Merchant.getRecipes(player);
 				if (merchantrecipelist != null) {
 					Server.sendData(player, EnumPacketClient.VILLAGER_LIST, merchantrecipelist);
 				}
@@ -167,14 +167,14 @@ public class ServerEventsHandler {
 	}
 
 	@SubscribeEvent
-	public void invoke(final LivingDeathEvent event) {
+	public void invoke(LivingDeathEvent event) {
 		if (event.entityLiving.worldObj.isRemote) {
 			return;
 		}
 		if (event.source.getEntity() != null) {
 			if ((event.source.getEntity() instanceof EntityNPCInterface) && (event.entityLiving != null)) {
-				final EntityNPCInterface npc = (EntityNPCInterface) event.source.getEntity();
-				final Line line = npc.advanced.getKillLine();
+				EntityNPCInterface npc = (EntityNPCInterface) event.source.getEntity();
+				Line line = npc.advanced.getKillLine();
 				if (line != null) {
 					npc.saySurrounding(line.formatTarget(event.entityLiving));
 				}
@@ -195,25 +195,25 @@ public class ServerEventsHandler {
 			}
 		}
 		if (event.entityLiving instanceof EntityPlayer) {
-			final PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer) event.entityLiving);
+			PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer) event.entityLiving);
 			data.saveNBTData(null);
 		}
 	}
 
 	@SubscribeEvent
-	public void invoke(final LivingHurtEvent event) {
+	public void invoke(LivingHurtEvent event) {
 		if (!(event.entityLiving instanceof EntityPlayer)) {
 			return;
 		}
-		final EntityPlayer player = (EntityPlayer) event.entityLiving;
+		EntityPlayer player = (EntityPlayer) event.entityLiving;
 		if (event.source.isUnblockable() || event.source.isFireDamage()) {
 			return;
 		}
 		if (!player.isBlocking()) {
 			return;
 		}
-		final ItemStack item = player.getCurrentEquippedItem();
-		final float damage = item.getItemDamage() + event.ammount;
+		ItemStack item = player.getCurrentEquippedItem();
+		float damage = item.getItemDamage() + event.ammount;
 		item.damageItem((int) event.ammount, player);
 		if (damage > item.getMaxDamage()) {
 			event.ammount = damage - item.getMaxDamage();
@@ -224,34 +224,34 @@ public class ServerEventsHandler {
 	}
 
 	@SubscribeEvent
-	public void invoke(final PlayerInteractEvent event) {
+	public void invoke(PlayerInteractEvent event) {
 		if (event.pos == null) {
 			return;
 		}
-		final EntityPlayer player = event.entityPlayer;
+		EntityPlayer player = event.entityPlayer;
 		BlockPos pos = event.pos;
-		final IBlockState state = player.worldObj.getBlockState(pos);
-		final Block block = state.getBlock();
+		IBlockState state = player.worldObj.getBlockState(pos);
+		Block block = state.getBlock();
 		if ((event.action == PlayerInteractEvent.Action.LEFT_CLICK_BLOCK) && (player.getHeldItem() != null)
 				&& (player.getHeldItem().getItem() == CustomItems.teleporter)) {
 			event.setCanceled(true);
 		}
 		if ((block == Blocks.crafting_table) && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
 				&& !player.worldObj.isRemote) {
-			final RecipeController controller = RecipeController.instance;
+			RecipeController controller = RecipeController.instance;
 			NBTTagList list = new NBTTagList();
 			int i = 0;
-			for (final RecipeCarpentry recipe : controller.globalRecipes.values()) {
+			for (RecipeCarpentry recipe : controller.globalRecipes.values()) {
 				list.appendTag(recipe.writeNBT());
 				if ((++i % 10) == 0) {
-					final NBTTagCompound compound = new NBTTagCompound();
+					NBTTagCompound compound = new NBTTagCompound();
 					compound.setTag("recipes", list);
 					Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound);
 					list = new NBTTagList();
 				}
 			}
 			if ((i % 10) != 0) {
-				final NBTTagCompound compound2 = new NBTTagCompound();
+				NBTTagCompound compound2 = new NBTTagCompound();
 				compound2.setTag("recipes", list);
 				Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound2);
 			}
@@ -259,20 +259,20 @@ public class ServerEventsHandler {
 		}
 		if ((block == CustomItems.carpentyBench) && (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)
 				&& !player.worldObj.isRemote) {
-			final RecipeController controller = RecipeController.instance;
+			RecipeController controller = RecipeController.instance;
 			NBTTagList list = new NBTTagList();
 			int i = 0;
-			for (final RecipeCarpentry recipe : controller.anvilRecipes.values()) {
+			for (RecipeCarpentry recipe : controller.anvilRecipes.values()) {
 				list.appendTag(recipe.writeNBT());
 				if ((++i % 10) == 0) {
-					final NBTTagCompound compound = new NBTTagCompound();
+					NBTTagCompound compound = new NBTTagCompound();
 					compound.setTag("recipes", list);
 					Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound);
 					list = new NBTTagList();
 				}
 			}
 			if ((i % 10) != 0) {
-				final NBTTagCompound compound2 = new NBTTagCompound();
+				NBTTagCompound compound2 = new NBTTagCompound();
 				compound2.setTag("recipes", list);
 				Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound2);
 			}
@@ -281,25 +281,25 @@ public class ServerEventsHandler {
 	}
 
 	@SubscribeEvent
-	public void pickUp(final EntityItemPickupEvent event) {
+	public void pickUp(EntityItemPickupEvent event) {
 		if (event.entityPlayer.worldObj.isRemote) {
 			return;
 		}
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(event.entityPlayer).questData;
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(event.entityPlayer).questData;
 		playerdata.checkQuestCompletion(event.entityPlayer, EnumQuestType.ITEM);
 	}
 
 	@SubscribeEvent
-	public void populateChunk(final PopulateChunkEvent.Post event) {
+	public void populateChunk(PopulateChunkEvent.Post event) {
 		NPCSpawning.performWorldGenSpawning(event.world, event.chunkX, event.chunkZ, event.rand);
 	}
 
 	@SubscribeEvent
-	public void world(final EntityJoinWorldEvent event) {
+	public void world(EntityJoinWorldEvent event) {
 		if (event.world.isRemote || !(event.entity instanceof EntityPlayer)) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer) event.entity);
+		PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer) event.entity);
 		data.updateCompanion(event.world);
 	}
 }

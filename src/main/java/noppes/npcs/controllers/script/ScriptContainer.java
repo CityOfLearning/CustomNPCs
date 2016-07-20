@@ -28,13 +28,13 @@ import noppes.npcs.api.constants.TacticalType;
 import noppes.npcs.constants.EnumScriptType;
 
 public class ScriptContainer {
-	private static final AnimationType animations;
-	private static final EntityType entities;
-	private static final JobType jobs;
-	private static final RoleType roles;
-	private static final TacticalType tacticalVariantTypes;
-	private static final PotionEffectType potionEffectTypes;
-	private static final ParticleType particleTypes;
+	private static AnimationType animations;
+	private static EntityType entities;
+	private static JobType jobs;
+	private static RoleType roles;
+	private static TacticalType tacticalVariantTypes;
+	private static PotionEffectType potionEffectTypes;
+	private static ParticleType particleTypes;
 	static {
 		animations = new AnimationType();
 		entities = new EntityType();
@@ -57,7 +57,7 @@ public class ScriptContainer {
 
 	private boolean init;
 
-	public ScriptContainer(final IScriptHandler handler) {
+	public ScriptContainer(IScriptHandler handler) {
 		fullscript = "";
 		script = "";
 		console = new HashMap<Long, String>();
@@ -72,7 +72,7 @@ public class ScriptContainer {
 		this.handler = handler;
 	}
 
-	public void appandConsole(final String message) {
+	public void appandConsole(String message) {
 		if ((message == null) || message.isEmpty()) {
 			return;
 		}
@@ -86,8 +86,8 @@ public class ScriptContainer {
 			if (!fullscript.isEmpty()) {
 				fullscript += "\n";
 			}
-			for (final String loc : scripts) {
-				final String code = ScriptController.Instance.scripts.get(loc);
+			for (String loc : scripts) {
+				String code = ScriptController.Instance.scripts.get(loc);
 				if ((code != null) && !code.isEmpty()) {
 					fullscript = fullscript + code + "\n";
 				}
@@ -102,19 +102,19 @@ public class ScriptContainer {
 		return !getCode().isEmpty();
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		script = compound.getString("Script");
 		console = NBTTags.GetLongStringMap(compound.getTagList("Console", 10));
 		scripts = NBTTags.getStringList(compound.getTagList("ScriptList", 10));
 		lastCreated = 0L;
 	}
 
-	public void run(final EnumScriptType type, final Event event) {
+	public void run(EnumScriptType type, Event event) {
 		if (!hasCode() || unknownFunctions.contains(type.ordinal())) {
 			return;
 		}
-		final StringWriter sw = new StringWriter();
-		final PrintWriter pw = new PrintWriter(sw);
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
 		engine.getContext().setWriter(pw);
 		engine.getContext().setErrorWriter(pw);
 		try {
@@ -134,7 +134,7 @@ public class ScriptContainer {
 		pw.close();
 	}
 
-	public void setEngine(final String scriptLanguage) {
+	public void setEngine(String scriptLanguage) {
 		if ((currentScriptLanguage != null) && currentScriptLanguage.equals(scriptLanguage)) {
 			return;
 		}
@@ -154,7 +154,7 @@ public class ScriptContainer {
 		init = false;
 	}
 
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		compound.setString("Script", script);
 		compound.setTag("Console", NBTTags.NBTLongStringMap(console));
 		compound.setTag("ScriptList", NBTTags.nbtStringList(scripts));

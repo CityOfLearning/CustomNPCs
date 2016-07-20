@@ -38,23 +38,23 @@ import noppes.npcs.entity.EntityDialogNpc;
 import noppes.npcs.util.ValueUtil;
 
 public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWrapper<T> implements IPlayer {
-	public PlayerWrapper(final T player) {
+	public PlayerWrapper(T player) {
 		super(player);
 	}
 
 	@Override
-	public void addFactionPoints(final int faction, final int points) {
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+	public void addFactionPoints(int faction, int points) {
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
 		data.factionData.increasePoints(faction, points);
 	}
 
 	@Override
-	public void finishQuest(final int id) {
-		final Quest quest = QuestController.instance.quests.get(id);
+	public void finishQuest(int id) {
+		Quest quest = QuestController.instance.quests.get(id);
 		if (quest == null) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
 		data.questData.finishedQuests.put(id, System.currentTimeMillis());
 	}
 
@@ -69,8 +69,8 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public int getFactionPoints(final int faction) {
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+	public int getFactionPoints(int faction) {
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
 		return data.factionData.getFactionPoints(faction);
 	}
 
@@ -81,9 +81,9 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 
 	@Override
 	public IItemStack[] getInventory() {
-		final IItemStack[] items = new IItemStack[36];
+		IItemStack[] items = new IItemStack[36];
 		for (int i = 0; i < entity.inventory.mainInventory.length; ++i) {
-			final ItemStack item = entity.inventory.mainInventory[i];
+			ItemStack item = entity.inventory.mainInventory[i];
 			if (item != null) {
 				items[i] = new ItemStackWrapper(item);
 			}
@@ -102,16 +102,16 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public boolean giveItem(final IItemStack item) {
-		final Item mcItem = item.getMCItemStack().getItem();
+	public boolean giveItem(IItemStack item) {
+		Item mcItem = item.getMCItemStack().getItem();
 		if (mcItem == null) {
 			return false;
 		}
-		final int damage = item.getItemDamage();
-		final int amount = item.getStackSize();
-		final ItemStack givenItem = new ItemStack(mcItem, amount, damage);
+		int damage = item.getItemDamage();
+		int amount = item.getStackSize();
+		ItemStack givenItem = new ItemStack(mcItem, amount, damage);
 		givenItem.setStackDisplayName(item.getDisplayName());
-		final boolean bo = entity.inventory.addItemStackToInventory(givenItem);
+		boolean bo = entity.inventory.addItemStackToInventory(givenItem);
 		if (bo) {
 			entity.worldObj.playSoundAtEntity(entity, "random.pop", 0.2f,
 					(((entity.getRNG().nextFloat() - entity.getRNG().nextFloat()) * 0.7f) + 1.0f) * 2.0f);
@@ -121,52 +121,52 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public boolean giveItem(final String id, final int damage, final int amount) {
-		final Item item = Item.itemRegistry.getObject(new ResourceLocation(id));
+	public boolean giveItem(String id, int damage, int amount) {
+		Item item = Item.itemRegistry.getObject(new ResourceLocation(id));
 		if (item == null) {
 			return false;
 		}
-		final ItemStack mcStack = new ItemStack(item);
-		final IItemStack itemStack = new ItemStackWrapper(mcStack);
+		ItemStack mcStack = new ItemStack(item);
+		IItemStack itemStack = new ItemStackWrapper(mcStack);
 		itemStack.setStackSize(amount);
 		itemStack.setItemDamage(damage);
 		return this.giveItem(itemStack);
 	}
 
 	@Override
-	public boolean hasAchievement(final String achievement) {
-		final StatBase statbase = StatList.getOneShotStat(achievement);
+	public boolean hasAchievement(String achievement) {
+		StatBase statbase = StatList.getOneShotStat(achievement);
 		return (statbase != null) && (statbase instanceof Achievement)
 				&& entity.getStatFile().hasAchievementUnlocked((Achievement) statbase);
 	}
 
 	@Override
-	public boolean hasActiveQuest(final int id) {
-		final PlayerQuestData data = PlayerDataController.instance.getPlayerData(entity).questData;
+	public boolean hasActiveQuest(int id) {
+		PlayerQuestData data = PlayerDataController.instance.getPlayerData(entity).questData;
 		return data.activeQuests.containsKey(id);
 	}
 
 	@Override
-	public boolean hasFinishedQuest(final int id) {
-		final PlayerQuestData data = PlayerDataController.instance.getPlayerData(entity).questData;
+	public boolean hasFinishedQuest(int id) {
+		PlayerQuestData data = PlayerDataController.instance.getPlayerData(entity).questData;
 		return data.finishedQuests.containsKey(id);
 	}
 
 	@Override
-	public boolean hasPermission(final String permission) {
+	public boolean hasPermission(String permission) {
 		return CustomNpcsPermissions.hasPermissionString(entity, permission);
 	}
 
 	@Override
-	public boolean hasReadDialog(final int id) {
-		final PlayerDialogData data = PlayerDataController.instance.getPlayerData(entity).dialogData;
+	public boolean hasReadDialog(int id) {
+		PlayerDialogData data = PlayerDataController.instance.getPlayerData(entity).dialogData;
 		return data.dialogsRead.contains(id);
 	}
 
 	@Override
-	public int inventoryItemCount(final IItemStack item) {
+	public int inventoryItemCount(IItemStack item) {
 		int i = 0;
-		for (final ItemStack is : entity.inventory.mainInventory) {
+		for (ItemStack is : entity.inventory.mainInventory) {
 			if ((is != null) && is.isItemEqual(item.getMCItemStack())) {
 				i += is.stackSize;
 			}
@@ -175,15 +175,15 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public void message(final String message) {
+	public void message(String message) {
 		entity.addChatMessage(
 				new ChatComponentTranslation(NoppesStringUtils.formatText(message, entity), new Object[0]));
 	}
 
 	@Override
-	public void removeAllItems(final IItemStack item) {
+	public void removeAllItems(IItemStack item) {
 		for (int i = 0; i < entity.inventory.mainInventory.length; ++i) {
-			final ItemStack is = entity.inventory.mainInventory[i];
+			ItemStack is = entity.inventory.mainInventory[i];
 			if ((is != null) && is.isItemEqual(item.getMCItemStack())) {
 				entity.inventory.mainInventory[i] = null;
 			}
@@ -191,8 +191,8 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public boolean removeItem(final IItemStack item, int amount) {
-		final int count = this.inventoryItemCount(item);
+	public boolean removeItem(IItemStack item, int amount) {
+		int count = this.inventoryItemCount(item);
 		if (amount > count) {
 			return false;
 		}
@@ -200,7 +200,7 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 			this.removeAllItems(item);
 		} else {
 			for (int i = 0; i < entity.inventory.mainInventory.length; ++i) {
-				final ItemStack is = entity.inventory.mainInventory[i];
+				ItemStack is = entity.inventory.mainInventory[i];
 				if ((is != null) && is.isItemEqual(item.getMCItemStack())) {
 					if (amount <= is.stackSize) {
 						is.splitStack(amount);
@@ -215,18 +215,18 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public boolean removeItem(final String id, final int damage, final int amount) {
-		final Item item = Item.itemRegistry.getObject(new ResourceLocation(id));
+	public boolean removeItem(String id, int damage, int amount) {
+		Item item = Item.itemRegistry.getObject(new ResourceLocation(id));
 		return (item != null) && this.removeItem(new ItemStackWrapper(new ItemStack(item, 1, damage)), amount);
 	}
 
 	@Override
-	public void removeQuest(final int id) {
-		final Quest quest = QuestController.instance.quests.get(id);
+	public void removeQuest(int id) {
+		Quest quest = QuestController.instance.quests.get(id);
 		if (quest == null) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
 		data.questData.activeQuests.remove(id);
 		data.questData.finishedQuests.remove(id);
 	}
@@ -237,18 +237,18 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public void setExpLevel(final int level) {
+	public void setExpLevel(int level) {
 		entity.experienceLevel = level;
 		entity.addExperienceLevel(0);
 	}
 
 	@Override
-	public void setGamemode(final int type) {
+	public void setGamemode(int type) {
 		entity.setGameType(WorldSettings.getGameTypeById(type));
 	}
 
 	@Override
-	public void setPosition(final double x, final double y, final double z) {
+	public void setPosition(double x, double y, double z) {
 		NoppesUtilPlayer.teleportPlayer(entity, new BlockPos(x, y, z), entity.dimension);
 	}
 
@@ -261,18 +261,18 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public void showDialog(final int id, final String name) {
-		final Dialog dialog = DialogController.instance.dialogs.get(id);
+	public void showDialog(int id, String name) {
+		Dialog dialog = DialogController.instance.dialogs.get(id);
 		if (dialog == null) {
 			throw new CustomNPCsException("Unknown Dialog id: " + id, new Object[0]);
 		}
 		if (!dialog.availability.isAvailable(entity)) {
 			return;
 		}
-		final EntityDialogNpc npc = new EntityDialogNpc(getWorld().getMCWorld());
+		EntityDialogNpc npc = new EntityDialogNpc(getWorld().getMCWorld());
 		npc.display.setName(name);
 		EntityUtil.Copy(entity, npc);
-		final DialogOption option = new DialogOption();
+		DialogOption option = new DialogOption();
 		option.dialogId = id;
 		option.title = dialog.title;
 		npc.dialogs.put(0, option);
@@ -280,30 +280,30 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	}
 
 	@Override
-	public void startQuest(final int id) {
-		final Quest quest = QuestController.instance.quests.get(id);
+	public void startQuest(int id) {
+		Quest quest = QuestController.instance.quests.get(id);
 		if (quest == null) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
-		final QuestData questdata = new QuestData(quest);
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+		QuestData questdata = new QuestData(quest);
 		data.questData.activeQuests.put(id, questdata);
 		Server.sendData(entity, EnumPacketClient.MESSAGE, "quest.newquest", quest.title);
 		Server.sendData(entity, EnumPacketClient.CHAT, "quest.newquest", ": ", quest.title);
 	}
 
 	@Override
-	public void stopQuest(final int id) {
-		final Quest quest = QuestController.instance.quests.get(id);
+	public void stopQuest(int id) {
+		Quest quest = QuestController.instance.quests.get(id);
 		if (quest == null) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData(entity);
+		PlayerData data = PlayerDataController.instance.getPlayerData(entity);
 		data.questData.activeQuests.remove(id);
 	}
 
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return (type == 1) || super.typeOf(type);
 	}
 }

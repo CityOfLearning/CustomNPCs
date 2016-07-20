@@ -31,11 +31,11 @@ public interface IRecipe {
 
 	boolean saves();
 
-	void saves(final boolean p0);
+	void saves(boolean p0);
 
-	void setIgnoreDamage(final boolean p0);
+	void setIgnoreDamage(boolean p0);
 
-	void setIgnoreNBT(final boolean p0);
+	void setIgnoreNBT(boolean p0);
 
-	void setIsGlobal(final boolean p0);
+	void setIsGlobal(boolean p0);
 }

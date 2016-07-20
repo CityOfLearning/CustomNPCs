@@ -18,27 +18,26 @@ public class TextBlockClient extends TextBlock {
 	private String name;
 	private ICommandSender sender;
 
-	public TextBlockClient(final ICommandSender sender, final String text, final int lineWidth, final int color,
-			final Object... obs) {
+	public TextBlockClient(ICommandSender sender, String text, int lineWidth, int color, Object... obs) {
 		this(text, lineWidth, false, obs);
 		this.color = color;
 		this.sender = sender;
 	}
 
-	public TextBlockClient(String text, final int lineWidth, final boolean mcFont, final Object... obs) {
+	public TextBlockClient(String text, int lineWidth, boolean mcFont, Object... obs) {
 		color = 14737632;
 		style = new ChatStyle();
 		text = NoppesStringUtils.formatText(text, obs);
 		String line = "";
 		text = text.replace("\n", " \n ");
 		text = text.replace("\r", " \r ");
-		final String[] words = text.split(" ");
-		final FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
-		for (final String word : words) {
+		String[] words = text.split(" ");
+		FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+		for (String word : words) {
 			Label_0235: {
 				if (!word.isEmpty()) {
 					if (word.length() == 1) {
-						final char c = word.charAt(0);
+						char c = word.charAt(0);
 						if ((c == '\r') || (c == '\n')) {
 							addLine(line);
 							line = "";
@@ -65,15 +64,14 @@ public class TextBlockClient extends TextBlock {
 		}
 	}
 
-	public TextBlockClient(final String name, final String text, final int lineWidth, final int color,
-			final Object... obs) {
+	public TextBlockClient(String name, String text, int lineWidth, int color, Object... obs) {
 		this(text, lineWidth, false, obs);
 		this.color = color;
 		this.name = name;
 	}
 
-	private void addLine(final String text) {
-		final ChatComponentText line = new ChatComponentText(text);
+	private void addLine(String text) {
+		ChatComponentText line = new ChatComponentText(text);
 		line.setChatStyle(style);
 		lines.add(line);
 	}

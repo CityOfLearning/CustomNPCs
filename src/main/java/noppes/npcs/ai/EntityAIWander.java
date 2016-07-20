@@ -19,13 +19,13 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIWander extends EntityAIBase {
 	private EntityNPCInterface entity;
-	public final NPCInteractSelector selector;
+	public NPCInteractSelector selector;
 	private double xPosition;
 	private double yPosition;
 	private double zPosition;
 	private EntityNPCInterface nearbyNPC;
 
-	public EntityAIWander(final EntityNPCInterface npc) {
+	public EntityAIWander(EntityNPCInterface npc) {
 		entity = npc;
 		setMutexBits(AiMutex.PASSIVE);
 		selector = new NPCInteractSelector(npc);
@@ -38,13 +38,13 @@ public class EntityAIWander extends EntityAIBase {
 	}
 
 	private EntityNPCInterface getNearbyNPC() {
-		final List<Entity> list = entity.worldObj.getEntitiesInAABBexcluding(entity,
+		List<Entity> list = entity.worldObj.getEntitiesInAABBexcluding(entity,
 				entity.getEntityBoundingBox().expand(entity.ai.walkingRange,
 						(entity.ai.walkingRange > 7) ? 7.0 : ((double) entity.ai.walkingRange), entity.ai.walkingRange),
 				selector);
-		final Iterator<Entity> ita = list.iterator();
+		Iterator<Entity> ita = list.iterator();
 		while (ita.hasNext()) {
-			final EntityNPCInterface npc = (EntityNPCInterface) ita.next();
+			EntityNPCInterface npc = (EntityNPCInterface) ita.next();
 			if (!npc.ai.stopAndInteract || npc.isAttacking() || !npc.isEntityAlive()
 					|| entity.faction.isAggressiveToNpc(npc)) {
 				ita.remove();
@@ -60,8 +60,7 @@ public class EntityAIWander extends EntityAIBase {
 		if (entity.ai.walkingRange <= 0) {
 			return RandomPositionGeneratorAlt.findRandomTarget(entity, CustomNpcs.NpcNavRange, 7);
 		}
-		final double distance = entity.getDistanceSq(entity.getStartXPos(), entity.getStartYPos(),
-				entity.getStartZPos());
+		double distance = entity.getDistanceSq(entity.getStartXPos(), entity.getStartYPos(), entity.getStartZPos());
 		int range = (int) MathHelper.sqrt_double((entity.ai.walkingRange * entity.ai.walkingRange) - distance);
 		if (range > CustomNpcs.NpcNavRange) {
 			range = CustomNpcs.NpcNavRange;
@@ -71,7 +70,7 @@ public class EntityAIWander extends EntityAIBase {
 			if (range > CustomNpcs.NpcNavRange) {
 				range = CustomNpcs.NpcNavRange;
 			}
-			final Vec3 start = new Vec3(entity.getStartXPos(), entity.getStartYPos(), entity.getStartZPos());
+			Vec3 start = new Vec3(entity.getStartXPos(), entity.getStartYPos(), entity.getStartZPos());
 			return RandomPositionGeneratorAlt.findRandomTargetBlockTowards(entity, range / 2,
 					((range / 2) > 7) ? 7 : (range / 2), start);
 		}
@@ -81,7 +80,7 @@ public class EntityAIWander extends EntityAIBase {
 	@Override
 	public void resetTask() {
 		if ((nearbyNPC != null) && entity.isInRange(nearbyNPC, 3.5)) {
-			final Line line = new Line(".........");
+			Line line = new Line(".........");
 			line.hideText = true;
 			if (entity.getRNG().nextBoolean()) {
 				entity.saySurrounding(line);
@@ -109,7 +108,7 @@ public class EntityAIWander extends EntityAIBase {
 			zPosition = MathHelper.floor_double(nearbyNPC.posZ);
 			nearbyNPC.addInteract(entity);
 		} else {
-			final Vec3 vec = getVec();
+			Vec3 vec = getVec();
 			if (vec == null) {
 				return false;
 			}

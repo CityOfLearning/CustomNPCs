@@ -15,7 +15,7 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 public class SubGuiNpcResistanceProperties extends SubGuiInterface implements ISliderListener {
 	private Resistances resistances;
 
-	public SubGuiNpcResistanceProperties(final Resistances resistances) {
+	public SubGuiNpcResistanceProperties(Resistances resistances) {
 		this.resistances = resistances;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -24,8 +24,8 @@ public class SubGuiNpcResistanceProperties extends SubGuiInterface implements IS
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 66) {
 			close();
 		}
@@ -50,16 +50,16 @@ public class SubGuiNpcResistanceProperties extends SubGuiInterface implements IS
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider slider) {
+	public void mouseDragged(GuiNpcSlider slider) {
 		slider.displayString = (int) ((slider.sliderValue * 200.0f) - 100.0f) + "%";
 	}
 
 	@Override
-	public void mousePressed(final GuiNpcSlider slider) {
+	public void mousePressed(GuiNpcSlider slider) {
 	}
 
 	@Override
-	public void mouseReleased(final GuiNpcSlider slider) {
+	public void mouseReleased(GuiNpcSlider slider) {
 		if (slider.id == 0) {
 			resistances.knockback = slider.sliderValue * 2.0f;
 		}

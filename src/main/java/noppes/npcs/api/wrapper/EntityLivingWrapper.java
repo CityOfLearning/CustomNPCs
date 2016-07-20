@@ -12,12 +12,12 @@ import noppes.npcs.api.entity.IEntityLiving;
 import noppes.npcs.api.entity.IEntityLivingBase;
 
 public class EntityLivingWrapper<T extends EntityLiving> extends EntityLivingBaseWrapper<T> implements IEntityLiving {
-	public EntityLivingWrapper(final T entity) {
+	public EntityLivingWrapper(T entity) {
 		super(entity);
 	}
 
 	@Override
-	public boolean canSeeEntity(final IEntity entity) {
+	public boolean canSeeEntity(IEntity entity) {
 		return this.entity.getEntitySenses().canSee(entity.getMCEntity());
 	}
 
@@ -28,7 +28,7 @@ public class EntityLivingWrapper<T extends EntityLiving> extends EntityLivingBas
 
 	@Override
 	public IEntityLivingBase getAttackTarget() {
-		final IEntityLivingBase base = (IEntityLivingBase) NpcAPI.Instance().getIEntity(entity.getAttackTarget());
+		IEntityLivingBase base = (IEntityLivingBase) NpcAPI.Instance().getIEntity(entity.getAttackTarget());
 		return (base != null) ? base : super.getAttackTarget();
 	}
 
@@ -43,13 +43,13 @@ public class EntityLivingWrapper<T extends EntityLiving> extends EntityLivingBas
 	}
 
 	@Override
-	public void navigateTo(final double x, final double y, final double z, final double speed) {
+	public void navigateTo(double x, double y, double z, double speed) {
 		entity.getNavigator().clearPathEntity();
 		entity.getNavigator().tryMoveToXYZ(x, y, z, speed * 0.7);
 	}
 
 	@Override
-	public void setAttackTarget(final IEntityLivingBase living) {
+	public void setAttackTarget(IEntityLivingBase living) {
 		if (living == null) {
 			entity.setAttackTarget((EntityLivingBase) null);
 		} else {

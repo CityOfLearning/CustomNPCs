@@ -5,5 +5,5 @@
 package noppes.npcs.client.gui.util;
 
 public interface ICustomScrollListener {
-	void customScrollClicked(final int p0, final int p1, final int p2, final GuiCustomScroll p3);
+	void customScrollClicked(int p0, int p1, int p2, GuiCustomScroll p3);
 }

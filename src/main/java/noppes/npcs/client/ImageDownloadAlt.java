@@ -28,22 +28,21 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ImageDownloadAlt extends SimpleTexture {
-	private static final Logger logger;
-	private static final AtomicInteger threadDownloadCounter;
+	private static Logger logger;
+	private static AtomicInteger threadDownloadCounter;
 	static {
 		logger = LogManager.getLogger();
 		threadDownloadCounter = new AtomicInteger(0);
 	}
-	private final File cacheFile;
-	private final String imageUrl;
-	private final IImageBuffer imageBuffer;
+	private File cacheFile;
+	private String imageUrl;
+	private IImageBuffer imageBuffer;
 	private BufferedImage bufferedImage;
 	private Thread imageThread;
 
 	private boolean textureUploaded;
 
-	public ImageDownloadAlt(final File file, final String url, final ResourceLocation resource,
-			final IImageBuffer buffer) {
+	public ImageDownloadAlt(File file, String url, ResourceLocation resource, IImageBuffer buffer) {
 		super(resource);
 		cacheFile = file;
 		imageUrl = url;
@@ -67,7 +66,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 	}
 
 	@Override
-	public void loadTexture(final IResourceManager resourceManager) throws IOException {
+	public void loadTexture(IResourceManager resourceManager) throws IOException {
 		if ((bufferedImage == null) && (textureLocation != null)) {
 			super.loadTexture(resourceManager);
 		}
@@ -130,7 +129,7 @@ public class ImageDownloadAlt extends SimpleTexture {
 		imageThread.start();
 	}
 
-	public void setBufferedImage(final BufferedImage p_147641_1_) {
+	public void setBufferedImage(BufferedImage p_147641_1_) {
 		bufferedImage = p_147641_1_;
 		if (imageBuffer != null) {
 			imageBuffer.skinAvailable();

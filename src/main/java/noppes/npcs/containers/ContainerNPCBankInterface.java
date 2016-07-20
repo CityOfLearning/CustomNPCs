@@ -19,7 +19,7 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 	public int bankid;
 	private PlayerBankData data;
 
-	public ContainerNPCBankInterface(final EntityPlayer player, final int slot, final int bankid) {
+	public ContainerNPCBankInterface(EntityPlayer player, int slot, int bankid) {
 		super(player);
 		this.slot = 0;
 		this.bankid = bankid;
@@ -36,7 +36,7 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 		int xOffset = xOffset();
 		for (int j = 0; j < getRowNumber(); ++j) {
 			for (int i1 = 0; i1 < 9; ++i1) {
-				final int id = i1 + (j * 9);
+				int id = i1 + (j * 9);
 				addSlotToContainer(new Slot(items, id, 8 + (i1 * 18), 17 + xOffset + (j * 18)));
 			}
 		}
@@ -71,10 +71,10 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer entityplayer) {
+	public void onContainerClosed(EntityPlayer entityplayer) {
 		super.onContainerClosed(entityplayer);
 		if (!entityplayer.worldObj.isRemote) {
-			final ItemStack var3 = currencyMatrix.getStackInSlot(0);
+			ItemStack var3 = currencyMatrix.getStackInSlot(0);
 			currencyMatrix.setInventorySlotContents(0, null);
 			if (var3 != null) {
 				entityplayer.dropPlayerItemWithRandomChoice(var3, false);
@@ -83,15 +83,15 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onCraftMatrixChanged(final IInventory inv) {
+	public void onCraftMatrixChanged(IInventory inv) {
 	}
 
-	public synchronized void setCurrency(final ItemStack item) {
+	public synchronized void setCurrency(ItemStack item) {
 		currency.item = item;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 

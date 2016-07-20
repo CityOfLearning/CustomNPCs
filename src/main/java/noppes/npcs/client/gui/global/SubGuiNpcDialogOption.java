@@ -32,7 +32,7 @@ public class SubGuiNpcDialogOption extends SubGuiInterface
 
 	private DialogOption option;
 
-	public SubGuiNpcDialogOption(final DialogOption option) {
+	public SubGuiNpcDialogOption(DialogOption option) {
 		this.option = option;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -41,8 +41,8 @@ public class SubGuiNpcDialogOption extends SubGuiInterface
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 1) {
 			option.optionType = EnumOptionType.values()[button.getValue()];
 			initGui();
@@ -51,7 +51,7 @@ public class SubGuiNpcDialogOption extends SubGuiInterface
 			setSubGui(new SubGuiColorSelector(option.optionColor));
 		}
 		if (button.id == 3) {
-			final GuiNPCDialogSelection gui = new GuiNPCDialogSelection(npc, getParent(), option.dialogId);
+			GuiNPCDialogSelection gui = new GuiNPCDialogSelection(npc, getParent(), option.dialogId);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
@@ -97,14 +97,14 @@ public class SubGuiNpcDialogOption extends SubGuiInterface
 	}
 
 	@Override
-	public void selected(final int ob, final String name) {
+	public void selected(int ob, String name) {
 		option.dialogId = ob;
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("DialogId")) {
-			final Dialog dialog = new Dialog();
+			Dialog dialog = new Dialog();
 			dialog.readNBT(compound);
 			option.dialogId = dialog.id;
 			if (getButton(3) != null) {
@@ -114,16 +114,16 @@ public class SubGuiNpcDialogOption extends SubGuiInterface
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
-		final DialogOption option = this.option;
-		final int color = ((SubGuiColorSelector) subgui).color;
+	public void subGuiClosed(SubGuiInterface subgui) {
+		DialogOption option = this.option;
+		int color = ((SubGuiColorSelector) subgui).color;
 		option.optionColor = color;
 		SubGuiNpcDialogOption.LastColor = color;
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
 			if (textfield.isEmpty()) {
 				textfield.setText(option.title);

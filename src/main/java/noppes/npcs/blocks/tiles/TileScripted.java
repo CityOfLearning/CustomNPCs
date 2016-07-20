@@ -93,14 +93,14 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		getDisplayNBT(compound);
-		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
 	}
 
-	public NBTTagCompound getDisplayNBT(final NBTTagCompound compound) {
-		final NBTTagCompound itemcompound = new NBTTagCompound();
+	public NBTTagCompound getDisplayNBT(NBTTagCompound compound) {
+		NBTTagCompound itemcompound = new NBTTagCompound();
 		itemModel.writeToNBT(itemcompound);
 		compound.setTag("ScriptBlockModel", itemcompound);
 		compound.setInteger("LightValue", lightValue);
@@ -124,7 +124,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 		return scriptLanguage;
 	}
 
-	public NBTTagCompound getNBT(final NBTTagCompound compound) {
+	public NBTTagCompound getNBT(NBTTagCompound compound) {
 		compound.setTag("Scripts", NBTTags.NBTScript(scripts));
 		compound.setString("ScriptLanguage", scriptLanguage);
 		compound.setBoolean("ScriptEnabled", enabled);
@@ -149,13 +149,13 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 
 	@Override
 	public String noticeString() {
-		final BlockPos pos = getPos();
+		BlockPos pos = getPos();
 		return Objects.toStringHelper(this).add("x", pos.getX()).add("y", pos.getY()).add("z", pos.getZ()).toString();
 	}
 
 	@Override
-	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
-		final int light = lightValue;
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		int light = lightValue;
 		setDisplayNBT(pkt.getNbtCompound());
 		if (light != lightValue) {
 			worldObj.checkLight(pos);
@@ -163,7 +163,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		setNBT(compound);
 		setDisplayNBT(compound);
@@ -171,7 +171,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	}
 
 	@Override
-	public void runScript(final EnumScriptType type, final Event event) {
+	public void runScript(EnumScriptType type, Event event) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -179,7 +179,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 			hasInited = true;
 			EventHooks.onScriptBlockInit(this);
 		}
-		for (final ScriptContainer script : scripts) {
+		for (ScriptContainer script : scripts) {
 			if (!script.errored) {
 				if (!script.hasCode()) {
 					continue;
@@ -193,7 +193,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 		}
 	}
 
-	public void setDisplayNBT(final NBTTagCompound compound) {
+	public void setDisplayNBT(NBTTagCompound compound) {
 		itemModel = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("ScriptBlockModel"));
 		if ((itemModel == null) || (itemModel.getItem() == null)) {
 			itemModel = new ItemStack(CustomItems.scripted);
@@ -221,7 +221,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	}
 
 	@Override
-	public void setEnabled(final boolean bo) {
+	public void setEnabled(boolean bo) {
 		enabled = bo;
 	}
 
@@ -237,11 +237,11 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	}
 
 	@Override
-	public void setLanguage(final String lang) {
+	public void setLanguage(String lang) {
 		scriptLanguage = lang;
 	}
 
-	public void setLightValue(final int value) {
+	public void setLightValue(int value) {
 		if (value == lightValue) {
 			return;
 		}
@@ -249,28 +249,28 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 		needsClientUpdate = true;
 	}
 
-	public void setNBT(final NBTTagCompound compound) {
+	public void setNBT(NBTTagCompound compound) {
 		scripts = NBTTags.GetScript(compound.getTagList("Scripts", 10), this);
 		scriptLanguage = compound.getString("ScriptLanguage");
 		enabled = compound.getBoolean("ScriptEnabled");
-		final int integer = compound.getInteger("BlockPowering");
+		int integer = compound.getInteger("BlockPowering");
 		powering = integer;
 		activePowering = integer;
 		prevPower = compound.getInteger("BlockPrevPower");
 	}
 
-	public void setRedstonePower(final int strength) {
+	public void setRedstonePower(int strength) {
 		if (powering == strength) {
 			return;
 		}
-		final int correctInt = ValueUtil.CorrectInt(strength, 0, 15);
+		int correctInt = ValueUtil.CorrectInt(strength, 0, 15);
 		activePowering = correctInt;
 		prevPower = correctInt;
 		worldObj.notifyNeighborsOfStateChange(pos, getBlockType());
 		powering = activePowering;
 	}
 
-	public void setRotation(final int x, final int y, final int z) {
+	public void setRotation(int x, int y, int z) {
 		if ((rotationX == x) && (rotationY == y) && (rotationZ == z)) {
 			return;
 		}
@@ -280,7 +280,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 		needsClientUpdate = true;
 	}
 
-	public void setScale(final float x, final float y, final float z) {
+	public void setScale(float x, float y, float z) {
 		if ((scaleX == x) && (scaleY == y) && (scaleZ == z)) {
 			return;
 		}
@@ -316,7 +316,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		getNBT(compound);
 		getDisplayNBT(compound);

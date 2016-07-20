@@ -15,7 +15,7 @@ public abstract class RoleInterface implements INPCRole {
 	public EntityNPCInterface npc;
 	public HashMap<String, String> dataString;
 
-	public RoleInterface(final EntityNPCInterface npc) {
+	public RoleInterface(EntityNPCInterface npc) {
 		dataString = new HashMap<String, String>();
 		this.npc = npc;
 	}
@@ -49,12 +49,12 @@ public abstract class RoleInterface implements INPCRole {
 		return npc.advanced.role;
 	}
 
-	public abstract void interact(final EntityPlayer p0);
+	public abstract void interact(EntityPlayer p0);
 
 	public void killed() {
 	}
 
-	public abstract void readFromNBT(final NBTTagCompound p0);
+	public abstract void readFromNBT(NBTTagCompound p0);
 
-	public abstract NBTTagCompound writeToNBT(final NBTTagCompound p0);
+	public abstract NBTTagCompound writeToNBT(NBTTagCompound p0);
 }

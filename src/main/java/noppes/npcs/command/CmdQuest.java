@@ -21,23 +21,23 @@ import noppes.npcs.controllers.quest.QuestData;
 
 public class CmdQuest extends CommandNoppesBase {
 	@SubCommand(desc = "Finish a quest", usage = "<player> <quest>")
-	public void finish(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void finish(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int questid;
 		try {
 			questid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("QuestID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException(String.format("Unknow player '%s'", playername), new Object[0]);
 		}
-		final Quest quest = QuestController.instance.quests.get(questid);
+		Quest quest = QuestController.instance.quests.get(questid);
 		if (quest == null) {
 			throw new CommandException("Unknown QuestID", new Object[0]);
 		}
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.questData.finishedQuests.put(questid, System.currentTimeMillis());
 			playerdata.saveNBTData(null);
 		}
@@ -54,28 +54,28 @@ public class CmdQuest extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "reload quests from disk", permission = 4)
-	public void reload(final ICommandSender sender, final String[] args) {
+	public void reload(ICommandSender sender, String[] args) {
 		new DialogController();
 	}
 
 	@SubCommand(desc = "Removes a quest from finished and active quests", usage = "<player> <quest>")
-	public void remove(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void remove(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int questid;
 		try {
 			questid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("QuestID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException(String.format("Unknow player '%s'", playername), new Object[0]);
 		}
-		final Quest quest = QuestController.instance.quests.get(questid);
+		Quest quest = QuestController.instance.quests.get(questid);
 		if (quest == null) {
 			throw new CommandException("Unknown QuestID", new Object[0]);
 		}
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.questData.activeQuests.remove(questid);
 			playerdata.questData.finishedQuests.remove(questid);
 			playerdata.saveNBTData(null);
@@ -83,24 +83,24 @@ public class CmdQuest extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Start a quest", usage = "<player> <quest>")
-	public void start(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void start(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int questid;
 		try {
 			questid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("QuestID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException("Unknow player '%s'", new Object[] { playername });
 		}
-		final Quest quest = QuestController.instance.quests.get(questid);
+		Quest quest = QuestController.instance.quests.get(questid);
 		if (quest == null) {
 			throw new CommandException("Unknown QuestID", new Object[0]);
 		}
-		for (final PlayerData playerdata : data) {
-			final QuestData questdata = new QuestData(quest);
+		for (PlayerData playerdata : data) {
+			QuestData questdata = new QuestData(quest);
 			playerdata.questData.activeQuests.put(questid, questdata);
 			playerdata.saveNBTData(null);
 			Server.sendData((EntityPlayerMP) playerdata.player, EnumPacketClient.MESSAGE, "quest.newquest",
@@ -111,23 +111,23 @@ public class CmdQuest extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Stop a started quest", usage = "<player> <quest>")
-	public void stop(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void stop(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int questid;
 		try {
 			questid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("QuestID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException(String.format("Unknow player '%s'", playername), new Object[0]);
 		}
-		final Quest quest = QuestController.instance.quests.get(questid);
+		Quest quest = QuestController.instance.quests.get(questid);
 		if (quest == null) {
 			throw new CommandException("Unknown QuestID", new Object[0]);
 		}
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.questData.activeQuests.remove(questid);
 			playerdata.saveNBTData(null);
 		}

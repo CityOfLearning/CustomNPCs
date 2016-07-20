@@ -9,5 +9,5 @@ import net.minecraft.util.BlockPos;
 import noppes.npcs.entity.EntityProjectile;
 
 public interface IProjectileCallback {
-	boolean onImpact(final EntityProjectile p0, final BlockPos p1, final Entity p2);
+	boolean onImpact(EntityProjectile p0, BlockPos p1, Entity p2);
 }

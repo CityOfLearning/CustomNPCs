@@ -21,7 +21,7 @@ public class SubGuiNpcDialogExtra extends SubGuiInterface implements ISubGuiList
 	private Dialog dialog;
 	public GuiScreen parent2;
 
-	public SubGuiNpcDialogExtra(final Dialog dialog, final GuiScreen parent) {
+	public SubGuiNpcDialogExtra(Dialog dialog, GuiScreen parent) {
 		parent2 = parent;
 		this.dialog = dialog;
 		setBackground("menubg.png");
@@ -31,8 +31,8 @@ public class SubGuiNpcDialogExtra extends SubGuiInterface implements ISubGuiList
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 10) {
 			setSubGui(new SubGuiNpcCommand(dialog.command));
 		}
@@ -69,23 +69,23 @@ public class SubGuiNpcDialogExtra extends SubGuiInterface implements ISubGuiList
 		if (!dialog.mail.subject.isEmpty()) {
 			getButton(13).setDisplayText(dialog.mail.subject);
 		}
-		final int i = 10;
-		final int j = guiLeft + 120;
+		int i = 10;
+		int j = guiLeft + 120;
 		y += 22;
 		addButton(new GuiNpcButton(i, j, y, 50, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(10, "advMode.command", guiLeft + 4, y + 5));
-		final int id = 11;
-		final int x = guiLeft + 120;
+		int id = 11;
+		int x = guiLeft + 120;
 		y += 22;
 		addButton(new GuiNpcButtonYesNo(id, x, y, dialog.hideNPC));
 		addLabel(new GuiNpcLabel(11, "dialog.hideNPC", guiLeft + 4, y + 5));
-		final int id2 = 12;
-		final int x2 = guiLeft + 120;
+		int id2 = 12;
+		int x2 = guiLeft + 120;
 		y += 22;
 		addButton(new GuiNpcButtonYesNo(id2, x2, y, dialog.showWheel));
 		addLabel(new GuiNpcLabel(12, "dialog.showWheel", guiLeft + 4, y + 5));
-		final int id3 = 15;
-		final int x3 = guiLeft + 120;
+		int id3 = 15;
+		int x3 = guiLeft + 120;
 		y += 22;
 		addButton(new GuiNpcButtonYesNo(id3, x3, y, dialog.disableEsc));
 		addLabel(new GuiNpcLabel(15, "dialog.disableEsc", guiLeft + 4, y + 5));
@@ -93,7 +93,7 @@ public class SubGuiNpcDialogExtra extends SubGuiInterface implements ISubGuiList
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		if (subgui instanceof SubGuiNpcCommand) {
 			dialog.command = ((SubGuiNpcCommand) subgui).command;
 		}

@@ -8,7 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcTextureOverlays extends GuiNpcSelectionInterface {
-	public GuiNpcTextureOverlays(final EntityNPCInterface npc, final GuiScreen parent) {
+	public GuiNpcTextureOverlays(EntityNPCInterface npc, GuiScreen parent) {
 		super(npc, parent, npc.display.getOverlayTexture().isEmpty() ? "customnpcs:textures/overlays/"
 				: npc.display.getOverlayTexture());
 		title = "Select Overlay";
@@ -16,9 +16,9 @@ public class GuiNpcTextureOverlays extends GuiNpcSelectionInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
-		final int l = -50;
-		final int i2 = (height / 2) + 30;
+	public void drawScreen(int i, int j, float f) {
+		int l = -50;
+		int i2 = (height / 2) + 30;
 		this.drawNpc(npc, l, i2, 2.0f, 0);
 		super.drawScreen(i, j, f);
 	}
@@ -38,9 +38,9 @@ public class GuiNpcTextureOverlays extends GuiNpcSelectionInterface {
 	@Override
 	public void initGui() {
 		super.initGui();
-		final int index = npc.display.getOverlayTexture().lastIndexOf("/");
+		int index = npc.display.getOverlayTexture().lastIndexOf("/");
 		if (index > 0) {
-			final String asset = npc.display.getOverlayTexture().substring(index + 1);
+			String asset = npc.display.getOverlayTexture().substring(index + 1);
 			if (npc.display.getOverlayTexture().equals(assets.getAsset(asset))) {
 				slot.selected = asset;
 			}

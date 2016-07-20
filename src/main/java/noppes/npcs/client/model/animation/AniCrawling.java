@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
 public class AniCrawling {
-	public static void setRotationAngles(final float par1, float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity, final ModelBiped model) {
+	public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity, ModelBiped model) {
 		model.bipedHead.rotateAngleZ = -par4 / 57.295776f;
 		model.bipedHead.rotateAngleY = 0.0f;
 		model.bipedHead.rotateAngleX = -0.95993114f;
@@ -20,7 +20,7 @@ public class AniCrawling {
 		if (par2 > 0.25) {
 			par2 = 0.25f;
 		}
-		final float movement = MathHelper.cos((par1 * 0.8f) + 3.1415927f) * par2;
+		float movement = MathHelper.cos((par1 * 0.8f) + 3.1415927f) * par2;
 		model.bipedLeftArm.rotateAngleX = 3.1415927f - (movement * 0.25f);
 		model.bipedLeftArm.rotateAngleY = movement * -0.46f;
 		model.bipedLeftArm.rotateAngleZ = movement * -0.2f;

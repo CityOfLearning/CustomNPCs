@@ -29,15 +29,15 @@ public class ChunkController implements ForgeChunkManager.LoadingCallback {
 		tickets = new HashMap<Entity, ForgeChunkManager.Ticket>();
 	}
 
-	public void deleteNPC(final EntityNPCInterface npc) {
-		final ForgeChunkManager.Ticket ticket = tickets.get(npc);
+	public void deleteNPC(EntityNPCInterface npc) {
+		ForgeChunkManager.Ticket ticket = tickets.get(npc);
 		if (ticket != null) {
 			tickets.remove(npc);
 			ForgeChunkManager.releaseTicket(ticket);
 		}
 	}
 
-	public ForgeChunkManager.Ticket getTicket(final EntityNPCInterface npc) {
+	public ForgeChunkManager.Ticket getTicket(EntityNPCInterface npc) {
 		ForgeChunkManager.Ticket ticket = tickets.get(npc);
 		if (ticket != null) {
 			return ticket;
@@ -60,18 +60,18 @@ public class ChunkController implements ForgeChunkManager.LoadingCallback {
 	}
 
 	@Override
-	public void ticketsLoaded(final List<ForgeChunkManager.Ticket> tickets, final World world) {
-		for (final ForgeChunkManager.Ticket ticket : tickets) {
+	public void ticketsLoaded(List<ForgeChunkManager.Ticket> tickets, World world) {
+		for (ForgeChunkManager.Ticket ticket : tickets) {
 			if (!(ticket.getEntity() instanceof EntityNPCInterface)) {
 				continue;
 			}
-			final EntityNPCInterface npc = (EntityNPCInterface) ticket.getEntity();
+			EntityNPCInterface npc = (EntityNPCInterface) ticket.getEntity();
 			if ((npc.advanced.job != 8) || tickets.contains(npc)) {
 				continue;
 			}
 			this.tickets.put(npc, ticket);
-			final double x = npc.posX / 16.0;
-			final double z = npc.posZ / 16.0;
+			double x = npc.posX / 16.0;
+			double z = npc.posZ / 16.0;
 			ForgeChunkManager.forceChunk(ticket,
 					new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
 			ForgeChunkManager.forceChunk(ticket,
@@ -83,14 +83,14 @@ public class ChunkController implements ForgeChunkManager.LoadingCallback {
 		}
 	}
 
-	public void unload(final int toRemove) {
-		final Iterator<Entity> ite = tickets.keySet().iterator();
+	public void unload(int toRemove) {
+		Iterator<Entity> ite = tickets.keySet().iterator();
 		int i = 0;
 		while (ite.hasNext()) {
 			if (i >= toRemove) {
 				return;
 			}
-			final Entity entity = ite.next();
+			Entity entity = ite.next();
 			ForgeChunkManager.releaseTicket(tickets.get(entity));
 			ite.remove();
 			++i;

@@ -26,7 +26,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 	private HashMap<Integer, DialogOption> data;
 	private int selectedSlot;
 
-	public GuiNPCDialogNpcOptions(final EntityNPCInterface npc, final GuiScreen parent) {
+	public GuiNPCDialogNpcOptions(EntityNPCInterface npc, GuiScreen parent) {
 		super(npc);
 		data = new HashMap<Integer, DialogOption>();
 		this.parent = parent;
@@ -35,8 +35,8 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 1) {
 			NoppesUtil.openGUI(player, parent);
 		}
@@ -50,7 +50,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 			NoppesUtil.openGUI(player, new GuiNPCDialogSelection(npc, this, dialogID));
 		}
 		if ((id >= 20) && (id < 40)) {
-			final int slot = id - 20;
+			int slot = id - 20;
 			data.remove(slot);
 			Client.sendData(EnumPacketServer.DialogNpcRemove, slot);
 			initGui();
@@ -58,7 +58,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
 	}
 
@@ -66,7 +66,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 	public void initGui() {
 		super.initGui();
 		for (int i = 0; i < 12; ++i) {
-			final int offset = (i >= 6) ? 200 : 0;
+			int offset = (i >= 6) ? 200 : 0;
 			addButton(new GuiNpcButton(i + 20, guiLeft + 20 + offset, guiTop + 13 + ((i % 6) * 22), 20, 20, "X"));
 			addLabel(new GuiNpcLabel(i, "" + i, guiLeft + 6 + offset, guiTop + 18 + ((i % 6) * 22)));
 			String title = "dialog.selectoption";
@@ -82,14 +82,14 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 	}
 
 	@Override
-	public void selected(final int id, final String name) {
+	public void selected(int id, String name) {
 		Client.sendData(EnumPacketServer.DialogNpcSet, selectedSlot, id);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final int pos = compound.getInteger("Position");
-		final DialogOption dialog = new DialogOption();
+	public void setGuiData(NBTTagCompound compound) {
+		int pos = compound.getInteger("Position");
+		DialogOption dialog = new DialogOption();
 		dialog.readNBT(compound);
 		data.put(pos, dialog);
 		initGui();

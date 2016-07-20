@@ -24,21 +24,21 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public class CmdClone extends CommandNoppesBase {
 	@SubCommand(desc = "Add NPC(s) to clone storage", usage = "<npc> <tab> [clonedname]", permission = 4)
-	public void add(final ICommandSender sender, final String[] args) {
+	public void add(ICommandSender sender, String[] args) {
 		int tab = 0;
 		try {
 			tab = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 		}
-		final List<EntityNPCInterface> list = this.getEntities(EntityNPCInterface.class, sender.getEntityWorld(),
+		List<EntityNPCInterface> list = this.getEntities(EntityNPCInterface.class, sender.getEntityWorld(),
 				sender.getPosition(), 80);
-		for (final EntityNPCInterface npc : list) {
+		for (EntityNPCInterface npc : list) {
 			if (npc.display.getName().equalsIgnoreCase(args[0])) {
 				String name = npc.display.getName();
 				if (args.length > 2) {
 					name = args[2];
 				}
-				final NBTTagCompound compound = new NBTTagCompound();
+				NBTTagCompound compound = new NBTTagCompound();
 				if (!npc.writeToNBTOptional(compound)) {
 					return;
 				}
@@ -48,14 +48,14 @@ public class CmdClone extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Remove NPC from clone storage", usage = "<name> <tab>", permission = 4)
-	public void del(final ICommandSender sender, final String[] args) throws CommandException {
-		final String nametodel = args[0];
+	public void del(ICommandSender sender, String[] args) throws CommandException {
+		String nametodel = args[0];
 		int tab = 0;
 		try {
 			tab = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 		}
-		for (final String name : ServerCloneController.Instance.getClones(tab)) {
+		for (String name : ServerCloneController.Instance.getClones(tab)) {
 			if (nametodel.equalsIgnoreCase(name)) {
 				ServerCloneController.Instance.removeClone(name, tab);
 				break;
@@ -76,16 +76,15 @@ public class CmdClone extends CommandNoppesBase {
 		return "Clone operation (server side)";
 	}
 
-	public <T extends Entity> List<T> getEntities(final Class<? extends T> cls, final World world, final BlockPos pos,
-			final int range) {
+	public <T extends Entity> List<T> getEntities(Class<? extends T> cls, World world, BlockPos pos, int range) {
 		return world.getEntitiesWithinAABB((Class) cls,
 				new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(range, range, range));
 	}
 
-	public World getWorld(final String t) {
-		final WorldServer[] worldServers;
+	public World getWorld(String t) {
+		WorldServer[] worldServers;
 		worldServers = MinecraftServer.getServer().worldServers;
-		for (final WorldServer w : worldServers) {
+		for (WorldServer w : worldServers) {
 			if ((w != null) && (w.provider.getDimensionId() + "").equalsIgnoreCase(t)) {
 				return w;
 			}
@@ -94,29 +93,29 @@ public class CmdClone extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "List NPC from clone storage", usage = "<tab>", permission = 2)
-	public void list(final ICommandSender sender, final String[] args) {
+	public void list(ICommandSender sender, String[] args) {
 		sendMessage(sender, "--- Stored NPCs --- (server side)", new Object[0]);
 		int tab = 0;
 		try {
 			tab = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
 		}
-		for (final String name : ServerCloneController.Instance.getClones(tab)) {
+		for (String name : ServerCloneController.Instance.getClones(tab)) {
 			sendMessage(sender, name, new Object[0]);
 		}
 		sendMessage(sender, "------------------------------------", new Object[0]);
 	}
 
 	@SubCommand(desc = "Spawn cloned NPC", usage = "<name> <tab> [[world:]x,y,z]] [newname]", permission = 2)
-	public void spawn(final ICommandSender sender, final String[] args) throws CommandException {
-		final String name = args[0].replaceAll("%", " ");
+	public void spawn(ICommandSender sender, String[] args) throws CommandException {
+		String name = args[0].replaceAll("%", " ");
 		int tab = 0;
 		try {
 			tab = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 		}
 		String newname = null;
-		final NBTTagCompound compound = ServerCloneController.Instance.getCloneData(sender, name, tab);
+		NBTTagCompound compound = ServerCloneController.Instance.getCloneData(sender, name, tab);
 		if (compound == null) {
 			throw new CommandException("Unknown npc", new Object[0]);
 		}
@@ -125,7 +124,7 @@ public class CmdClone extends CommandNoppesBase {
 		if (args.length > 2) {
 			String location = args[2];
 			if (location.contains(":")) {
-				final String[] par = location.split(":");
+				String[] par = location.split(":");
 				location = par[1];
 				world = getWorld(par[0]);
 				if (world == null) {
@@ -133,7 +132,7 @@ public class CmdClone extends CommandNoppesBase {
 				}
 			}
 			if (location.contains(",")) {
-				final String[] par = location.split(",");
+				String[] par = location.split(",");
 				if (par.length != 3) {
 					throw new CommandException("Location need be x,y,z", new Object[0]);
 				}
@@ -152,10 +151,10 @@ public class CmdClone extends CommandNoppesBase {
 		if ((pos.getX() == 0) && (pos.getY() == 0) && (pos.getZ() == 0)) {
 			throw new CommandException("Location needed", new Object[0]);
 		}
-		final Entity entity = EntityList.createEntityFromNBT(compound, world);
+		Entity entity = EntityList.createEntityFromNBT(compound, world);
 		entity.setPosition(pos.getX() + 0.5, pos.getY() + 1, pos.getZ() + 0.5);
 		if (entity instanceof EntityNPCInterface) {
-			final EntityNPCInterface npc = (EntityNPCInterface) entity;
+			EntityNPCInterface npc = (EntityNPCInterface) entity;
 			npc.ai.setStartPos(pos);
 			if ((newname != null) && !newname.isEmpty()) {
 				npc.display.setName(newname.replaceAll("%", " "));

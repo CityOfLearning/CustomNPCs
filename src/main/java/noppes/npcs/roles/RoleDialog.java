@@ -27,7 +27,7 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 	public HashMap<Integer, String> options;
 	public HashMap<Integer, String> optionsTexts;
 
-	public RoleDialog(final EntityNPCInterface npc) {
+	public RoleDialog(EntityNPCInterface npc) {
 		super(npc);
 		dialog = "";
 		questId = -1;
@@ -41,28 +41,28 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 	}
 
 	@Override
-	public String getOption(final int option) {
+	public String getOption(int option) {
 		return options.get(option);
 	}
 
 	@Override
-	public String getOptionDialog(final int option) {
+	public String getOptionDialog(int option) {
 		return optionsTexts.get(option);
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		if (dialog.isEmpty()) {
 			npc.say(player, npc.advanced.getInteractLine());
 		} else {
-			final Dialog d = new Dialog();
+			Dialog d = new Dialog();
 			d.text = dialog;
-			for (final Map.Entry<Integer, String> entry : options.entrySet()) {
+			for (Map.Entry<Integer, String> entry : options.entrySet()) {
 				if (entry.getValue().isEmpty()) {
 					continue;
 				}
-				final DialogOption option = new DialogOption();
-				final String text = optionsTexts.get(entry.getKey());
+				DialogOption option = new DialogOption();
+				String text = optionsTexts.get(entry.getKey());
 				if ((text != null) && !text.isEmpty()) {
 					option.optionType = EnumOptionType.ROLE_OPTION;
 				} else {
@@ -73,14 +73,14 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 			}
 			NoppesUtilServer.openDialog(player, npc, d);
 		}
-		final Quest quest = QuestController.instance.quests.get(questId);
+		Quest quest = QuestController.instance.quests.get(questId);
 		if (quest != null) {
 			PlayerQuestController.addActiveQuest(quest, player);
 		}
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		questId = compound.getInteger("RoleQuestId");
 		dialog = compound.getString("RoleDialog");
 		options = NBTTags.getIntegerStringMap(compound.getTagList("RoleOptions", 10));
@@ -88,12 +88,12 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 	}
 
 	@Override
-	public void setDialog(final String text) {
+	public void setDialog(String text) {
 		dialog = text;
 	}
 
 	@Override
-	public void setOption(final int option, final String text) {
+	public void setOption(int option, String text) {
 		if ((option < 1) || (option > 6)) {
 			throw new CustomNPCsException("Wrong dialog option slot given: " + option, new Object[0]);
 		}
@@ -101,7 +101,7 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 	}
 
 	@Override
-	public void setOptionDialog(final int option, final String text) {
+	public void setOptionDialog(int option, String text) {
 		if ((option < 1) || (option > 6)) {
 			throw new CustomNPCsException("Wrong dialog option slot given: " + option, new Object[0]);
 		}
@@ -109,7 +109,7 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("RoleQuestId", questId);
 		compound.setString("RoleDialog", dialog);
 		compound.setTag("RoleOptions", NBTTags.nbtIntegerStringMap(options));

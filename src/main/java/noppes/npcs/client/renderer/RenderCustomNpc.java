@@ -40,7 +40,7 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 	private RendererLivingEntity renderEntity;
 	public ModelBiped npcmodel;
 
-	public RenderCustomNpc(final ModelBiped model) {
+	public RenderCustomNpc(ModelBiped model) {
 		super(model, 0.5f);
 		this.npcmodel = (ModelBiped) mainModel;
 		this.addLayer((LayerRenderer) new LayerHeadwear(this));
@@ -52,19 +52,18 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 		this.addLayer((LayerRenderer) new LayerLeftHeldItem(this));
 		this.addLayer((LayerRenderer) new LayerNpcCloak(this));
 		this.addLayer((LayerRenderer) new LayerCustomHead(this.npcmodel.bipedHead));
-		final LayerBipedArmor armor = new LayerBipedArmor(this);
+		LayerBipedArmor armor = new LayerBipedArmor(this);
 		this.addLayer((LayerRenderer) armor);
 		ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, armor, new ModelBipedAlt(0.5f), 1);
 		ObfuscationReflectionHelper.setPrivateValue(LayerArmorBase.class, armor, new ModelBipedAlt(1.0f), 2);
 	}
 
 	@Override
-	public void doRender(final T npc, final double d, final double d1, final double d2, final float f,
-			final float partialTicks) {
+	public void doRender(T npc, double d, double d1, double d2, float f, float partialTicks) {
 		this.partialTicks = partialTicks;
 		this.entity = npc.modelData.getEntity(npc);
 		if (this.entity != null) {
-			final Render render = renderManager.getEntityRenderObject((Entity) this.entity);
+			Render render = renderManager.getEntityRenderObject((Entity) this.entity);
 			if (render instanceof RendererLivingEntity) {
 				this.renderEntity = (RendererLivingEntity) render;
 			} else {
@@ -73,8 +72,8 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 			}
 		} else {
 			this.renderEntity = null;
-			final List<LayerRenderer<T>> list = layerRenderers;
-			for (final LayerRenderer layer : list) {
+			List<LayerRenderer<T>> list = layerRenderers;
+			for (LayerRenderer layer : list) {
 				if (layer instanceof LayerPreRender) {
 					((LayerPreRender) layer).preRender(npc);
 				}
@@ -86,7 +85,7 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 	}
 
 	@Override
-	protected float handleRotationFloat(final T par1EntityLivingBase, final float par2) {
+	protected float handleRotationFloat(T par1EntityLivingBase, float par2) {
 		if (this.renderEntity != null) {
 			return NPCRendererHelper.handleRotationFloat(this.entity, par2, this.renderEntity);
 		}
@@ -94,10 +93,10 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 	}
 
 	@Override
-	protected void preRenderCallback(final T npc, final float f) {
+	protected void preRenderCallback(T npc, float f) {
 		if (this.renderEntity != null) {
 			renderColor(npc);
-			final int size = npc.display.getSize();
+			int size = npc.display.getSize();
 			if (this.entity instanceof EntityNPCInterface) {
 				((EntityNPCInterface) this.entity).display.setSize(5);
 			}
@@ -111,9 +110,8 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 	}
 
 	@Override
-	protected void renderLayers(final T livingEntity, final float p_177093_2_, final float p_177093_3_,
-			final float p_177093_4_, final float p_177093_5_, final float p_177093_6_, final float p_177093_7_,
-			final float p_177093_8_) {
+	protected void renderLayers(T livingEntity, float p_177093_2_, float p_177093_3_, float p_177093_4_,
+			float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_) {
 		if ((this.entity != null) && (this.renderEntity != null)) {
 			NPCRendererHelper.DrawLayers(this.entity, p_177093_2_, p_177093_3_, p_177093_4_, p_177093_5_, p_177093_6_,
 					p_177093_7_, p_177093_8_, this.renderEntity);
@@ -124,11 +122,10 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 	}
 
 	@Override
-	protected void renderModel(final T npc, final float par2, final float par3, final float par4, final float par5,
-			final float par6, final float par7) {
+	protected void renderModel(T npc, float par2, float par3, float par4, float par5, float par6, float par7) {
 		if (this.renderEntity != null) {
-			final boolean flag = !npc.isInvisible();
-			final boolean flag2 = !flag && !npc.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
+			boolean flag = !npc.isInvisible();
+			boolean flag2 = !flag && !npc.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
 			if (!flag && !flag2) {
 				return;
 			}
@@ -152,7 +149,7 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 				if (npc.textureGlowLocation == null) {
 					npc.textureGlowLocation = new ResourceLocation(npc.display.getOverlayTexture());
 				}
-				final float f1 = 1.0f;
+				float f1 = 1.0f;
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(1, 1);
 				GlStateManager.disableLighting();

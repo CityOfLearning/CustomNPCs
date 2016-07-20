@@ -12,8 +12,8 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIReturn extends EntityAIBase {
-	public static final int MaxTotalTicks = 600;
-	private final EntityNPCInterface npc;
+	public static int MaxTotalTicks = 600;
+	private EntityNPCInterface npc;
 	private int stuckTicks;
 	private int totalTicks;
 	private double endPosX;
@@ -23,7 +23,7 @@ public class EntityAIReturn extends EntityAIBase {
 	private double[] preAttackPos;
 	private int stuckCount;
 
-	public EntityAIReturn(final EntityNPCInterface npc) {
+	public EntityAIReturn(EntityNPCInterface npc) {
 		stuckTicks = 0;
 		totalTicks = 0;
 		wasAttacked = false;
@@ -44,12 +44,12 @@ public class EntityAIReturn extends EntityAIBase {
 		if (npc.ai.getMovingType() == 1) {
 			allowedDistance += npc.ai.walkingRange;
 		}
-		final double x = npc.posX - endPosX;
-		final double z = npc.posX - endPosZ;
+		double x = npc.posX - endPosX;
+		double z = npc.posX - endPosZ;
 		return ((x * x) + (z * z)) > (allowedDistance * allowedDistance);
 	}
 
-	private void navigate(final boolean towards) {
+	private void navigate(boolean towards) {
 		if (!wasAttacked) {
 			endPosX = npc.getStartXPos();
 			endPosY = npc.getStartYPos();
@@ -62,7 +62,7 @@ public class EntityAIReturn extends EntityAIBase {
 		double posX = endPosX;
 		double posY = endPosY;
 		double posZ = endPosZ;
-		final double range = npc.getDistance(posX, posY, posZ);
+		double range = npc.getDistance(posX, posY, posZ);
 		if ((range > CustomNpcs.NpcNavRange) || towards) {
 			int distance = (int) range;
 			if (distance > CustomNpcs.NpcNavRange) {
@@ -71,8 +71,8 @@ public class EntityAIReturn extends EntityAIBase {
 				distance /= 2;
 			}
 			if (distance > 2) {
-				final Vec3 start = new Vec3(posX, posY, posZ);
-				final Vec3 pos = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(npc, distance,
+				Vec3 start = new Vec3(posX, posY, posZ);
+				Vec3 pos = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(npc, distance,
 						((distance / 2) > 7) ? 7 : (distance / 2), start);
 				if (pos != null) {
 					posX = pos.xCoord;
@@ -99,12 +99,12 @@ public class EntityAIReturn extends EntityAIBase {
 		}
 		if ((npc.ai.findShelter == 0) && (!npc.worldObj.isDaytime() || npc.worldObj.isRaining())
 				&& !npc.worldObj.provider.getHasNoSky()) {
-			final BlockPos pos = new BlockPos(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos());
+			BlockPos pos = new BlockPos(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos());
 			if (npc.worldObj.canSeeSky(pos) || (npc.worldObj.getLight(pos) <= 8)) {
 				return false;
 			}
 		} else if ((npc.ai.findShelter == 1) && npc.worldObj.isDaytime()) {
-			final BlockPos pos = new BlockPos(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos());
+			BlockPos pos = new BlockPos(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos());
 			if (npc.worldObj.canSeeSky(pos)) {
 				return false;
 			}

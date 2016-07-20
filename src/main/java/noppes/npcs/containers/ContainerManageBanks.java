@@ -13,16 +13,16 @@ import noppes.npcs.controllers.bank.Bank;
 public class ContainerManageBanks extends Container {
 	public Bank bank;
 
-	public ContainerManageBanks(final EntityPlayer player) {
+	public ContainerManageBanks(EntityPlayer player) {
 		bank = new Bank();
 		for (int i = 0; i < 6; ++i) {
-			final int x = 36;
+			int x = 36;
 			int y = 38;
 			y += i * 22;
 			addSlotToContainer(new Slot(bank.currencyInventory, i, x, y));
 		}
 		for (int i = 0; i < 6; ++i) {
-			final int x = 142;
+			int x = 142;
 			int y = 38;
 			y += i * 22;
 			addSlotToContainer(new Slot(bank.upgradeInventory, i, x, y));
@@ -33,11 +33,11 @@ public class ContainerManageBanks extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
-	public void setBank(final Bank bank2) {
+	public void setBank(Bank bank2) {
 		for (int i = 0; i < 6; ++i) {
 			bank.currencyInventory.setInventorySlotContents(i, bank2.currencyInventory.getStackInSlot(i));
 			bank.upgradeInventory.setInventorySlotContents(i, bank2.upgradeInventory.getStackInSlot(i));
@@ -45,7 +45,7 @@ public class ContainerManageBanks extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

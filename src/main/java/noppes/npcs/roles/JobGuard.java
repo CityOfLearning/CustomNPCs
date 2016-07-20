@@ -20,32 +20,32 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class JobGuard extends JobInterface {
 	public List<String> targets;
 
-	public JobGuard(final EntityNPCInterface npc) {
+	public JobGuard(EntityNPCInterface npc) {
 		super(npc);
 		targets = new ArrayList<String>();
 	}
 
-	public boolean isEntityApplicable(final Entity entity) {
+	public boolean isEntityApplicable(Entity entity) {
 		return !(entity instanceof EntityPlayer) && !(entity instanceof EntityNPCInterface)
 				&& targets.contains("entity." + EntityList.getEntityString(entity) + ".name");
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		targets = NBTTags.getStringList(nbttagcompound.getTagList("GuardTargets", 10));
 		if (nbttagcompound.getBoolean("GuardAttackAnimals")) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityAnimal.class.isAssignableFrom(cl) && !targets.contains(name)) {
 					targets.add(name);
 				}
 			}
 		}
 		if (nbttagcompound.getBoolean("GuardAttackMobs")) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityMob.class.isAssignableFrom(cl) && !EntityCreeper.class.isAssignableFrom(cl)
 						&& !targets.contains(name)) {
 					targets.add(name);
@@ -53,9 +53,9 @@ public class JobGuard extends JobInterface {
 			}
 		}
 		if (nbttagcompound.getBoolean("GuardAttackCreepers")) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityCreeper.class.isAssignableFrom(cl) && !targets.contains(name)) {
 					targets.add(name);
 				}
@@ -64,7 +64,7 @@ public class JobGuard extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setTag("GuardTargets", NBTTags.nbtStringList(targets));
 		return nbttagcompound;
 	}

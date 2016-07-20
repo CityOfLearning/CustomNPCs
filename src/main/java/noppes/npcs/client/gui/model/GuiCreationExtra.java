@@ -32,30 +32,30 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	abstract class GuiType {
 		public String name;
 
-		public GuiType(final String name) {
+		public GuiType(String name) {
 			this.name = name;
 		}
 
-		public void actionPerformed(final GuiButton button) {
+		public void actionPerformed(GuiButton button) {
 		}
 
 		public void initGui() {
 		}
 
-		public void scrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+		public void scrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		}
 	}
 
 	class GuiTypeBoolean extends GuiType {
 		private boolean bo;
 
-		public GuiTypeBoolean(final String name, final boolean bo) {
+		public GuiTypeBoolean(String name, boolean bo) {
 			super(name);
 			this.bo = bo;
 		}
 
 		@Override
-		public void actionPerformed(final GuiButton button) {
+		public void actionPerformed(GuiButton button) {
 			if (button.id != 11) {
 				return;
 			}
@@ -77,23 +77,23 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	}
 
 	class GuiTypeByte extends GuiType {
-		public GuiTypeByte(final String name, final byte b) {
+		public GuiTypeByte(String name, byte b) {
 			super(name);
 		}
 	}
 
 	class GuiTypeDoggyStyle extends GuiType {
-		public GuiTypeDoggyStyle(final String name) {
+		public GuiTypeDoggyStyle(String name) {
 			super(name);
 		}
 
 		@Override
-		public void actionPerformed(final GuiButton button) {
+		public void actionPerformed(GuiButton button) {
 			if (button.id != 11) {
 				return;
 			}
 			((GuiNpcButton) button).getValue();
-			final EntityLivingBase entity = GuiCreationExtra.this.playerdata.getEntity(GuiCreationExtra.this.npc);
+			EntityLivingBase entity = GuiCreationExtra.this.playerdata.getEntity(GuiCreationExtra.this.npc);
 			GuiCreationExtra.this.playerdata.setExtra(entity, "breed", ((GuiNpcButton) button).getValue() + "");
 			updateTexture();
 		}
@@ -102,7 +102,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		public void initGui() {
 			Enum breed = null;
 			try {
-				final Method method = GuiCreationExtra.this.entity.getClass().getMethod("getBreedID", new Class[0]);
+				Method method = GuiCreationExtra.this.entity.getClass().getMethod("getBreedID", new Class[0]);
 				breed = (Enum) method.invoke(GuiCreationExtra.this.entity, new Object[0]);
 			} catch (Exception ex) {
 			}
@@ -114,7 +114,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		}
 	}
 
-	private final String[] ignoredTags;
+	private String[] ignoredTags;
 
 	private GuiCustomScroll scroll;
 
@@ -122,7 +122,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 
 	private GuiType selected;
 
-	public GuiCreationExtra(final EntityNPCInterface npc) {
+	public GuiCreationExtra(EntityNPCInterface npc) {
 		super(npc);
 		ignoredTags = new String[] { "CanBreakDoors", "Bred", "PlayerCreated", "HasReproduced" };
 		data = new HashMap<String, GuiType>();
@@ -130,7 +130,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (selected != null) {
 			selected.actionPerformed(btn);
@@ -138,7 +138,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		if (scroll.id == 0) {
 			initGui();
 		} else if (selected != null) {
@@ -146,15 +146,15 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		}
 	}
 
-	public Map<String, GuiType> getData(final EntityLivingBase entity) {
-		final Map<String, GuiType> data = new HashMap<String, GuiType>();
-		final NBTTagCompound compound = getExtras(entity);
-		final Set<String> keys = compound.getKeySet();
-		for (final String name : keys) {
+	public Map<String, GuiType> getData(EntityLivingBase entity) {
+		Map<String, GuiType> data = new HashMap<String, GuiType>();
+		NBTTagCompound compound = getExtras(entity);
+		Set<String> keys = compound.getKeySet();
+		for (String name : keys) {
 			if (isIgnored(name)) {
 				continue;
 			}
-			final NBTBase base = compound.getTag(name);
+			NBTBase base = compound.getTag(name);
 			if (name.equals("Age")) {
 				data.put("Child", new GuiTypeBoolean("Child", entity.isChild()));
 			} else {
@@ -177,13 +177,13 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		return data;
 	}
 
-	private NBTTagCompound getExtras(final EntityLivingBase entity) {
-		final NBTTagCompound fake = new NBTTagCompound();
+	private NBTTagCompound getExtras(EntityLivingBase entity) {
+		NBTTagCompound fake = new NBTTagCompound();
 		new EntityFakeLiving(entity.worldObj).writeEntityToNBT(fake);
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		entity.writeEntityToNBT(compound);
-		final Set<String> keys = fake.getKeySet();
-		for (final String name : keys) {
+		Set<String> keys = fake.getKeySet();
+		for (String name : keys) {
 			compound.removeTag(name);
 		}
 		return compound;
@@ -199,7 +199,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		if (scroll == null) {
 			data = getData(entity);
 			scroll = new GuiCustomScroll(this, 0);
-			final List<String> list = new ArrayList<String>(data.keySet());
+			List<String> list = new ArrayList<String>(data.keySet());
 			scroll.setList(list);
 			if (list.isEmpty()) {
 				return;
@@ -217,8 +217,8 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		selected.initGui();
 	}
 
-	private boolean isIgnored(final String tag) {
-		for (final String s : ignoredTags) {
+	private boolean isIgnored(String tag) {
+		for (String s : ignoredTags) {
 			if (s.equals(tag)) {
 				return true;
 			}
@@ -227,8 +227,8 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	}
 
 	private void updateTexture() {
-		final EntityLivingBase entity = playerdata.getEntity(npc);
-		final RendererLivingEntity render = (RendererLivingEntity) mc.getRenderManager()
+		EntityLivingBase entity = playerdata.getEntity(npc);
+		RendererLivingEntity render = (RendererLivingEntity) mc.getRenderManager()
 				.getEntityRenderObject((Entity) entity);
 		npc.display.setSkinTexture(NPCRendererHelper.getTexture(render, entity));
 	}

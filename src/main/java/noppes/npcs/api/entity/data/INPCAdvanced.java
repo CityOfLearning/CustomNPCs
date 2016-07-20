@@ -5,13 +5,13 @@
 package noppes.npcs.api.entity.data;
 
 public interface INPCAdvanced {
-	String getLine(final int p0, final int p1);
+	String getLine(int p0, int p1);
 
-	int getLineCount(final int p0);
+	int getLineCount(int p0);
 
-	String getSound(final int p0);
+	String getSound(int p0);
 
-	void setLine(final int p0, final int p1, final String p2, final String p3);
+	void setLine(int p0, int p1, String p2, String p3);
 
-	void setSound(final int p0, final String p1);
+	void setSound(int p0, String p1);
 }

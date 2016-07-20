@@ -19,7 +19,7 @@ public class EntityAIAttackTarget extends EntityAIBase {
 	private int delayCounter;
 	private boolean navOverride;
 
-	public EntityAIAttackTarget(final EntityNPCInterface par1EntityLiving) {
+	public EntityAIAttackTarget(EntityNPCInterface par1EntityLiving) {
 		navOverride = false;
 		attackTick = 0;
 		npc = par1EntityLiving;
@@ -35,12 +35,12 @@ public class EntityAIAttackTarget extends EntityAIBase {
 		if (!npc.isInRange(entityTarget, npc.stats.aggroRange)) {
 			return false;
 		}
-		final int melee = npc.stats.ranged.getMeleeRange();
+		int melee = npc.stats.ranged.getMeleeRange();
 		return ((melee <= 0) || npc.isInRange(entityTarget, melee))
 				&& npc.isWithinHomeDistanceFromPosition(new BlockPos(entityTarget));
 	}
 
-	public void navOverride(final boolean nav) {
+	public void navOverride(boolean nav) {
 		navOverride = nav;
 		setMutexBits(navOverride ? AiMutex.PATHING : (AiMutex.LOOK + AiMutex.PASSIVE));
 	}
@@ -55,11 +55,11 @@ public class EntityAIAttackTarget extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		final EntityLivingBase entitylivingbase = npc.getAttackTarget();
+		EntityLivingBase entitylivingbase = npc.getAttackTarget();
 		if ((entitylivingbase == null) || !entitylivingbase.isEntityAlive()) {
 			return false;
 		}
-		final int melee = npc.stats.ranged.getMeleeRange();
+		int melee = npc.stats.ranged.getMeleeRange();
 		if ((npc.inventory.getProjectile() != null) && ((melee <= 0) || !npc.isInRange(entitylivingbase, melee))) {
 			return false;
 		}
@@ -88,9 +88,9 @@ public class EntityAIAttackTarget extends EntityAIBase {
 		if (entityTarget.getEntityBoundingBox() != null) {
 			y = entityTarget.getEntityBoundingBox().minY;
 		}
-		final double distance = npc.getDistanceSq(entityTarget.posX, y, entityTarget.posZ);
+		double distance = npc.getDistanceSq(entityTarget.posX, y, entityTarget.posZ);
 		double range = (npc.stats.melee.getRange() * npc.stats.melee.getRange()) + entityTarget.width;
-		final double minRange = (npc.width * 2.0f * npc.width * 2.0f) + entityTarget.width;
+		double minRange = (npc.width * 2.0f * npc.width * 2.0f) + entityTarget.width;
 		if (minRange > range) {
 			range = minRange;
 		}

@@ -9,13 +9,13 @@ public enum EnumNpcToolMaterial {
 			1561, 8.0f, 3, 10), GOLD(0, 32, 12.0f, 1, 22), EMERALD(3, 1000, 8.0f, 4,
 					10), DEMONIC(3, 100, 8.0f, 6, 10), FROST(2, 59, 6.0f, 3, 5), MITHRIL(3, 3000, 8.0f, 3, 10);
 
-	private final int harvestLevel;
-	private final int maxUses;
-	private final float efficiencyOnProperMaterial;
-	private final int damageVsEntity;
-	private final int enchantability;
+	private int harvestLevel;
+	private int maxUses;
+	private float efficiencyOnProperMaterial;
+	private int damageVsEntity;
+	private int enchantability;
 
-	private EnumNpcToolMaterial(final int par3, final int par4, final float par5, final int par6, final int par7) {
+	private EnumNpcToolMaterial(int par3, int par4, float par5, int par6, int par7) {
 		harvestLevel = par3;
 		maxUses = par4;
 		efficiencyOnProperMaterial = par5;

@@ -18,11 +18,11 @@ public class GuiNpcLabel {
 	public boolean enabled;
 	public int id;
 
-	public GuiNpcLabel(final int id, final Object label, final int x, final int y) {
+	public GuiNpcLabel(int id, Object label, int x, int y) {
 		this(id, label, x, y, CustomNpcResourceListener.DefaultTextColor);
 	}
 
-	public GuiNpcLabel(final int id, final Object label, final int x, final int y, final int color) {
+	public GuiNpcLabel(int id, Object label, int x, int y, int color) {
 		enabled = true;
 		this.id = id;
 		this.label = StatCollector.translateToLocal(label.toString());
@@ -31,12 +31,12 @@ public class GuiNpcLabel {
 		this.color = color;
 	}
 
-	public void center(final int width) {
-		final int size = Minecraft.getMinecraft().fontRendererObj.getStringWidth(label);
+	public void center(int width) {
+		int size = Minecraft.getMinecraft().fontRendererObj.getStringWidth(label);
 		x += (width - size) / 2;
 	}
 
-	public void drawLabel(final GuiScreen gui, final FontRenderer fontRenderer) {
+	public void drawLabel(GuiScreen gui, FontRenderer fontRenderer) {
 		if (enabled) {
 			fontRenderer.drawString(label, x, y, color);
 		}

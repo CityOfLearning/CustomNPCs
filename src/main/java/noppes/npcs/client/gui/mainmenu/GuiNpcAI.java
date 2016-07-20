@@ -23,7 +23,7 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
 	private String[] tacts;
 	private DataAI ai;
 
-	public GuiNpcAI(final EntityNPCInterface npc) {
+	public GuiNpcAI(EntityNPCInterface npc) {
 		super(npc, 6);
 		tacts = new String[] { "aitactics.rush", "aitactics.stagger", "aitactics.orbit", "aitactics.hitandrun",
 				"aitactics.ambush", "aitactics.stalk", "gui.none" };
@@ -32,8 +32,8 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			ai.onAttack = button.getValue();
 			initGui();
@@ -136,13 +136,13 @@ public class GuiNpcAI extends GuiNPCInterface2 implements ITextfieldListener, IG
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		ai.readToNBT(compound);
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 3) {
 			ai.setTacticalRange(textfield.getInteger());
 		}

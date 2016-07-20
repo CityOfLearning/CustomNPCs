@@ -26,7 +26,7 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
 
 public class BlockBuilder extends BlockContainer implements IPermission {
-	public static final PropertyInteger ROTATION;
+	public static PropertyInteger ROTATION;
 
 	static {
 		ROTATION = PropertyInteger.create("rotation", 0, 3);
@@ -37,7 +37,7 @@ public class BlockBuilder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void breakBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		if ((TileBuilder.DrawPos != null) && TileBuilder.DrawPos.equals(pos)) {
 			TileBuilder.SetDrawPos(null);
 		}
@@ -49,12 +49,12 @@ public class BlockBuilder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileBuilder();
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return state.getValue(BlockBuilder.ROTATION);
 	}
 
@@ -64,23 +64,23 @@ public class BlockBuilder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockBuilder.ROTATION, meta);
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return (e == EnumPacketServer.SchematicsSet) || (e == EnumPacketServer.SchematicsTile)
 				|| (e == EnumPacketServer.SchematicsTileSave);
 	}
 
 	@Override
-	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
+			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (par1World.isRemote) {
 			return true;
 		}
-		final ItemStack currentItem = player.inventory.getCurrentItem();
+		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)) {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.BuilderBlock, null, pos.getX(), pos.getY(), pos.getZ());
 		}
@@ -88,9 +88,9 @@ public class BlockBuilder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entity, final ItemStack stack) {
-		final int var6 = MathHelper.floor_double((entity.rotationYaw / 90.0f) + 0.5) & 0x3;
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
+			ItemStack stack) {
+		int var6 = MathHelper.floor_double((entity.rotationYaw / 90.0f) + 0.5) & 0x3;
 		world.setBlockState(pos, state.withProperty(BlockBuilder.ROTATION, var6), 2);
 		if ((entity instanceof EntityPlayer) && !world.isRemote) {
 			NoppesUtilServer.sendOpenGui((EntityPlayer) entity, EnumGuiType.BuilderBlock, null, pos.getX(), pos.getY(),

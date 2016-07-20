@@ -28,8 +28,7 @@ public class ContainerCarpentryBench extends Container {
 	private World worldObj;
 	private BlockPos pos;
 
-	public ContainerCarpentryBench(final InventoryPlayer par1InventoryPlayer, final World par2World,
-			final BlockPos pos) {
+	public ContainerCarpentryBench(InventoryPlayer par1InventoryPlayer, World par2World, BlockPos pos) {
 		craftMatrix = new InventoryCrafting(this, 4, 4);
 		craftResult = new InventoryCraftResult();
 		worldObj = par2World;
@@ -54,13 +53,13 @@ public class ContainerCarpentryBench extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer par1EntityPlayer) {
+	public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
 		return (worldObj.getBlockState(pos).getBlock() == CustomItems.carpentyBench)
 				&& (par1EntityPlayer.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) <= 64.0);
 	}
 
 	@Override
-	public boolean canMergeSlot(final ItemStack p_94530_1_, final Slot p_94530_2_) {
+	public boolean canMergeSlot(ItemStack p_94530_1_, Slot p_94530_2_) {
 		return (p_94530_2_.inventory != craftResult) && super.canMergeSlot(p_94530_1_, p_94530_2_);
 	}
 
@@ -69,11 +68,11 @@ public class ContainerCarpentryBench extends Container {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer par1EntityPlayer) {
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
 		super.onContainerClosed(par1EntityPlayer);
 		if (!worldObj.isRemote) {
 			for (int var2 = 0; var2 < 16; ++var2) {
-				final ItemStack var3 = craftMatrix.removeStackFromSlot(var2);
+				ItemStack var3 = craftMatrix.removeStackFromSlot(var2);
 				if (var3 != null) {
 					par1EntityPlayer.dropPlayerItemWithRandomChoice(var3, false);
 				}
@@ -82,25 +81,25 @@ public class ContainerCarpentryBench extends Container {
 	}
 
 	@Override
-	public void onCraftMatrixChanged(final IInventory par1IInventory) {
+	public void onCraftMatrixChanged(IInventory par1IInventory) {
 		if (!worldObj.isRemote) {
-			final RecipeCarpentry recipe = RecipeController.instance.findMatchingRecipe(craftMatrix);
+			RecipeCarpentry recipe = RecipeController.instance.findMatchingRecipe(craftMatrix);
 			ItemStack item = null;
 			if ((recipe != null) && recipe.availability.isAvailable(player)) {
 				item = recipe.getCraftingResult(craftMatrix);
 			}
 			craftResult.setInventorySlotContents(0, item);
-			final EntityPlayerMP plmp = (EntityPlayerMP) player;
+			EntityPlayerMP plmp = (EntityPlayerMP) player;
 			plmp.playerNetServerHandler.sendPacket(new S2FPacketSetSlot(windowId, 0, item));
 		}
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int par1) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1) {
 		ItemStack var2 = null;
-		final Slot var3 = inventorySlots.get(par1);
+		Slot var3 = inventorySlots.get(par1);
 		if ((var3 != null) && var3.getHasStack()) {
-			final ItemStack var4 = var3.getStack();
+			ItemStack var4 = var3.getStack();
 			var2 = var4.copy();
 			if (par1 == 0) {
 				if (!mergeItemStack(var4, 17, 53, true)) {

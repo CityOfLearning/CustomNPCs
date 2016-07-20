@@ -17,31 +17,31 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 	private ScorePlayerTeam team;
 	private Scoreboard board;
 
-	protected ScoreboardTeamWrapper(final ScorePlayerTeam team, final Scoreboard board) {
+	protected ScoreboardTeamWrapper(ScorePlayerTeam team, Scoreboard board) {
 		this.team = team;
 		this.board = board;
 	}
 
 	@Override
-	public void addPlayer(final String player) {
+	public void addPlayer(String player) {
 		board.addPlayerToTeam(player, getName());
 	}
 
 	@Override
 	public void clearPlayers() {
-		final List<String> list = new ArrayList<String>(team.getMembershipCollection());
-		for (final String player : list) {
+		List<String> list = new ArrayList<String>(team.getMembershipCollection());
+		for (String player : list) {
 			board.removePlayerFromTeam(player, team);
 		}
 	}
 
 	@Override
 	public String getColor() {
-		final String prefix = team.getColorPrefix();
+		String prefix = team.getColorPrefix();
 		if ((prefix == null) || prefix.isEmpty()) {
 			return null;
 		}
-		for (final EnumChatFormatting format : EnumChatFormatting.values()) {
+		for (EnumChatFormatting format : EnumChatFormatting.values()) {
 			if (prefix.equals(format.toString()) && (format != EnumChatFormatting.RESET)) {
 				return format.getFriendlyName();
 			}
@@ -66,7 +66,7 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 
 	@Override
 	public String[] getPlayers() {
-		final List<String> list = new ArrayList<String>(team.getMembershipCollection());
+		List<String> list = new ArrayList<String>(team.getMembershipCollection());
 		return list.toArray(new String[list.size()]);
 	}
 
@@ -76,13 +76,13 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 	}
 
 	@Override
-	public void removePlayer(final String player) {
+	public void removePlayer(String player) {
 		board.removePlayerFromTeam(player, team);
 	}
 
 	@Override
-	public void setColor(final String color) {
-		final EnumChatFormatting enumchatformatting = EnumChatFormatting.getValueByName(color);
+	public void setColor(String color) {
+		EnumChatFormatting enumchatformatting = EnumChatFormatting.getValueByName(color);
 		if ((enumchatformatting == null) || enumchatformatting.isFancyStyling()) {
 			throw new CustomNPCsException("Not a proper color name: %s", new Object[] { color });
 		}
@@ -91,7 +91,7 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 	}
 
 	@Override
-	public void setDisplayName(final String name) {
+	public void setDisplayName(String name) {
 		if ((name.length() <= 0) || (name.length() > 32)) {
 			throw new CustomNPCsException("Score team display name must be between 1-32 characters: %s",
 					new Object[] { name });
@@ -100,12 +100,12 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 	}
 
 	@Override
-	public void setFriendlyFire(final boolean bo) {
+	public void setFriendlyFire(boolean bo) {
 		team.setAllowFriendlyFire(bo);
 	}
 
 	@Override
-	public void setSeeInvisibleTeamPlayers(final boolean bo) {
+	public void setSeeInvisibleTeamPlayers(boolean bo) {
 		team.setSeeFriendlyInvisiblesEnabled(bo);
 	}
 }

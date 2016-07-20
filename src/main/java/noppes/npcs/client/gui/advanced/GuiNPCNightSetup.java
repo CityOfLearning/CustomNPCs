@@ -18,15 +18,15 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class GuiNPCNightSetup extends GuiNPCInterface2 implements IGuiData {
 	private DataTransform data;
 
-	public GuiNPCNightSetup(final EntityNPCInterface npc) {
+	public GuiNPCNightSetup(EntityNPCInterface npc) {
 		super(npc);
 		data = npc.transform;
 		Client.sendData(EnumPacketServer.TransformGet, new Object[0]);
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	public void buttonEvent(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			data.hasDisplay = (button.getValue() == 1);
 		}
@@ -100,7 +100,7 @@ public class GuiNPCNightSetup extends GuiNPCInterface2 implements IGuiData {
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		data.readOptions(compound);
 		initGui();
 	}

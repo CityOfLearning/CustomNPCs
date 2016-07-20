@@ -41,9 +41,9 @@ public class CmdSlay extends CommandNoppesBase {
 		SlayMap.put("animals", EntityAnimal.class);
 		SlayMap.put("items", EntityItem.class);
 		SlayMap.put("xporbs", EntityXPOrb.class);
-		final HashMap<String, Class<?>> list = new HashMap<String, Class<?>>(EntityList.stringToClassMapping);
-		for (final String name : list.keySet()) {
-			final Class<?> cls = list.get(name);
+		HashMap<String, Class<?>> list = new HashMap<String, Class<?>>(EntityList.stringToClassMapping);
+		for (String name : list.keySet()) {
+			Class<?> cls = list.get(name);
 			if (EntityNPCInterface.class.isAssignableFrom(cls)) {
 				continue;
 			}
@@ -57,12 +57,12 @@ public class CmdSlay extends CommandNoppesBase {
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		return CommandBase.getListOfStringsMatchingLastWord(args, SlayMap.keySet().toArray(new String[SlayMap.size()]));
 	}
 
-	private boolean delete(final Entity entity, final ArrayList<Class<?>> toDelete) {
-		for (final Class<?> delete : toDelete) {
+	private boolean delete(Entity entity, ArrayList<Class<?>> toDelete) {
+		for (Class<?> delete : toDelete) {
 			if ((delete == EntityAnimal.class) && (entity instanceof EntityHorse)) {
 				continue;
 			}
@@ -89,12 +89,12 @@ public class CmdSlay extends CommandNoppesBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-		final ArrayList<Class<?>> toDelete = new ArrayList<Class<?>>();
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+		ArrayList<Class<?>> toDelete = new ArrayList<Class<?>>();
 		boolean deleteNPCs = false;
 		for (String delete : args) {
 			delete = delete.toLowerCase();
-			final Class<?> cls = SlayMap.get(delete);
+			Class<?> cls = SlayMap.get(delete);
 			if (cls != null) {
 				toDelete.add(cls);
 			}
@@ -112,11 +112,11 @@ public class CmdSlay extends CommandNoppesBase {
 			range = Integer.parseInt(args[args.length - 1]);
 		} catch (NumberFormatException ex) {
 		}
-		final AxisAlignedBB box = new AxisAlignedBB(sender.getPosition(), sender.getPosition().add(1, 1, 1))
-				.expand(range, range, range);
+		AxisAlignedBB box = new AxisAlignedBB(sender.getPosition(), sender.getPosition().add(1, 1, 1)).expand(range,
+				range, range);
 		List<? extends Entity> list = sender.getEntityWorld().getEntitiesWithinAABB((Class) EntityLivingBase.class,
 				box);
-		for (final Entity entity : list) {
+		for (Entity entity : list) {
 			if (entity instanceof EntityPlayer) {
 				continue;
 			}
@@ -133,14 +133,14 @@ public class CmdSlay extends CommandNoppesBase {
 		}
 		if (toDelete.contains(EntityXPOrb.class)) {
 			list = sender.getEntityWorld().getEntitiesWithinAABB((Class) EntityXPOrb.class, box);
-			for (final Entity entity : list) {
+			for (Entity entity : list) {
 				entity.isDead = true;
 				++count;
 			}
 		}
 		if (toDelete.contains(EntityItem.class)) {
 			list = sender.getEntityWorld().getEntitiesWithinAABB((Class) EntityItem.class, box);
-			for (final Entity entity : list) {
+			for (Entity entity : list) {
 				entity.isDead = true;
 				++count;
 			}

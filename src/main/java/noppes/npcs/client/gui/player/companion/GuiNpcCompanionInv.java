@@ -16,12 +16,12 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleCompanion;
 
 public class GuiNpcCompanionInv extends GuiContainerNPCInterface {
-	private final ResourceLocation resource;
-	private final ResourceLocation slot;
+	private ResourceLocation resource;
+	private ResourceLocation slot;
 	private EntityNPCInterface npc;
 	private RoleCompanion role;
 
-	public GuiNpcCompanionInv(final EntityNPCInterface npc, final ContainerNPCCompanion container) {
+	public GuiNpcCompanionInv(EntityNPCInterface npc, ContainerNPCCompanion container) {
 		super(npc, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/companioninv.png");
 		slot = new ResourceLocation("customnpcs", "textures/gui/slot.png");
@@ -33,9 +33,9 @@ public class GuiNpcCompanionInv extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
-		final int id = guibutton.id;
+		int id = guibutton.id;
 		if (id == 1) {
 			CustomNpcs.proxy.openGui(npc, EnumGuiType.Companion);
 		}
@@ -45,7 +45,7 @@ public class GuiNpcCompanionInv extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int xMouse, final int yMouse) {
+	protected void drawGuiContainerBackgroundLayer(float f, int xMouse, int yMouse) {
 		drawWorldBackground(0);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
@@ -70,11 +70,11 @@ public class GuiNpcCompanionInv extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
 		super.drawNpc(52, 70);
 	}

@@ -29,7 +29,7 @@ public class ModelNpcDragon extends ModelBase {
 	private ModelRenderer wingTip;
 	private float field_40317_s;
 
-	public ModelNpcDragon(final float f) {
+	public ModelNpcDragon(float f) {
 		textureWidth = 256;
 		textureHeight = 256;
 		setTextureOffset("body.body", 0, 0);
@@ -51,7 +51,7 @@ public class ModelNpcDragon extends ModelBase {
 		setTextureOffset("head.scale", 0, 0);
 		setTextureOffset("neck.scale", 48, 0);
 		setTextureOffset("head.nostril", 112, 0);
-		final float f2 = -16.0f;
+		float f2 = -16.0f;
 		(head = new ModelRenderer(this, "head")).addBox("upperlip", -6.0f, -1.0f, -8.0f + f2, 12, 5, 16);
 		head.addBox("upperhead", -8.0f, -8.0f, 6.0f + f2, 16, 16, 16);
 		head.mirror = true;
@@ -106,11 +106,10 @@ public class ModelNpcDragon extends ModelBase {
 	}
 
 	@Override
-	public void render(final Entity entity, final float f, final float f1, final float f2, final float f3,
-			final float f4, final float f5) {
-		final EntityNpcDragon entitydragon = (EntityNpcDragon) entity;
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		EntityNpcDragon entitydragon = (EntityNpcDragon) entity;
 		GlStateManager.pushMatrix();
-		final float f6 = entitydragon.field_40173_aw
+		float f6 = entitydragon.field_40173_aw
 				+ ((entitydragon.field_40172_ax - entitydragon.field_40173_aw) * field_40317_s);
 		jaw.rotateAngleX = (float) (Math.sin(f6 * 3.1415927f * 2.0f) + 1.0) * 0.2f;
 		float f7 = (float) (Math.sin((f6 * 3.1415927f * 2.0f) - 1.0f) + 1.0);
@@ -120,18 +119,18 @@ public class ModelNpcDragon extends ModelBase {
 		float f8 = -30.0f;
 		float f9 = 22.0f;
 		float f10 = 0.0f;
-		final float f11 = 1.5f;
+		float f11 = 1.5f;
 		double[] ad = entitydragon.func_40160_a(6, field_40317_s);
-		final float f12 = func_40307_a(
+		float f12 = func_40307_a(
 				entitydragon.func_40160_a(5, field_40317_s)[0] - entitydragon.func_40160_a(10, field_40317_s)[0]);
-		final float f13 = func_40307_a(entitydragon.func_40160_a(5, field_40317_s)[0] + (f12 / 2.0f));
+		float f13 = func_40307_a(entitydragon.func_40160_a(5, field_40317_s)[0] + (f12 / 2.0f));
 		f8 += 2.0f;
 		float f14 = 0.0f;
 		float f15 = f6 * 3.141593f * 2.0f;
 		f8 = 20.0f;
 		f9 = -12.0f;
 		for (int i = 0; i < 5; ++i) {
-			final double[] ad2 = entitydragon.func_40160_a(5 - i, field_40317_s);
+			double[] ad2 = entitydragon.func_40160_a(5 - i, field_40317_s);
 			f14 = (float) Math.cos((i * 0.45f) + f15) * 0.15f;
 			neck.rotateAngleY = ((func_40307_a(ad2[0] - ad[0]) * 3.1415927f) / 180.0f) * f11;
 			neck.rotateAngleX = f14 + ((((float) (ad2[1] - ad[1]) * 3.1415927f) / 180.0f) * f11 * 5.0f);
@@ -147,7 +146,7 @@ public class ModelNpcDragon extends ModelBase {
 		head.rotationPointY = f8;
 		head.rotationPointZ = f9;
 		head.rotationPointX = f10;
-		final double[] ad3 = entitydragon.func_40160_a(0, field_40317_s);
+		double[] ad3 = entitydragon.func_40160_a(0, field_40317_s);
 		head.rotateAngleY = ((func_40307_a(ad3[0] - ad[0]) * 3.1415927f) / 180.0f) * 1.0f;
 		head.rotateAngleZ = ((-func_40307_a(ad3[0] - f13) * 3.1415927f) / 180.0f) * 1.0f;
 		head.render(f5);
@@ -189,7 +188,7 @@ public class ModelNpcDragon extends ModelBase {
 		} else {
 			for (int j = 0; j < 2; ++j) {
 				GL11.glEnable(2884);
-				final float f16 = f6 * 3.1415927f * 2.0f;
+				float f16 = f6 * 3.1415927f * 2.0f;
 				wing.rotateAngleX = 0.125f - ((float) Math.cos(f16) * 0.2f);
 				wing.rotateAngleY = 0.25f;
 				wing.rotateAngleZ = (float) (Math.sin(f16) + 0.125) * 0.8f;
@@ -221,7 +220,7 @@ public class ModelNpcDragon extends ModelBase {
 		f10 = 0.0f;
 		ad = entitydragon.func_40160_a(11, field_40317_s);
 		for (int k = 0; k < 12; ++k) {
-			final double[] ad4 = entitydragon.func_40160_a(12 + k, field_40317_s);
+			double[] ad4 = entitydragon.func_40160_a(12 + k, field_40317_s);
 			f14 += (float) (Math.sin((k * 0.45f) + f15) * 0.05000000074505806);
 			neck.rotateAngleY = (((func_40307_a(ad4[0] - ad[0]) * f11) + 180.0f) * 3.1415927f) / 180.0f;
 			neck.rotateAngleX = f14 + ((((float) (ad4[1] - ad[1]) * 3.1415927f) / 180.0f) * f11 * 5.0f);
@@ -238,8 +237,7 @@ public class ModelNpcDragon extends ModelBase {
 	}
 
 	@Override
-	public void setLivingAnimations(final EntityLivingBase entityliving, final float f, final float f1,
-			final float f2) {
+	public void setLivingAnimations(EntityLivingBase entityliving, float f, float f1, float f2) {
 		field_40317_s = f2;
 	}
 }

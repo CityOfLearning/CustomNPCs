@@ -22,10 +22,10 @@ public class QuestDialog extends QuestInterface {
 	}
 
 	@Override
-	public Vector<String> getQuestLogStatus(final EntityPlayer player) {
-		final Vector<String> vec = new Vector<String>();
-		for (final int dialogId : dialogs.values()) {
-			final Dialog dialog = DialogController.instance.dialogs.get(dialogId);
+	public Vector<String> getQuestLogStatus(EntityPlayer player) {
+		Vector<String> vec = new Vector<String>();
+		for (int dialogId : dialogs.values()) {
+			Dialog dialog = DialogController.instance.dialogs.get(dialogId);
 			if (dialog == null) {
 				continue;
 			}
@@ -41,12 +41,12 @@ public class QuestDialog extends QuestInterface {
 	}
 
 	@Override
-	public void handleComplete(final EntityPlayer player) {
+	public void handleComplete(EntityPlayer player) {
 	}
 
 	@Override
-	public boolean isCompleted(final EntityPlayer player) {
-		for (final int dialogId : dialogs.values()) {
+	public boolean isCompleted(EntityPlayer player) {
+		for (int dialogId : dialogs.values()) {
 			if (!PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(dialogId)) {
 				return false;
 			}
@@ -55,12 +55,12 @@ public class QuestDialog extends QuestInterface {
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		dialogs = NBTTags.getIntegerIntegerMap(compound.getTagList("QuestDialogs", 10));
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound compound) {
+	public void writeEntityToNBT(NBTTagCompound compound) {
 		compound.setTag("QuestDialogs", NBTTags.nbtIntegerIntegerMap(dialogs));
 	}
 }

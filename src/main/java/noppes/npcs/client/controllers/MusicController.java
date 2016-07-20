@@ -20,41 +20,41 @@ public class MusicController {
 		MusicController.Instance = this;
 	}
 
-	public boolean isPlaying(final String music) {
-		final ResourceLocation resource = new ResourceLocation(music);
+	public boolean isPlaying(String music) {
+		ResourceLocation resource = new ResourceLocation(music);
 		return (playingResource != null) && playingResource.equals(resource)
 				&& Minecraft.getMinecraft().getSoundHandler().isSoundPlaying(playing);
 	}
 
-	public void playMusic(final String music, final Entity entity) {
+	public void playMusic(String music, Entity entity) {
 		if (isPlaying(music)) {
 			return;
 		}
 		stopMusic();
 		playingResource = new ResourceLocation(music);
 		playingEntity = entity;
-		final SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
+		SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
 		handler.playSound(playing = PositionedSoundRecord.create(playingResource));
 	}
 
-	public void playSound(final String music, final float x, final float y, final float z) {
+	public void playSound(String music, float x, float y, float z) {
 		Minecraft.getMinecraft().theWorld.playSound(x, y, z, music, 1.0f, 1.0f, false);
 	}
 
-	public void playStreaming(final String music, final Entity entity) {
+	public void playStreaming(String music, Entity entity) {
 		if (isPlaying(music)) {
 			return;
 		}
 		stopMusic();
 		playingEntity = entity;
 		playingResource = new ResourceLocation(music);
-		final SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
+		SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
 		handler.playSound(playing = PositionedSoundRecord.create(playingResource, (float) entity.posX,
 				(float) entity.posY, (float) entity.posZ));
 	}
 
 	public void stopMusic() {
-		final SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
+		SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
 		if (playing != null) {
 			handler.stopSound(playing);
 		}

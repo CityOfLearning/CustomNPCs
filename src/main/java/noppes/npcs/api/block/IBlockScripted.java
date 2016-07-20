@@ -8,7 +8,7 @@ import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.ITimers;
 
 public interface IBlockScripted extends IBlock {
-	void executeCommand(final String p0);
+	void executeCommand(String p0);
 
 	boolean getIsLadder();
 
@@ -32,17 +32,17 @@ public interface IBlockScripted extends IBlock {
 
 	ITimers getTimers();
 
-	void setIsLadder(final boolean p0);
+	void setIsLadder(boolean p0);
 
-	void setLight(final int p0);
+	void setLight(int p0);
 
-	void setModel(final IItemStack p0);
+	void setModel(IItemStack p0);
 
-	void setModel(final String p0);
+	void setModel(String p0);
 
-	void setRedstonePower(final int p0);
+	void setRedstonePower(int p0);
 
-	void setRotation(final int p0, final int p1, final int p2);
+	void setRotation(int p0, int p1, int p2);
 
-	void setScale(final float p0, final float p1, final float p2);
+	void setScale(float p0, float p1, float p2);
 }

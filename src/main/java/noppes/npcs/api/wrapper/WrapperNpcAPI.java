@@ -37,7 +37,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class WrapperNpcAPI extends NpcAPI {
-	public static final EventBus EVENT_BUS;
+	public static EventBus EVENT_BUS;
 	private static NpcAPI instance;
 
 	static {
@@ -59,11 +59,11 @@ public class WrapperNpcAPI extends NpcAPI {
 	}
 
 	@Override
-	public ICustomNpc createNPC(final World world) {
+	public ICustomNpc createNPC(World world) {
 		if (world.isRemote) {
 			return null;
 		}
-		final EntityCustomNpc npc = new EntityCustomNpc(world);
+		EntityCustomNpc npc = new EntityCustomNpc(world);
 		return npc.wrappedNPC;
 	}
 
@@ -84,8 +84,8 @@ public class WrapperNpcAPI extends NpcAPI {
 	}
 
 	@Override
-	public IBlock getIBlock(final World world, final BlockPos pos) {
-		final Block block = world.getBlockState(pos).getBlock();
+	public IBlock getIBlock(World world, BlockPos pos) {
+		Block block = world.getBlockState(pos).getBlock();
 		if ((block == null) || block.isAir(world, pos)) {
 			return null;
 		}
@@ -102,7 +102,7 @@ public class WrapperNpcAPI extends NpcAPI {
 	}
 
 	@Override
-	public IEntity getIEntity(final Entity entity) {
+	public IEntity getIEntity(Entity entity) {
 		if ((entity == null) || entity.worldObj.isRemote) {
 			return null;
 		}
@@ -131,7 +131,7 @@ public class WrapperNpcAPI extends NpcAPI {
 	}
 
 	@Override
-	public IItemStack getIItemStack(final ItemStack itemstack) {
+	public IItemStack getIItemStack(ItemStack itemstack) {
 		if (itemstack == null) {
 			return null;
 		}
@@ -150,16 +150,16 @@ public class WrapperNpcAPI extends NpcAPI {
 	}
 
 	@Override
-	public void registerCommand(final CommandNoppesBase command) {
+	public void registerCommand(CommandNoppesBase command) {
 		CustomNpcs.NoppesCommand.registerCommand(command);
 	}
 
 	@Override
-	public ICustomNpc spawnNPC(final World world, final int x, final int y, final int z) {
+	public ICustomNpc spawnNPC(World world, int x, int y, int z) {
 		if (world.isRemote) {
 			return null;
 		}
-		final EntityCustomNpc npc = new EntityCustomNpc(world);
+		EntityCustomNpc npc = new EntityCustomNpc(world);
 		npc.setPositionAndRotation(x + 0.5, y, z + 0.5, 0.0f, 0.0f);
 		npc.ai.setStartPos(new BlockPos(x, y, z));
 		npc.setHealth(npc.getMaxHealth());

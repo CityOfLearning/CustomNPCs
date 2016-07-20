@@ -51,14 +51,14 @@ public class AssetsBrowser {
 
 	private String[] extensions;
 
-	public AssetsBrowser(final String folder, final String[] extensions) {
+	public AssetsBrowser(String folder, String[] extensions) {
 		folders = new HashSet<String>();
 		files = new HashSet<String>();
 		this.extensions = extensions;
 		setFolder(folder);
 	}
 
-	public AssetsBrowser(final String[] extensions) {
+	public AssetsBrowser(String[] extensions) {
 		folders = new HashSet<String>();
 		files = new HashSet<String>();
 		this.extensions = extensions;
@@ -71,8 +71,8 @@ public class AssetsBrowser {
 		if (!name.startsWith(folder)) {
 			return;
 		}
-		final String[] split = name.split("/");
-		final int count = split.length;
+		String[] split = name.split("/");
+		int count = split.length;
 		if (count == (depth + 1)) {
 			if (validExtension(name)) {
 				files.add(split[depth]);
@@ -82,12 +82,12 @@ public class AssetsBrowser {
 		}
 	}
 
-	private void checkFolder(final File file, final int length) {
-		final File[] files = file.listFiles();
+	private void checkFolder(File file, int length) {
+		File[] files = file.listFiles();
 		if (files == null) {
 			return;
 		}
-		for (final File f : files) {
+		for (File f : files) {
 			String name = f.getAbsolutePath().substring(length);
 			name = name.replace("\\", "/");
 			if (!name.startsWith("/")) {
@@ -102,8 +102,8 @@ public class AssetsBrowser {
 		}
 	}
 
-	public String getAsset(final String asset) {
-		final String[] split = folder.split("/");
+	public String getAsset(String asset) {
+		String[] split = folder.split("/");
 		if (split.length < 3) {
 			return null;
 		}
@@ -116,22 +116,22 @@ public class AssetsBrowser {
 		folders.clear();
 		files.clear();
 		Minecraft.getMinecraft().getResourcePackRepository();
-		final SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) Minecraft.getMinecraft()
+		SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) Minecraft.getMinecraft()
 				.getResourceManager();
-		final Map<String, IResourceManager> map = (Map<String, IResourceManager>) ObfuscationReflectionHelper
+		Map<String, IResourceManager> map = (Map<String, IResourceManager>) ObfuscationReflectionHelper
 				.getPrivateValue((Class) SimpleReloadableResourceManager.class, simplemanager, 2);
-		final HashSet<String> set = new HashSet<String>();
-		for (final String name : map.keySet()) {
+		HashSet<String> set = new HashSet<String>();
+		for (String name : map.keySet()) {
 			if (!(map.get(name) instanceof FallbackResourceManager)) {
 				continue;
 			}
-			final FallbackResourceManager manager = (FallbackResourceManager) map.get(name);
-			final List<IResourcePack> list = (List<IResourcePack>) ObfuscationReflectionHelper
+			FallbackResourceManager manager = (FallbackResourceManager) map.get(name);
+			List<IResourcePack> list = (List<IResourcePack>) ObfuscationReflectionHelper
 					.getPrivateValue((Class) FallbackResourceManager.class, manager, 1);
-			for (final IResourcePack pack : list) {
+			for (IResourcePack pack : list) {
 				if (pack instanceof AbstractResourcePack) {
-					final AbstractResourcePack p = (AbstractResourcePack) pack;
-					final File file = new File((String) p.getResourceDomains().toArray()[0], p.getPackName());
+					AbstractResourcePack p = (AbstractResourcePack) pack;
+					File file = new File((String) p.getResourceDomains().toArray()[0], p.getPackName());
 					if (file == null) {
 						continue;
 					}
@@ -139,29 +139,29 @@ public class AssetsBrowser {
 				}
 			}
 		}
-		for (final String file2 : set) {
+		for (String file2 : set) {
 			progressFile(new File(file2));
 		}
-		for (final ModContainer mod : Loader.instance().getModList()) {
+		for (ModContainer mod : Loader.instance().getModList()) {
 			if (mod.getSource().exists()) {
 				progressFile(mod.getSource());
 			}
 		}
 	}
 
-	private void progressFile(final File file) {
+	private void progressFile(File file) {
 		try {
 			if (!file.isDirectory() && (file.getName().endsWith(".jar") || file.getName().endsWith(".zip"))) {
-				final ZipFile zip = new ZipFile(file);
-				final Enumeration<? extends ZipEntry> entries = zip.entries();
+				ZipFile zip = new ZipFile(file);
+				Enumeration<? extends ZipEntry> entries = zip.entries();
 				while (entries.hasMoreElements()) {
-					final ZipEntry zipentry = entries.nextElement();
-					final String entryName = zipentry.getName();
+					ZipEntry zipentry = entries.nextElement();
+					String entryName = zipentry.getName();
 					checkFile(entryName);
 				}
 				zip.close();
 			} else if (file.isDirectory()) {
-				final int length = file.getAbsolutePath().length();
+				int length = file.getAbsolutePath().length();
 				checkFolder(file, length);
 			}
 		} catch (Exception e) {
@@ -179,13 +179,13 @@ public class AssetsBrowser {
 		getFiles();
 	}
 
-	private boolean validExtension(final String entryName) {
-		final int index = entryName.indexOf(".");
+	private boolean validExtension(String entryName) {
+		int index = entryName.indexOf(".");
 		if (index < 0) {
 			return false;
 		}
-		final String extension = entryName.substring(index + 1);
-		for (final String ex : extensions) {
+		String extension = entryName.substring(index + 1);
+		for (String ex : extensions) {
 			if (ex.equalsIgnoreCase(extension)) {
 				return true;
 			}

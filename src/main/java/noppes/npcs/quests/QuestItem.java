@@ -26,22 +26,22 @@ public class QuestItem extends QuestInterface {
 		ignoreNBT = false;
 	}
 
-	public HashMap<Integer, ItemStack> getProcessSet(final EntityPlayer player) {
-		final HashMap<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
-		for (final int slot : items.items.keySet()) {
-			final ItemStack item = items.items.get(slot);
+	public HashMap<Integer, ItemStack> getProcessSet(EntityPlayer player) {
+		HashMap<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
+		for (int slot : items.items.keySet()) {
+			ItemStack item = items.items.get(slot);
 			if (item == null) {
 				continue;
 			}
-			final ItemStack is = item.copy();
+			ItemStack is = item.copy();
 			is.stackSize = 0;
 			map.put(slot, is);
 		}
-		for (final ItemStack item2 : player.inventory.mainInventory) {
+		for (ItemStack item2 : player.inventory.mainInventory) {
 			if (item2 != null) {
-				for (final ItemStack questItem : map.values()) {
+				for (ItemStack questItem : map.values()) {
 					if (NoppesUtilPlayer.compareItems(questItem, item2, ignoreDamage, ignoreNBT)) {
-						final ItemStack itemStack = questItem;
+						ItemStack itemStack = questItem;
 						itemStack.stackSize += item2.stackSize;
 					}
 				}
@@ -51,12 +51,12 @@ public class QuestItem extends QuestInterface {
 	}
 
 	@Override
-	public Vector<String> getQuestLogStatus(final EntityPlayer player) {
-		final Vector<String> vec = new Vector<String>();
-		final HashMap<Integer, ItemStack> map = getProcessSet(player);
-		for (final int slot : map.keySet()) {
-			final ItemStack item = map.get(slot);
-			final ItemStack quest = items.items.get(slot);
+	public Vector<String> getQuestLogStatus(EntityPlayer player) {
+		Vector<String> vec = new Vector<String>();
+		HashMap<Integer, ItemStack> map = getProcessSet(player);
+		for (int slot : map.keySet()) {
+			ItemStack item = map.get(slot);
+			ItemStack quest = items.items.get(slot);
 			if (item == null) {
 				continue;
 			}
@@ -75,17 +75,17 @@ public class QuestItem extends QuestInterface {
 	}
 
 	@Override
-	public void handleComplete(final EntityPlayer player) {
+	public void handleComplete(EntityPlayer player) {
 		if (leaveItems) {
 			return;
 		}
-		for (final ItemStack questitem : items.items.values()) {
+		for (ItemStack questitem : items.items.values()) {
 			int stacksize = questitem.stackSize;
 			for (int i = 0; i < player.inventory.mainInventory.length; ++i) {
-				final ItemStack item = player.inventory.mainInventory[i];
+				ItemStack item = player.inventory.mainInventory[i];
 				if (item != null) {
 					if (NoppesUtilPlayer.compareItems(item, questitem, ignoreDamage, ignoreNBT)) {
-						final int size = item.stackSize;
+						int size = item.stackSize;
 						if ((stacksize - size) >= 0) {
 							player.inventory.setInventorySlotContents(i, (ItemStack) null);
 							item.splitStack(size);
@@ -103,11 +103,11 @@ public class QuestItem extends QuestInterface {
 	}
 
 	@Override
-	public boolean isCompleted(final EntityPlayer player) {
-		final HashMap<Integer, ItemStack> map = getProcessSet(player);
-		for (final ItemStack reqItem : items.items.values()) {
+	public boolean isCompleted(EntityPlayer player) {
+		HashMap<Integer, ItemStack> map = getProcessSet(player);
+		for (ItemStack reqItem : items.items.values()) {
 			boolean done = false;
-			for (final ItemStack item : map.values()) {
+			for (ItemStack item : map.values()) {
 				if (NoppesUtilPlayer.compareItems(reqItem, item, ignoreDamage, ignoreNBT)
 						&& (item.stackSize >= reqItem.stackSize)) {
 					done = true;
@@ -122,7 +122,7 @@ public class QuestItem extends QuestInterface {
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		items.setFromNBT(compound.getCompoundTag("Items"));
 		leaveItems = compound.getBoolean("LeaveItems");
 		ignoreDamage = compound.getBoolean("IgnoreDamage");
@@ -130,7 +130,7 @@ public class QuestItem extends QuestInterface {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound compound) {
+	public void writeEntityToNBT(NBTTagCompound compound) {
 		compound.setTag("Items", items.getToNBT());
 		compound.setBoolean("LeaveItems", leaveItems);
 		compound.setBoolean("IgnoreDamage", ignoreDamage);

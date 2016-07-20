@@ -23,7 +23,7 @@ import noppes.npcs.roles.JobItemGiver;
 public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 	private JobItemGiver role;
 
-	public GuiNpcItemGiver(final EntityNPCInterface npc, final ContainerNpcItemGiver container) {
+	public GuiNpcItemGiver(EntityNPCInterface npc, ContainerNpcItemGiver container) {
 		super(npc, container);
 		ySize = 200;
 		role = (JobItemGiver) npc.jobInterface;
@@ -31,8 +31,8 @@ public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	public void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			role.givingMethod = button.getValue();
 		}
@@ -60,7 +60,7 @@ public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 		addLabel(new GuiNpcLabel(1, "Items to give", guiLeft + 46, guiTop + 79));
 		getTextField(0).numbersOnly = true;
 		int i = 0;
-		for (final String line : role.lines) {
+		for (String line : role.lines) {
 			addTextField(new GuiNpcTextField(i + 1, this, fontRendererObj, guiLeft + 150, guiTop + 6 + (i * 24), 236,
 					20, line));
 			++i;
@@ -78,9 +78,9 @@ public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 
 	@Override
 	public void save() {
-		final List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<String>();
 		for (int i = 1; i < 4; ++i) {
-			final GuiNpcTextField tf = getTextField(i);
+			GuiNpcTextField tf = getTextField(i);
 			if (!tf.isEmpty()) {
 				lines.add(tf.getText());
 			}

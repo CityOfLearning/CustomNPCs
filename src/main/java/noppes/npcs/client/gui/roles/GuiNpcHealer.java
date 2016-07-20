@@ -30,7 +30,7 @@ public class GuiNpcHealer extends GuiNPCInterface2 {
 	private HashMap<String, String> displays;
 	private int potency;
 
-	public GuiNpcHealer(final EntityNPCInterface npc) {
+	public GuiNpcHealer(EntityNPCInterface npc) {
 		super(npc);
 		potency = 0;
 		job = (JobHealer) npc.jobInterface;
@@ -44,8 +44,8 @@ public class GuiNpcHealer extends GuiNPCInterface2 {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 3) {
 			job.type = (byte) button.getValue();
 		}
@@ -66,7 +66,7 @@ public class GuiNpcHealer extends GuiNPCInterface2 {
 			new ArrayList<String>();
 			for (int i = 0; i < Potion.potionTypes.length; ++i) {
 				if (Potion.potionTypes[i] != null) {
-					final int potionID = Potion.potionTypes[i].getId();
+					int potionID = Potion.potionTypes[i].getId();
 					job.effects.put(potionID, potency);
 				}
 			}
@@ -119,8 +119,8 @@ public class GuiNpcHealer extends GuiNPCInterface2 {
 		scroll2.guiTop = guiTop + 58;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(12, "beacon.currentEffects", guiLeft + 235, guiTop + 48));
-		final List<String> all = new ArrayList<String>();
-		for (final String names : potions.keySet()) {
+		List<String> all = new ArrayList<String>();
+		for (String names : potions.keySet()) {
 			if (!job.effects.containsKey(potions.get(names))) {
 				all.add(names);
 			} else {
@@ -131,7 +131,7 @@ public class GuiNpcHealer extends GuiNPCInterface2 {
 			}
 		}
 		scroll1.setList(all);
-		final List<String> applied = new ArrayList<String>(displays.keySet());
+		List<String> applied = new ArrayList<String>(displays.keySet());
 		scroll2.setList(applied);
 		addButton(new GuiNpcButton(11, guiLeft + 180, guiTop + 80, 55, 20, ">"));
 		addButton(new GuiNpcButton(12, guiLeft + 180, guiTop + 102, 55, 20, "<"));

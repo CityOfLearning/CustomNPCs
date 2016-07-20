@@ -17,7 +17,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 	public RoleTrader role;
 	private EntityNPCInterface npc;
 
-	public ContainerNPCTrader(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCTrader(EntityNPCInterface npc, EntityPlayer player) {
 		super(player);
 		this.npc = npc;
 		role = (RoleTrader) npc.roleInterface;
@@ -44,7 +44,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 		}
 	}
 
-	public boolean canBuy(ItemStack currency, ItemStack currency2, final EntityPlayer player) {
+	public boolean canBuy(ItemStack currency, ItemStack currency2, EntityPlayer player) {
 		if ((currency == null) && (currency2 == null)) {
 			return true;
 		}
@@ -53,7 +53,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 			currency2 = null;
 		}
 		if (NoppesUtilPlayer.compareItems(currency, currency2, role.ignoreDamage, role.ignoreNBT)) {
-			final ItemStack copy;
+			ItemStack copy;
 			currency = (copy = currency.copy());
 			copy.stackSize += currency2.stackSize;
 			currency2 = null;
@@ -65,13 +65,13 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 				&& NoppesUtilPlayer.compareItems(player, currency2, role.ignoreDamage, role.ignoreNBT);
 	}
 
-	private boolean canGivePlayer(final ItemStack item, final EntityPlayer entityplayer) {
-		final ItemStack itemstack3 = entityplayer.inventory.getItemStack();
+	private boolean canGivePlayer(ItemStack item, EntityPlayer entityplayer) {
+		ItemStack itemstack3 = entityplayer.inventory.getItemStack();
 		if (itemstack3 == null) {
 			return true;
 		}
 		if (NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
-			final int k1 = item.stackSize;
+			int k1 = item.stackSize;
 			if ((k1 > 0) && ((k1 + itemstack3.stackSize) <= itemstack3.getMaxStackSize())) {
 				return true;
 			}
@@ -79,21 +79,21 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 		return false;
 	}
 
-	private void givePlayer(final ItemStack item, final EntityPlayer entityplayer) {
-		final ItemStack itemstack3 = entityplayer.inventory.getItemStack();
+	private void givePlayer(ItemStack item, EntityPlayer entityplayer) {
+		ItemStack itemstack3 = entityplayer.inventory.getItemStack();
 		if (itemstack3 == null) {
 			entityplayer.inventory.setItemStack(item);
 		} else if (NoppesUtilPlayer.compareItems(itemstack3, item, false, false)) {
-			final int k1 = item.stackSize;
+			int k1 = item.stackSize;
 			if ((k1 > 0) && ((k1 + itemstack3.stackSize) <= itemstack3.getMaxStackSize())) {
-				final ItemStack itemStack = itemstack3;
+				ItemStack itemStack = itemstack3;
 				itemStack.stackSize += k1;
 			}
 		}
 	}
 
 	@Override
-	public ItemStack slotClick(final int i, final int j, int par3, final EntityPlayer entityplayer) {
+	public ItemStack slotClick(int i, int j, int par3, EntityPlayer entityplayer) {
 		if (par3 == 6) {
 			par3 = 0;
 		}
@@ -103,11 +103,11 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 		if (j == 1) {
 			return null;
 		}
-		final Slot slot = inventorySlots.get(i);
+		Slot slot = inventorySlots.get(i);
 		if ((slot == null) || (slot.getStack() == null)) {
 			return null;
 		}
-		final ItemStack item = slot.getStack();
+		ItemStack item = slot.getStack();
 		if (!canGivePlayer(item, entityplayer)) {
 			return null;
 		}
@@ -116,7 +116,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 		if (!canBuy(currency, currency2, entityplayer)) {
 			return null;
 		}
-		final RoleEvent.TraderEvent event = new RoleEvent.TraderEvent(entityplayer, npc.wrappedNPC, item, currency,
+		RoleEvent.TraderEvent event = new RoleEvent.TraderEvent(entityplayer, npc.wrappedNPC, item, currency,
 				currency2);
 		if (EventHooks.onNPCRole(npc, event)) {
 			return null;
@@ -141,7 +141,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

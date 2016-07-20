@@ -25,11 +25,11 @@ public class ItemNpcInterface extends Item implements ItemRenderInterface {
 		setCreativeTab(CustomItems.tab);
 	}
 
-	public ItemNpcInterface(final int par1) {
+	public ItemNpcInterface(int par1) {
 		this();
 	}
 
-	public boolean consumeItem(final EntityPlayer player, final Item item) {
+	public boolean consumeItem(EntityPlayer player, Item item) {
 		return player.inventory.consumeInventoryItem(item);
 	}
 
@@ -39,17 +39,17 @@ public class ItemNpcInterface extends Item implements ItemRenderInterface {
 	}
 
 	@Override
-	public void getSubItems(final Item itemIn, final CreativeTabs tab, final List subItems) {
+	public void getSubItems(Item itemIn, CreativeTabs tab, List subItems) {
 		subItems.add(new ItemStack(itemIn, 1, 0));
 	}
 
-	public boolean hasItem(final EntityPlayer player, final Item item) {
+	public boolean hasItem(EntityPlayer player, Item item) {
 		return player.inventory.hasItem(item);
 	}
 
 	@Override
-	public boolean hitEntity(final ItemStack par1ItemStack, final EntityLivingBase par2EntityLiving,
-			final EntityLivingBase par3EntityLiving) {
+	public boolean hitEntity(ItemStack par1ItemStack, EntityLivingBase par2EntityLiving,
+			EntityLivingBase par3EntityLiving) {
 		if (par2EntityLiving.getHealth() <= 0.0f) {
 			return false;
 		}
@@ -70,13 +70,13 @@ public class ItemNpcInterface extends Item implements ItemRenderInterface {
 	}
 
 	@Override
-	public Item setUnlocalizedName(final String name) {
+	public Item setUnlocalizedName(String name) {
 		super.setUnlocalizedName(name);
 		GameRegistry.registerItem(this, name);
 		if (hasSubtypes) {
-			final List<ItemStack> list = new ArrayList<ItemStack>();
+			List<ItemStack> list = new ArrayList<ItemStack>();
 			getSubItems(this, null, list);
-			for (final ItemStack stack : list) {
+			for (ItemStack stack : list) {
 				CustomNpcs.proxy.registerItem(this, name, stack.getItemDamage());
 			}
 		} else {

@@ -12,7 +12,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.GameSettings;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NoppesStringUtils;
@@ -28,16 +27,16 @@ public class InventoryTabQuests extends AbstractTab {
 	}
 
 	@Override
-	public void drawButton(final Minecraft minecraft, final int mouseX, final int mouseY) {
+	public void drawButton(Minecraft minecraft, int mouseX, int mouseY) {
 		if (!enabled || !visible) {
 			super.drawButton(minecraft, mouseX, mouseY);
 			return;
 		}
-		final Minecraft mc = Minecraft.getMinecraft();
-		final boolean hovered = (mouseX >= xPosition) && (mouseY >= yPosition) && (mouseX < (xPosition + width))
+		Minecraft mc = Minecraft.getMinecraft();
+		boolean hovered = (mouseX >= xPosition) && (mouseY >= yPosition) && (mouseX < (xPosition + width))
 				&& (mouseY < (yPosition + height));
 		if (hovered) {
-			final int x = mouseX + mc.fontRendererObj.getStringWidth(displayString);
+			int x = mouseX + mc.fontRendererObj.getStringWidth(displayString);
 			GlStateManager.translate(x, yPosition + 2, 0.0f);
 			drawHoveringText(Arrays.asList(displayString), 0, 0, mc.fontRendererObj);
 			GlStateManager.translate((-x), (-(yPosition + 2)), 0.0f);
@@ -45,7 +44,7 @@ public class InventoryTabQuests extends AbstractTab {
 		super.drawButton(minecraft, mouseX, mouseY);
 	}
 
-	protected void drawHoveringText(final List<String> list, final int x, final int y, final FontRenderer font) {
+	protected void drawHoveringText(List<String> list, int x, int y, FontRenderer font) {
 		if (list.isEmpty()) {
 			return;
 		}
@@ -54,8 +53,8 @@ public class InventoryTabQuests extends AbstractTab {
 		GlStateManager.disableLighting();
 		GlStateManager.disableDepth();
 		int k = 0;
-		for (final String s : list) {
-			final int l = font.getStringWidth(s);
+		for (String s : list) {
+			int l = font.getStringWidth(s);
 			if (l > k) {
 				k = l;
 			}
@@ -74,20 +73,20 @@ public class InventoryTabQuests extends AbstractTab {
 		}
 		zLevel = 300.0f;
 		itemRenderer.zLevel = 300.0f;
-		final int j3 = -267386864;
+		int j3 = -267386864;
 		drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j3, j3);
 		drawGradientRect(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j3, j3);
 		drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j3, j3);
 		drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j3, j3);
 		drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j3, j3);
-		final int k3 = 1347420415;
-		final int l2 = ((k3 & 0xFEFEFE) >> 1) | (k3 & 0xFF000000);
+		int k3 = 1347420415;
+		int l2 = ((k3 & 0xFEFEFE) >> 1) | (k3 & 0xFF000000);
 		drawGradientRect(j2 - 3, (k2 - 3) + 1, (j2 - 3) + 1, (k2 + i1 + 3) - 1, k3, l2);
 		drawGradientRect(j2 + k + 2, (k2 - 3) + 1, j2 + k + 3, (k2 + i1 + 3) - 1, k3, l2);
 		drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, (k2 - 3) + 1, k3, k3);
 		drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l2, l2);
 		for (int i2 = 0; i2 < list.size(); ++i2) {
-			final String s2 = list.get(i2);
+			String s2 = list.get(i2);
 			font.drawStringWithShadow(s2, j2, k2, -1);
 			if (i2 == 0) {
 				k2 += 2;
@@ -104,12 +103,9 @@ public class InventoryTabQuests extends AbstractTab {
 
 	@Override
 	public void onTabClicked() {
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				final Minecraft mc = Minecraft.getMinecraft();
-				mc.displayGuiScreen(new GuiQuestLog(mc.thePlayer));
-			}
+		CustomNPCsScheduler.runTack(() -> {
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.displayGuiScreen(new GuiQuestLog(mc.thePlayer));
 		});
 	}
 

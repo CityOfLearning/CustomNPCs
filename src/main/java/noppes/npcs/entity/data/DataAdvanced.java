@@ -55,7 +55,7 @@ public class DataAdvanced implements INPCAdvanced {
 	public boolean disablePitch;
 	public DataScenes scenes;
 
-	public DataAdvanced(final EntityNPCInterface npc) {
+	public DataAdvanced(EntityNPCInterface npc) {
 		interactLines = new Lines();
 		worldLines = new Lines();
 		attackLines = new Lines();
@@ -81,12 +81,12 @@ public class DataAdvanced implements INPCAdvanced {
 		return attackLines.getLine(!orderedLines);
 	}
 
-	private HashMap<Integer, DialogOption> getDialogs(final NBTTagList tagList) {
-		final HashMap<Integer, DialogOption> map = new HashMap<Integer, DialogOption>();
+	private HashMap<Integer, DialogOption> getDialogs(NBTTagList tagList) {
+		HashMap<Integer, DialogOption> map = new HashMap<Integer, DialogOption>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
-			final int slot = nbttagcompound.getInteger("DialogSlot");
-			final DialogOption option = new DialogOption();
+			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+			int slot = nbttagcompound.getInteger("DialogSlot");
+			DialogOption option = new DialogOption();
 			option.readNBT(nbttagcompound.getCompoundTag("NPCDialog"));
 			map.put(slot, option);
 		}
@@ -106,8 +106,8 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	@Override
-	public String getLine(final int type, final int slot) {
-		final Line line = getLines(type).lines.get(slot);
+	public String getLine(int type, int slot) {
+		Line line = getLines(type).lines.get(slot);
 		if (line == null) {
 			return null;
 		}
@@ -115,11 +115,11 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	@Override
-	public int getLineCount(final int type) {
+	public int getLineCount(int type) {
 		return getLines(type).lines.size();
 	}
 
-	private Lines getLines(final int type) {
+	private Lines getLines(int type) {
 		if (type == 0) {
 			return interactLines;
 		}
@@ -139,7 +139,7 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	@Override
-	public String getSound(final int type) {
+	public String getSound(int type) {
 		String sound = null;
 		if (type == 0) {
 			sound = idleSound;
@@ -166,10 +166,10 @@ public class DataAdvanced implements INPCAdvanced {
 		return !worldLines.isEmpty();
 	}
 
-	private NBTTagList nbtDialogs(final HashMap<Integer, DialogOption> dialogs2) {
-		final NBTTagList nbttaglist = new NBTTagList();
-		for (final int slot : dialogs2.keySet()) {
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+	private NBTTagList nbtDialogs(HashMap<Integer, DialogOption> dialogs2) {
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int slot : dialogs2.keySet()) {
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("DialogSlot", slot);
 			nbttagcompound.setTag("NPCDialog", dialogs2.get(slot).writeNBT());
 			nbttaglist.appendTag(nbttagcompound);
@@ -177,7 +177,7 @@ public class DataAdvanced implements INPCAdvanced {
 		return nbttaglist;
 	}
 
-	public void readToNBT(final NBTTagCompound compound) {
+	public void readToNBT(NBTTagCompound compound) {
 		interactLines.readNBT(compound.getCompoundTag("NpcInteractLines"));
 		worldLines.readNBT(compound.getCompoundTag("NpcLines"));
 		attackLines.readNBT(compound.getCompoundTag("NpcAttackLines"));
@@ -201,7 +201,7 @@ public class DataAdvanced implements INPCAdvanced {
 		scenes.readFromNBT(compound.getCompoundTag("NpcScenes"));
 	}
 
-	public void setJob(final int i) {
+	public void setJob(int i) {
 		if ((npc.jobInterface != null) && !npc.worldObj.isRemote) {
 			npc.jobInterface.reset();
 		}
@@ -234,13 +234,13 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	@Override
-	public void setLine(final int type, int slot, final String text, final String sound) {
+	public void setLine(int type, int slot, String text, String sound) {
 		slot = ValueUtil.CorrectInt(slot, 0, 7);
-		final Lines lines = getLines(type);
+		Lines lines = getLines(type);
 		if ((text == null) || text.isEmpty()) {
 			lines.lines.remove(slot);
 		} else {
-			final Line line = lines.lines.get(slot);
+			Line line = lines.lines.get(slot);
 			line.text = text;
 			if (sound != null) {
 				line.sound = sound;
@@ -273,7 +273,7 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	@Override
-	public void setSound(final int type, String sound) {
+	public void setSound(int type, String sound) {
 		if (sound == null) {
 			sound = "";
 		}
@@ -290,7 +290,7 @@ public class DataAdvanced implements INPCAdvanced {
 		}
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("NpcLines", worldLines.writeToNBT());
 		compound.setTag("NpcKilledLines", killedLines.writeToNBT());
 		compound.setTag("NpcInteractLines", interactLines.writeToNBT());

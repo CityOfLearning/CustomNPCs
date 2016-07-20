@@ -21,7 +21,7 @@ public class CmdScript extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Reload scripts and saved data from disks script folder.")
-	public Boolean reload(final ICommandSender sender, final String[] args) {
+	public Boolean reload(ICommandSender sender, String[] args) {
 		if (ScriptController.Instance.loadStoredData()) {
 			sender.addChatMessage(new ChatComponentText("Reload succesful"));
 		} else {

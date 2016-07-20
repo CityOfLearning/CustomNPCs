@@ -17,19 +17,18 @@ import net.minecraft.item.ItemSword;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 
 public class LayerBackItem extends LayerInterface {
-	public LayerBackItem(final RenderLiving render) {
+	public LayerBackItem(RenderLiving render) {
 		super(render);
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
-		final Minecraft minecraft = Minecraft.getMinecraft();
-		final ItemStack itemstack = ItemStackWrapper.MCItem(npc.inventory.getRightHand());
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
+		Minecraft minecraft = Minecraft.getMinecraft();
+		ItemStack itemstack = ItemStackWrapper.MCItem(npc.inventory.getRightHand());
 		if ((itemstack == null) || npc.isAttacking()) {
 			return;
 		}
-		final Item item = itemstack.getItem();
+		Item item = itemstack.getItem();
 		if (item instanceof ItemBlock) {
 			return;
 		}
@@ -39,8 +38,8 @@ public class LayerBackItem extends LayerInterface {
 		if (item instanceof ItemSword) {
 			GlStateManager.rotate(180.0f, -1.0f, 0.0f, 0.0f);
 		}
-		final IBakedModel model = minecraft.getRenderItem().getItemModelMesher().getItemModel(itemstack);
-		final ItemTransformVec3f p_175034_1_ = model.getItemCameraTransforms().thirdPerson;
+		IBakedModel model = minecraft.getRenderItem().getItemModelMesher().getItemModel(itemstack);
+		ItemTransformVec3f p_175034_1_ = model.getItemCameraTransforms().thirdPerson;
 		GlStateManager.scale(p_175034_1_.scale.x + ItemCameraTransforms.field_181696_h,
 				p_175034_1_.scale.y + ItemCameraTransforms.field_181697_i,
 				p_175034_1_.scale.z + ItemCameraTransforms.field_181698_j);
@@ -48,7 +47,6 @@ public class LayerBackItem extends LayerInterface {
 	}
 
 	@Override
-	public void rotate(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
+	public void rotate(float par1, float par2, float par3, float par4, float par5, float par6) {
 	}
 }

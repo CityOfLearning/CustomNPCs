@@ -41,9 +41,9 @@ public class SpawnController {
 	}
 
 	private void fillBiomeData() {
-		final HashMap<String, List<SpawnData>> biomes = new HashMap<String, List<SpawnData>>();
-		for (final SpawnData spawn : data) {
-			for (final String s : spawn.biomes) {
+		HashMap<String, List<SpawnData>> biomes = new HashMap<String, List<SpawnData>>();
+		for (SpawnData spawn : data) {
+			for (String s : spawn.biomes) {
 				List<SpawnData> list = biomes.get(s);
 				if (list == null) {
 					biomes.put(s, list = new ArrayList<SpawnData>());
@@ -55,20 +55,20 @@ public class SpawnController {
 	}
 
 	public NBTTagCompound getNBT() {
-		final NBTTagList list = new NBTTagList();
-		for (final SpawnData spawn : data) {
-			final NBTTagCompound nbtfactions = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (SpawnData spawn : data) {
+			NBTTagCompound nbtfactions = new NBTTagCompound();
 			spawn.writeNBT(nbtfactions);
 			list.appendTag(nbtfactions);
 		}
-		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		nbttagcompound.setInteger("lastID", lastUsedID);
 		nbttagcompound.setTag("NPCSpawnData", list);
 		return nbttagcompound;
 	}
 
-	public SpawnData getRandomSpawnData(final String biome, final boolean isAir) {
-		final List<SpawnData> list = getSpawnList(biome);
+	public SpawnData getRandomSpawnData(String biome, boolean isAir) {
+		List<SpawnData> list = getSpawnList(biome);
 		if ((list == null) || list.isEmpty()) {
 			return null;
 		}
@@ -76,15 +76,15 @@ public class SpawnController {
 	}
 
 	public Map<String, Integer> getScroll() {
-		final Map<String, Integer> map = new HashMap<String, Integer>();
-		for (final SpawnData spawn : data) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		for (SpawnData spawn : data) {
 			map.put(spawn.name, spawn.id);
 		}
 		return map;
 	}
 
-	public SpawnData getSpawnData(final int id) {
-		for (final SpawnData spawn : data) {
+	public SpawnData getSpawnData(int id) {
+		for (SpawnData spawn : data) {
 			if (spawn.id == id) {
 				return spawn;
 			}
@@ -92,7 +92,7 @@ public class SpawnController {
 		return null;
 	}
 
-	public List<SpawnData> getSpawnList(final String biome) {
+	public List<SpawnData> getSpawnList(String biome) {
 		return biomes.get(biome);
 	}
 
@@ -101,18 +101,18 @@ public class SpawnController {
 	}
 
 	private void loadData() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		if (saveDir == null) {
 			return;
 		}
 		try {
-			final File file = new File(saveDir, "spawns.dat");
+			File file = new File(saveDir, "spawns.dat");
 			if (file.exists()) {
 				loadDataFile(file);
 			}
 		} catch (Exception e) {
 			try {
-				final File file2 = new File(saveDir, "spawns.dat_old");
+				File file2 = new File(saveDir, "spawns.dat_old");
 				if (file2.exists()) {
 					loadDataFile(file2);
 				}
@@ -121,15 +121,15 @@ public class SpawnController {
 		}
 	}
 
-	public void loadData(final DataInputStream stream) throws IOException {
-		final ArrayList<SpawnData> data = new ArrayList<SpawnData>();
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.read(stream);
+	public void loadData(DataInputStream stream) throws IOException {
+		ArrayList<SpawnData> data = new ArrayList<SpawnData>();
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.read(stream);
 		lastUsedID = nbttagcompound1.getInteger("lastID");
-		final NBTTagList nbtlist = nbttagcompound1.getTagList("NPCSpawnData", 10);
+		NBTTagList nbtlist = nbttagcompound1.getTagList("NPCSpawnData", 10);
 		if (nbtlist != null) {
 			for (int i = 0; i < nbtlist.tagCount(); ++i) {
-				final NBTTagCompound nbttagcompound2 = nbtlist.getCompoundTagAt(i);
-				final SpawnData spawn = new SpawnData();
+				NBTTagCompound nbttagcompound2 = nbtlist.getCompoundTagAt(i);
+				SpawnData spawn = new SpawnData();
 				spawn.readNBT(nbttagcompound2);
 				data.add(spawn);
 			}
@@ -138,16 +138,16 @@ public class SpawnController {
 		fillBiomeData();
 	}
 
-	private void loadDataFile(final File file) throws IOException {
-		final DataInputStream var1 = new DataInputStream(
+	private void loadDataFile(File file) throws IOException {
+		DataInputStream var1 = new DataInputStream(
 				new BufferedInputStream(new GZIPInputStream(new FileInputStream(file))));
 		this.loadData(var1);
 		var1.close();
 	}
 
-	public void removeSpawnData(final int id) {
-		final ArrayList<SpawnData> data = new ArrayList<SpawnData>();
-		for (final SpawnData spawn : this.data) {
+	public void removeSpawnData(int id) {
+		ArrayList<SpawnData> data = new ArrayList<SpawnData>();
+		for (SpawnData spawn : this.data) {
 			if (spawn.id == id) {
 				continue;
 			}
@@ -160,10 +160,10 @@ public class SpawnController {
 
 	public void saveData() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final File file = new File(saveDir, "spawns.dat_new");
-			final File file2 = new File(saveDir, "spawns.dat_old");
-			final File file3 = new File(saveDir, "spawns.dat");
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			File file = new File(saveDir, "spawns.dat_new");
+			File file2 = new File(saveDir, "spawns.dat_old");
+			File file3 = new File(saveDir, "spawns.dat");
 			CompressedStreamTools.writeCompressed(getNBT(), new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();
@@ -181,11 +181,11 @@ public class SpawnController {
 		}
 	}
 
-	public void saveSpawnData(final SpawnData spawn) {
+	public void saveSpawnData(SpawnData spawn) {
 		if (spawn.id < 0) {
 			spawn.id = getUnusedId();
 		}
-		final SpawnData original = getSpawnData(spawn.id);
+		SpawnData original = getSpawnData(spawn.id);
 		if (original == null) {
 			data.add(spawn);
 		} else {

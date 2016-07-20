@@ -13,13 +13,12 @@ import noppes.npcs.client.model.ModelPlayerAlt;
 import noppes.npcs.constants.EnumParts;
 
 public class LayerNpcCloak extends LayerInterface {
-	public LayerNpcCloak(final RenderLiving render) {
+	public LayerNpcCloak(RenderLiving render) {
 		super(render);
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
 		if (npc.textureCloakLocation == null) {
 			if ((npc.display.getCapeTexture() == null) || npc.display.getCapeTexture().isEmpty()
 					|| !(model instanceof ModelPlayerAlt)) {
@@ -29,21 +28,21 @@ public class LayerNpcCloak extends LayerInterface {
 		}
 		render.bindTexture(npc.textureCloakLocation);
 		GlStateManager.pushMatrix();
-		final ModelPartConfig config = playerdata.getPartConfig(EnumParts.BODY);
+		ModelPartConfig config = playerdata.getPartConfig(EnumParts.BODY);
 		if (npc.isSneaking()) {
 			GlStateManager.translate(0.0f, 0.2f, 0.0f);
 		}
 		GlStateManager.translate(config.transX, config.transY, config.transZ);
 		GlStateManager.translate(0.0f, 0.0f, 0.125f);
-		final double d = (npc.field_20066_r + ((npc.field_20063_u - npc.field_20066_r) * par7))
+		double d = (npc.field_20066_r + ((npc.field_20063_u - npc.field_20066_r) * par7))
 				- (npc.prevPosX + ((npc.posX - npc.prevPosX) * par7));
-		final double d3 = (npc.field_20064_t + ((npc.field_20061_w - npc.field_20064_t) * par7))
+		double d3 = (npc.field_20064_t + ((npc.field_20061_w - npc.field_20064_t) * par7))
 				- (npc.prevPosZ + ((npc.posZ - npc.prevPosZ) * par7));
-		final float f11 = npc.prevRenderYawOffset + ((npc.renderYawOffset - npc.prevRenderYawOffset) * par7);
-		final double d4 = MathHelper.sin((f11 * 3.141593f) / 180.0f);
-		final double d5 = -MathHelper.cos((f11 * 3.141593f) / 180.0f);
+		float f11 = npc.prevRenderYawOffset + ((npc.renderYawOffset - npc.prevRenderYawOffset) * par7);
+		double d4 = MathHelper.sin((f11 * 3.141593f) / 180.0f);
+		double d5 = -MathHelper.cos((f11 * 3.141593f) / 180.0f);
 		float f12 = (float) ((d * d4) + (d3 * d5)) * 100.0f;
-		final float f13 = (float) ((d * d5) - (d3 * d4)) * 100.0f;
+		float f13 = (float) ((d * d5) - (d3 * d4)) * 100.0f;
 		if (f12 < 0.0f) {
 			f12 = 0.0f;
 		}
@@ -60,7 +59,6 @@ public class LayerNpcCloak extends LayerInterface {
 	}
 
 	@Override
-	public void rotate(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
+	public void rotate(float par1, float par2, float par3, float par4, float par5, float par6) {
 	}
 }

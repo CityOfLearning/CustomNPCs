@@ -17,13 +17,13 @@ import noppes.npcs.roles.JobFarmer;
 public class GuiJobFarmer extends GuiNPCInterface2 {
 	private JobFarmer job;
 
-	public GuiJobFarmer(final EntityNPCInterface npc) {
+	public GuiJobFarmer(EntityNPCInterface npc) {
 		super(npc);
 		job = (JobFarmer) npc.jobInterface;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 0) {
 			job.chestMode = ((GuiNpcButton) guibutton).getValue();
 		}

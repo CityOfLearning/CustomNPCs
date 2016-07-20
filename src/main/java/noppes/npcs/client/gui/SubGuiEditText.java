@@ -13,7 +13,7 @@ public class SubGuiEditText extends SubGuiInterface {
 	public String text;
 	public boolean cancelled;
 
-	public SubGuiEditText(final String text) {
+	public SubGuiEditText(String text) {
 		cancelled = true;
 		this.text = text;
 		setBackground("extrasmallbg.png");
@@ -23,7 +23,7 @@ public class SubGuiEditText extends SubGuiInterface {
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton button) {
+	public void buttonEvent(GuiButton button) {
 		if (button.id == 0) {
 			cancelled = false;
 			text = getTextField(0).getText();

@@ -21,14 +21,14 @@ import noppes.npcs.containers.ContainerNPCBankInterface;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiData {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	private ContainerNPCBankInterface container;
 	private int availableSlots;
 	private int maxSlots;
 	private int unlockedSlots;
 	private ItemStack currency;
 
-	public GuiNPCBankChest(final EntityNPCInterface npc, final ContainerNPCBankInterface container) {
+	public GuiNPCBankChest(EntityNPCInterface npc, ContainerNPCBankInterface container) {
 		super(npc, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/bankchest.png");
 		availableSlots = 0;
@@ -42,9 +42,9 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
-		final int id = guibutton.id;
+		int id = guibutton.id;
 		if (id < 6) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.BankSlotOpen, id, container.bankid);
 		}
@@ -57,17 +57,17 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
-		final int l = (width - xSize) / 2;
-		final int i2 = (height - ySize) / 2;
+		int l = (width - xSize) / 2;
+		int i2 = (height - ySize) / 2;
 		this.drawTexturedModalRect(l, i2, 0, 0, xSize, 6);
 		if (!container.isAvailable()) {
 			this.drawTexturedModalRect(l, i2 + 6, 0, 6, xSize, 64);
 			this.drawTexturedModalRect(l, i2 + 70, 0, 124, xSize, 98);
-			final int x = guiLeft + 30;
-			final int y = guiTop + 8;
+			int x = guiLeft + 30;
+			int y = guiTop + 8;
 			fontRendererObj.drawString(StatCollector.translateToLocal("bank.unlockCosts") + ":", x, y + 4,
 					CustomNpcResourceListener.DefaultTextColor);
 			drawItem(x + 90, y, currency, i, j);
@@ -76,8 +76,8 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 			this.drawTexturedModalRect(l, i2 + 6, 0, 60, xSize, 64);
 		} else if (container.canBeUpgraded()) {
 			this.drawTexturedModalRect(l, i2 + 6, 0, 6, xSize, 216);
-			final int x = guiLeft + 30;
-			final int y = guiTop + 8;
+			int x = guiLeft + 30;
+			int y = guiTop + 8;
 			fontRendererObj.drawString(StatCollector.translateToLocal("bank.upgradeCosts") + ":", x, y + 4,
 					CustomNpcResourceListener.DefaultTextColor);
 			drawItem(x + 90, y, currency, i, j);
@@ -95,7 +95,7 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 	}
 
-	private void drawItem(final int x, final int y, final ItemStack item, final int mouseX, final int mouseY) {
+	private void drawItem(int x, int y, ItemStack item, int mouseX, int mouseY) {
 		if (item == null) {
 			return;
 		}
@@ -116,7 +116,7 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 		availableSlots = 0;
 		if (maxSlots > 1) {
 			for (int i = 0; i < maxSlots; ++i) {
-				final GuiNpcButton button = new GuiNpcButton(i, guiLeft - 50, guiTop + 10 + (i * 24), 50, 20,
+				GuiNpcButton button = new GuiNpcButton(i, guiLeft - 50, guiTop + 10 + (i * 24), 50, 20,
 						"Tab " + (i + 1));
 				if (i > unlockedSlots) {
 					button.setEnabled(false);
@@ -146,7 +146,7 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		maxSlots = compound.getInteger("MaxSlots");
 		unlockedSlots = compound.getInteger("UnlockedSlots");
 		if (compound.hasKey("Currency")) {

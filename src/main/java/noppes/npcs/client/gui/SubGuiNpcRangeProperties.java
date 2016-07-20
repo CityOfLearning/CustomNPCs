@@ -21,7 +21,7 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 	private DataStats stats;
 	private GuiNpcSoundSelection gui;
 
-	public SubGuiNpcRangeProperties(final DataStats stats) {
+	public SubGuiNpcRangeProperties(DataStats stats) {
 		ranged = stats.ranged;
 		this.stats = stats;
 		setBackground("menubg.png");
@@ -31,8 +31,8 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 7) {
 			NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(parent, getTextField(7).getText()));
 		}
@@ -69,9 +69,9 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 		addLabel(new GuiNpcLabel(8, "stats.shotcount", guiLeft + 135, y + 5));
 		getTextField(8).numbersOnly = true;
 		getTextField(8).setMinMaxDefault(1, 10, 1);
-		final int id = 2;
-		final FontRenderer fontRendererObj = this.fontRendererObj;
-		final int i = guiLeft + 80;
+		int id = 2;
+		FontRenderer fontRendererObj = this.fontRendererObj;
+		int i = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id, this, fontRendererObj, i, y, 50, 18, ranged.getRange() + ""));
 		addLabel(new GuiNpcLabel(2, "gui.range", guiLeft + 5, y + 5));
@@ -82,9 +82,9 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 		addLabel(new GuiNpcLabel(16, "stats.meleerange", guiLeft + 135, y + 5));
 		getTextField(9).numbersOnly = true;
 		getTextField(9).setMinMaxDefault(0, stats.aggroRange, 5);
-		final int id2 = 3;
-		final FontRenderer fontRendererObj2 = this.fontRendererObj;
-		final int j = guiLeft + 80;
+		int id2 = 3;
+		FontRenderer fontRendererObj2 = this.fontRendererObj;
+		int j = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id2, this, fontRendererObj2, j, y, 50, 18, ranged.getDelayMin() + ""));
 		addLabel(new GuiNpcLabel(3, "stats.mindelay", guiLeft + 5, y + 5));
@@ -95,9 +95,9 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 		addLabel(new GuiNpcLabel(4, "stats.maxdelay", guiLeft + 135, y + 5));
 		getTextField(4).numbersOnly = true;
 		getTextField(4).setMinMaxDefault(1, 9999, 20);
-		final int id3 = 6;
-		final FontRenderer fontRendererObj3 = this.fontRendererObj;
-		final int k = guiLeft + 80;
+		int id3 = 6;
+		FontRenderer fontRendererObj3 = this.fontRendererObj;
+		int k = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id3, this, fontRendererObj3, k, y, 50, 18, ranged.getBurst() + ""));
 		addLabel(new GuiNpcLabel(6, "stats.burstcount", guiLeft + 5, y + 5));
@@ -108,34 +108,34 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 		addLabel(new GuiNpcLabel(5, "stats.burstspeed", guiLeft + 135, y + 5));
 		getTextField(5).numbersOnly = true;
 		getTextField(5).setMinMaxDefault(0, 30, 0);
-		final int id4 = 7;
-		final FontRenderer fontRendererObj4 = this.fontRendererObj;
-		final int l = guiLeft + 80;
+		int id4 = 7;
+		FontRenderer fontRendererObj4 = this.fontRendererObj;
+		int l = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id4, this, fontRendererObj4, l, y, 100, 20, ranged.getSound(0)));
 		addLabel(new GuiNpcLabel(7, "stats.firesound", guiLeft + 5, y + 5));
 		addButton(new GuiNpcButton(7, guiLeft + 187, y, 60, 20, "mco.template.button.select"));
-		final int id5 = 11;
-		final FontRenderer fontRendererObj5 = this.fontRendererObj;
-		final int m = guiLeft + 80;
+		int id5 = 11;
+		FontRenderer fontRendererObj5 = this.fontRendererObj;
+		int m = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id5, this, fontRendererObj5, m, y, 100, 20, ranged.getSound(1)));
 		addLabel(new GuiNpcLabel(11, "stats.hitsound", guiLeft + 5, y + 5));
 		addButton(new GuiNpcButton(11, guiLeft + 187, y, 60, 20, "mco.template.button.select"));
-		final int id6 = 10;
-		final FontRenderer fontRendererObj6 = this.fontRendererObj;
-		final int i2 = guiLeft + 80;
+		int id6 = 10;
+		FontRenderer fontRendererObj6 = this.fontRendererObj;
+		int i2 = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id6, this, fontRendererObj6, i2, y, 100, 20, ranged.getSound(2)));
 		addLabel(new GuiNpcLabel(10, "stats.groundsound", guiLeft + 5, y + 5));
 		addButton(new GuiNpcButton(10, guiLeft + 187, y, 60, 20, "mco.template.button.select"));
-		final int id7 = 9;
-		final int x = guiLeft + 100;
+		int id7 = 9;
+		int x = guiLeft + 100;
 		y += 22;
 		addButton(new GuiNpcButtonYesNo(id7, x, y, ranged.getHasAimAnimation()));
 		addLabel(new GuiNpcLabel(9, "stats.aimWhileShooting", guiLeft + 5, y + 5));
-		final int i3 = 13;
-		final int j2 = guiLeft + 100;
+		int i3 = 13;
+		int j2 = guiLeft + 100;
 		y += 22;
 		addButton(new GuiNpcButton(i3, j2, y, 80, 20, new String[] { "gui.no", "gui.whendistant", "gui.whenhidden" },
 				ranged.getFireType()));
@@ -144,7 +144,7 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 1) {
 			ranged.setAccuracy(textfield.getInteger());
 		} else if (textfield.id == 2) {

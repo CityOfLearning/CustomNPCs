@@ -44,7 +44,7 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 
 	private int activeTab;
 
-	public GuiNpcMobSpawnerMounter(final int i, final int j, final int k) {
+	public GuiNpcMobSpawnerMounter(int i, int j, int k) {
 		activeTab = 1;
 		xSize = 256;
 		posX = i;
@@ -55,13 +55,13 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			close();
 		}
 		if (id == 1) {
-			final NBTTagCompound compound = getCompound();
+			NBTTagCompound compound = getCompound();
 			if (compound != null) {
 				compound.setTag("Pos", newDoubleNBTList(posX + 0.5, posY + 1, posZ + 0.5));
 				Client.sendData(EnumPacketServer.SpawnRider, compound);
@@ -91,18 +91,18 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 	}
 
 	private NBTTagCompound getCompound() {
-		final String sel = scroll.getSelected();
+		String sel = scroll.getSelected();
 		if (sel == null) {
 			return null;
 		}
 		if (GuiNpcMobSpawnerMounter.showingClones == 0) {
 			return ClientCloneController.Instance.getCloneData(player, sel, activeTab);
 		}
-		final Entity entity = EntityList.createEntityByName(sel, Minecraft.getMinecraft().theWorld);
+		Entity entity = EntityList.createEntityByName(sel, Minecraft.getMinecraft().theWorld);
 		if (entity == null) {
 			return null;
 		}
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		entity.writeToNBTOptional(compound);
 		return compound;
 	}
@@ -111,8 +111,8 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 		if (GuiNpcMobSpawnerMounter.search.isEmpty()) {
 			return new ArrayList<String>(list);
 		}
-		final List<String> list = new ArrayList<String>();
-		for (final String name : this.list) {
+		List<String> list = new ArrayList<String>();
+		for (String name : this.list) {
 			if (name.toLowerCase().contains(GuiNpcMobSpawnerMounter.search)) {
 				list.add(name);
 			}
@@ -161,7 +161,7 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		super.keyTyped(c, i);
 		if (GuiNpcMobSpawnerMounter.search.equals(getTextField(1).getText())) {
 			return;
@@ -170,9 +170,9 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 		scroll.setList(getSearchList());
 	}
 
-	protected NBTTagList newDoubleNBTList(final double... par1ArrayOfDouble) {
-		final NBTTagList nbttaglist = new NBTTagList();
-		for (final double d1 : par1ArrayOfDouble) {
+	protected NBTTagList newDoubleNBTList(double... par1ArrayOfDouble) {
+		NBTTagList nbttaglist = new NBTTagList();
+		for (double d1 : par1ArrayOfDouble) {
 			nbttaglist.appendTag(new NBTTagDouble(d1));
 		}
 		return nbttaglist;
@@ -183,9 +183,9 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final NBTTagList nbtlist = compound.getTagList("List", 8);
-		final List<String> list = new ArrayList<String>();
+	public void setGuiData(NBTTagCompound compound) {
+		NBTTagList nbtlist = compound.getTagList("List", 8);
+		List<String> list = new ArrayList<String>();
 		for (int i = 0; i < nbtlist.tagCount(); ++i) {
 			list.add(nbtlist.getStringTagAt(i));
 		}
@@ -204,10 +204,10 @@ public class GuiNpcMobSpawnerMounter extends GuiNPCInterface implements IGuiData
 	}
 
 	private void showEntities() {
-		final Map<?, ?> data = EntityList.stringToClassMapping;
-		final ArrayList<String> list = new ArrayList<String>();
-		for (final Object name : data.keySet()) {
-			final Class<?> c = (Class<?>) data.get(name);
+		Map<?, ?> data = EntityList.stringToClassMapping;
+		ArrayList<String> list = new ArrayList<String>();
+		for (Object name : data.keySet()) {
+			Class<?> c = (Class<?>) data.get(name);
 			try {
 				if (!EntityLiving.class.isAssignableFrom(c) || (c.getConstructor(World.class) == null)
 						|| Modifier.isAbstract(c.getModifiers())) {

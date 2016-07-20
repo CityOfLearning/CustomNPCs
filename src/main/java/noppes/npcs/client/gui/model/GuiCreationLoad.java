@@ -19,7 +19,7 @@ public class GuiCreationLoad extends GuiCreationScreenInterface implements ICust
 	private List<String> list;
 	private GuiCustomScroll scroll;
 
-	public GuiCreationLoad(final EntityNPCInterface npc) {
+	public GuiCreationLoad(EntityNPCInterface npc) {
 		super(npc);
 		list = new ArrayList<String>();
 		active = 5;
@@ -28,7 +28,7 @@ public class GuiCreationLoad extends GuiCreationScreenInterface implements ICust
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if ((btn.id == 10) && scroll.hasSelected()) {
 			PresetController.instance.removePreset(scroll.getSelected());
@@ -37,8 +37,8 @@ public class GuiCreationLoad extends GuiCreationScreenInterface implements ICust
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
-		final Preset preset = PresetController.instance.getPreset(scroll.getSelected());
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
+		Preset preset = PresetController.instance.getPreset(scroll.getSelected());
 		playerdata.readFromNBT(preset.data.writeToNBT());
 		initGui();
 	}
@@ -50,7 +50,7 @@ public class GuiCreationLoad extends GuiCreationScreenInterface implements ICust
 			scroll = new GuiCustomScroll(this, 0);
 		}
 		list.clear();
-		for (final Preset preset : PresetController.instance.presets.values()) {
+		for (Preset preset : PresetController.instance.presets.values()) {
 			list.add(preset.name);
 		}
 		scroll.setList(list);

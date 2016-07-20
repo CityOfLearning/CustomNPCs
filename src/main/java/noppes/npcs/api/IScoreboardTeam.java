@@ -5,7 +5,7 @@
 package noppes.npcs.api;
 
 public interface IScoreboardTeam {
-	void addPlayer(final String p0);
+	void addPlayer(String p0);
 
 	void clearPlayers();
 
@@ -21,13 +21,13 @@ public interface IScoreboardTeam {
 
 	boolean getSeeInvisibleTeamPlayers();
 
-	void removePlayer(final String p0);
+	void removePlayer(String p0);
 
-	void setColor(final String p0);
+	void setColor(String p0);
 
-	void setDisplayName(final String p0);
+	void setDisplayName(String p0);
 
-	void setFriendlyFire(final boolean p0);
+	void setFriendlyFire(boolean p0);
 
-	void setSeeInvisibleTeamPlayers(final boolean p0);
+	void setSeeInvisibleTeamPlayers(boolean p0);
 }

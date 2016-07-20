@@ -40,7 +40,7 @@ public class DataRanged implements INPCRanged {
 	private String hitSound;
 	private String groundSound;
 
-	public DataRanged(final EntityNPCInterface npc) {
+	public DataRanged(EntityNPCInterface npc) {
 		burstCount = 1;
 		pDamage = 4;
 		pSpeed = 10;
@@ -187,7 +187,7 @@ public class DataRanged implements INPCRanged {
 	}
 
 	@Override
-	public String getSound(final int type) {
+	public String getSound(int type) {
 		String sound = null;
 		if (type == 0) {
 			sound = fireSound;
@@ -224,7 +224,7 @@ public class DataRanged implements INPCRanged {
 		return pDamage;
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		pDamage = compound.getInteger("pDamage");
 		pSpeed = compound.getInteger("pSpeed");
 		burstCount = compound.getInteger("BurstCount");
@@ -256,7 +256,7 @@ public class DataRanged implements INPCRanged {
 	}
 
 	@Override
-	public void setAccelerate(final boolean accelerate) {
+	public void setAccelerate(boolean accelerate) {
 		pXlr8 = accelerate;
 	}
 
@@ -266,92 +266,92 @@ public class DataRanged implements INPCRanged {
 	}
 
 	@Override
-	public void setBurst(final int count) {
+	public void setBurst(int count) {
 		burstCount = count;
 	}
 
 	@Override
-	public void setBurstDelay(final int delay) {
+	public void setBurstDelay(int delay) {
 		fireRate = delay;
 	}
 
 	@Override
-	public void setDelay(int min, final int max) {
+	public void setDelay(int min, int max) {
 		min = Math.min(min, max);
 		minDelay = min;
 		maxDelay = max;
 	}
 
 	@Override
-	public void setEffect(final int type, final int strength, final int time) {
+	public void setEffect(int type, int strength, int time) {
 		pEffect = type;
 		pDur = time;
 		pEffAmp = strength;
 	}
 
 	@Override
-	public void setExplodeSize(final int size) {
+	public void setExplodeSize(int size) {
 		pArea = size;
 	}
 
 	@Override
-	public void setFireType(final int type) {
+	public void setFireType(int type) {
 		canFireIndirect = type;
 	}
 
 	@Override
-	public void setGlows(final boolean glows) {
+	public void setGlows(boolean glows) {
 		pGlows = glows;
 	}
 
 	@Override
-	public void setHasAimAnimation(final boolean aim) {
+	public void setHasAimAnimation(boolean aim) {
 		aimWhileShooting = aim;
 	}
 
 	@Override
-	public void setHasGravity(final boolean hasGravity) {
+	public void setHasGravity(boolean hasGravity) {
 		pPhysics = hasGravity;
 	}
 
 	@Override
-	public void setKnockback(final int punch) {
+	public void setKnockback(int punch) {
 		pImpact = punch;
 	}
 
 	@Override
-	public void setMeleeRange(final int range) {
+	public void setMeleeRange(int range) {
 		meleeDistance = range;
 		npc.updateAI = true;
 	}
 
 	@Override
-	public void setParticle(final int type) {
+	public void setParticle(int type) {
 		pTrail = type;
 	}
 
 	@Override
-	public void setRange(final int range) {
+	public void setRange(int range) {
 		rangedRange = ValueUtil.CorrectInt(range, 1, 64);
 	}
 
 	@Override
-	public void setRender3D(final boolean render3d) {
+	public void setRender3D(boolean render3d) {
 		pRender3D = render3d;
 	}
 
 	@Override
-	public void setShotCount(final int count) {
+	public void setShotCount(int count) {
 		shotCount = count;
 	}
 
 	@Override
-	public void setSize(final int size) {
+	public void setSize(int size) {
 		pSize = size;
 	}
 
 	@Override
-	public void setSound(final int type, String sound) {
+	public void setSound(int type, String sound) {
 		if (sound == null) {
 			sound = "";
 		}
@@ -368,26 +368,26 @@ public class DataRanged implements INPCRanged {
 	}
 
 	@Override
-	public void setSpeed(final int speed) {
+	public void setSpeed(int speed) {
 		pSpeed = ValueUtil.CorrectInt(speed, 0, 100);
 	}
 
 	@Override
-	public void setSpins(final boolean spins) {
+	public void setSpins(boolean spins) {
 		pSpin = spins;
 	}
 
 	@Override
-	public void setSticks(final boolean sticks) {
+	public void setSticks(boolean sticks) {
 		pStick = sticks;
 	}
 
 	@Override
-	public void setStrength(final int strength) {
+	public void setStrength(int strength) {
 		pDamage = strength;
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("BurstCount", burstCount);
 		compound.setInteger("pSpeed", pSpeed);
 		compound.setInteger("pDamage", pDamage);

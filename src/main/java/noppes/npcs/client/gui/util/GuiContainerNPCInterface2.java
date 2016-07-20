@@ -13,15 +13,15 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface {
 	private ResourceLocation background;
-	private final ResourceLocation defaultBackground;
+	private ResourceLocation defaultBackground;
 	private GuiNpcMenu menu;
 	public int menuYOffset;
 
-	public GuiContainerNPCInterface2(final EntityNPCInterface npc, final Container cont) {
+	public GuiContainerNPCInterface2(EntityNPCInterface npc, Container cont) {
 		this(npc, cont, -1);
 	}
 
-	public GuiContainerNPCInterface2(final EntityNPCInterface npc, final Container cont, final int activeMenu) {
+	public GuiContainerNPCInterface2(EntityNPCInterface npc, Container cont, int activeMenu) {
 		super(npc, cont);
 		background = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
 		defaultBackground = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
@@ -38,7 +38,7 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawDefaultBackground();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(background);
@@ -51,7 +51,7 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public ResourceLocation getResource(final String texture) {
+	public ResourceLocation getResource(String texture) {
 		return new ResourceLocation("customnpcs", "textures/gui/" + texture);
 	}
 
@@ -62,14 +62,14 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
 	}
 
 	@Override
-	protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+	protected void mouseClicked(int i, int j, int k) throws IOException {
 		super.mouseClicked(i, j, k);
 		if (!hasSubGui()) {
 			menu.mouseClicked(i, j, k);
 		}
 	}
 
-	public void setBackground(final String texture) {
+	public void setBackground(String texture) {
 		background = new ResourceLocation("customnpcs", "textures/gui/" + texture);
 	}
 }

@@ -20,7 +20,7 @@ public class TileTrading extends TileColorable {
 		trader2 = null;
 	}
 
-	public void addTrader(final EntityPlayer player) {
+	public void addTrader(EntityPlayer player) {
 		if (isFull()) {
 			return;
 		}
@@ -59,7 +59,7 @@ public class TileTrading extends TileColorable {
 		return (trader1 != null) && (trader2 != null);
 	}
 
-	public EntityPlayer other(final EntityPlayer player) {
+	public EntityPlayer other(EntityPlayer player) {
 		if (player == trader1) {
 			return trader2;
 		}

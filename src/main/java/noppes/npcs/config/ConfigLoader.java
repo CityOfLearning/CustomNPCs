@@ -23,7 +23,7 @@ public class ConfigLoader {
 	private Class<?> configClass;
 	private LinkedList<Field> configFields;
 
-	public ConfigLoader(final Class<?> clss, final File dir, final String fileName) {
+	public ConfigLoader(Class<?> clss, File dir, String fileName) {
 		updateFile = false;
 		if (!dir.exists()) {
 			dir.mkdir();
@@ -32,9 +32,9 @@ public class ConfigLoader {
 		configClass = clss;
 		configFields = new LinkedList<Field>();
 		this.fileName = fileName + ".cfg";
-		final Field[] declaredFields;
+		Field[] declaredFields;
 		declaredFields = configClass.getDeclaredFields();
-		for (final Field field : declaredFields) {
+		for (Field field : declaredFields) {
 			if (field.isAnnotationPresent(ConfigProp.class)) {
 				configFields.add(field);
 			}
@@ -43,22 +43,22 @@ public class ConfigLoader {
 
 	public void loadConfig() {
 		try {
-			final File configFile = new File(dir, fileName);
-			final HashMap<String, Field> types = new HashMap<String, Field>();
-			for (final Field field : configFields) {
-				final ConfigProp prop = field.getAnnotation(ConfigProp.class);
+			File configFile = new File(dir, fileName);
+			HashMap<String, Field> types = new HashMap<String, Field>();
+			for (Field field : configFields) {
+				ConfigProp prop = field.getAnnotation(ConfigProp.class);
 				types.put(prop.name().isEmpty() ? field.getName() : prop.name(), field);
 			}
 			if (configFile.exists()) {
-				final HashMap<String, Object> properties = parseConfig(configFile, types);
-				for (final String prop2 : properties.keySet()) {
-					final Field field2 = types.get(prop2);
-					final Object obj = properties.get(prop2);
+				HashMap<String, Object> properties = parseConfig(configFile, types);
+				for (String prop2 : properties.keySet()) {
+					Field field2 = types.get(prop2);
+					Object obj = properties.get(prop2);
 					if (!obj.equals(field2.get(null))) {
 						field2.set(null, obj);
 					}
 				}
-				for (final String type : types.keySet()) {
+				for (String type : types.keySet()) {
 					if (!properties.containsKey(type)) {
 						updateFile = true;
 					}
@@ -76,26 +76,26 @@ public class ConfigLoader {
 		updateFile = false;
 	}
 
-	private HashMap<String, Object> parseConfig(final File file, final HashMap<String, Field> types) throws Exception {
-		final HashMap<String, Object> config = new HashMap<String, Object>();
-		final BufferedReader reader = new BufferedReader(new FileReader(file));
+	private HashMap<String, Object> parseConfig(File file, HashMap<String, Field> types) throws Exception {
+		HashMap<String, Object> config = new HashMap<String, Object>();
+		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String strLine;
 		while ((strLine = reader.readLine()) != null) {
 			if (!strLine.startsWith("#")) {
 				if (strLine.length() == 0) {
 					continue;
 				}
-				final int index = strLine.indexOf("=");
+				int index = strLine.indexOf("=");
 				if ((index <= 0) || (index == strLine.length())) {
 					updateFile = true;
 				} else {
-					final String name = strLine.substring(0, index);
-					final String prop = strLine.substring(index + 1);
+					String name = strLine.substring(0, index);
+					String prop = strLine.substring(index + 1);
 					if (!types.containsKey(name)) {
 						updateFile = true;
 					} else {
 						Object obj = null;
-						final Class<?> class2 = types.get(name).getType();
+						Class<?> class2 = types.get(name).getType();
 						if (class2.isAssignableFrom(String.class)) {
 							obj = prop;
 						} else if (class2.isAssignableFrom(Integer.TYPE)) {
@@ -124,18 +124,18 @@ public class ConfigLoader {
 	}
 
 	public void updateConfig() {
-		final File file = new File(dir, fileName);
+		File file = new File(dir, fileName);
 		try {
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-			final BufferedWriter out = new BufferedWriter(new FileWriter(file));
-			for (final Field field : configFields) {
-				final ConfigProp prop = field.getAnnotation(ConfigProp.class);
+			BufferedWriter out = new BufferedWriter(new FileWriter(file));
+			for (Field field : configFields) {
+				ConfigProp prop = field.getAnnotation(ConfigProp.class);
 				if (prop.info().length() != 0) {
 					out.write("#" + prop.info() + System.getProperty("line.separator"));
 				}
-				final String name = prop.name().isEmpty() ? field.getName() : prop.name();
+				String name = prop.name().isEmpty() ? field.getName() : prop.name();
 				try {
 					out.write(name + "=" + field.get(null).toString() + System.getProperty("line.separator"));
 					out.write(System.getProperty("line.separator"));

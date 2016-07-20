@@ -16,7 +16,7 @@ import noppes.npcs.entity.data.DataAI;
 public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldListener {
 	private DataAI ai;
 
-	public SubGuiNpcMovement(final DataAI ai) {
+	public SubGuiNpcMovement(DataAI ai) {
 		this.ai = ai;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -25,17 +25,17 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			ai.setMovingType(button.getValue());
 			if (ai.getMovingType() != 0) {
 				ai.animationType = 0;
 				ai.setStandingType(0);
-				final DataAI ai = this.ai;
-				final DataAI ai2 = this.ai;
-				final DataAI ai3 = this.ai;
-				final float bodyOffsetX = 5.0f;
+				DataAI ai = this.ai;
+				DataAI ai2 = this.ai;
+				DataAI ai3 = this.ai;
+				float bodyOffsetX = 5.0f;
 				ai3.bodyOffsetZ = bodyOffsetX;
 				ai2.bodyOffsetY = bodyOffsetX;
 				ai.bodyOffsetX = bodyOffsetX;
@@ -88,28 +88,28 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 		addLabel(new GuiNpcLabel(0, "movement.type", guiLeft + 4, y + 5));
 		addButton(new GuiNpcButton(0, guiLeft + 80, y, 100, 20,
 				new String[] { "ai.standing", "ai.wandering", "ai.movingpath" }, ai.getMovingType()));
-		final int i = 15;
-		final int j = guiLeft + 80;
+		int i = 15;
+		int j = guiLeft + 80;
 		y += 22;
 		addButton(new GuiNpcButton(i, j, y, 100, 20, new String[] { "movement.ground", "movement.flying" },
 				ai.movementType));
 		if (ai.getMovingType() == 1) {
-			final int id = 4;
-			final int k = guiLeft + 100;
+			int id = 4;
+			int k = guiLeft + 100;
 			y += 22;
 			addTextField(new GuiNpcTextField(id, this, k, y, 40, 20, ai.walkingRange + ""));
 			getTextField(4).numbersOnly = true;
 			getTextField(4).setMinMaxDefault(0, 1000, 10);
 			addLabel(new GuiNpcLabel(4, "gui.range", guiLeft + 4, y + 5));
-			final int l = 5;
-			final int m = guiLeft + 100;
+			int l = 5;
+			int m = guiLeft + 100;
 			y += 22;
 			addButton(
 					new GuiNpcButton(l, m, y, 50, 20, new String[] { "gui.no", "gui.yes" }, ai.npcInteracting ? 1 : 0));
 			addLabel(new GuiNpcLabel(5, "movement.wanderinteract", guiLeft + 4, y + 5));
 		} else if (ai.getMovingType() == 0) {
-			final int id2 = 7;
-			final int i2 = guiLeft + 99;
+			int id2 = 7;
+			int i2 = guiLeft + 99;
 			y += 22;
 			addTextField(new GuiNpcTextField(id2, this, i2, y, 24, 20, (int) ai.bodyOffsetX + ""));
 			addLabel(new GuiNpcLabel(17, "spawner.posoffset", guiLeft + 4, y + 5));
@@ -124,8 +124,8 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 			addTextField(new GuiNpcTextField(9, this, guiLeft + 171, y, 24, 20, (int) ai.bodyOffsetZ + ""));
 			getTextField(9).numbersOnly = true;
 			getTextField(9).setMinMaxDefault(0, 10, 5);
-			final int i3 = 3;
-			final int j2 = guiLeft + 80;
+			int i3 = 3;
+			int j2 = guiLeft + 80;
 			y += 22;
 			addButton(new GuiNpcButton(i3, j2, y, 100, 20,
 					new String[] { "stats.normal", "movement.sitting", "movement.lying", "movement.sneaking",
@@ -133,16 +133,16 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 					ai.animationType));
 			addLabel(new GuiNpcLabel(3, "movement.animation", guiLeft + 4, y + 5));
 			if (ai.animationType != 2) {
-				final int i4 = 4;
-				final int j3 = guiLeft + 80;
+				int i4 = 4;
+				int j3 = guiLeft + 80;
 				y += 22;
 				addButton(new GuiNpcButton(i4, j3, y, 80, 20,
 						new String[] { "movement.body", "movement.manual", "movement.stalking", "movement.head" },
 						ai.getStandingType()));
 				addLabel(new GuiNpcLabel(1, "movement.rotation", guiLeft + 4, y + 5));
 			} else {
-				final int id3 = 5;
-				final int i5 = guiLeft + 99;
+				int id3 = 5;
+				int i5 = guiLeft + 99;
 				y += 22;
 				addTextField(new GuiNpcTextField(id3, this, i5, y, 40, 20, ai.orientation + ""));
 				getTextField(5).numbersOnly = true;
@@ -158,8 +158,8 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 			}
 		}
 		if (ai.getMovingType() != 0) {
-			final int i6 = 12;
-			final int j4 = guiLeft + 80;
+			int i6 = 12;
+			int j4 = guiLeft + 80;
 			y += 22;
 			addButton(new GuiNpcButton(i6, j4, y, 100, 20,
 					new String[] { "stats.normal", "movement.sneaking", "movement.aiming", "movement.dancing",
@@ -168,27 +168,27 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 			addLabel(new GuiNpcLabel(12, "movement.animation", guiLeft + 4, y + 5));
 		}
 		if (ai.getMovingType() == 2) {
-			final int i7 = 8;
-			final int j5 = guiLeft + 80;
+			int i7 = 8;
+			int j5 = guiLeft + 80;
 			y += 22;
 			addButton(new GuiNpcButton(i7, j5, y, 80, 20, new String[] { "ai.looping", "ai.backtracking" },
 					ai.movingPattern));
 			addLabel(new GuiNpcLabel(8, "movement.name", guiLeft + 4, y + 5));
-			final int i8 = 9;
-			final int j6 = guiLeft + 80;
+			int i8 = 9;
+			int j6 = guiLeft + 80;
 			y += 22;
 			addButton(
 					new GuiNpcButton(i8, j6, y, 80, 20, new String[] { "gui.no", "gui.yes" }, ai.movingPause ? 1 : 0));
 			addLabel(new GuiNpcLabel(9, "movement.pauses", guiLeft + 4, y + 5));
 		}
-		final int i9 = 13;
-		final int j7 = guiLeft + 100;
+		int i9 = 13;
+		int j7 = guiLeft + 100;
 		y += 22;
 		addButton(
 				new GuiNpcButton(i9, j7, y, 50, 20, new String[] { "gui.no", "gui.yes" }, ai.stopAndInteract ? 1 : 0));
 		addLabel(new GuiNpcLabel(13, "movement.stopinteract", guiLeft + 4, y + 5));
-		final int id4 = 14;
-		final int i10 = guiLeft + 80;
+		int id4 = 14;
+		int i10 = guiLeft + 80;
 		y += 22;
 		addTextField(new GuiNpcTextField(id4, this, i10, y, 50, 18, ai.getWalkingSpeed() + ""));
 		getTextField(14).numbersOnly = true;
@@ -198,7 +198,7 @@ public class SubGuiNpcMovement extends SubGuiInterface implements ITextfieldList
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 7) {
 			ai.bodyOffsetX = textfield.getInteger();
 		} else if (textfield.id == 8) {

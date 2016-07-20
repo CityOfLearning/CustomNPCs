@@ -33,24 +33,24 @@ import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.util.CustomNPCsScheduler;
 
 public class Server {
-	public static boolean fillBuffer(final ByteBuf buffer, final Enum enu, final Object... obs) throws IOException {
+	public static boolean fillBuffer(ByteBuf buffer, Enum enu, Object... obs) throws IOException {
 		buffer.writeInt(enu.ordinal());
-		for (final Object ob : obs) {
+		for (Object ob : obs) {
 			if (ob != null) {
 				if (ob instanceof Map) {
-					final Map<String, Integer> map = (Map<String, Integer>) ob;
+					Map<String, Integer> map = (Map<String, Integer>) ob;
 					buffer.writeInt(map.size());
-					for (final String key : map.keySet()) {
-						final int value = map.get(key);
+					for (String key : map.keySet()) {
+						int value = map.get(key);
 						buffer.writeInt(value);
 						writeString(buffer, key);
 					}
 				} else if (ob instanceof MerchantRecipeList) {
 					((MerchantRecipeList) ob).writeToBuf(new PacketBuffer(buffer));
 				} else if (ob instanceof List) {
-					final List<String> list = (List<String>) ob;
+					List<String> list = (List<String>) ob;
 					buffer.writeInt(list.size());
-					for (final String s : list) {
+					for (String s : list) {
 						writeString(buffer, s);
 					}
 				} else if (ob instanceof Enum) {
@@ -79,10 +79,10 @@ public class Server {
 		return true;
 	}
 
-	public static NBTTagCompound readNBT(final ByteBuf buffer) throws IOException {
-		final byte[] bytes = new byte[buffer.readShort()];
+	public static NBTTagCompound readNBT(ByteBuf buffer) throws IOException {
+		byte[] bytes = new byte[buffer.readShort()];
 		buffer.readBytes(bytes);
-		final DataInputStream datainputstream = new DataInputStream(
+		DataInputStream datainputstream = new DataInputStream(
 				new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(bytes))));
 		try {
 			return CompressedStreamTools.read(datainputstream, new NBTSizeTracker(2097152L));
@@ -91,9 +91,9 @@ public class Server {
 		}
 	}
 
-	public static String readString(final ByteBuf buffer) {
+	public static String readString(ByteBuf buffer) {
 		try {
-			final byte[] bytes = new byte[buffer.readShort()];
+			byte[] bytes = new byte[buffer.readShort()];
 			buffer.readBytes(bytes);
 			return new String(bytes, Charsets.UTF_8);
 		} catch (IndexOutOfBoundsException ex) {
@@ -101,37 +101,33 @@ public class Server {
 		}
 	}
 
-	public static void sendAssociatedData(final Entity entity, final EnumPacketClient enu, final Object... obs) {
-		final List<EntityPlayerMP> list = entity.worldObj.getEntitiesWithinAABB((Class) EntityPlayerMP.class,
+	public static void sendAssociatedData(Entity entity, EnumPacketClient enu, Object... obs) {
+		List<EntityPlayerMP> list = entity.worldObj.getEntitiesWithinAABB((Class) EntityPlayerMP.class,
 				entity.getEntityBoundingBox().expand(160.0, 160.0, 160.0));
 		if (list.isEmpty()) {
 			return;
 		}
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				final PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-				try {
-					if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
-						return;
-					}
-					for (final EntityPlayerMP player : list) {
-						CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
-					}
-				} catch (IOException e) {
-					LogWriter.except(e);
+		CustomNPCsScheduler.runTack(() -> {
+			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+			try {
+				if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
+					return;
 				}
+				for (EntityPlayerMP player : list) {
+					CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
+				}
+			} catch (IOException e) {
+				LogWriter.except(e);
 			}
 		});
 	}
 
-	public static void sendData(final EntityPlayerMP player, final EnumPacketClient enu, final Object... obs) {
+	public static void sendData(EntityPlayerMP player, EnumPacketClient enu, Object... obs) {
 		sendDataDelayed(player, enu, 0, obs);
 	}
 
-	public static boolean sendDataChecked(final EntityPlayerMP player, final EnumPacketClient enu,
-			final Object... obs) {
-		final PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+	public static boolean sendDataChecked(EntityPlayerMP player, EnumPacketClient enu, Object... obs) {
+		PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
 		try {
 			if (!fillBuffer((ByteBuf) buffer, enu, obs)) {
 				return false;
@@ -143,60 +139,53 @@ public class Server {
 		return true;
 	}
 
-	public static void sendDataDelayed(final EntityPlayerMP player, final EnumPacketClient enu, final int delay,
-			final Object... obs) {
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				final PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-				try {
-					if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
-						return;
-					}
-					CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
-				} catch (IOException e) {
-					LogWriter.except(e);
+	public static void sendDataDelayed(EntityPlayerMP player, EnumPacketClient enu, int delay, Object... obs) {
+		CustomNPCsScheduler.runTack(() -> {
+			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+			try {
+				if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
+					return;
 				}
+				CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
+			} catch (IOException e) {
+				LogWriter.except(e);
 			}
 		}, delay);
 	}
 
-	public static void sendToAll(final EnumPacketClient enu, final Object... obs) {
-		final List<EntityPlayerMP> list = new ArrayList<EntityPlayerMP>(
+	public static void sendToAll(EnumPacketClient enu, Object... obs) {
+		List<EntityPlayerMP> list = new ArrayList<EntityPlayerMP>(
 				MinecraftServer.getServer().getConfigurationManager().playerEntityList);
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				final PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-				try {
-					if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
-						return;
-					}
-					for (final EntityPlayerMP player : list) {
-						CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
-					}
-				} catch (IOException e) {
-					LogWriter.except(e);
+		CustomNPCsScheduler.runTack(() -> {
+			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+			try {
+				if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
+					return;
 				}
+				for (EntityPlayerMP player : list) {
+					CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
+				}
+			} catch (IOException e) {
+				LogWriter.except(e);
 			}
 		});
 	}
 
-	public static void writeNBT(final ByteBuf buffer, final NBTTagCompound compound) throws IOException {
-		final ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-		final DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
+	public static void writeNBT(ByteBuf buffer, NBTTagCompound compound) throws IOException {
+		ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+		DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
 		try {
 			CompressedStreamTools.write(compound, dataoutputstream);
 		} finally {
 			dataoutputstream.close();
 		}
-		final byte[] bytes = bytearrayoutputstream.toByteArray();
+		byte[] bytes = bytearrayoutputstream.toByteArray();
 		buffer.writeShort((short) bytes.length);
 		buffer.writeBytes(bytes);
 	}
 
-	public static void writeString(final ByteBuf buffer, final String s) {
-		final byte[] bytes = s.getBytes(Charsets.UTF_8);
+	public static void writeString(ByteBuf buffer, String s) {
+		byte[] bytes = s.getBytes(Charsets.UTF_8);
 		buffer.writeShort((short) bytes.length);
 		buffer.writeBytes(bytes);
 	}

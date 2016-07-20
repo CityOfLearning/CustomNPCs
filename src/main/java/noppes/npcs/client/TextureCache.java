@@ -21,7 +21,7 @@ public class TextureCache extends SimpleTexture {
 	private BufferedImage bufferedImage;
 	private boolean textureUploaded;
 
-	public TextureCache(final ResourceLocation location) {
+	public TextureCache(ResourceLocation location) {
 		super(location);
 	}
 
@@ -43,17 +43,17 @@ public class TextureCache extends SimpleTexture {
 	}
 
 	@Override
-	public void loadTexture(final IResourceManager resourceManager) throws IOException {
+	public void loadTexture(IResourceManager resourceManager) throws IOException {
 	}
 
-	public void setImage(final ResourceLocation location) {
+	public void setImage(ResourceLocation location) {
 		try {
-			final IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-			final BufferedImage bufferedimage = ImageIO.read(manager.getResource(location).getInputStream());
-			final int i = bufferedimage.getWidth();
-			final int j = bufferedimage.getHeight();
+			IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+			BufferedImage bufferedimage = ImageIO.read(manager.getResource(location).getInputStream());
+			int i = bufferedimage.getWidth();
+			int j = bufferedimage.getHeight();
 			bufferedImage = new BufferedImage(i * 4, j * 2, 1);
-			final Graphics g = bufferedImage.getGraphics();
+			Graphics g = bufferedImage.getGraphics();
 			g.drawImage(bufferedimage, 0, 0, null);
 			g.drawImage(bufferedimage, i, 0, null);
 			g.drawImage(bufferedimage, i * 2, 0, null);

@@ -19,7 +19,7 @@ public class EntityNpcDragon extends EntityNPCInterface {
 	public boolean isFlying;
 	private boolean exploded;
 
-	public EntityNpcDragon(final World world) {
+	public EntityNpcDragon(World world) {
 		super(world);
 		isFlying = false;
 		exploded = false;
@@ -36,11 +36,11 @@ public class EntityNpcDragon extends EntityNPCInterface {
 		height = 1.4f;
 	}
 
-	public double[] func_40160_a(final int i, float f) {
+	public double[] func_40160_a(int i, float f) {
 		f = 1.0f - f;
-		final int j = (field_40164_e - (i * 1)) & 0x3F;
-		final int k = (field_40164_e - (i * 1) - 1) & 0x3F;
-		final double[] ad = new double[3];
+		int j = (field_40164_e - (i * 1)) & 0x3F;
+		int k = (field_40164_e - (i * 1) - 1) & 0x3F;
+		double[] ad = new double[3];
 		double d = field_40162_d[j][0];
 		double d2;
 		for (d2 = field_40162_d[k][0] - d; d2 < -180.0; d2 += 360.0) {
@@ -67,9 +67,9 @@ public class EntityNpcDragon extends EntityNPCInterface {
 		if (worldObj.isRemote && (getHealth() <= 0.0f)) {
 			if (!exploded) {
 				exploded = true;
-				final float f = (rand.nextFloat() - 0.5f) * 8.0f;
-				final float f2 = (rand.nextFloat() - 0.5f) * 4.0f;
-				final float f3 = (rand.nextFloat() - 0.5f) * 8.0f;
+				float f = (rand.nextFloat() - 0.5f) * 8.0f;
+				float f2 = (rand.nextFloat() - 0.5f) * 4.0f;
+				float f3 = (rand.nextFloat() - 0.5f) * 8.0f;
 				worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_LARGE, posX + f, posY + 2.0 + f2, posZ + f3, 0.0,
 						0.0, 0.0, new int[0]);
 			}
@@ -87,11 +87,11 @@ public class EntityNpcDragon extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.setEntityClass(EntityNpcDragon.class);
 			worldObj.spawnEntityInWorld(npc);
 		}

@@ -18,13 +18,11 @@ public class EntityRainbowFX extends EntityFX {
 
 	float reddustParticleScale;
 
-	public EntityRainbowFX(final World world, final double d, final double d1, final double d2, final double f,
-			final double f1, final double f2) {
+	public EntityRainbowFX(World world, double d, double d1, double d2, double f, double f1, double f2) {
 		this(world, d, d1, d2, 1.0f, f, f1, f2);
 	}
 
-	public EntityRainbowFX(final World world, final double d, final double d1, final double d2, final float f,
-			double f1, final double f2, final double f3) {
+	public EntityRainbowFX(World world, double d, double d1, double d2, float f, double f1, double f2, double f3) {
 		super(world, d, d1, d2, 0.0, 0.0, 0.0);
 		motionX *= 0.10000000149011612;
 		motionY *= 0.10000000149011612;
@@ -32,7 +30,7 @@ public class EntityRainbowFX extends EntityFX {
 		if (f1 == 0.0) {
 			f1 = 1.0;
 		}
-		final int i = world.rand.nextInt(EntityRainbowFX.colorTable.length);
+		int i = world.rand.nextInt(EntityRainbowFX.colorTable.length);
 		particleRed = EntityRainbowFX.colorTable[i][0];
 		particleGreen = EntityRainbowFX.colorTable[i][1];
 		particleBlue = EntityRainbowFX.colorTable[i][2];
@@ -68,8 +66,8 @@ public class EntityRainbowFX extends EntityFX {
 	}
 
 	@Override
-	public void renderParticle(final WorldRenderer tessellator, final Entity entity, final float f, final float f1,
-			final float f2, final float f3, final float f4, final float f5) {
+	public void renderParticle(WorldRenderer tessellator, Entity entity, float f, float f1, float f2, float f3,
+			float f4, float f5) {
 		float f6 = ((particleAge + f) / particleMaxAge) * 32.0f;
 		if (f6 < 0.0f) {
 			f6 = 0.0f;

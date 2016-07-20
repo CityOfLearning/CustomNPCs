@@ -54,7 +54,7 @@ public class WorldWrapper implements IWorld {
 
 	private IData storeddata;
 
-	public WorldWrapper(final World world) {
+	public WorldWrapper(World world) {
 		tempdata = new IData() {
 			@Override
 			public void clear() {
@@ -62,22 +62,22 @@ public class WorldWrapper implements IWorld {
 			}
 
 			@Override
-			public Object get(final String key) {
+			public Object get(String key) {
 				return WorldWrapper.tempData.get(key);
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return WorldWrapper.tempData.containsKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
+			public void put(String key, Object value) {
 				WorldWrapper.tempData.put(key, value);
 			}
 
 			@Override
-			public void remove(final String key) {
+			public void remove(String key) {
 				WorldWrapper.tempData.remove(key);
 			}
 		};
@@ -89,12 +89,12 @@ public class WorldWrapper implements IWorld {
 			}
 
 			@Override
-			public Object get(final String key) {
-				final NBTTagCompound compound = ScriptController.Instance.compound;
+			public Object get(String key) {
+				NBTTagCompound compound = ScriptController.Instance.compound;
 				if (!compound.hasKey(key)) {
 					return null;
 				}
-				final NBTBase base = compound.getTag(key);
+				NBTBase base = compound.getTag(key);
 				if (base instanceof NBTBase.NBTPrimitive) {
 					return ((NBTBase.NBTPrimitive) base).getDouble();
 				}
@@ -102,13 +102,13 @@ public class WorldWrapper implements IWorld {
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return ScriptController.Instance.compound.hasKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
-				final NBTTagCompound compound = ScriptController.Instance.compound;
+			public void put(String key, Object value) {
+				NBTTagCompound compound = ScriptController.Instance.compound;
 				if (value instanceof Number) {
 					compound.setDouble(key, ((Number) value).doubleValue());
 				} else if (value instanceof String) {
@@ -118,7 +118,7 @@ public class WorldWrapper implements IWorld {
 			}
 
 			@Override
-			public void remove(final String key) {
+			public void remove(String key) {
 				ScriptController.Instance.compound.removeTag(key);
 				ScriptController.Instance.shouldSave = true;
 			}
@@ -127,13 +127,13 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void broadcast(final String message) {
+	public void broadcast(String message) {
 		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(message));
 	}
 
 	@Override
-	public IItemStack createItem(final String name, final int damage, final int size) {
-		final Item item = Item.itemRegistry.getObject(new ResourceLocation(name));
+	public IItemStack createItem(String name, int damage, int size) {
+		Item item = Item.itemRegistry.getObject(new ResourceLocation(name));
 		if (item == null) {
 			return null;
 		}
@@ -141,15 +141,14 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void explode(final double x, final double y, final double z, final float range, final boolean fire,
-			final boolean grief) {
+	public void explode(double x, double y, double z, float range, boolean fire, boolean grief) {
 		world.newExplosion((Entity) null, x, y, z, range, fire, grief);
 	}
 
 	@Override
 	public IPlayer[] getAllPlayers() {
-		final List<EntityPlayerMP> list = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		final IPlayer[] arr = new IPlayer[list.size()];
+		List<EntityPlayerMP> list = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
+		IPlayer[] arr = new IPlayer[list.size()];
 		for (int i = 0; i < list.size(); ++i) {
 			arr[i] = (IPlayer) NpcAPI.Instance().getIEntity(list.get(i));
 		}
@@ -157,16 +156,16 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public String getBiomeName(final int x, final int z) {
+	public String getBiomeName(int x, int z) {
 		return world.getBiomeGenForCoords(new BlockPos(x, 0, z)).biomeName;
 	}
 
 	@Override
-	public IBlock getBlock(final int x, final int y, final int z) {
+	public IBlock getBlock(int x, int y, int z) {
 		return NpcAPI.Instance().getIBlock(world, new BlockPos(x, y, z));
 	}
 
-	private Class getClassForType(final int type) {
+	private Class getClassForType(int type) {
 		Class cls = Entity.class;
 		if (type == 5) {
 			cls = EntityLivingBase.class;
@@ -183,17 +182,17 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public IEntity getClosestEntity(final int x, final int y, final int z, final int range, final int type) {
-		final AxisAlignedBB bb = AxisAlignedBB.fromBounds(0.0, 0.0, 0.0, 1.0, 1.0, 1.0).offset(x, y, z).expand(range,
-				range, range);
-		final List<Entity> entities = world.getEntitiesWithinAABB(getClassForType(type), bb);
+	public IEntity getClosestEntity(int x, int y, int z, int range, int type) {
+		AxisAlignedBB bb = AxisAlignedBB.fromBounds(0.0, 0.0, 0.0, 1.0, 1.0, 1.0).offset(x, y, z).expand(range, range,
+				range);
+		List<Entity> entities = world.getEntitiesWithinAABB(getClassForType(type), bb);
 		double distance = range * range * range;
 		Entity entity = null;
-		for (final Entity e : entities) {
-			final double d0 = x - e.posX;
-			final double d2 = y - e.posY;
-			final double d3 = z - e.posZ;
-			final double r = (d0 * d0) + (d2 * d2) + (d3 * d3);
+		for (Entity e : entities) {
+			double d0 = x - e.posX;
+			double d2 = y - e.posY;
+			double d3 = z - e.posZ;
+			double r = (d0 * d0) + (d2 * d2) + (d3 * d3);
 			if (entity == null) {
 				distance = r;
 				entity = e;
@@ -209,7 +208,7 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public float getLightValue(final int x, final int y, final int z) {
+	public float getLightValue(int x, int y, int z) {
 		return world.getLight(new BlockPos(x, y, z)) / 16.0f;
 	}
 
@@ -219,20 +218,20 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public IEntity[] getNearbyEntities(final int x, final int y, final int z, final int range, final int type) {
-		final AxisAlignedBB bb = AxisAlignedBB.fromBounds(0.0, 0.0, 0.0, 1.0, 1.0, 1.0).offset(x, y, z).expand(range,
-				range, range);
-		final List<Entity> entities = world.getEntitiesWithinAABB(getClassForType(type), bb);
-		final List<IEntity> list = new ArrayList<IEntity>();
-		for (final Entity living : entities) {
+	public IEntity[] getNearbyEntities(int x, int y, int z, int range, int type) {
+		AxisAlignedBB bb = AxisAlignedBB.fromBounds(0.0, 0.0, 0.0, 1.0, 1.0, 1.0).offset(x, y, z).expand(range, range,
+				range);
+		List<Entity> entities = world.getEntitiesWithinAABB(getClassForType(type), bb);
+		List<IEntity> list = new ArrayList<IEntity>();
+		for (Entity living : entities) {
 			list.add(NpcAPI.Instance().getIEntity(living));
 		}
 		return list.toArray(new IEntity[list.size()]);
 	}
 
 	@Override
-	public IPlayer getPlayer(final String name) {
-		final EntityPlayer player = world.getPlayerEntityByName(name);
+	public IPlayer getPlayer(String name) {
+		EntityPlayer player = world.getPlayerEntityByName(name);
 		if (player == null) {
 			return null;
 		}
@@ -240,7 +239,7 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public int getRedstonePower(final int x, final int y, final int z) {
+	public int getRedstonePower(int x, int y, int z) {
 		return world.getStrongPower(new BlockPos(x, y, z));
 	}
 
@@ -280,13 +279,13 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void removeBlock(final int x, final int y, final int z) {
+	public void removeBlock(int x, int y, int z) {
 		world.setBlockToAir(new BlockPos(x, y, z));
 	}
 
 	@Override
-	public void setBlock(final int x, final int y, final int z, final String name, final int meta) {
-		final Block block = Block.getBlockFromName(name);
+	public void setBlock(int x, int y, int z, String name, int meta) {
+		Block block = Block.getBlockFromName(name);
 		if (block == null) {
 			throw new CustomNPCsException("There is no such block: %s", new Object[0]);
 		}
@@ -294,22 +293,22 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void setRaining(final boolean bo) {
+	public void setRaining(boolean bo) {
 		world.getWorldInfo().setRaining(bo);
 	}
 
 	@Override
-	public void setTime(final long time) {
+	public void setTime(long time) {
 		world.setWorldTime(time);
 	}
 
 	@Override
-	public IEntity spawnClone(final int x, final int y, final int z, final int tab, final String name) {
-		final NBTTagCompound compound = ServerCloneController.Instance.getCloneData(null, name, tab);
+	public IEntity spawnClone(int x, int y, int z, int tab, String name) {
+		NBTTagCompound compound = ServerCloneController.Instance.getCloneData(null, name, tab);
 		if (compound == null) {
 			return null;
 		}
-		final Entity entity = NoppesUtilServer.spawnClone(compound, x, y, z, world);
+		Entity entity = NoppesUtilServer.spawnClone(compound, x, y, z, world);
 		if (entity == null) {
 			return null;
 		}
@@ -317,10 +316,10 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void spawnParticle(final String particle, final double x, final double y, final double z, final double dx,
-			final double dy, final double dz, final double speed, final int count) {
+	public void spawnParticle(String particle, double x, double y, double z, double dx, double dy, double dz,
+			double speed, int count) {
 		EnumParticleTypes particleType = null;
-		for (final EnumParticleTypes enumParticle : EnumParticleTypes.values()) {
+		for (EnumParticleTypes enumParticle : EnumParticleTypes.values()) {
 			if (enumParticle.hasArguments()) {
 				if (particle.startsWith(enumParticle.getParticleName())) {
 					particleType = enumParticle;
@@ -337,7 +336,7 @@ public class WorldWrapper implements IWorld {
 	}
 
 	@Override
-	public void thunderStrike(final double x, final double y, final double z) {
+	public void thunderStrike(double x, double y, double z) {
 		world.addWeatherEffect(new EntityLightningBolt(world, x, y, z));
 	}
 }

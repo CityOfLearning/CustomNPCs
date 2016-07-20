@@ -20,13 +20,13 @@ public class TileNpcEntity extends TileEntity {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		extraData = compound.getCompoundTag("ExtraData");
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setTag("ExtraData", extraData);
 	}

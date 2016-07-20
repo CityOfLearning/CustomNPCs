@@ -15,7 +15,7 @@ public class CompanionFarmer extends CompanionJobInterface {
 
 	@Override
 	public NBTTagCompound getNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setBoolean("CompanionFarmerStanding", isStanding);
 		return compound;
 	}
@@ -30,7 +30,7 @@ public class CompanionFarmer extends CompanionJobInterface {
 	}
 
 	@Override
-	public void setNBT(final NBTTagCompound compound) {
+	public void setNBT(NBTTagCompound compound) {
 		isStanding = compound.getBoolean("CompanionFarmerStanding");
 	}
 }

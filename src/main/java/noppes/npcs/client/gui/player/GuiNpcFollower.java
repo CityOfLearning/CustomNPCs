@@ -22,11 +22,11 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleFollower;
 
 public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	private EntityNPCInterface npc;
 	private RoleFollower role;
 
-	public GuiNpcFollower(final EntityNPCInterface npc, final ContainerNPCFollower container) {
+	public GuiNpcFollower(EntityNPCInterface npc, ContainerNPCFollower container) {
 		super(npc, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/follower.png");
 		this.npc = npc;
@@ -36,9 +36,9 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
-		final int id = guibutton.id;
+		int id = guibutton.id;
 		if (id == 4) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.FollowerState, new Object[0]);
 		}
@@ -48,16 +48,16 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
-		final int l = guiLeft;
-		final int i2 = guiTop;
+		int l = guiLeft;
+		int i2 = guiTop;
 		this.drawTexturedModalRect(l, i2, 0, 0, xSize, ySize);
 		int index = 0;
 		if (!role.infiniteDays) {
-			for (final int id : role.inventory.items.keySet()) {
-				final ItemStack itemstack = role.inventory.items.get(id);
+			for (int id : role.inventory.items.keySet()) {
+				ItemStack itemstack = role.inventory.items.get(id);
 				if (itemstack == null) {
 					continue;
 				}
@@ -65,16 +65,16 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
 				if (role.rates.containsKey(id)) {
 					days = role.rates.get(id);
 				}
-				final int yOffset = index * 20;
-				final int x = guiLeft + 68;
-				final int y = guiTop + yOffset + 4;
+				int yOffset = index * 20;
+				int x = guiLeft + 68;
+				int y = guiTop + yOffset + 4;
 				GlStateManager.enableRescaleNormal();
 				RenderHelper.enableGUIStandardItemLighting();
 				itemRender.renderItemAndEffectIntoGUI(itemstack, x + 11, y);
 				itemRender.renderItemOverlays(fontRendererObj, itemstack, x + 11, y);
 				RenderHelper.disableStandardItemLighting();
 				GlStateManager.disableRescaleNormal();
-				final String daysS = days + " " + ((days == 1) ? StatCollector.translateToLocal("follower.day")
+				String daysS = days + " " + ((days == 1) ? StatCollector.translateToLocal("follower.day")
 						: StatCollector.translateToLocal("follower.days"));
 				fontRendererObj.drawString(" = " + daysS, x + 27, y + 4, CustomNpcResourceListener.DefaultTextColor);
 				++index;
@@ -84,7 +84,7 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		fontRendererObj.drawString(
 				StatCollector.translateToLocal("follower.health") + ": " + npc.getHealth() + "/" + npc.getMaxHealth(),
 				62, 70, CustomNpcResourceListener.DefaultTextColor);
@@ -121,7 +121,7 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		npc.roleInterface.readFromNBT(compound);
 		initGui();
 	}

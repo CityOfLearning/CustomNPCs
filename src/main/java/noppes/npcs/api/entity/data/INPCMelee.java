@@ -19,13 +19,13 @@ public interface INPCMelee {
 
 	int getStrength();
 
-	void setDelay(final int p0);
+	void setDelay(int p0);
 
-	void setEffect(final int p0, final int p1, final int p2);
+	void setEffect(int p0, int p1, int p2);
 
-	void setKnockback(final int p0);
+	void setKnockback(int p0);
 
-	void setRange(final int p0);
+	void setRange(int p0);
 
-	void setStrength(final int p0);
+	void setStrength(int p0);
 }

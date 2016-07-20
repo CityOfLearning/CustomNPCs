@@ -20,7 +20,7 @@ public class SubGuiNpcBiomes extends SubGuiInterface {
 	private GuiCustomScroll scroll1;
 	private GuiCustomScroll scroll2;
 
-	public SubGuiNpcBiomes(final SpawnData data) {
+	public SubGuiNpcBiomes(SpawnData data) {
 		this.data = data;
 		setBackground("menubg.png");
 		xSize = 346;
@@ -29,8 +29,8 @@ public class SubGuiNpcBiomes extends SubGuiInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if ((button.id == 1) && scroll1.hasSelected()) {
 			data.biomes.add(scroll1.getSelected());
 			scroll1.selected = -1;
@@ -44,7 +44,7 @@ public class SubGuiNpcBiomes extends SubGuiInterface {
 		}
 		if (button.id == 3) {
 			data.biomes.clear();
-			for (final BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+			for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 				if (base != null) {
 					data.biomes.add(base.biomeName);
 				}
@@ -81,8 +81,8 @@ public class SubGuiNpcBiomes extends SubGuiInterface {
 		scroll2.guiTop = guiTop + 14;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(2, "spawning.spawningBiomes", guiLeft + 200, guiTop + 4));
-		final List<String> biomes = new ArrayList<String>();
-		for (final BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+		List<String> biomes = new ArrayList<String>();
+		for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 			if ((base != null) && (base.biomeName != null) && !data.biomes.contains(base.biomeName)) {
 				biomes.add(base.biomeName);
 			}

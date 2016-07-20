@@ -13,5 +13,5 @@ public interface IScoreboardObjective {
 
 	boolean isReadyOnly();
 
-	void setDisplayName(final String p0);
+	void setDisplayName(String p0);
 }

@@ -22,14 +22,14 @@ public class GuiNpcBard extends GuiNPCInterface2 {
 	private JobBard job;
 	private GuiNpcSoundSelection gui;
 
-	public GuiNpcBard(final EntityNPCInterface npc) {
+	public GuiNpcBard(EntityNPCInterface npc) {
 		super(npc);
 		job = (JobBard) npc.jobInterface;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			gui = new GuiNpcSoundSelection(this, job.song);
 			NoppesUtil.openGUI(player, gui);

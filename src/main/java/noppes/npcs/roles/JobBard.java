@@ -26,7 +26,7 @@ public class JobBard extends JobInterface implements IJobBard {
 	private EnumBardInstrument instrument;
 	private long ticks;
 
-	public JobBard(final EntityNPCInterface npc) {
+	public JobBard(EntityNPCInterface npc) {
 		super(npc);
 		minRange = 2;
 		maxRange = 64;
@@ -37,7 +37,7 @@ public class JobBard extends JobInterface implements IJobBard {
 		ticks = 0L;
 		if (CustomItems.banjo != null) {
 			mainhand = new ItemStackWrapper(new ItemStack(CustomItems.banjo));
-			final boolean b = true;
+			boolean b = true;
 			overrideOffHand = b;
 			overrideMainHand = b;
 		}
@@ -76,7 +76,7 @@ public class JobBard extends JobInterface implements IJobBard {
 			return;
 		}
 		if (!MusicController.Instance.isPlaying(song)) {
-			final List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+			List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 					npc.getEntityBoundingBox().expand(minRange, minRange / 2, minRange));
 			if (!list.contains(CustomNpcs.proxy.getPlayer())) {
 				return;
@@ -87,13 +87,13 @@ public class JobBard extends JobInterface implements IJobBard {
 				MusicController.Instance.playMusic(song, npc);
 			}
 		} else if (MusicController.Instance.playingEntity != npc) {
-			final EntityPlayer player = CustomNpcs.proxy.getPlayer();
+			EntityPlayer player = CustomNpcs.proxy.getPlayer();
 			if (npc.getDistanceSqToEntity(player) < MusicController.Instance.playingEntity
 					.getDistanceSqToEntity(player)) {
 				MusicController.Instance.playingEntity = npc;
 			}
 		} else if (hasOffRange) {
-			final List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+			List<EntityPlayer> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 					npc.getEntityBoundingBox().expand(maxRange, maxRange / 2, maxRange));
 			if (!list.contains(CustomNpcs.proxy.getPlayer())) {
 				MusicController.Instance.stopMusic();
@@ -102,7 +102,7 @@ public class JobBard extends JobInterface implements IJobBard {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		song = nbttagcompound.getString("BardSong");
 		minRange = nbttagcompound.getInteger("BardMinRange");
 		maxRange = nbttagcompound.getInteger("BardMaxRange");
@@ -111,12 +111,12 @@ public class JobBard extends JobInterface implements IJobBard {
 		hasOffRange = nbttagcompound.getBoolean("BardHasOff");
 	}
 
-	public void setInstrument(final int i) {
+	public void setInstrument(int i) {
 		if (CustomItems.banjo == null) {
 			return;
 		}
 		instrument = EnumBardInstrument.values()[i];
-		final boolean b = instrument != EnumBardInstrument.None;
+		boolean b = instrument != EnumBardInstrument.None;
 		overrideOffHand = b;
 		overrideMainHand = b;
 		switch (instrument) {
@@ -154,13 +154,13 @@ public class JobBard extends JobInterface implements IJobBard {
 	}
 
 	@Override
-	public void setSong(final String song) {
+	public void setSong(String song) {
 		this.song = song;
 		npc.updateClient = true;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setString("BardSong", song);
 		nbttagcompound.setInteger("BardMinRange", minRange);
 		nbttagcompound.setInteger("BardMaxRange", maxRange);

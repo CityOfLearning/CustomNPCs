@@ -21,19 +21,19 @@ public class ModelScaleRenderer extends ModelRenderer {
 	public ModelPartConfig config;
 	public EnumParts part;
 
-	public ModelScaleRenderer(final ModelBase par1ModelBase, final EnumParts part) {
+	public ModelScaleRenderer(ModelBase par1ModelBase, EnumParts part) {
 		super(par1ModelBase);
 		this.part = part;
 	}
 
-	public ModelScaleRenderer(final ModelBase par1ModelBase, final int par2, final int par3, final EnumParts part) {
+	public ModelScaleRenderer(ModelBase par1ModelBase, int par2, int par3, EnumParts part) {
 		this(par1ModelBase, part);
 		setTextureOffset(par2, par3);
 	}
 
-	public void compileDisplayList(final float par1) {
+	public void compileDisplayList(float par1) {
 		GL11.glNewList(displayList = GLAllocation.generateDisplayLists(1), 4864);
-		final WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
+		WorldRenderer worldrenderer = Tessellator.getInstance().getWorldRenderer();
 		for (int i = 0; i < cubeList.size(); ++i) {
 			cubeList.get(i).render(worldrenderer, par1);
 		}
@@ -41,12 +41,12 @@ public class ModelScaleRenderer extends ModelRenderer {
 		compiled = true;
 	}
 
-	public void parentRender(final float par1) {
+	public void parentRender(float par1) {
 		super.render(par1);
 	}
 
 	@Override
-	public void postRender(final float par1) {
+	public void postRender(float par1) {
 		if (config != null) {
 			GlStateManager.translate(config.transX, config.transY, config.transZ);
 		}
@@ -56,13 +56,13 @@ public class ModelScaleRenderer extends ModelRenderer {
 		}
 	}
 
-	public void postRenderNoScale(final float par1) {
+	public void postRenderNoScale(float par1) {
 		GlStateManager.translate(config.transX, config.transY, config.transZ);
 		super.postRender(par1);
 	}
 
 	@Override
-	public void render(final float par1) {
+	public void render(float par1) {
 		if (!showModel || isHidden) {
 			return;
 		}
@@ -80,7 +80,7 @@ public class ModelScaleRenderer extends ModelRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	public void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	public void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;

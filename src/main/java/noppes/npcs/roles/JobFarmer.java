@@ -42,7 +42,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	private BlockPos chest;
 	private ItemStack holding;
 
-	public JobFarmer(final EntityNPCInterface npc) {
+	public JobFarmer(EntityNPCInterface npc) {
 		super(npc);
 		chestMode = 1;
 		trackedBlocks = new ArrayList<BlockPos>();
@@ -97,11 +97,11 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 
 	@Override
 	public void aiUpdateTask() {
-		final Iterator<BlockPos> ite = trackedBlocks.iterator();
+		Iterator<BlockPos> ite = trackedBlocks.iterator();
 		while (ite.hasNext() && (ripe == null)) {
-			final BlockPos pos = ite.next();
+			BlockPos pos = ite.next();
 			IBlockState state = npc.worldObj.getBlockState(pos);
-			final Block b = state.getBlock();
+			Block b = state.getBlock();
 			if (b instanceof BlockCrops) {
 				if (state.getValue(BlockCrops.AGE) < 7) {
 					continue;
@@ -109,7 +109,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 				ripe = pos;
 			} else if (b instanceof BlockStem) {
 				state = b.getActualState(state, npc.worldObj, pos);
-				final EnumFacing facing = state.getValue(BlockStem.FACING);
+				EnumFacing facing = state.getValue(BlockStem.FACING);
 				if (facing == EnumFacing.UP) {
 					continue;
 				}
@@ -127,7 +127,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	}
 
 	private void chest() {
-		final BlockPos pos = chest;
+		BlockPos pos = chest;
 		npc.getNavigator().tryMoveToXYZ(pos.getX(), pos.getY(), pos.getZ(), 1.0);
 		npc.getLookHelper().setLookPosition(pos.getX(), pos.getY(), pos.getZ(), 10.0f, npc.getVerticalFaceSpeed());
 		if (npc.nearPosition(pos) || (walkTicks++ > 400)) {
@@ -137,14 +137,14 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 			npc.getNavigator().clearPathEntity();
 			ticks = 100;
 			walkTicks = 0;
-			final IBlockState state = npc.worldObj.getBlockState(pos);
+			IBlockState state = npc.worldObj.getBlockState(pos);
 			if (state.getBlock() instanceof BlockChest) {
-				final TileEntityChest tile = (TileEntityChest) npc.worldObj.getTileEntity(pos);
+				TileEntityChest tile = (TileEntityChest) npc.worldObj.getTileEntity(pos);
 				for (int i = 0; (holding != null) && (i < tile.getSizeInventory()); ++i) {
 					holding = mergeStack(tile, i, holding);
 				}
 				for (int i = 0; (holding != null) && (i < tile.getSizeInventory()); ++i) {
-					final ItemStack item = tile.getStackInSlot(i);
+					ItemStack item = tile.getStackInSlot(i);
 					if (item == null) {
 						tile.setInventorySlotContents(i, holding);
 						holding = null;
@@ -161,16 +161,16 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 		}
 	}
 
-	private void dropItem(final ItemStack item) {
-		final EntityItem entityitem = new EntityItem(npc.worldObj, npc.posX, npc.posY, npc.posZ, item);
+	private void dropItem(ItemStack item) {
+		EntityItem entityitem = new EntityItem(npc.worldObj, npc.posX, npc.posY, npc.posZ, item);
 		entityitem.setDefaultPickupDelay();
 		npc.worldObj.spawnEntityInWorld(entityitem);
 	}
 
 	@Override
 	public IItemStack getMainhand() {
-		final String name = npc.getDataWatcher().getWatchableObjectString(17);
-		final ItemStack item = stringToItem(name);
+		String name = npc.getDataWatcher().getWatchableObjectString(17);
+		ItemStack item = stringToItem(name);
 		if (item == null) {
 			return npc.inventory.weapons.get(0);
 		}
@@ -192,14 +192,14 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 		return 16;
 	}
 
-	private ItemStack mergeStack(final IInventory inventory, final int slot, final ItemStack item) {
-		final ItemStack item2 = inventory.getStackInSlot(slot);
+	private ItemStack mergeStack(IInventory inventory, int slot, ItemStack item) {
+		ItemStack item2 = inventory.getStackInSlot(slot);
 		if (!NoppesUtilPlayer.compareItems(item, item2, false, false)) {
 			return item;
 		}
-		final int size = item2.getMaxStackSize() - item2.stackSize;
+		int size = item2.getMaxStackSize() - item2.stackSize;
 		if (size >= item.stackSize) {
-			final ItemStack itemStack = item2;
+			ItemStack itemStack = item2;
 			itemStack.stackSize += item.stackSize;
 			return null;
 		}
@@ -233,7 +233,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 			}
 			if (b instanceof BlockStem) {
 				state = b.getActualState(state, npc.worldObj, pos);
-				final EnumFacing facing = state.getValue(BlockStem.FACING);
+				EnumFacing facing = state.getValue(BlockStem.FACING);
 				if ((facing == EnumFacing.UP) || (facing == EnumFacing.DOWN)) {
 					return;
 				}
@@ -249,11 +249,11 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	}
 
 	@Override
-	public void processed(final List<BlockData> list) {
-		final List<BlockPos> trackedBlocks = new ArrayList<BlockPos>();
+	public void processed(List<BlockData> list) {
+		List<BlockPos> trackedBlocks = new ArrayList<BlockPos>();
 		BlockPos chest = null;
-		for (final BlockData data : list) {
-			final Block b = data.state.getBlock();
+		for (BlockData data : list) {
+			Block b = data.state.getBlock();
 			if (b instanceof BlockChest) {
 				if ((chest != null) && (npc.getDistanceSq(chest) <= npc.getDistanceSq(data.pos))) {
 					continue;
@@ -275,7 +275,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		chestMode = compound.getInteger("JobChestMode");
 		if (compound.hasKey("JobHolding")) {
 			holding = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("JobHolding"));
@@ -283,7 +283,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 		blockTicks = 1100;
 	}
 
-	public void setHolding(final ItemStack item) {
+	public void setHolding(ItemStack item) {
 		holding = item;
 		if (holding == null) {
 			npc.getDataWatcher().updateObject(17, "");
@@ -293,7 +293,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("JobChestMode", chestMode);
 		if (holding != null) {
 			compound.setTag("JobHolding", holding.writeToNBT(new NBTTagCompound()));

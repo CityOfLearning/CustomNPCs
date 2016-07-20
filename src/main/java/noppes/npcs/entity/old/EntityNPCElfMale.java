@@ -12,7 +12,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCElfMale extends EntityNPCInterface {
-	public EntityNPCElfMale(final World world) {
+	public EntityNPCElfMale(World world) {
 		super(world);
 		scaleX = 0.85f;
 		scaleY = 1.07f;
@@ -24,11 +24,11 @@ public class EntityNPCElfMale extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.getPartConfig(EnumParts.LEG_LEFT).setScale(0.85f, 1.15f);
 			data.getPartConfig(EnumParts.ARM_LEFT).setScale(0.85f, 1.15f);
 			data.getPartConfig(EnumParts.BODY).setScale(0.85f, 1.15f);

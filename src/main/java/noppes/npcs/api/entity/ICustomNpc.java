@@ -16,7 +16,7 @@ import noppes.npcs.api.entity.data.INPCStats;
 import noppes.npcs.api.handler.data.IFaction;
 
 public interface ICustomNpc<T extends EntityCreature> extends IEntityLivingBase<T> {
-	void executeCommand(final String p0);
+	void executeCommand(String p0);
 
 	INPCAi getAi();
 
@@ -43,17 +43,17 @@ public interface ICustomNpc<T extends EntityCreature> extends IEntityLivingBase<
 
 	ITimers getTimers();
 
-	void giveItem(final IPlayer p0, final IItemStack p1);
+	void giveItem(IPlayer p0, IItemStack p1);
 
 	void kill();
 
 	void reset();
 
-	void say(final String p0);
+	void say(String p0);
 
-	void setFaction(final int p0);
+	void setFaction(int p0);
 
-	void setHome(final int p0, final int p1, final int p2);
+	void setHome(int p0, int p1, int p2);
 
-	void shootItem(final IEntityLivingBase p0, final IItemStack p1, final int p2);
+	void shootItem(IEntityLivingBase p0, IItemStack p1, int p2);
 }

@@ -5,17 +5,17 @@
 package noppes.npcs.api.constants;
 
 public class JobType {
-	public static final int NONE = 0;
-	public static final int BARD = 1;
-	public static final int HEALER = 2;
-	public static final int GUARD = 3;
-	public static final int ITEMGIVER = 4;
-	public static final int FOLLOWER = 5;
-	public static final int SPAWNER = 6;
-	public static final int CONVERSATION = 7;
-	public static final int CHUNKLOADER = 8;
-	public static final int PUPPET = 9;
-	public static final int BUILDER = 10;
-	public static final int FARMER = 11;
-	public static final int MAXSIZE = 12;
+	public static int NONE = 0;
+	public static int BARD = 1;
+	public static int HEALER = 2;
+	public static int GUARD = 3;
+	public static int ITEMGIVER = 4;
+	public static int FOLLOWER = 5;
+	public static int SPAWNER = 6;
+	public static int CONVERSATION = 7;
+	public static int CHUNKLOADER = 8;
+	public static int PUPPET = 9;
+	public static int BUILDER = 10;
+	public static int FARMER = 11;
+	public static int MAXSIZE = 12;
 }

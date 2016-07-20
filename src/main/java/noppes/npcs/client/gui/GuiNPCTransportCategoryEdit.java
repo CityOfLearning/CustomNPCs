@@ -20,8 +20,7 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
 	private String name;
 	private int id;
 
-	public GuiNPCTransportCategoryEdit(final EntityNPCInterface npc, final GuiScreen parent, final String name,
-			final int id) {
+	public GuiNPCTransportCategoryEdit(EntityNPCInterface npc, GuiScreen parent, String name, int id) {
 		super(npc);
 		this.parent = parent;
 		this.name = name;
@@ -30,8 +29,8 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 2) {
 			NoppesUtil.openGUI(player, parent);
 			Client.sendData(EnumPacketServer.TransportCategoriesGet, new Object[0]);
@@ -44,7 +43,7 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
 	}
 
@@ -59,7 +58,7 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
 
 	@Override
 	public void save() {
-		final String name = getTextField(1).getText();
+		String name = getTextField(1).getText();
 		if (name.trim().isEmpty()) {
 			return;
 		}

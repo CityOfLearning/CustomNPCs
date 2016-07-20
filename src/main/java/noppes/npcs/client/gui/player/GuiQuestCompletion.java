@@ -20,9 +20,9 @@ import noppes.npcs.controllers.quest.Quest;
 
 public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonListener {
 	private Quest quest;
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 
-	public GuiQuestCompletion(final Quest quest) {
+	public GuiQuestCompletion(Quest quest) {
 		resource = new ResourceLocation("customnpcs", "textures/gui/smallbg.png");
 		xSize = 176;
 		ySize = 222;
@@ -32,27 +32,27 @@ public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonLis
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 0) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.QuestCompletion, quest.id);
 			close();
 		}
 	}
 
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 	}
 
 	private void drawQuestText() {
-		final TextBlockClient block = new TextBlockClient(quest.completeText, 172, true, new Object[] { player });
+		TextBlockClient block = new TextBlockClient(quest.completeText, 172, true, new Object[] { player });
 		for (int i = 0; i < block.lines.size(); ++i) {
-			final String text = block.lines.get(i).getFormattedText();
+			String text = block.lines.get(i).getFormattedText();
 			fontRendererObj.drawString(text, guiLeft + 4, guiTop + 16 + (i * fontRendererObj.FONT_HEIGHT),
 					CustomNpcResourceListener.DefaultTextColor);
 		}
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		drawDefaultBackground();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
@@ -66,15 +66,15 @@ public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonLis
 	@Override
 	public void initGui() {
 		super.initGui();
-		final String questTitle = quest.title;
-		final int left = (xSize - fontRendererObj.getStringWidth(questTitle)) / 2;
+		String questTitle = quest.title;
+		int left = (xSize - fontRendererObj.getStringWidth(questTitle)) / 2;
 		addLabel(new GuiNpcLabel(0, questTitle, guiLeft + left, guiTop + 4));
 		addButton(new GuiNpcButton(0, guiLeft + 38, (guiTop + ySize) - 24, 100, 20,
 				StatCollector.translateToLocal("quest.complete")));
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}

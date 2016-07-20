@@ -11,10 +11,9 @@ import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.roles.RoleCompanion;
 
 class SlotCompanionWeapon extends Slot {
-	final RoleCompanion role;
+	RoleCompanion role;
 
-	public SlotCompanionWeapon(final RoleCompanion role, final IInventory iinventory, final int id, final int x,
-			final int y) {
+	public SlotCompanionWeapon(RoleCompanion role, IInventory iinventory, int id, int x, int y) {
 		super(iinventory, id, x, y);
 		this.role = role;
 	}
@@ -25,7 +24,7 @@ class SlotCompanionWeapon extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
+	public boolean isItemValid(ItemStack itemstack) {
 		return (itemstack != null) && role.canWearSword(new ItemStackWrapper(itemstack));
 	}
 }

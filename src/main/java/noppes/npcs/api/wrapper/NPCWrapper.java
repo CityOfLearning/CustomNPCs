@@ -26,12 +26,12 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.ValueUtil;
 
 public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrapper<T> implements ICustomNpc {
-	public NPCWrapper(final T npc) {
+	public NPCWrapper(T npc) {
 		super(npc);
 	}
 
 	@Override
-	public void executeCommand(final String command) {
+	public void executeCommand(String command) {
 		NoppesUtilServer.runCommand(entity, entity.getName(), command, null);
 	}
 
@@ -113,7 +113,7 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
 	}
 
 	@Override
-	public void giveItem(final IPlayer player, final IItemStack item) {
+	public void giveItem(IPlayer player, IItemStack item) {
 		entity.givePlayerItem(player.getMCEntity(), item.getMCItemStack());
 	}
 
@@ -128,13 +128,13 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
 	}
 
 	@Override
-	public void say(final String message) {
+	public void say(String message) {
 		entity.saySurrounding(new Line(message));
 	}
 
 	@Override
-	public void setFaction(final int id) {
-		final Faction faction = FactionController.getInstance().getFaction(id);
+	public void setFaction(int id) {
+		Faction faction = FactionController.getInstance().getFaction(id);
 		if (faction == null) {
 			throw new CustomNPCsException("Unknown faction id: " + id, new Object[0]);
 		}
@@ -142,24 +142,24 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
 	}
 
 	@Override
-	public void setHome(final int x, final int y, final int z) {
+	public void setHome(int x, int y, int z) {
 		entity.ai.setStartPos(new BlockPos(x, y, z));
 	}
 
 	@Override
-	public void setMaxHealth(final float health) {
+	public void setMaxHealth(float health) {
 		super.setMaxHealth(health);
 		entity.stats.maxHealth = (int) health;
 	}
 
-	public void setOffset(final int x, final int y, final int z) {
+	public void setOffset(int x, int y, int z) {
 		entity.ai.bodyOffsetX = ValueUtil.correctFloat(x, 0.0f, 9.0f);
 		entity.ai.bodyOffsetY = ValueUtil.correctFloat(y, 0.0f, 9.0f);
 		entity.ai.bodyOffsetZ = ValueUtil.correctFloat(z, 0.0f, 9.0f);
 	}
 
 	@Override
-	public void shootItem(final IEntityLivingBase target, final IItemStack item, int accuracy) {
+	public void shootItem(IEntityLivingBase target, IItemStack item, int accuracy) {
 		if (item == null) {
 			throw new CustomNPCsException("No item was given", new Object[0]);
 		}
@@ -169,9 +169,9 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
 		accuracy = ValueUtil.CorrectInt(accuracy, 1, 100);
 		entity.shoot(target.getMCEntity(), accuracy, item.getMCItemStack(), false);
 	}
-	
+
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return (type == 2) || super.typeOf(type);
 	}
 }

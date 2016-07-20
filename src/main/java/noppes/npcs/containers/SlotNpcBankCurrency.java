@@ -11,8 +11,7 @@ import net.minecraft.item.ItemStack;
 public class SlotNpcBankCurrency extends Slot {
 	public ItemStack item;
 
-	public SlotNpcBankCurrency(final ContainerNPCBankInterface containerplayer, final IInventory iinventory,
-			final int i, final int j, final int k) {
+	public SlotNpcBankCurrency(ContainerNPCBankInterface containerplayer, IInventory iinventory, int i, int j, int k) {
 		super(iinventory, i, j, k);
 		item = null;
 	}
@@ -23,7 +22,7 @@ public class SlotNpcBankCurrency extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
+	public boolean isItemValid(ItemStack itemstack) {
 		return (item != null) && ((item.getItem() == itemstack.getItem())
 				&& (!item.getHasSubtypes() || (item.getItemDamage() == itemstack.getItemDamage())));
 	}

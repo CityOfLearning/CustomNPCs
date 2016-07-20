@@ -26,11 +26,11 @@ public class TileCopy extends TileEntity {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setShort("Length", length);
 		compound.setShort("Width", width);
 		compound.setShort("Height", height);
-		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
 	}
 
@@ -41,15 +41,15 @@ public class TileCopy extends TileEntity {
 	}
 
 	@Override
-	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
-		final NBTTagCompound compound = pkt.getNbtCompound();
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound compound = pkt.getNbtCompound();
 		length = compound.getShort("Length");
 		width = compound.getShort("Width");
 		height = compound.getShort("Height");
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		length = compound.getShort("Length");
 		width = compound.getShort("Width");
@@ -58,7 +58,7 @@ public class TileCopy extends TileEntity {
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setShort("Length", length);
 		compound.setShort("Width", width);

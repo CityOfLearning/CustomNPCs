@@ -20,14 +20,14 @@ import noppes.npcs.constants.EnumPacketServer;
 public class GuiNpcRedstoneBlock extends GuiNPCInterface implements IGuiData {
 	private TileRedstoneBlock tile;
 
-	public GuiNpcRedstoneBlock(final int x, final int y, final int z) {
+	public GuiNpcRedstoneBlock(int x, int y, int z) {
 		tile = (TileRedstoneBlock) player.worldObj.getTileEntity(new BlockPos(x, y, z));
 		Client.sendData(EnumPacketServer.GetTileEntity, x, y, z);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			close();
 		}
@@ -124,14 +124,14 @@ public class GuiNpcRedstoneBlock extends GuiNPCInterface implements IGuiData {
 				tile.offRange = tile.onRange;
 			}
 		}
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		tile.writeToNBT(compound);
 		compound.removeTag("BlockActivated");
 		Client.sendData(EnumPacketServer.SaveTileEntity, compound);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		tile.readFromNBT(compound);
 	}
 }

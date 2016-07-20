@@ -34,7 +34,7 @@ import tconstruct.client.tabs.InventoryTabQuests;
 import tconstruct.client.tabs.TabRegistry;
 
 public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, ICustomScrollListener, IGuiData {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	private EntityPlayer player;
 	private GuiCustomScroll scroll;
 	private HashMap<Integer, GuiMenuSideButton> sideButtons;
@@ -43,7 +43,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	private boolean questDetails;
 	private Minecraft mc;
 
-	public GuiQuestLog(final EntityPlayer player) {
+	public GuiQuestLog(EntityPlayer player) {
 		resource = new ResourceLocation("customnpcs", "textures/gui/standardbg.png");
 		sideButtons = new HashMap<Integer, GuiMenuSideButton>();
 		data = new QuestLogData();
@@ -58,7 +58,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (!(guibutton instanceof GuiButtonNextPage)) {
 			return;
 		}
@@ -73,7 +73,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		if (!scroll.hasSelected()) {
 			return;
 		}
@@ -87,7 +87,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	private void drawProgress() {
-		final String complete = data.getComplete();
+		String complete = data.getComplete();
 		if ((complete != null) && !complete.isEmpty()) {
 			mc.fontRendererObj.drawString(
 					StatCollector.translateToLocalFormatted("quest.completewith", new Object[] { complete }),
@@ -95,7 +95,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 		}
 		int yoffset = guiTop + 22;
 		for (String process : data.getQuestStatus()) {
-			final int index = process.lastIndexOf(":");
+			int index = process.lastIndexOf(":");
 			if (index > 0) {
 				String name = process.substring(0, index);
 				String trans = StatCollector.translateToLocal(name);
@@ -115,16 +115,16 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	private void drawQuestText() {
-		final TextBlockClient block = new TextBlockClient(data.getQuestText(), 174, true, new Object[] { player });
+		TextBlockClient block = new TextBlockClient(data.getQuestText(), 174, true, new Object[] { player });
 		for (int i = 0; i < block.lines.size(); ++i) {
-			final String text = block.lines.get(i).getFormattedText();
+			String text = block.lines.get(i).getFormattedText();
 			fontRendererObj.drawString(text, guiLeft + 142, guiTop + 20 + (i * fontRendererObj.FONT_HEIGHT),
 					CustomNpcResourceListener.DefaultTextColor);
 		}
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		if (scroll != null) {
 			scroll.visible = !noQuests;
 		}
@@ -139,7 +139,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 					CustomNpcResourceListener.DefaultTextColor);
 			return;
 		}
-		for (final GuiMenuSideButton button : sideButtons.values().toArray(new GuiMenuSideButton[sideButtons.size()])) {
+		for (GuiMenuSideButton button : sideButtons.values().toArray(new GuiMenuSideButton[sideButtons.size()])) {
 			button.drawButton(mc, i, j);
 		}
 		mc.fontRendererObj.drawString(data.selectedCategory, guiLeft + 5, guiTop + 5,
@@ -149,12 +149,12 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 		}
 		if (questDetails) {
 			drawProgress();
-			final String title = StatCollector.translateToLocal("gui.text");
+			String title = StatCollector.translateToLocal("gui.text");
 			mc.fontRendererObj.drawString(title, (guiLeft + 284) - mc.fontRendererObj.getStringWidth(title),
 					guiTop + 179, CustomNpcResourceListener.DefaultTextColor);
 		} else {
 			drawQuestText();
-			final String title = StatCollector.translateToLocal("quest.objectives");
+			String title = StatCollector.translateToLocal("quest.objectives");
 			mc.fontRendererObj.drawString(title, guiLeft + 168, guiTop + 179,
 					CustomNpcResourceListener.DefaultTextColor);
 		}
@@ -180,11 +180,11 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 			noQuests = true;
 			return;
 		}
-		final List<String> categories = new ArrayList<String>();
+		List<String> categories = new ArrayList<String>();
 		categories.addAll(data.categories.keySet());
 		Collections.sort(categories, String.CASE_INSENSITIVE_ORDER);
 		int i = 0;
-		for (final String category : categories) {
+		for (String category : categories) {
 			if (data.selectedCategory.isEmpty()) {
 				data.selectedCategory = category;
 			}
@@ -207,7 +207,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || (i == mc.gameSettings.keyBindInventory.getKeyCode())) {
 			mc.displayGuiScreen((GuiScreen) null);
 			mc.setIngameFocus();
@@ -215,13 +215,13 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if (k == 0) {
 			if (scroll != null) {
 				scroll.mouseClicked(i, j, k);
 			}
-			for (final GuiMenuSideButton button : new ArrayList<GuiMenuSideButton>(sideButtons.values())) {
+			for (GuiMenuSideButton button : new ArrayList<GuiMenuSideButton>(sideButtons.values())) {
 				if (button.mousePressed(mc, i, j)) {
 					sideButtonPressed(button);
 				}
@@ -234,14 +234,14 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final QuestLogData data = new QuestLogData();
+	public void setGuiData(NBTTagCompound compound) {
+		QuestLogData data = new QuestLogData();
 		data.readNBT(compound);
 		this.data = data;
 		initGui();
 	}
 
-	private void sideButtonPressed(final GuiMenuSideButton button) {
+	private void sideButtonPressed(GuiMenuSideButton button) {
 		if (button.active) {
 			return;
 		}

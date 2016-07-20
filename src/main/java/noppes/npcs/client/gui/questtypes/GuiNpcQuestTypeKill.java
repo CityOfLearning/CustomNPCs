@@ -30,7 +30,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	private QuestKill quest;
 	private GuiNpcTextField lastSelected;
 
-	public GuiNpcQuestTypeKill(final EntityNPCInterface npc, final Quest q, final GuiScreen parent) {
+	public GuiNpcQuestTypeKill(EntityNPCInterface npc, Quest q, GuiScreen parent) {
 		this.npc = npc;
 		title = "Quest Kill Setup";
 		quest = (QuestKill) q.questInterface;
@@ -41,7 +41,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
 		if (guibutton.id == 0) {
 			close();
@@ -49,7 +49,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (lastSelected == null) {
 			return;
 		}
@@ -62,7 +62,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 		super.initGui();
 		int i = 0;
 		addLabel(new GuiNpcLabel(0, "You can fill in npc or player names too", guiLeft + 4, guiTop + 50));
-		for (final String name : quest.targets.keySet()) {
+		for (String name : quest.targets.keySet()) {
 			addTextField(
 					new GuiNpcTextField(i, this, fontRendererObj, guiLeft + 4, guiTop + 70 + (i * 22), 180, 20, name));
 			addTextField(new GuiNpcTextField(i + 3, this, fontRendererObj, guiLeft + 186, guiTop + 70 + (i * 22), 24,
@@ -80,10 +80,10 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 			getTextField(i + 3).setMinMaxDefault(1, Integer.MAX_VALUE, 1);
 			++i;
 		}
-		final Map<?, ?> data = EntityList.stringToClassMapping;
-		final ArrayList<String> list = new ArrayList<String>();
-		for (final Object name2 : data.keySet()) {
-			final Class<?> c = (Class<?>) data.get(name2);
+		Map<?, ?> data = EntityList.stringToClassMapping;
+		ArrayList<String> list = new ArrayList<String>();
+		for (Object name2 : data.keySet()) {
+			Class<?> c = (Class<?>) data.get(name2);
 			try {
 				if (!EntityLivingBase.class.isAssignableFrom(c) || EntityNPCInterface.class.isAssignableFrom(c)
 						|| (c.getConstructor(World.class) == null) || Modifier.isAbstract(c.getModifiers())) {
@@ -108,7 +108,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.visible = GuiNpcTextField.isActive();
 	}
@@ -118,9 +118,9 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	private void saveTargets() {
-		final HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<String, Integer>();
 		for (int i = 0; i < 3; ++i) {
-			final String name = getTextField(i).getText();
+			String name = getTextField(i).getText();
 			if (!name.isEmpty()) {
 				map.put(name, getTextField(i + 3).getInteger());
 			}
@@ -129,7 +129,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
 		if (guiNpcTextField.id < 3) {
 			lastSelected = guiNpcTextField;
 		}

@@ -19,7 +19,7 @@ public class ContainerMail extends ContainerNpcInterface {
 	public PlayerMail mail;
 	private boolean canEdit;
 
-	public ContainerMail(final EntityPlayer player, final boolean canEdit, final boolean canSend) {
+	public ContainerMail(EntityPlayer player, boolean canEdit, boolean canSend) {
 		super(player);
 		mail = new PlayerMail();
 		mail = ContainerMail.staticmail;
@@ -40,11 +40,11 @@ public class ContainerMail extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer player) {
+	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
 		if (!canEdit && !player.worldObj.isRemote) {
-			final PlayerMailData data = PlayerDataController.instance.getPlayerData(player).mailData;
-			for (final PlayerMail mail : data.playermail) {
+			PlayerMailData data = PlayerDataController.instance.getPlayerData(player).mailData;
+			for (PlayerMail mail : data.playermail) {
 				if ((mail.time == this.mail.time) && mail.sender.equals(this.mail.sender)) {
 					mail.readNBT(this.mail.writeNBT());
 					break;
@@ -54,11 +54,11 @@ public class ContainerMail extends ContainerNpcInterface {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int par2) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
 		ItemStack itemstack = null;
-		final Slot slot = inventorySlots.get(par2);
+		Slot slot = inventorySlots.get(par2);
 		if ((slot != null) && slot.getHasStack()) {
-			final ItemStack itemstack2 = slot.getStack();
+			ItemStack itemstack2 = slot.getStack();
 			itemstack = itemstack2.copy();
 			if (par2 < 4) {
 				if (!mergeItemStack(itemstack2, 4, inventorySlots.size(), true)) {

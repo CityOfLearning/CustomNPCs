@@ -21,7 +21,7 @@ public class RolePostman extends RoleInterface {
 	private List<EntityPlayer> recentlyChecked;
 	private List<EntityPlayer> toCheck;
 
-	public RolePostman(final EntityNPCInterface npc) {
+	public RolePostman(EntityNPCInterface npc) {
 		super(npc);
 		inventory = new NpcMiscInventory(1);
 		recentlyChecked = new ArrayList<EntityPlayer>();
@@ -39,11 +39,11 @@ public class RolePostman extends RoleInterface {
 		}
 		(toCheck = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0))).removeAll(recentlyChecked);
-		final List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(20.0, 20.0, 20.0));
 		recentlyChecked.retainAll(listMax);
 		recentlyChecked.addAll(toCheck);
-		for (final EntityPlayer player : toCheck) {
+		for (EntityPlayer player : toCheck) {
 			if (PlayerDataController.instance.hasMail(player)) {
 				player.addChatMessage(new ChatComponentTranslation("You've got mail", new Object[0]));
 			}
@@ -52,17 +52,17 @@ public class RolePostman extends RoleInterface {
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		player.openGui(CustomNpcs.instance, EnumGuiType.PlayerMailman.ordinal(), player.worldObj, 1, 1, 0);
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		inventory.setFromNBT(nbttagcompound.getCompoundTag("PostInv"));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setTag("PostInv", inventory.getToNBT());
 		return nbttagcompound;
 	}

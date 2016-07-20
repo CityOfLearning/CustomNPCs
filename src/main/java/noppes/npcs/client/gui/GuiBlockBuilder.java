@@ -33,7 +33,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	private GuiCustomScroll scroll;
 	private Schematic selected;
 
-	public GuiBlockBuilder(final int x, final int y, final int z) {
+	public GuiBlockBuilder(int x, int y, int z) {
 		selected = null;
 		this.x = x;
 		this.y = y;
@@ -46,9 +46,9 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 3) {
-			final GuiNpcButtonYesNo button = (GuiNpcButtonYesNo) guibutton;
+			GuiNpcButtonYesNo button = (GuiNpcButtonYesNo) guibutton;
 			if (button.getBoolean()) {
 				TileBuilder.SetDrawPos(new BlockPos(x, y, z));
 				tile.setDrawSchematic(selected);
@@ -76,7 +76,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		if (!scroll.hasSelected()) {
 			return;
 		}
@@ -104,50 +104,50 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 						(TileBuilder.DrawPos != null) && tile.getPos().equals(TileBuilder.DrawPos)));
 				addLabel(new GuiNpcLabel(3, "schematic.preview", guiLeft + 130, y + 5));
 			}
-			final boolean id = false;
-			final String string = StatCollector.translateToLocal("schematic.width") + ": " + selected.width;
-			final int x = guiLeft + 130;
+			boolean id = false;
+			String string = StatCollector.translateToLocal("schematic.width") + ": " + selected.width;
+			int x = guiLeft + 130;
 			y += 22;
 			addLabel(new GuiNpcLabel(id ? 1 : 0, string, x, y));
-			final boolean id2 = true;
-			final String string2 = StatCollector.translateToLocal("schematic.length") + ": " + selected.length;
-			final int x2 = guiLeft + 130;
+			boolean id2 = true;
+			String string2 = StatCollector.translateToLocal("schematic.length") + ": " + selected.length;
+			int x2 = guiLeft + 130;
 			y += 12;
 			addLabel(new GuiNpcLabel(id2 ? 1 : 0, string2, x2, y));
-			final int id3 = 2;
-			final String string3 = StatCollector.translateToLocal("schematic.height") + ": " + selected.height;
-			final int x3 = guiLeft + 130;
+			int id3 = 2;
+			String string3 = StatCollector.translateToLocal("schematic.height") + ": " + selected.height;
+			int x3 = guiLeft + 130;
 			y += 12;
 			addLabel(new GuiNpcLabel(id3, string3, x3, y));
-			final int id4 = 4;
-			final int x4 = guiLeft + 200;
+			int id4 = 4;
+			int x4 = guiLeft + 200;
 			y += 16;
 			addButton(new GuiNpcButtonYesNo(id4, x4, y, tile.enabled));
 			addLabel(new GuiNpcLabel(4, StatCollector.translateToLocal("gui.enabled"), guiLeft + 130, y + 5));
-			final int id5 = 7;
-			final int x5 = guiLeft + 200;
+			int id5 = 7;
+			int x5 = guiLeft + 200;
 			y += 23;
 			addButton(new GuiNpcButtonYesNo(id5, x5, y, tile.finished));
 			addLabel(new GuiNpcLabel(7, StatCollector.translateToLocal("gui.finished"), guiLeft + 130, y + 5));
-			final int id6 = 8;
-			final int x6 = guiLeft + 200;
+			int id6 = 8;
+			int x6 = guiLeft + 200;
 			y += 23;
 			addButton(new GuiNpcButtonYesNo(id6, x6, y, tile.started));
 			addLabel(new GuiNpcLabel(8, StatCollector.translateToLocal("gui.started"), guiLeft + 130, y + 5));
-			final int id7 = 9;
-			final int i = guiLeft + 200;
+			int id7 = 9;
+			int i = guiLeft + 200;
 			y += 23;
 			addTextField(new GuiNpcTextField(id7, this, i, y, 50, 20, tile.yOffest + ""));
 			addLabel(new GuiNpcLabel(9, StatCollector.translateToLocal("gui.yoffset"), guiLeft + 130, y + 5));
 			getTextField(9).numbersOnly = true;
 			getTextField(9).setMinMaxDefault(-10, 10, 0);
-			final int j = 5;
-			final int k = guiLeft + 200;
+			int j = 5;
+			int k = guiLeft + 200;
 			y += 23;
 			addButton(new GuiNpcButton(j, k, y, 50, 20, new String[] { "0", "90", "180", "270" }, tile.rotation));
 			addLabel(new GuiNpcLabel(5, StatCollector.translateToLocal("movement.rotation"), guiLeft + 130, y + 5));
-			final int l = 6;
-			final int m = guiLeft + 130;
+			int l = 6;
+			int m = guiLeft + 130;
 			y += 22;
 			addButton(new GuiNpcButton(l, m, y, 120, 20, "availability.options"));
 		}
@@ -167,7 +167,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		scroll.setList(list);
 		if (selected != null) {
 			scroll.setSelected(selected.name);
@@ -176,7 +176,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("Width")) {
 			(selected = new Schematic(compound.getString("SchematicName"))).load(compound);
 			if ((TileBuilder.DrawPos != null) && TileBuilder.DrawPos.equals(tile.getPos())) {
@@ -191,6 +191,6 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

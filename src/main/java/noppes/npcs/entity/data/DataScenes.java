@@ -47,7 +47,7 @@ public class DataScenes {
 			events = new ArrayList<SceneEvent>();
 		}
 
-		private void handle(final SceneEvent event) throws Exception {
+		private void handle(SceneEvent event) throws Exception {
 			if (event.type == SceneType.MOVE) {
 				String[] param = event.param.split(" ");
 				while (param.length > 1) {
@@ -59,7 +59,7 @@ public class DataScenes {
 					}
 					BlockPos pos = null;
 					if (param[0].startsWith("@")) {
-						final EntityLivingBase entitylivingbase = (EntityLivingBase) CommandBase
+						EntityLivingBase entitylivingbase = (EntityLivingBase) CommandBase
 								.getEntity((ICommandSender) npc, param[0], (Class) EntityLivingBase.class);
 						if (entitylivingbase != null) {
 							pos = entitylivingbase.getPosition();
@@ -78,7 +78,7 @@ public class DataScenes {
 					npc.ai.setStartPos(pos);
 					npc.getNavigator().clearPathEntity();
 					if (move) {
-						final PathEntity pathentity = npc.getNavigator().getPathToPos(pos);
+						PathEntity pathentity = npc.getNavigator().getPathToPos(pos);
 						npc.getNavigator().setPath(pathentity, 1.0);
 					} else {
 						if (npc.isInRange(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, 2.0)) {
@@ -92,22 +92,22 @@ public class DataScenes {
 			} else if (event.type == SceneType.ROTATE) {
 				npc.lookAi.resetTask();
 				if (event.param.startsWith("@")) {
-					final EntityLivingBase entitylivingbase2 = (EntityLivingBase) CommandBase
-							.getEntity((ICommandSender) npc, event.param, (Class) EntityLivingBase.class);
+					EntityLivingBase entitylivingbase2 = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc,
+							event.param, (Class) EntityLivingBase.class);
 					npc.lookAi.rotate(npc.worldObj.getClosestPlayerToEntity(entitylivingbase2, 30.0));
 				} else {
 					npc.lookAi.rotate(Integer.parseInt(event.param));
 				}
 			} else if (event.type == SceneType.EQUIP) {
-				final String[] args = event.param.split(" ");
+				String[] args = event.param.split(" ");
 				if (args.length < 2) {
 					return;
 				}
 				IItemStack itemstack = null;
 				if (!args[1].equalsIgnoreCase("none")) {
-					final Item item = CommandBase.getItemByText(npc, args[1]);
-					final int i = (args.length >= 3) ? CommandBase.parseInt(args[2], 1, 64) : 1;
-					final int j = (args.length >= 4) ? CommandBase.parseInt(args[3]) : 0;
+					Item item = CommandBase.getItemByText(npc, args[1]);
+					int i = (args.length >= 3) ? CommandBase.parseInt(args[2], 1, 64) : 1;
+					int j = (args.length >= 4) ? CommandBase.parseInt(args[3]) : 0;
 					itemstack = new ItemStackWrapper(new ItemStack(item, i, j));
 				}
 				if (args[0].equalsIgnoreCase("main")) {
@@ -129,15 +129,15 @@ public class DataScenes {
 				if (event.param.equals("none")) {
 					npc.setAttackTarget(null);
 				} else {
-					final EntityLivingBase entity = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc,
+					EntityLivingBase entity = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc,
 							event.param, (Class) EntityLivingBase.class);
 					if (entity != null) {
 						npc.setAttackTarget(entity);
 					}
 				}
 			} else if (event.type == SceneType.THROW) {
-				final String[] args = event.param.split(" ");
-				final EntityLivingBase entity2 = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc, args[0],
+				String[] args = event.param.split(" ");
+				EntityLivingBase entity2 = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc, args[0],
 						(Class) EntityLivingBase.class);
 				if (entity2 == null) {
 					return;
@@ -148,7 +148,7 @@ public class DataScenes {
 				}
 				ItemStack stack = ItemStackWrapper.MCItem(npc.inventory.getProjectile());
 				if (args.length > 2) {
-					final Item item2 = CommandBase.getItemByText(npc, args[2]);
+					Item item2 = CommandBase.getItemByText(npc, args[2]);
 					stack = new ItemStack(item2, 1, 0);
 				}
 			} else if (event.type == SceneType.ANIMATE) {
@@ -179,7 +179,7 @@ public class DataScenes {
 					owner = null;
 					ownerScene = null;
 				} else {
-					final EntityLivingBase entity = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc,
+					EntityLivingBase entity = (EntityLivingBase) CommandBase.getEntity((ICommandSender) npc,
 							event.param, (Class) EntityLivingBase.class);
 					if (entity == null) {
 						return;
@@ -190,15 +190,15 @@ public class DataScenes {
 			}
 		}
 
-		public void readFromNBT(final NBTTagCompound compound) {
+		public void readFromNBT(NBTTagCompound compound) {
 			enabled = compound.getBoolean("Enabled");
 			name = compound.getString("Name");
 			lines = compound.getString("Lines");
 			btn = compound.getInteger("Button");
 			ticks = compound.getInteger("Ticks");
 			events = new ArrayList<SceneEvent>();
-			for (final String line : lines.split("\r\n|\r|\n")) {
-				final SceneEvent event = SceneEvent.parse(line);
+			for (String line : lines.split("\r\n|\r|\n")) {
+				SceneEvent event = SceneEvent.parse(line);
 				if (event != null) {
 					events.add(event);
 				}
@@ -210,7 +210,7 @@ public class DataScenes {
 			if (!enabled || events.isEmpty() || (state == null)) {
 				return;
 			}
-			for (final SceneEvent event : events) {
+			for (SceneEvent event : events) {
 				if (event.ticks > state.ticks) {
 					break;
 				}
@@ -242,7 +242,7 @@ public class DataScenes {
 			return (state != null) && !state.paused;
 		}
 
-		public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+		public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 			compound.setBoolean("Enabled", enabled);
 			compound.setString("Name", name);
 			compound.setString("Lines", lines);
@@ -254,7 +254,7 @@ public class DataScenes {
 
 	public static class SceneEvent implements Comparable<SceneEvent> {
 		public static SceneEvent parse(String str) {
-			final SceneEvent event = new SceneEvent();
+			SceneEvent event = new SceneEvent();
 			int i = str.indexOf(" ");
 			if (i <= 0) {
 				return null;
@@ -269,8 +269,8 @@ public class DataScenes {
 			if (i <= 0) {
 				return null;
 			}
-			final String name = str.substring(0, i);
-			for (final SceneType type : SceneType.values()) {
+			String name = str.substring(0, i);
+			for (SceneType type : SceneType.values()) {
 				if (name.equalsIgnoreCase(type.name())) {
 					event.type = type;
 				}
@@ -293,7 +293,7 @@ public class DataScenes {
 		}
 
 		@Override
-		public int compareTo(final SceneEvent o) {
+		public int compareTo(SceneEvent o) {
 			return ticks - o.ticks;
 		}
 
@@ -325,20 +325,20 @@ public class DataScenes {
 		DataScenes.ScenesToRun = new ArrayList<SceneContainer>();
 	}
 
-	public static void Pause(final ICommandSender sender, final String id) {
+	public static void Pause(ICommandSender sender, String id) {
 		if (id == null) {
-			for (final SceneState state : DataScenes.StartedScenes.values()) {
+			for (SceneState state : DataScenes.StartedScenes.values()) {
 				state.paused = true;
 			}
 			NoppesUtilServer.NotifyOPs("Paused all scenes", new Object[0]);
 		} else {
-			final SceneState state2 = DataScenes.StartedScenes.get(id.toLowerCase());
+			SceneState state2 = DataScenes.StartedScenes.get(id.toLowerCase());
 			state2.paused = true;
 			NoppesUtilServer.NotifyOPs("Paused scene %s at %s", id, state2.ticks);
 		}
 	}
 
-	public static void Reset(final ICommandSender sender, final String id) {
+	public static void Reset(ICommandSender sender, String id) {
 		if (id == null) {
 			DataScenes.StartedScenes = new HashMap<String, SceneState>();
 			NoppesUtilServer.NotifyOPs("Reset all scene", new Object[0]);
@@ -349,8 +349,8 @@ public class DataScenes {
 		}
 	}
 
-	public static void Start(final ICommandSender sender, final String id) {
-		final SceneState state = DataScenes.StartedScenes.get(id.toLowerCase());
+	public static void Start(ICommandSender sender, String id) {
+		SceneState state = DataScenes.StartedScenes.get(id.toLowerCase());
 		if (state == null) {
 			NoppesUtilServer.NotifyOPs("Started scene %s", id);
 			DataScenes.StartedScenes.put(id.toLowerCase(), new SceneState());
@@ -360,8 +360,8 @@ public class DataScenes {
 		}
 	}
 
-	public static void Toggle(final ICommandSender sender, final String id) {
-		final SceneState state = DataScenes.StartedScenes.get(id.toLowerCase());
+	public static void Toggle(ICommandSender sender, String id) {
+		SceneState state = DataScenes.StartedScenes.get(id.toLowerCase());
 		if ((state == null) || state.paused) {
 			Start(sender, id);
 		} else {
@@ -378,18 +378,18 @@ public class DataScenes {
 
 	private String ownerScene;
 
-	public DataScenes(final EntityNPCInterface npc) {
+	public DataScenes(EntityNPCInterface npc) {
 		scenes = new ArrayList<SceneContainer>();
 		owner = null;
 		ownerScene = null;
 		this.npc = npc;
 	}
 
-	public void addScene(final String name) {
+	public void addScene(String name) {
 		if (name.isEmpty()) {
 			return;
 		}
-		final SceneContainer scene = new SceneContainer();
+		SceneContainer scene = new SceneContainer();
 		scene.name = name;
 		scenes.add(scene);
 	}
@@ -398,11 +398,11 @@ public class DataScenes {
 		return owner;
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
-		final NBTTagList list = compound.getTagList("Scenes", 10);
-		final List<SceneContainer> scenes = new ArrayList<SceneContainer>();
+	public void readFromNBT(NBTTagCompound compound) {
+		NBTTagList list = compound.getTagList("Scenes", 10);
+		List<SceneContainer> scenes = new ArrayList<SceneContainer>();
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final SceneContainer scene = new SceneContainer();
+			SceneContainer scene = new SceneContainer();
 			scene.readFromNBT(list.getCompoundTagAt(i));
 			scenes.add(scene);
 		}
@@ -410,7 +410,7 @@ public class DataScenes {
 	}
 
 	public void update() {
-		for (final SceneContainer scene : scenes) {
+		for (SceneContainer scene : scenes) {
 			if (scene.validState()) {
 				DataScenes.ScenesToRun.add(scene);
 			}
@@ -421,9 +421,9 @@ public class DataScenes {
 		}
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
-		final NBTTagList list = new NBTTagList();
-		for (final SceneContainer scene : scenes) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+		NBTTagList list = new NBTTagList();
+		for (SceneContainer scene : scenes) {
 			list.appendTag(scene.writeToNBT(new NBTTagCompound()));
 		}
 		compound.setTag("Scenes", list);

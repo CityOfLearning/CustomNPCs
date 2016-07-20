@@ -21,14 +21,14 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.quests.QuestItem;
 
 public class GuiNpcQuestTypeItem extends GuiContainerNPCInterface implements ITextfieldListener {
-	private static final ResourceLocation field_110422_t;
+	private static ResourceLocation field_110422_t;
 	static {
 		field_110422_t = new ResourceLocation("customnpcs", "textures/gui/followersetup.png");
 	}
 
 	private Quest quest;
 
-	public GuiNpcQuestTypeItem(final EntityNPCInterface npc, final ContainerNpcQuestTypeItem container) {
+	public GuiNpcQuestTypeItem(EntityNPCInterface npc, ContainerNpcQuestTypeItem container) {
 		super(npc, container);
 		quest = GuiNPCManageQuest.quest;
 		title = "";
@@ -37,7 +37,7 @@ public class GuiNpcQuestTypeItem extends GuiContainerNPCInterface implements ITe
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 0) {
 			((QuestItem) quest.questInterface).leaveItems = (((GuiNpcButton) guibutton).getValue() == 1);
 		}
@@ -53,12 +53,12 @@ public class GuiNpcQuestTypeItem extends GuiContainerNPCInterface implements ITe
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawWorldBackground(0);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(GuiNpcQuestTypeItem.field_110422_t);
-		final int l = (width - xSize) / 2;
-		final int i2 = (height - ySize) / 2;
+		int l = (width - xSize) / 2;
+		int i2 = (height - ySize) / 2;
 		this.drawTexturedModalRect(l, i2, 0, 0, xSize, ySize);
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 	}
@@ -83,7 +83,7 @@ public class GuiNpcQuestTypeItem extends GuiContainerNPCInterface implements ITe
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		quest.rewardExp = textfield.getInteger();
 	}
 }

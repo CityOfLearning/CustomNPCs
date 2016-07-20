@@ -20,7 +20,7 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 
 public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldListener {
-	private static final ResourceLocation resource;
+	private static ResourceLocation resource;
 	static {
 		resource = new ResourceLocation("customnpcs:textures/gui/color.png");
 	}
@@ -30,7 +30,7 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 
 	public int color;
 
-	public SubGuiColorSelector(final int color) {
+	public SubGuiColorSelector(int color) {
 		xSize = 176;
 		ySize = 222;
 		this.color = color;
@@ -38,7 +38,7 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (btn.id == 66) {
 			close();
@@ -51,7 +51,7 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void drawScreen(final int par1, final int par2, final float par3) {
+	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		mc.getTextureManager().bindTexture(SubGuiColorSelector.resource);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -76,10 +76,10 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
-		final String prev = textfield.getText();
+	public void keyTyped(char c, int i) {
+		String prev = textfield.getText();
 		super.keyTyped(c, i);
-		final String newText = textfield.getText();
+		String newText = textfield.getText();
 		if (newText.equals(prev)) {
 			return;
 		}
@@ -92,15 +92,15 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if ((i < colorX) || (i > (colorX + 117)) || (j < colorY) || (j > (colorY + 117))) {
 			return;
 		}
 		InputStream stream = null;
 		try {
-			final IResource iresource = mc.getResourceManager().getResource(SubGuiColorSelector.resource);
-			final BufferedImage bufferedimage = ImageIO.read(stream = iresource.getInputStream());
+			IResource iresource = mc.getResourceManager().getResource(SubGuiColorSelector.resource);
+			BufferedImage bufferedimage = ImageIO.read(stream = iresource.getInputStream());
 			color = (bufferedimage.getRGB((i - guiLeft - 30) * 4, (j - guiTop - 50) * 4) & 0xFFFFFF);
 			textfield.setTextColor(color);
 			textfield.setText(getColor());
@@ -116,7 +116,7 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		int color = 0;
 		try {
 			color = Integer.parseInt(textfield.getText(), 16);

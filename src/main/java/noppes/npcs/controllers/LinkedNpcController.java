@@ -32,13 +32,13 @@ public class LinkedNpcController {
 		}
 
 		public NBTTagCompound getNBT() {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			compound.setString("LinkedName", name);
 			compound.setTag("NPCData", data);
 			return compound;
 		}
 
-		public void setNBT(final NBTTagCompound compound) {
+		public void setNBT(NBTTagCompound compound) {
 			name = compound.getString("LinkedName");
 			data = compound.getCompoundTag("NPCData");
 		}
@@ -53,22 +53,22 @@ public class LinkedNpcController {
 		(LinkedNpcController.Instance = this).load();
 	}
 
-	public void addData(final String name) {
+	public void addData(String name) {
 		if ((getData(name) != null) || name.isEmpty()) {
 			return;
 		}
-		final LinkedData data = new LinkedData();
+		LinkedData data = new LinkedData();
 		data.name = name;
 		list.add(data);
 		save();
 	}
 
-	private void cleanTags(final NBTTagCompound compound) {
+	private void cleanTags(NBTTagCompound compound) {
 		compound.removeTag("MovingPathNew");
 	}
 
-	public LinkedData getData(final String name) {
-		for (final LinkedData data : list) {
+	public LinkedData getData(String name) {
+		for (LinkedData data : list) {
 			if (data.name.equalsIgnoreCase(name)) {
 				return data;
 			}
@@ -77,7 +77,7 @@ public class LinkedNpcController {
 	}
 
 	public File getDir() {
-		final File dir = new File(CustomNpcs.getWorldSaveDirectory(), "linkednpcs");
+		File dir = new File(CustomNpcs.getWorldSaveDirectory(), "linkednpcs");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
@@ -92,11 +92,11 @@ public class LinkedNpcController {
 		}
 	}
 
-	public void loadNpcData(final EntityNPCInterface npc) {
+	public void loadNpcData(EntityNPCInterface npc) {
 		if (npc.linkedName.isEmpty()) {
 			return;
 		}
-		final LinkedData data = getData(npc.linkedName);
+		LinkedData data = getData(npc.linkedName);
 		if (data == null) {
 			npc.linkedLast = 0L;
 			npc.linkedName = "";
@@ -107,8 +107,8 @@ public class LinkedNpcController {
 				return;
 			}
 			npc.linkedLast = data.time;
-			final List<int[]> points = npc.ai.getMovingPath();
-			final NBTTagCompound compound = NBTTags.NBTMerge(readNpcData(npc), data.data);
+			List<int[]> points = npc.ai.getMovingPath();
+			NBTTagCompound compound = NBTTags.NBTMerge(readNpcData(npc), data.data);
 			npc.display.readToNBT(compound);
 			npc.stats.readToNBT(compound);
 			npc.advanced.readToNBT(compound);
@@ -125,14 +125,14 @@ public class LinkedNpcController {
 
 	private void loadNpcs() {
 		LogWriter.info("Loading Linked Npcs");
-		final File dir = getDir();
+		File dir = getDir();
 		if (dir.exists()) {
-			final List<LinkedData> list = new ArrayList<LinkedData>();
-			for (final File file : dir.listFiles()) {
+			List<LinkedData> list = new ArrayList<LinkedData>();
+			for (File file : dir.listFiles()) {
 				if (file.getName().endsWith(".json")) {
 					try {
-						final NBTTagCompound compound = NBTJsonUtil.LoadFile(file);
-						final LinkedData linked = new LinkedData();
+						NBTTagCompound compound = NBTJsonUtil.LoadFile(file);
+						LinkedData linked = new LinkedData();
 						linked.setNBT(compound);
 						list.add(linked);
 					} catch (Exception e) {
@@ -145,8 +145,8 @@ public class LinkedNpcController {
 		LogWriter.info("Done loading Linked Npcs");
 	}
 
-	private NBTTagCompound readNpcData(final EntityNPCInterface npc) {
-		final NBTTagCompound compound = new NBTTagCompound();
+	private NBTTagCompound readNpcData(EntityNPCInterface npc) {
+		NBTTagCompound compound = new NBTTagCompound();
 		npc.display.writeToNBT(compound);
 		npc.inventory.writeEntityToNBT(compound);
 		npc.stats.writeToNBT(compound);
@@ -157,8 +157,8 @@ public class LinkedNpcController {
 		return compound;
 	}
 
-	public void removeData(final String name) {
-		final Iterator<LinkedData> ita = list.iterator();
+	public void removeData(String name) {
+		Iterator<LinkedData> ita = list.iterator();
 		while (ita.hasNext()) {
 			if (ita.next().name.equalsIgnoreCase(name)) {
 				ita.remove();
@@ -168,7 +168,7 @@ public class LinkedNpcController {
 	}
 
 	public void save() {
-		for (final LinkedData npc : list) {
+		for (LinkedData npc : list) {
 			try {
 				saveNpc(npc);
 			} catch (IOException e) {
@@ -177,9 +177,9 @@ public class LinkedNpcController {
 		}
 	}
 
-	private void saveNpc(final LinkedData npc) throws IOException {
-		final File file = new File(getDir(), npc.name + ".json_new");
-		final File file2 = new File(getDir(), npc.name + ".json");
+	private void saveNpc(LinkedData npc) throws IOException {
+		File file = new File(getDir(), npc.name + ".json_new");
+		File file2 = new File(getDir(), npc.name + ".json");
 		try {
 			NBTJsonUtil.SaveFile(file, npc.getNBT());
 			if (file2.exists()) {
@@ -191,8 +191,8 @@ public class LinkedNpcController {
 		}
 	}
 
-	public void saveNpcData(final EntityNPCInterface npc) {
-		final NBTTagCompound compound = readNpcData(npc);
+	public void saveNpcData(EntityNPCInterface npc) {
+		NBTTagCompound compound = readNpcData(npc);
 		cleanTags(compound);
 		if (npc.linkedData.data.equals(compound)) {
 			return;

@@ -12,7 +12,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNpcSkeleton extends EntityNPCInterface {
-	public EntityNpcSkeleton(final World world) {
+	public EntityNpcSkeleton(World world) {
 		super(world);
 		display.setSkinTexture("customnpcs:textures/entity/skeleton/Skeleton.png");
 	}
@@ -21,11 +21,11 @@ public class EntityNpcSkeleton extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.setEntityClass(EntitySkeleton.class);
 			worldObj.spawnEntityInWorld(npc);
 		}

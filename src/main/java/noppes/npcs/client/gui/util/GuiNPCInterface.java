@@ -60,7 +60,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		this(null);
 	}
 
-	public GuiNPCInterface(final EntityNPCInterface npc) {
+	public GuiNPCInterface(EntityNPCInterface npc) {
 		drawDefaultBackground = true;
 		buttons = new ConcurrentHashMap<Integer, GuiNpcButton>();
 		topbuttons = new ConcurrentHashMap<Integer, GuiMenuTopButton>();
@@ -84,7 +84,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (subgui != null) {
 			subgui.buttonEvent(guibutton);
 		} else {
@@ -92,45 +92,45 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		}
 	}
 
-	public void addButton(final GuiNpcButton button) {
+	public void addButton(GuiNpcButton button) {
 		buttons.put(button.id, button);
 		buttonList.add(button);
 	}
 
-	public void addExtra(final GuiHoverText gui) {
+	public void addExtra(GuiHoverText gui) {
 		gui.setWorldAndResolution(mc, 350, 250);
 		extra.put(gui.id, gui);
 	}
 
-	public void addLabel(final GuiNpcLabel label) {
+	public void addLabel(GuiNpcLabel label) {
 		labels.put(label.id, label);
 	}
 
-	public void addScroll(final GuiCustomScroll scroll) {
+	public void addScroll(GuiCustomScroll scroll) {
 		scroll.setWorldAndResolution(mc, 350, 250);
 		scrolls.put(scroll.id, scroll);
 	}
 
-	public void addSideButton(final GuiMenuSideButton button) {
+	public void addSideButton(GuiMenuSideButton button) {
 		sidebuttons.put(button.id, button);
 		buttonList.add(button);
 	}
 
-	public void addSlider(final GuiNpcSlider slider) {
+	public void addSlider(GuiNpcSlider slider) {
 		sliders.put(slider.id, slider);
 		buttonList.add(slider);
 	}
 
-	public void addTextField(final GuiNpcTextField tf) {
+	public void addTextField(GuiNpcTextField tf) {
 		textfields.put(tf.id, tf);
 	}
 
-	public void addTopButton(final GuiMenuTopButton button) {
+	public void addTopButton(GuiMenuTopButton button) {
 		topbuttons.put(button.id, button);
 		buttonList.add(button);
 	}
 
-	public void buttonEvent(final GuiButton guibutton) {
+	public void buttonEvent(GuiButton guibutton) {
 	}
 
 	public void close() {
@@ -139,11 +139,11 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		save();
 	}
 
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		subgui = null;
 	}
 
-	public void displayGuiScreen(final GuiScreen gui) {
+	public void displayGuiScreen(GuiScreen gui) {
 		mc.displayGuiScreen(gui);
 	}
 
@@ -160,8 +160,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		super.drawDefaultBackground();
 	}
 
-	public void drawNpc(final EntityLivingBase entity, final int x, final int y, final float zoomed,
-			final int rotation) {
+	public void drawNpc(EntityLivingBase entity, int x, int y, float zoomed, int rotation) {
 		EntityNPCInterface npc = null;
 		if (entity instanceof EntityNPCInterface) {
 			npc = (EntityNPCInterface) entity;
@@ -177,12 +176,12 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		GlStateManager.scale(-30.0f * scale * zoomed, 30.0f * scale * zoomed, 30.0f * scale * zoomed);
 		GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
 		RenderHelper.enableStandardItemLighting();
-		final float f2 = entity.renderYawOffset;
-		final float f3 = entity.rotationYaw;
-		final float f4 = entity.rotationPitch;
-		final float f5 = entity.rotationYawHead;
-		final float f6 = (guiLeft + x) - mouseX;
-		final float f7 = (guiTop + y) - (50.0f * scale * zoomed) - mouseY;
+		float f2 = entity.renderYawOffset;
+		float f3 = entity.rotationYaw;
+		float f4 = entity.rotationPitch;
+		float f5 = entity.rotationYawHead;
+		float f6 = (guiLeft + x) - mouseX;
+		float f7 = (guiTop + y) - (50.0f * scale * zoomed) - mouseY;
 		int orientation = 0;
 		if (npc != null) {
 			orientation = npc.ai.orientation;
@@ -197,16 +196,16 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		entity.rotationYawHead = entity.rotationYaw;
 		mc.getRenderManager().playerViewY = 180.0f;
 		mc.getRenderManager().renderEntityWithPosYaw(entity, 0.0, 0.0, 0.0, 0.0f, 1.0f);
-		final float n = f2;
+		float n = f2;
 		entity.renderYawOffset = n;
 		entity.prevRenderYawOffset = n;
-		final float n2 = f3;
+		float n2 = f3;
 		entity.rotationYaw = n2;
 		entity.prevRotationYaw = n2;
-		final float n3 = f4;
+		float n3 = f4;
 		entity.rotationPitch = n3;
 		entity.prevRotationPitch = n3;
-		final float n4 = f5;
+		float n4 = f5;
 		entity.rotationYawHead = n4;
 		entity.prevRotationYawHead = n4;
 		if (npc != null) {
@@ -220,12 +219,12 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		GlStateManager.setActiveTexture(OpenGlHelper.defaultTexUnit);
 	}
 
-	public void drawNpc(final int x, final int y) {
+	public void drawNpc(int x, int y) {
 		this.drawNpc(npc, x, y, 1.0f, 0);
 	}
 
 	@Override
-	public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
+	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		if (GuiNPCInterface.AWTWindow != null) {
 			if (!GuiNPCInterface.AWTWindow.isVisible()) {
 				GuiNPCInterface.AWTWindow.dispose();
@@ -255,16 +254,17 @@ public abstract class GuiNPCInterface extends GuiScreen {
 			GlStateManager.popMatrix();
 		}
 		drawCenteredString(fontRendererObj, title, width / 2, 8, 16777215);
-		for (final GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
+		for (GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
 			label.drawLabel(this, fontRendererObj);
 		}
-		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 			tf.drawTextBox(mouseX, mouseY);
 		}
-		for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
-			scroll.drawScreen(mouseX, mouseY, partialTicks, (!hasSubGui() && scroll.isMouseOver(mouseX, mouseY)) ? Mouse.getDWheel() : 0);
+		for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+			scroll.drawScreen(mouseX, mouseY, partialTicks,
+					(!hasSubGui() && scroll.isMouseOver(mouseX, mouseY)) ? Mouse.getDWheel() : 0);
 		}
-		for (final GuiScreen gui : new ArrayList<GuiScreen>(extra.values())) {
+		for (GuiScreen gui : new ArrayList<GuiScreen>(extra.values())) {
 			gui.drawScreen(mouseX, mouseY, partialTicks);
 		}
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -279,7 +279,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		}
 	}
 
-	public GuiNpcButton getButton(final int id) {
+	public GuiNpcButton getButton(int id) {
 		return buttons.get(id);
 	}
 
@@ -287,23 +287,23 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		return fontRendererObj;
 	}
 
-	public GuiNpcLabel getLabel(final int id) {
+	public GuiNpcLabel getLabel(int id) {
 		return labels.get(id);
 	}
 
-	public ResourceLocation getResource(final String texture) {
+	public ResourceLocation getResource(String texture) {
 		return new ResourceLocation("customnpcs", "textures/gui/" + texture);
 	}
 
-	public GuiCustomScroll getScroll(final int id) {
+	public GuiCustomScroll getScroll(int id) {
 		return scrolls.get(id);
 	}
 
-	public GuiMenuSideButton getSideButton(final int id) {
+	public GuiMenuSideButton getSideButton(int id) {
 		return sidebuttons.get(id);
 	}
 
-	public GuiNpcSlider getSlider(final int id) {
+	public GuiNpcSlider getSlider(int id) {
 		return sliders.get(id);
 	}
 
@@ -314,11 +314,11 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		return subgui;
 	}
 
-	public GuiNpcTextField getTextField(final int id) {
+	public GuiNpcTextField getTextField(int id) {
 		return textfields.get(id);
 	}
 
-	public GuiMenuTopButton getTopButton(final int id) {
+	public GuiMenuTopButton getTopButton(int id) {
 		return topbuttons.get(id);
 	}
 
@@ -350,19 +350,19 @@ public abstract class GuiNPCInterface extends GuiScreen {
 	public void initPacket() {
 	}
 
-	public boolean isInventoryKey(final int id) {
+	public boolean isInventoryKey(int id) {
 		return id == mc.gameSettings.keyBindInventory.getKeyCode();
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if (GuiNPCInterface.AWTWindow != null) {
 			return;
 		}
 		if (subgui != null) {
 			subgui.keyTyped(c, i);
 		}
-		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 			tf.textboxKeyTyped(c, i);
 		}
 		if (closeOnEsc && ((i == 1) || (!GuiNpcTextField.isActive() && isInventoryKey(i)))) {
@@ -371,26 +371,26 @@ public abstract class GuiNPCInterface extends GuiScreen {
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		if (GuiNPCInterface.AWTWindow != null) {
 			return;
 		}
 		if (subgui != null) {
 			subgui.mouseClicked(i, j, k);
 		} else {
-			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 				if (tf.enabled) {
 					tf.mouseClicked(i, j, k);
 				}
 			}
 			mouseEvent(i, j, k);
 			if (k == 0) {
-				for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+				for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
 					scroll.mouseClicked(i, j, k);
 				}
 				for (GuiButton guibutton : buttonList) {
 					if (guibutton.mousePressed(mc, mouseX, mouseY)) {
-						final GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(
+						GuiScreenEvent.ActionPerformedEvent.Pre event = new GuiScreenEvent.ActionPerformedEvent.Pre(
 								this, guibutton, buttonList);
 						if (MinecraftForge.EVENT_BUS.post(event)) {
 							break;
@@ -410,11 +410,11 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		}
 	}
 
-	public void mouseEvent(final int mouseX, final int mouseY, final int state) {
+	public void mouseEvent(int mouseX, int mouseY, int state) {
 	}
 
 	@Override
-	public void mouseReleased(final int mouseX, final int mouseY, final int state) {
+	public void mouseReleased(int mouseX, int mouseY, int state) {
 		if ((selectedButton != null) && (state == 0)) {
 			selectedButton.mouseReleased(mouseX, mouseY);
 			selectedButton = null;
@@ -426,10 +426,10 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		GuiNpcTextField.unfocus();
 	}
 
-	public void openLink(final String link) {
+	public void openLink(String link) {
 		try {
-			final Class oclass = Class.forName("java.awt.Desktop");
-			final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+			Class oclass = Class.forName("java.awt.Desktop");
+			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
 			oclass.getMethod("browse", URI.class).invoke(object, new URI(link));
 		} catch (Throwable t) {
 		}
@@ -437,17 +437,17 @@ public abstract class GuiNPCInterface extends GuiScreen {
 
 	public abstract void save();
 
-	public void setBackground(final String texture) {
+	public void setBackground(String texture) {
 		background = new ResourceLocation("customnpcs", "textures/gui/" + texture);
 	}
 
-	public void setSubGui(final SubGuiInterface gui) {
+	public void setSubGui(SubGuiInterface gui) {
 		(subgui = gui).setWorldAndResolution(mc, width, height);
 		((GuiNPCInterface) (subgui.parent = this)).initGui();
 	}
 
 	@Override
-	public void setWorldAndResolution(final Minecraft mc, final int width, final int height) {
+	public void setWorldAndResolution(Minecraft mc, int width, int height) {
 		super.setWorldAndResolution(mc, width, height);
 		initPacket();
 	}
@@ -457,7 +457,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		if (subgui != null) {
 			subgui.updateScreen();
 		} else {
-			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 				if (tf.enabled) {
 					tf.updateCursorCounter();
 				}

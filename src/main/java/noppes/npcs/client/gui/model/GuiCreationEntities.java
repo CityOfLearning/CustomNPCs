@@ -32,19 +32,19 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 	private GuiCustomScroll scroll;
 	private boolean resetToSelected;
 
-	public GuiCreationEntities(final EntityNPCInterface npc) {
+	public GuiCreationEntities(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Class<? extends EntityLivingBase>>();
 		resetToSelected = true;
-		for (final Object name : EntityList.stringToClassMapping.keySet()) {
-			final Class<? extends Entity> c = EntityList.stringToClassMapping.get(name);
+		for (Object name : EntityList.stringToClassMapping.keySet()) {
+			Class<? extends Entity> c = EntityList.stringToClassMapping.get(name);
 			try {
 				if (!EntityLiving.class.isAssignableFrom(c) || (c.getConstructor(World.class) == null)
 						|| Modifier.isAbstract(c.getModifiers()) || !(Minecraft.getMinecraft().getRenderManager()
 								.getEntityClassRenderObject((Class) c) instanceof RendererLivingEntity)) {
 					continue;
 				}
-				final String s = name.toString();
+				String s = name.toString();
 				if (s.toLowerCase().contains("customnpc")) {
 					continue;
 				}
@@ -62,7 +62,7 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (btn.id == 10) {
 			playerdata.setEntityClass((Class<? extends EntityLivingBase>) null);
@@ -72,11 +72,11 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		playerdata.setEntityClass(data.get(scroll.getSelected()));
-		final Entity entity = playerdata.getEntity(npc);
+		Entity entity = playerdata.getEntity(npc);
 		if (entity != null) {
-			final RendererLivingEntity render = (RendererLivingEntity) mc.getRenderManager()
+			RendererLivingEntity render = (RendererLivingEntity) mc.getRenderManager()
 					.getEntityClassRenderObject((Class) entity.getClass());
 			npc.display.setSkinTexture(NPCRendererHelper.getTexture(render, entity));
 		} else {
@@ -97,7 +97,7 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 		scroll.setSize(100, ySize - 96);
 		String selected = "NPC";
 		if (entity != null) {
-			for (final Map.Entry<String, Class<? extends EntityLivingBase>> en : data.entrySet()) {
+			for (Map.Entry<String, Class<? extends EntityLivingBase>> en : data.entrySet()) {
 				if (en.getValue().toString().equals(entity.getClass().toString())) {
 					selected = en.getKey();
 				}

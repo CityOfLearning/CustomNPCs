@@ -13,7 +13,7 @@ public interface IBlockScriptedDoor extends IBlock {
 
 	ITimers getTimers();
 
-	void setBlockModel(final String p0);
+	void setBlockModel(String p0);
 
-	void setOpen(final boolean p0);
+	void setOpen(boolean p0);
 }

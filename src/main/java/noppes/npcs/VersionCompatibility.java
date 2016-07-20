@@ -24,7 +24,7 @@ public class VersionCompatibility {
 		VersionCompatibility.ModRev = 17;
 	}
 
-	public static void CheckAvailabilityCompatibility(final ICompatibilty compatibilty, final NBTTagCompound compound) {
+	public static void CheckAvailabilityCompatibility(ICompatibilty compatibilty, NBTTagCompound compound) {
 		if (compatibilty.getVersion() == VersionCompatibility.ModRev) {
 			return;
 		}
@@ -32,7 +32,7 @@ public class VersionCompatibility {
 		compatibilty.setVersion(VersionCompatibility.ModRev);
 	}
 
-	public static void CheckNpcCompatibility(final EntityNPCInterface npc, final NBTTagCompound compound) {
+	public static void CheckNpcCompatibility(EntityNPCInterface npc, NBTTagCompound compound) {
 		if (npc.npcVersion == VersionCompatibility.ModRev) {
 			return;
 		}
@@ -50,69 +50,69 @@ public class VersionCompatibility {
 			compound.setString("Texture", texture);
 		}
 		if ((npc.npcVersion < 6) && (compound.getTag("NpcInteractLines") instanceof NBTTagList)) {
-			final List<String> interactLines = NBTTags.getStringList(compound.getTagList("NpcInteractLines", 10));
+			List<String> interactLines = NBTTags.getStringList(compound.getTagList("NpcInteractLines", 10));
 			Lines lines = new Lines();
 			for (int i = 0; i < interactLines.size(); ++i) {
-				final Line line = new Line();
+				Line line = new Line();
 				line.text = (String) interactLines.toArray()[i];
 				lines.lines.put(i, line);
 			}
 			compound.setTag("NpcInteractLines", lines.writeToNBT());
-			final List<String> worldLines = NBTTags.getStringList(compound.getTagList("NpcLines", 10));
+			List<String> worldLines = NBTTags.getStringList(compound.getTagList("NpcLines", 10));
 			lines = new Lines();
 			for (int j = 0; j < worldLines.size(); ++j) {
-				final Line line2 = new Line();
+				Line line2 = new Line();
 				line2.text = (String) worldLines.toArray()[j];
 				lines.lines.put(j, line2);
 			}
 			compound.setTag("NpcLines", lines.writeToNBT());
-			final List<String> attackLines = NBTTags.getStringList(compound.getTagList("NpcAttackLines", 10));
+			List<String> attackLines = NBTTags.getStringList(compound.getTagList("NpcAttackLines", 10));
 			lines = new Lines();
 			for (int k = 0; k < attackLines.size(); ++k) {
-				final Line line3 = new Line();
+				Line line3 = new Line();
 				line3.text = (String) attackLines.toArray()[k];
 				lines.lines.put(k, line3);
 			}
 			compound.setTag("NpcAttackLines", lines.writeToNBT());
-			final List<String> killedLines = NBTTags.getStringList(compound.getTagList("NpcKilledLines", 10));
+			List<String> killedLines = NBTTags.getStringList(compound.getTagList("NpcKilledLines", 10));
 			lines = new Lines();
 			for (int l = 0; l < killedLines.size(); ++l) {
-				final Line line4 = new Line();
+				Line line4 = new Line();
 				line4.text = (String) killedLines.toArray()[l];
 				lines.lines.put(l, line4);
 			}
 			compound.setTag("NpcKilledLines", lines.writeToNBT());
 		}
 		if (npc.npcVersion == 12) {
-			final NBTTagList list = compound.getTagList("StartPos", 3);
+			NBTTagList list = compound.getTagList("StartPos", 3);
 			if (list.tagCount() == 3) {
-				final int z = ((NBTTagInt) list.removeTag(2)).getInt();
-				final int y = ((NBTTagInt) list.removeTag(1)).getInt();
-				final int x = ((NBTTagInt) list.removeTag(0)).getInt();
+				int z = ((NBTTagInt) list.removeTag(2)).getInt();
+				int y = ((NBTTagInt) list.removeTag(1)).getInt();
+				int x = ((NBTTagInt) list.removeTag(0)).getInt();
 				compound.setIntArray("StartPosNew", new int[] { x, y, z });
 			}
 		}
 		if (npc.npcVersion == 13) {
 			boolean bo = compound.getBoolean("HealthRegen");
 			compound.setInteger("HealthRegen", bo ? 1 : 0);
-			final NBTTagCompound comp = compound.getCompoundTag("TransformStats");
+			NBTTagCompound comp = compound.getCompoundTag("TransformStats");
 			bo = comp.getBoolean("HealthRegen");
 			comp.setInteger("HealthRegen", bo ? 1 : 0);
 			compound.setTag("TransformStats", comp);
 		}
 		if (npc.npcVersion == 15) {
-			final NBTTagList list = compound.getTagList("ScriptsContainers", 10);
+			NBTTagList list = compound.getTagList("ScriptsContainers", 10);
 			if (list.tagCount() > 0) {
-				final ScriptContainer script = new ScriptContainer(npc.script);
+				ScriptContainer script = new ScriptContainer(npc.script);
 				for (int i = 0; i < list.tagCount(); ++i) {
-					final NBTTagCompound scriptOld = list.getCompoundTagAt(i);
-					final EnumScriptType type = EnumScriptType.values()[scriptOld.getInteger("Type")];
-					final StringBuilder sb = new StringBuilder();
-					final ScriptContainer scriptContainer = script;
+					NBTTagCompound scriptOld = list.getCompoundTagAt(i);
+					EnumScriptType type = EnumScriptType.values()[scriptOld.getInteger("Type")];
+					StringBuilder sb = new StringBuilder();
+					ScriptContainer scriptContainer = script;
 					scriptContainer.script = sb.append(scriptContainer.script).append("\nfunction ")
 							.append(type.function).append("(event) {\n").append(scriptOld.getString("Script"))
 							.append("\n}").toString();
-					for (final String s : NBTTags.getStringList(compound.getTagList("ScriptList", 10))) {
+					for (String s : NBTTags.getStringList(compound.getTagList("ScriptList", 10))) {
 						if (!script.scripts.contains(s)) {
 							script.scripts.add(s);
 						}
@@ -133,10 +133,10 @@ public class VersionCompatibility {
 		npc.npcVersion = VersionCompatibility.ModRev;
 	}
 
-	private static void CompatabilityFix(final NBTTagCompound compound, final NBTTagCompound check) {
-		final Collection<String> tags = check.getKeySet();
-		for (final String name : tags) {
-			final NBTBase nbt = check.getTag(name);
+	private static void CompatabilityFix(NBTTagCompound compound, NBTTagCompound check) {
+		Collection<String> tags = check.getKeySet();
+		for (String name : tags) {
+			NBTBase nbt = check.getTag(name);
 			if (!compound.hasKey(name)) {
 				compound.setTag(name, nbt);
 			} else {

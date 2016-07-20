@@ -24,11 +24,11 @@ public class ModelHorseLegs extends ModelRenderer {
 	private ModelRenderer frontRightShin;
 	private ModelRenderer frontRightHoof;
 
-	public ModelHorseLegs(final ModelBiped model) {
+	public ModelHorseLegs(ModelBiped model) {
 		super(model);
-		final int zOffset = 10;
-		final float yOffset = 7.0f;
-		final ModelRenderer body = new ModelRenderer(model, 0, 34);
+		int zOffset = 10;
+		float yOffset = 7.0f;
+		ModelRenderer body = new ModelRenderer(model, 0, 34);
 		body.setTextureSize(128, 128);
 		body.addBox(-5.0f, -8.0f, -19.0f, 10, 10, 24);
 		body.setRotationPoint(0.0f, 11.0f + yOffset, 9.0f + zOffset);
@@ -83,8 +83,8 @@ public class ModelHorseLegs extends ModelRenderer {
 		frontRightLeg.addChild(frontRightHoof);
 	}
 
-	public void setRotationAngles(final ModelData data, final float par1, final float par2, final float par3,
-			final float par4, final float par5, final float par6, final Entity entity) {
+	public void setRotationAngles(ModelData data, float par1, float par2, float par3, float par4, float par5,
+			float par6, Entity entity) {
 		frontLeftLeg.rotateAngleX = MathHelper.cos(par1 * 0.6662f) * 0.4f * par2;
 		frontRightLeg.rotateAngleX = MathHelper.cos((par1 * 0.6662f) + 3.1415927f) * 0.4f * par2;
 		backLeftLeg.rotateAngleX = MathHelper.cos((par1 * 0.6662f) + 3.1415927f) * 0.4f * par2;

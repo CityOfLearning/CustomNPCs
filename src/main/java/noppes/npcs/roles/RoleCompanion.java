@@ -73,7 +73,7 @@ public class RoleCompanion extends RoleInterface {
 	private int eatingDelay;
 	public int currentExp;
 
-	public RoleCompanion(final EntityNPCInterface npc) {
+	public RoleCompanion(EntityNPCInterface npc) {
 		super(npc);
 		uuid = "";
 		ownerName = "";
@@ -94,14 +94,14 @@ public class RoleCompanion extends RoleInterface {
 		inventory = new NpcMiscInventory(12);
 	}
 
-	public void addExp(final int exp) {
+	public void addExp(int exp) {
 		if (canAddExp(exp)) {
 			currentExp += exp;
 		}
 	}
 
-	public void addMovementStat(final double x, final double y, final double z) {
-		final int i = Math.round(MathHelper.sqrt_double((x * x) + (y * y) + (z * z)) * 100.0f);
+	public void addMovementStat(double x, double y, double z) {
+		int i = Math.round(MathHelper.sqrt_double((x * x) + (y * y) + (z * z)) * 100.0f);
 		if (npc.isAttacking()) {
 			foodstats.addExhaustion(0.04f * i * 0.01f);
 		} else {
@@ -109,7 +109,7 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public void addTalentExp(final EnumCompanionTalent talent, int exp) {
+	public void addTalentExp(EnumCompanionTalent talent, int exp) {
 		if (talents.containsKey(talent)) {
 			exp += talents.get(talent);
 		}
@@ -118,7 +118,7 @@ public class RoleCompanion extends RoleInterface {
 
 	@Override
 	public boolean aiShouldExecute() {
-		final EntityPlayer prev = owner;
+		EntityPlayer prev = owner;
 		owner = getOwner();
 		if ((jobInterface != null) && jobInterface.isSelfSufficient()) {
 			return true;
@@ -127,7 +127,7 @@ public class RoleCompanion extends RoleInterface {
 			npc.isDead = true;
 		} else if ((prev != owner) && (owner != null)) {
 			ownerName = owner.getDisplayNameString();
-			final PlayerData data = PlayerDataController.instance.getPlayerData(owner);
+			PlayerData data = PlayerDataController.instance.getPlayerData(owner);
 			if (data.companionID != companionID) {
 				npc.isDead = true;
 			}
@@ -149,7 +149,7 @@ public class RoleCompanion extends RoleInterface {
 				--eatingDelay;
 				return;
 			}
-			final IItemStack prev = eating;
+			IItemStack prev = eating;
 			eating = getFood();
 			if ((prev != null) && (eating == null)) {
 				npc.setRoleDataWatcher("");
@@ -180,21 +180,21 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public float applyArmorCalculations(final DamageSource source, float damage) {
+	public float applyArmorCalculations(DamageSource source, float damage) {
 		if (!hasInv || (getTalentLevel(EnumCompanionTalent.ARMOR) <= 0)) {
 			return damage;
 		}
 		if (!source.isUnblockable()) {
 			damageArmor(damage);
-			final int i = 25 - getTotalArmorValue();
-			final float f1 = damage * i;
+			int i = 25 - getTotalArmorValue();
+			float f1 = damage * i;
 			damage = f1 / 25.0f;
 		}
 		return damage;
 	}
 
-	public void attackedEntity(final Entity entity) {
-		final IItemStack weapon = npc.inventory.getRightHand();
+	public void attackedEntity(Entity entity) {
+		IItemStack weapon = npc.inventory.getRightHand();
 		gainExp((weapon == null) ? 8 : 4);
 		if (weapon == null) {
 			return;
@@ -205,37 +205,37 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public boolean canAddExp(final int exp) {
-		final int newExp = currentExp + exp;
+	public boolean canAddExp(int exp) {
+		int newExp = currentExp + exp;
 		return (newExp >= 0) && (newExp < getMaxExp());
 	}
 
-	public boolean canWearArmor(final ItemStack item) {
-		final int level = getTalentLevel(EnumCompanionTalent.ARMOR);
+	public boolean canWearArmor(ItemStack item) {
+		int level = getTalentLevel(EnumCompanionTalent.ARMOR);
 		if ((item == null) || !(item.getItem() instanceof ItemArmor) || (level <= 0)) {
 			return false;
 		}
 		if (level >= 5) {
 			return true;
 		}
-		final ItemArmor armor = (ItemArmor) item.getItem();
-		final int reduction = (Integer) ObfuscationReflectionHelper
-				.getPrivateValue((Class) ItemArmor.ArmorMaterial.class, armor.getArmorMaterial(), 6);
+		ItemArmor armor = (ItemArmor) item.getItem();
+		int reduction = (Integer) ObfuscationReflectionHelper.getPrivateValue((Class) ItemArmor.ArmorMaterial.class,
+				armor.getArmorMaterial(), 6);
 		return ((reduction <= 5) && (level >= 1)) || ((reduction <= 7) && (level >= 2))
 				|| ((reduction <= 15) && (level >= 3)) || ((reduction <= 33) && (level >= 4));
 	}
 
-	public boolean canWearSword(final IItemStack item) {
-		final int level = getTalentLevel(EnumCompanionTalent.SWORD);
+	public boolean canWearSword(IItemStack item) {
+		int level = getTalentLevel(EnumCompanionTalent.SWORD);
 		return (item != null) && (item.getMCItemStack().getItem() instanceof ItemSword) && (level > 0)
 				&& ((level >= 5) || ((getSwordDamage(item) - level) < 4.0));
 	}
 
-	public boolean canWearWeapon(final IItemStack stack) {
+	public boolean canWearWeapon(IItemStack stack) {
 		if ((stack == null) || (stack.getMCItemStack().getItem() == null)) {
 			return false;
 		}
-		final Item item = stack.getMCItemStack().getItem();
+		Item item = stack.getMCItemStack().getItem();
 		if (item instanceof ItemSword) {
 			return canWearSword(stack);
 		}
@@ -263,10 +263,10 @@ public class RoleCompanion extends RoleInterface {
 			damage = 1.0f;
 		}
 		boolean hasArmor = false;
-		final Iterator<Map.Entry<Integer, IItemStack>> ita = npc.inventory.armor.entrySet().iterator();
+		Iterator<Map.Entry<Integer, IItemStack>> ita = npc.inventory.armor.entrySet().iterator();
 		while (ita.hasNext()) {
-			final Map.Entry<Integer, IItemStack> entry = ita.next();
-			final IItemStack item = entry.getValue();
+			Map.Entry<Integer, IItemStack> entry = ita.next();
+			IItemStack item = entry.getValue();
 			if (item != null) {
 				if (!(item.getMCItemStack().getItem() instanceof ItemArmor)) {
 					continue;
@@ -294,9 +294,9 @@ public class RoleCompanion extends RoleInterface {
 		}
 		ItemStack eating = this.eating.getMCItemStack();
 		if (npc.worldObj.isRemote) {
-			final Random rand = npc.getRNG();
+			Random rand = npc.getRNG();
 			for (int j = 0; j < 2; ++j) {
-				final Vec3 vec3 = new Vec3((rand.nextFloat() - 0.5) * 0.1, (Math.random() * 0.1) + 0.1, 0.0);
+				Vec3 vec3 = new Vec3((rand.nextFloat() - 0.5) * 0.1, (Math.random() * 0.1) + 0.1, 0.0);
 				vec3.rotateYaw((-npc.rotationPitch * 3.1415927f) / 180.0f);
 				vec3.rotatePitch((-npc.renderYawOffset * 3.1415927f) / 180.0f);
 				Vec3 vec4 = new Vec3((rand.nextFloat() - 0.5) * 0.3, (-rand.nextFloat() * 0.6) - 0.3,
@@ -319,7 +319,7 @@ public class RoleCompanion extends RoleInterface {
 			--eatingTicks;
 			if (eatingTicks <= 0) {
 				if (inventory.decrStackSize(eating, 1)) {
-					final ItemFood food = (ItemFood) eating.getItem();
+					ItemFood food = (ItemFood) eating.getItem();
 					foodstats.onFoodEaten(food, eating);
 					npc.playSound("random.burp", 0.5f, (npc.getRNG().nextFloat() * 0.1f) + 0.9f);
 				}
@@ -327,20 +327,20 @@ public class RoleCompanion extends RoleInterface {
 				npc.setRoleDataWatcher("");
 				eating = null;
 			} else if ((eatingTicks > 3) && ((eatingTicks % 2) == 0)) {
-				final Random rand = npc.getRNG();
+				Random rand = npc.getRNG();
 				npc.playSound("random.eat", 0.5f + (0.5f * rand.nextInt(2)),
 						((rand.nextFloat() - rand.nextFloat()) * 0.2f) + 1.0f);
 			}
 		}
 	}
 
-	public void gainExp(final int chance) {
+	public void gainExp(int chance) {
 		if (npc.getRNG().nextInt(chance) == 0) {
 			addExp(1);
 		}
 	}
 
-	public int getExp(final EnumCompanionTalent talent) {
+	public int getExp(EnumCompanionTalent talent) {
 		if (talents.containsKey(talent)) {
 			return talents.get(talent);
 		}
@@ -348,22 +348,22 @@ public class RoleCompanion extends RoleInterface {
 	}
 
 	private IItemStack getFood() {
-		final List<ItemStack> food = new ArrayList<ItemStack>(inventory.items.values());
-		final Iterator<ItemStack> ite = food.iterator();
+		List<ItemStack> food = new ArrayList<ItemStack>(inventory.items.values());
+		Iterator<ItemStack> ite = food.iterator();
 		int i = -1;
 		while (ite.hasNext()) {
-			final ItemStack is = ite.next();
+			ItemStack is = ite.next();
 			if ((is == null) || !(is.getItem() instanceof ItemFood)) {
 				ite.remove();
 			} else {
-				final int amount = ((ItemFood) is.getItem()).getDamage(is);
+				int amount = ((ItemFood) is.getItem()).getDamage(is);
 				if ((i != -1) && (amount >= i)) {
 					continue;
 				}
 				i = amount;
 			}
 		}
-		for (final ItemStack is2 : food) {
+		for (ItemStack is2 : food) {
 			if (((ItemFood) is2.getItem()).getDamage(is2) == i) {
 				return new ItemStackWrapper(is2);
 			}
@@ -382,11 +382,11 @@ public class RoleCompanion extends RoleInterface {
 		return 500 + (getTotalLevel() * 200);
 	}
 
-	public Integer getNextLevel(final EnumCompanionTalent talent) {
+	public Integer getNextLevel(EnumCompanionTalent talent) {
 		if (!talents.containsKey(talent)) {
 			return 0;
 		}
-		final int exp = talents.get(talent);
+		int exp = talents.get(talent);
 		if (exp < 400) {
 			return 400;
 		}
@@ -407,7 +407,7 @@ public class RoleCompanion extends RoleInterface {
 			return null;
 		}
 		try {
-			final UUID id = UUID.fromString(uuid);
+			UUID id = UUID.fromString(uuid);
 			if (id != null) {
 				return NoppesUtilServer.getPlayer(id);
 			}
@@ -416,25 +416,25 @@ public class RoleCompanion extends RoleInterface {
 		return null;
 	}
 
-	private double getSwordDamage(final IItemStack item) {
+	private double getSwordDamage(IItemStack item) {
 		if ((item == null) || !(item.getMCItemStack().getItem() instanceof ItemSword)) {
 			return 0.0;
 		}
-		final Multimap<String, AttributeModifier> map = item.getMCItemStack().getAttributeModifiers();
-		for (final Map.Entry<String, AttributeModifier> entry : map.entries()) {
+		Multimap<String, AttributeModifier> map = item.getMCItemStack().getAttributeModifiers();
+		for (Map.Entry<String, AttributeModifier> entry : map.entries()) {
 			if (entry.getKey().equals(SharedMonsterAttributes.attackDamage.getAttributeUnlocalizedName())) {
-				final AttributeModifier mod = entry.getValue();
+				AttributeModifier mod = entry.getValue();
 				return mod.getAmount();
 			}
 		}
 		return 0.0;
 	}
 
-	public int getTalentLevel(final EnumCompanionTalent talent) {
+	public int getTalentLevel(EnumCompanionTalent talent) {
 		if (!talents.containsKey(talent)) {
 			return 0;
 		}
-		final int exp = talents.get(talent);
+		int exp = talents.get(talent);
 		if (exp >= 5000) {
 			return 5;
 		}
@@ -455,7 +455,7 @@ public class RoleCompanion extends RoleInterface {
 
 	public int getTotalArmorValue() {
 		int armorValue = 0;
-		for (final IItemStack armor : npc.inventory.armor.values()) {
+		for (IItemStack armor : npc.inventory.armor.values()) {
 			if ((armor != null) && (armor.getMCItemStack().getItem() instanceof ItemArmor)) {
 				armorValue += ((ItemArmor) armor.getMCItemStack().getItem()).damageReduceAmount;
 			}
@@ -465,7 +465,7 @@ public class RoleCompanion extends RoleInterface {
 
 	public int getTotalLevel() {
 		int level = 0;
-		for (final EnumCompanionTalent talent : talents.keySet()) {
+		for (EnumCompanionTalent talent : talents.keySet()) {
 			level += getTalentLevel(talent);
 		}
 		return level;
@@ -480,12 +480,12 @@ public class RoleCompanion extends RoleInterface {
 		return !uuid.isEmpty();
 	}
 
-	public boolean hasTalent(final EnumCompanionTalent talent) {
+	public boolean hasTalent(EnumCompanionTalent talent) {
 		return getTalentLevel(talent) > 0;
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		if ((player != null) && (job == EnumCompanionJobs.SHOP)) {
 			((CompanionTrader) jobInterface).interact(player);
 		}
@@ -517,16 +517,16 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public void levelTalent(final EnumCompanionTalent talent, final int exp) {
+	public void levelTalent(EnumCompanionTalent talent, int exp) {
 		if (!talents.containsKey(EnumCompanionTalent.SWORD)) {
 			return;
 		}
 		talents.put(talent, exp + talents.get(talent));
 	}
 
-	public void matureTo(final EnumCompanionStage stage) {
+	public void matureTo(EnumCompanionStage stage) {
 		this.stage = stage;
-		final EntityCustomNpc npc = (EntityCustomNpc) this.npc;
+		EntityCustomNpc npc = (EntityCustomNpc) this.npc;
 		npc.ai.animationType = stage.animation;
 		if (stage == EnumCompanionStage.BABY) {
 			npc.modelData.getPartConfig(EnumParts.ARM_LEFT).setScale(0.5f, 0.5f, 0.5f);
@@ -571,12 +571,12 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	private void openGui(final EntityPlayer player) {
+	private void openGui(EntityPlayer player) {
 		NoppesUtilServer.sendOpenGui(player, EnumGuiType.Companion, npc);
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		inventory.setFromNBT(compound.getCompoundTag("CompanionInventory"));
 		uuid = compound.getString("CompanionOwner");
 		ownerName = compound.getString("CompanionOwnerName");
@@ -588,11 +588,11 @@ public class RoleCompanion extends RoleInterface {
 		hasInv = compound.getBoolean("CompanionHasInv");
 		defendOwner = compound.getBoolean("CompanionDefendOwner");
 		foodstats.readNBT(compound);
-		final NBTTagList list = compound.getTagList("CompanionTalents", 10);
-		final Map<EnumCompanionTalent, Integer> talents = new TreeMap<EnumCompanionTalent, Integer>();
+		NBTTagList list = compound.getTagList("CompanionTalents", 10);
+		Map<EnumCompanionTalent, Integer> talents = new TreeMap<EnumCompanionTalent, Integer>();
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final NBTTagCompound c = list.getCompoundTagAt(i);
-			final EnumCompanionTalent talent = EnumCompanionTalent.values()[c.getInteger("Talent")];
+			NBTTagCompound c = list.getCompoundTagAt(i);
+			EnumCompanionTalent talent = EnumCompanionTalent.values()[c.getInteger("Talent")];
 			talents.put(talent, c.getInteger("Exp"));
 		}
 		this.talents = talents;
@@ -603,11 +603,11 @@ public class RoleCompanion extends RoleInterface {
 		setStats();
 	}
 
-	public void setExp(final EnumCompanionTalent talent, final int exp) {
+	public void setExp(EnumCompanionTalent talent, int exp) {
 		talents.put(talent, exp);
 	}
 
-	private void setJob(final int i) {
+	private void setJob(int i) {
 		job = EnumCompanionJobs.values()[i];
 		if (job == EnumCompanionJobs.SHOP) {
 			jobInterface = new CompanionTrader();
@@ -623,15 +623,15 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public void setOwner(final EntityPlayer player) {
+	public void setOwner(EntityPlayer player) {
 		uuid = player.getUniqueID().toString();
 	}
 
-	public void setSelfsuficient(final boolean bo) {
+	public void setSelfsuficient(boolean bo) {
 		if ((owner == null) || ((jobInterface != null) && (bo == jobInterface.isSelfSufficient()))) {
 			return;
 		}
-		final PlayerData data = PlayerDataController.instance.getPlayerData(owner);
+		PlayerData data = PlayerDataController.instance.getPlayerData(owner);
 		if (!bo && data.hasCompanion()) {
 			return;
 		}
@@ -643,7 +643,7 @@ public class RoleCompanion extends RoleInterface {
 		}
 	}
 
-	public void setSitting(final boolean sit) {
+	public void setSitting(boolean sit) {
 		if (sit) {
 			npc.ai.animationType = 1;
 			npc.ai.onAttack = 3;
@@ -658,13 +658,13 @@ public class RoleCompanion extends RoleInterface {
 	}
 
 	public void setStats() {
-		final IItemStack weapon = npc.inventory.getRightHand();
+		IItemStack weapon = npc.inventory.getRightHand();
 		npc.stats.melee.setStrength((int) (1.0 + getSwordDamage(weapon)));
 		npc.stats.healthRegen = 0;
 		npc.stats.combatRegen = 0;
-		final int ranged = getTalentLevel(EnumCompanionTalent.RANGED);
+		int ranged = getTalentLevel(EnumCompanionTalent.RANGED);
 		if ((ranged > 0) && (weapon != null)) {
-			final Item item = weapon.getMCItemStack().getItem();
+			Item item = weapon.getMCItemStack().getItem();
 			if ((ranged > 0) && (item == Item.getItemFromBlock(Blocks.cobblestone))) {
 				npc.inventory.setProjectile(weapon);
 			}
@@ -676,7 +676,7 @@ public class RoleCompanion extends RoleInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("CompanionInventory", inventory.getToNBT());
 		compound.setString("CompanionOwner", uuid);
 		compound.setString("CompanionOwnerName", ownerName);
@@ -692,9 +692,9 @@ public class RoleCompanion extends RoleInterface {
 		if (jobInterface != null) {
 			compound.setTag("CompanionJobData", jobInterface.getNBT());
 		}
-		final NBTTagList list = new NBTTagList();
-		for (final EnumCompanionTalent talent : talents.keySet()) {
-			final NBTTagCompound c = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (EnumCompanionTalent talent : talents.keySet()) {
+			NBTTagCompound c = new NBTTagCompound();
 			c.setInteger("Talent", talent.ordinal());
 			c.setInteger("Exp", talents.get(talent));
 			list.appendTag(c);

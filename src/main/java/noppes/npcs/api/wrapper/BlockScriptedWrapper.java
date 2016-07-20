@@ -19,13 +19,13 @@ import noppes.npcs.blocks.tiles.TileScripted;
 public class BlockScriptedWrapper extends BlockWrapper implements IBlockScripted {
 	private TileScripted tile;
 
-	public BlockScriptedWrapper(final World world, final Block block, final BlockPos pos) {
+	public BlockScriptedWrapper(World world, Block block, BlockPos pos) {
 		super(world, block, pos);
 		tile = (TileScripted) super.tile;
 	}
 
 	@Override
-	public void executeCommand(final String command) {
+	public void executeCommand(String command) {
 		NoppesUtilServer.runCommand(tile.getWorld(), tile.getPos(), "ScriptBlock: " + tile.getPos(), command, null);
 	}
 
@@ -85,18 +85,18 @@ public class BlockScriptedWrapper extends BlockWrapper implements IBlockScripted
 	}
 
 	@Override
-	public void setIsLadder(final boolean bo) {
+	public void setIsLadder(boolean bo) {
 		tile.isLadder = bo;
 		tile.needsClientUpdate = true;
 	}
 
 	@Override
-	public void setLight(final int value) {
+	public void setLight(int value) {
 		tile.setLightValue(value);
 	}
 
 	@Override
-	public void setModel(final IItemStack item) {
+	public void setModel(IItemStack item) {
 		if (item == null) {
 			tile.setItemModel(null);
 		} else {
@@ -105,11 +105,11 @@ public class BlockScriptedWrapper extends BlockWrapper implements IBlockScripted
 	}
 
 	@Override
-	public void setModel(final String name) {
+	public void setModel(String name) {
 		if (name == null) {
 			tile.setItemModel(null);
 		} else {
-			final Item item = Item.itemRegistry.getObject(new ResourceLocation(name));
+			Item item = Item.itemRegistry.getObject(new ResourceLocation(name));
 			if (item == null) {
 				tile.setItemModel(null);
 			} else {
@@ -119,17 +119,17 @@ public class BlockScriptedWrapper extends BlockWrapper implements IBlockScripted
 	}
 
 	@Override
-	public void setRedstonePower(final int strength) {
+	public void setRedstonePower(int strength) {
 		tile.setRedstonePower(strength);
 	}
 
 	@Override
-	public void setRotation(final int x, final int y, final int z) {
+	public void setRotation(int x, int y, int z) {
 		tile.setRotation(x % 360, y % 360, z % 360);
 	}
 
 	@Override
-	public void setScale(final float x, final float y, final float z) {
+	public void setScale(float x, float y, float z) {
 		tile.setScale(x, y, z);
 	}
 }

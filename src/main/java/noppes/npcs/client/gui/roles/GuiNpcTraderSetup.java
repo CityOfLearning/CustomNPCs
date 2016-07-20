@@ -21,10 +21,10 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 public class GuiNpcTraderSetup extends GuiContainerNPCInterface2 implements ITextfieldListener {
-	private final ResourceLocation slot;
+	private ResourceLocation slot;
 	private RoleTrader role;
 
-	public GuiNpcTraderSetup(final EntityNPCInterface npc, final ContainerNPCTraderSetup container) {
+	public GuiNpcTraderSetup(EntityNPCInterface npc, ContainerNPCTraderSetup container) {
 		super(npc, container);
 		slot = new ResourceLocation("customnpcs", "textures/gui/slot.png");
 		ySize = 220;
@@ -33,7 +33,7 @@ public class GuiNpcTraderSetup extends GuiContainerNPCInterface2 implements ITex
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 1) {
 			role.ignoreDamage = ((GuiNpcButtonYesNo) guibutton).getBoolean();
 		}
@@ -43,12 +43,12 @@ public class GuiNpcTraderSetup extends GuiContainerNPCInterface2 implements ITex
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		for (int slot = 0; slot < 18; ++slot) {
-			final int x = guiLeft + ((slot % 3) * 94) + 7;
-			final int y = guiTop + ((slot / 3) * 22) + 4;
+			int x = guiLeft + ((slot % 3) * 94) + 7;
+			int y = guiTop + ((slot / 3) * 22) + 4;
 			mc.renderEngine.bindTexture(this.slot);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 			this.drawTexturedModalRect(x - 1, y, 0, 0, 18, 18);
@@ -61,7 +61,7 @@ public class GuiNpcTraderSetup extends GuiContainerNPCInterface2 implements ITex
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		guiTop += 10;
 		super.drawScreen(i, j, f);
 		guiTop -= 10;
@@ -87,8 +87,8 @@ public class GuiNpcTraderSetup extends GuiContainerNPCInterface2 implements ITex
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
-		final String name = guiNpcTextField.getText();
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
+		String name = guiNpcTextField.getText();
 		if (!name.equalsIgnoreCase(role.marketName)) {
 			role.marketName = name;
 			Client.sendData(EnumPacketServer.TraderMarketSave, role.marketName, true);

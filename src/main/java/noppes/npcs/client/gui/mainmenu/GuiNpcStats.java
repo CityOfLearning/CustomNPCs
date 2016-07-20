@@ -27,15 +27,15 @@ import noppes.npcs.entity.data.DataStats;
 public class GuiNpcStats extends GuiNPCInterface2 implements ITextfieldListener, IGuiData {
 	private DataStats stats;
 
-	public GuiNpcStats(final EntityNPCInterface npc) {
+	public GuiNpcStats(EntityNPCInterface npc) {
 		super(npc, 2);
 		stats = npc.stats;
 		Client.sendData(EnumPacketServer.MainmenuStatsGet, new Object[0]);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			setSubGui(new SubGuiNpcRespawn(stats));
 		} else if (button.id == 2) {
@@ -78,30 +78,30 @@ public class GuiNpcStats extends GuiNPCInterface2 implements ITextfieldListener,
 		addLabel(new GuiNpcLabel(34, "stats.creaturetype", guiLeft + 275, y + 5));
 		addButton(new GuiNpcButton(8, guiLeft + 355, y, 56, 20,
 				new String[] { "stats.normal", "stats.undead", "stats.arthropod" }, stats.creatureType.ordinal()));
-		final boolean i = false;
-		final int j = guiLeft + 82;
+		boolean i = false;
+		int j = guiLeft + 82;
 		y += 22;
 		addButton(new GuiNpcButton(i ? 1 : 0, j, y, 56, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(2, "stats.respawn", guiLeft + 5, y + 5));
-		final int k = 2;
-		final int l = guiLeft + 82;
+		int k = 2;
+		int l = guiLeft + 82;
 		y += 22;
 		addButton(new GuiNpcButton(k, l, y, 56, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(5, "stats.meleeproperties", guiLeft + 5, y + 5));
-		final int m = 3;
-		final int j2 = guiLeft + 82;
+		int m = 3;
+		int j2 = guiLeft + 82;
 		y += 22;
 		addButton(new GuiNpcButton(m, j2, y, 56, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(6, "stats.rangedproperties", guiLeft + 5, y + 5));
 		addButton(new GuiNpcButton(9, guiLeft + 217, y, 56, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(7, "stats.projectileproperties", guiLeft + 140, y + 5));
-		final int i2 = 15;
-		final int j3 = guiLeft + 82;
+		int i2 = 15;
+		int j3 = guiLeft + 82;
 		y += 34;
 		addButton(new GuiNpcButton(i2, j3, y, 56, 20, "selectServer.edit"));
 		addLabel(new GuiNpcLabel(15, "potion.resistance", guiLeft + 5, y + 5));
-		final int i3 = 4;
-		final int j4 = guiLeft + 82;
+		int i3 = 4;
+		int j4 = guiLeft + 82;
 		y += 34;
 		addButton(new GuiNpcButton(i3, j4, y, 56, 20, new String[] { "gui.no", "gui.yes" },
 				npc.isImmuneToFire() ? 1 : 0));
@@ -111,8 +111,8 @@ public class GuiNpcStats extends GuiNPCInterface2 implements ITextfieldListener,
 		addLabel(new GuiNpcLabel(11, "stats.candrown", guiLeft + 140, y + 5));
 		addTextField(new GuiNpcTextField(14, this, guiLeft + 355, y, 56, 20, stats.healthRegen + "").setNumbersOnly());
 		addLabel(new GuiNpcLabel(14, "stats.regenhealth", guiLeft + 275, y + 5));
-		final int id = 16;
-		final int i4 = guiLeft + 355;
+		int id = 16;
+		int i4 = guiLeft + 355;
 		y += 22;
 		addTextField(new GuiNpcTextField(id, this, i4, y, 56, 20, stats.combatRegen + "").setNumbersOnly());
 		addLabel(new GuiNpcLabel(16, "stats.combatregen", guiLeft + 275, y + 5));
@@ -122,8 +122,8 @@ public class GuiNpcStats extends GuiNPCInterface2 implements ITextfieldListener,
 		addButton(new GuiNpcButton(7, guiLeft + 217, y, 56, 20, new String[] { "gui.no", "gui.yes" },
 				stats.noFallDamage ? 1 : 0));
 		addLabel(new GuiNpcLabel(13, "stats.nofalldamage", guiLeft + 140, y + 5));
-		final int id2 = 17;
-		final int x = guiLeft + 82;
+		int id2 = 17;
+		int x = guiLeft + 82;
 		y += 22;
 		addButton(new GuiNpcButtonYesNo(id2, x, y, 56, 20, stats.potionImmune));
 		addLabel(new GuiNpcLabel(17, "stats.potionImmune", guiLeft + 5, y + 5));
@@ -138,13 +138,13 @@ public class GuiNpcStats extends GuiNPCInterface2 implements ITextfieldListener,
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		stats.readToNBT(compound);
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
 			stats.maxHealth = textfield.getInteger();
 			npc.heal(stats.maxHealth);

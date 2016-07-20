@@ -23,7 +23,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 	private int delay;
 	private int tick;
 
-	public EntityAIStalkTarget(final EntityNPCInterface par1EntityCreature) {
+	public EntityAIStalkTarget(EntityNPCInterface par1EntityCreature) {
 		tick = 0;
 		npc = par1EntityCreature;
 		theWorld = par1EntityCreature.worldObj;
@@ -32,7 +32,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 		setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
 	}
 
-	private Vec3 findSecludedXYZ(final int radius, final boolean nearest) {
+	private Vec3 findSecludedXYZ(int radius, boolean nearest) {
 		Vec3 idealPos = null;
 		double dist = targetEntity.getDistanceSqToEntity(npc);
 		double u = 0.0;
@@ -44,19 +44,19 @@ public class EntityAIStalkTarget extends EntityAIBase {
 			w = movePosition.zCoord;
 		}
 		for (int y = -2; y <= 2; ++y) {
-			final double k = MathHelper.floor_double(npc.getEntityBoundingBox().minY + y);
+			double k = MathHelper.floor_double(npc.getEntityBoundingBox().minY + y);
 			for (int x = -radius; x <= radius; ++x) {
-				final double j = MathHelper.floor_double(npc.posX + x) + 0.5;
+				double j = MathHelper.floor_double(npc.posX + x) + 0.5;
 				for (int z = -radius; z <= radius; ++z) {
-					final double l = MathHelper.floor_double(npc.posZ + z) + 0.5;
-					final BlockPos pos = new BlockPos(j, k, l);
+					double l = MathHelper.floor_double(npc.posZ + z) + 0.5;
+					BlockPos pos = new BlockPos(j, k, l);
 					if (isOpaque(pos) && !isOpaque(pos.up()) && !isOpaque(pos.up(2))) {
-						final Vec3 vec1 = new Vec3(targetEntity.posX, targetEntity.posY + targetEntity.getEyeHeight(),
+						Vec3 vec1 = new Vec3(targetEntity.posX, targetEntity.posY + targetEntity.getEyeHeight(),
 								targetEntity.posZ);
-						final Vec3 vec2 = new Vec3(j, k + npc.getEyeHeight(), l);
-						final MovingObjectPosition movingobjectposition = theWorld.rayTraceBlocks(vec1, vec2);
+						Vec3 vec2 = new Vec3(j, k + npc.getEyeHeight(), l);
+						MovingObjectPosition movingobjectposition = theWorld.rayTraceBlocks(vec1, vec2);
 						if (movingobjectposition != null) {
-							final boolean weight = !nearest || (targetEntity.getDistanceSq(j, k, l) <= dist);
+							boolean weight = !nearest || (targetEntity.getDistanceSq(j, k, l) <= dist);
 							if (weight && ((j != u) || (k != v) || (l != w))) {
 								idealPos = new Vec3(j, k, l);
 								if (nearest) {
@@ -73,7 +73,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 
 	private Vec3 hideFromTarget() {
 		for (int i = 1; i <= 8; ++i) {
-			final Vec3 vec = findSecludedXYZ(i, false);
+			Vec3 vec = findSecludedXYZ(i, false);
 			if (vec != null) {
 				return vec;
 			}
@@ -82,16 +82,16 @@ public class EntityAIStalkTarget extends EntityAIBase {
 	}
 
 	private boolean isLookingAway() {
-		final Vec3 vec3 = targetEntity.getLook(1.0f).normalize();
+		Vec3 vec3 = targetEntity.getLook(1.0f).normalize();
 		Vec3 vec4 = new Vec3(npc.posX - targetEntity.posX, (npc.getEntityBoundingBox().minY + (npc.height / 2.0f))
 				- (targetEntity.posY + targetEntity.getEyeHeight()), npc.posZ - targetEntity.posZ);
 		vec4.lengthVector();
 		vec4 = vec4.normalize();
-		final double d2 = vec3.dotProduct(vec4);
+		double d2 = vec3.dotProduct(vec4);
 		return d2 < 0.6;
 	}
 
-	private boolean isOpaque(final BlockPos pos) {
+	private boolean isOpaque(BlockPos pos) {
 		return theWorld.getBlockState(pos).getBlock().isOpaqueCube();
 	}
 
@@ -114,7 +114,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 
 	private Vec3 stalkTarget() {
 		for (int i = 8; i >= 1; --i) {
-			final Vec3 vec = findSecludedXYZ(i, true);
+			Vec3 vec = findSecludedXYZ(i, true);
 			if (vec != null) {
 				return vec;
 			}

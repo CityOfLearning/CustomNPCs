@@ -44,7 +44,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	public int mouseX;
 	public int mouseY;
 
-	public GuiContainerNPCInterface(final EntityNPCInterface npc, final Container cont) {
+	public GuiContainerNPCInterface(EntityNPCInterface npc, Container cont) {
 		super(cont);
 		drawDefaultBackground = false;
 		buttons = new HashMap<Integer, GuiNpcButton>();
@@ -63,7 +63,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (subgui != null) {
 			subgui.buttonEvent(guibutton);
 		} else {
@@ -71,35 +71,35 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		}
 	}
 
-	public void addButton(final GuiNpcButton button) {
+	public void addButton(GuiNpcButton button) {
 		buttons.put(button.id, button);
 		buttonList.add(button);
 	}
 
-	public void addLabel(final GuiNpcLabel label) {
+	public void addLabel(GuiNpcLabel label) {
 		labels.put(label.id, label);
 	}
 
-	public void addScroll(final GuiCustomScroll scroll) {
+	public void addScroll(GuiCustomScroll scroll) {
 		scroll.setWorldAndResolution(mc, 350, 250);
 		scrolls.put(scroll.id, scroll);
 	}
 
-	public void addSlider(final GuiNpcSlider slider) {
+	public void addSlider(GuiNpcSlider slider) {
 		sliders.put(slider.id, slider);
 		buttonList.add(slider);
 	}
 
-	public void addTextField(final GuiNpcTextField tf) {
+	public void addTextField(GuiNpcTextField tf) {
 		textfields.put(tf.id, tf);
 	}
 
-	public void addTopButton(final GuiMenuTopButton button) {
+	public void addTopButton(GuiMenuTopButton button) {
 		topbuttons.put(button.id, button);
 		buttonList.add(button);
 	}
 
-	public void buttonEvent(final GuiButton guibutton) {
+	public void buttonEvent(GuiButton guibutton) {
 	}
 
 	public void close() {
@@ -110,11 +110,11 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		mc.setIngameFocus();
 	}
 
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		subgui = null;
 	}
 
-	public void displayGuiScreen(final GuiScreen gui) {
+	public void displayGuiScreen(GuiScreen gui) {
 		mc.displayGuiScreen(gui);
 	}
 
@@ -126,24 +126,24 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawCenteredString(fontRendererObj, StatCollector.translateToLocal(title), width / 2, guiTop - 8, 16777215);
-		for (final GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
+		for (GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
 			label.drawLabel(this, fontRendererObj);
 		}
-		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 			tf.drawTextBox(i, j);
 		}
-		for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+		for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
 			scroll.drawScreen(i, j, f, hasSubGui() ? 0 : Mouse.getDWheel());
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	}
 
-	public void drawNpc(final int x, final int y) {
+	public void drawNpc(int x, int y) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		GlStateManager.enableColorMaterial();
 		GlStateManager.pushMatrix();
@@ -154,12 +154,12 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		}
 		GlStateManager.scale(-30.0f * scale, 30.0f * scale, 30.0f * scale);
 		GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
-		final float f2 = npc.renderYawOffset;
-		final float f3 = npc.rotationYaw;
-		final float f4 = npc.rotationPitch;
-		final float f5 = npc.rotationYawHead;
-		final float f6 = (guiLeft + x) - mouseX;
-		final float f7 = (guiTop + y) - 50 - mouseY;
+		float f2 = npc.renderYawOffset;
+		float f3 = npc.rotationYaw;
+		float f4 = npc.rotationPitch;
+		float f5 = npc.rotationYawHead;
+		float f6 = (guiLeft + x) - mouseX;
+		float f7 = (guiTop + y) - 50 - mouseY;
 		int orientation = 0;
 		if (npc != null) {
 			orientation = npc.ai.orientation;
@@ -192,10 +192,10 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		mouseX = i;
 		mouseY = j;
-		final Container container = inventorySlots;
+		Container container = inventorySlots;
 		if (subgui != null) {
 			inventorySlots = new ContainerEmpty();
 		}
@@ -209,7 +209,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		}
 	}
 
-	public GuiNpcButton getButton(final int i) {
+	public GuiNpcButton getButton(int i) {
 		return buttons.get(i);
 	}
 
@@ -217,19 +217,19 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		return fontRendererObj;
 	}
 
-	public GuiNpcLabel getLabel(final int i) {
+	public GuiNpcLabel getLabel(int i) {
 		return labels.get(i);
 	}
 
-	public ResourceLocation getResource(final String texture) {
+	public ResourceLocation getResource(String texture) {
 		return new ResourceLocation("customnpcs", "textures/gui/" + texture);
 	}
 
-	public GuiCustomScroll getScroll(final int id) {
+	public GuiCustomScroll getScroll(int id) {
 		return scrolls.get(id);
 	}
 
-	public GuiNpcSlider getSlider(final int i) {
+	public GuiNpcSlider getSlider(int i) {
 		return sliders.get(i);
 	}
 
@@ -240,11 +240,11 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		return subgui;
 	}
 
-	public GuiNpcTextField getTextField(final int i) {
+	public GuiNpcTextField getTextField(int i) {
 		return textfields.get(i);
 	}
 
-	public GuiMenuTopButton getTopButton(final int i) {
+	public GuiMenuTopButton getTopButton(int i) {
 		return topbuttons.get(i);
 	}
 
@@ -277,11 +277,11 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	}
 
 	@Override
-	protected void keyTyped(final char c, final int i) {
+	protected void keyTyped(char c, int i) {
 		if (subgui != null) {
 			subgui.keyTyped(c, i);
 		} else {
-			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 				tf.textboxKeyTyped(c, i);
 			}
 			if (closeOnEsc && ((i == 1)
@@ -292,17 +292,17 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	}
 
 	@Override
-	protected void mouseClicked(final int i, final int j, final int k) throws IOException {
+	protected void mouseClicked(int i, int j, int k) throws IOException {
 		if (subgui != null) {
 			subgui.mouseClicked(i, j, k);
 		} else {
-			for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 				if (tf.enabled) {
 					tf.mouseClicked(i, j, k);
 				}
 			}
 			if (k == 0) {
-				for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+				for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
 					scroll.mouseClicked(i, j, k);
 				}
 			}
@@ -311,25 +311,25 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		}
 	}
 
-	public void mouseEvent(final int i, final int j, final int k) {
+	public void mouseEvent(int i, int j, int k) {
 	}
 
 	public abstract void save();
 
-	public void setSubGui(final SubGuiInterface gui) {
+	public void setSubGui(SubGuiInterface gui) {
 		(subgui = gui).setWorldAndResolution(mc, width, height);
 		((GuiContainerNPCInterface) (subgui.parent = this)).initGui();
 	}
 
 	@Override
-	public void setWorldAndResolution(final Minecraft mc, final int width, final int height) {
+	public void setWorldAndResolution(Minecraft mc, int width, int height) {
 		super.setWorldAndResolution(mc, width, height);
 		initPacket();
 	}
 
 	@Override
 	public void updateScreen() {
-		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
 			if (tf.enabled) {
 				tf.updateCursorCounter();
 			}

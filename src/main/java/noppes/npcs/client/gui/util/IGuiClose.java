@@ -7,5 +7,5 @@ package noppes.npcs.client.gui.util;
 import net.minecraft.nbt.NBTTagCompound;
 
 public interface IGuiClose {
-	void setClose(final int p0, final NBTTagCompound p1);
+	void setClose(int p0, NBTTagCompound p1);
 }

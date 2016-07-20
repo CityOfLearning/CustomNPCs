@@ -17,13 +17,13 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCLinesMenu extends GuiNPCInterface2 {
-	public GuiNPCLinesMenu(final EntityNPCInterface npc) {
+	public GuiNPCLinesMenu(EntityNPCInterface npc) {
 		super(npc);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			NoppesUtil.openGUI(player, new GuiNPCLinesEdit(npc, npc.advanced.worldLines));
 		}

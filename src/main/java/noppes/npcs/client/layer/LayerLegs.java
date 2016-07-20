@@ -39,7 +39,7 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 	float rotationPointZ;
 	float rotationPointY;
 
-	public LayerLegs(final RenderLiving render) {
+	public LayerLegs(RenderLiving render) {
 		super(render);
 		createParts();
 	}
@@ -55,17 +55,17 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		setRotation(tail, 0.8714253f, 0.0f, 0.0f);
 		(horse = new ModelRenderer(model)).setTextureSize(32, 32);
 		horse.setRotationPoint(0.0f, -1.0f, 1.0f);
-		final ModelRenderer tailBase = new ModelRenderer(model, 0, 26);
+		ModelRenderer tailBase = new ModelRenderer(model, 0, 26);
 		tailBase.setTextureSize(32, 32);
 		tailBase.addBox(-1.0f, -1.0f, 0.0f, 2, 2, 3);
 		setRotation(tailBase, -1.134464f, 0.0f, 0.0f);
 		horse.addChild(tailBase);
-		final ModelRenderer tailMiddle = new ModelRenderer(model, 0, 13);
+		ModelRenderer tailMiddle = new ModelRenderer(model, 0, 13);
 		tailMiddle.setTextureSize(32, 32);
 		tailMiddle.addBox(-1.5f, -2.0f, 3.0f, 3, 4, 7);
 		setRotation(tailMiddle, -1.134464f, 0.0f, 0.0f);
 		horse.addChild(tailMiddle);
-		final ModelRenderer tailTip = new ModelRenderer(model, 0, 0);
+		ModelRenderer tailTip = new ModelRenderer(model, 0, 0);
 		tailTip.setTextureSize(32, 32);
 		tailTip.addBox(-1.5f, -4.5f, 9.0f, 3, 4, 7);
 		setRotation(tailTip, -1.40215f, 0.0f, 0.0f);
@@ -79,20 +79,19 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 	}
 
 	@Override
-	public void preRender(final EntityCustomNpc player) {
+	public void preRender(EntityCustomNpc player) {
 		npc = player;
 		playerdata = player.modelData;
-		final ModelPartData data = playerdata.getPartData(EnumParts.LEGS);
-		final ModelRenderer bipedLeftLeg = model.bipedLeftLeg;
-		final ModelRenderer bipedRightLeg = model.bipedRightLeg;
-		final boolean b = (data == null) || (data.type != 0);
+		ModelPartData data = playerdata.getPartData(EnumParts.LEGS);
+		ModelRenderer bipedLeftLeg = model.bipedLeftLeg;
+		ModelRenderer bipedRightLeg = model.bipedRightLeg;
+		boolean b = (data == null) || (data.type != 0);
 		bipedRightLeg.isHidden = b;
 		bipedLeftLeg.isHidden = b;
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
 		GlStateManager.pushMatrix();
 		renderLegs(par7);
 		GlStateManager.popMatrix();
@@ -101,12 +100,12 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		GlStateManager.popMatrix();
 	}
 
-	private void renderLegs(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.LEGS);
+	private void renderLegs(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.LEGS);
 		if (data.type <= 0) {
 			return;
 		}
-		final ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
+		ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
 		this.preRender(data);
 		if (data.type == 1) {
 			GlStateManager.translate(0.0f, config.transY * 2.0f, (config.transZ * par7) + 0.04f);
@@ -137,12 +136,12 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		}
 	}
 
-	private void renderTails(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.TAIL);
+	private void renderTails(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.TAIL);
 		if (data == null) {
 			return;
 		}
-		final ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
+		ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
 		GlStateManager.translate(config.transX * par7, config.transY + (rotationPointY * par7),
 				(config.transZ * par7) + (rotationPointZ * par7));
 		GlStateManager.translate(0.0f, 0.0f, (config.scaleZ - 1.0f) * 5.0f * par7);
@@ -151,12 +150,12 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		if (data.type == 0) {
 			if (data.pattern == 1) {
 				tail.rotationPointX = -0.5f;
-				final ModelRenderer tail = this.tail;
+				ModelRenderer tail = this.tail;
 				tail.rotateAngleY -= 0.2;
 				this.tail.render(par7);
-				final ModelRenderer tail2 = this.tail;
+				ModelRenderer tail2 = this.tail;
 				++tail2.rotationPointX;
-				final ModelRenderer tail3 = this.tail;
+				ModelRenderer tail3 = this.tail;
 				tail3.rotateAngleY += 0.4;
 				this.tail.render(par7);
 				this.tail.rotationPointX = 0.0f;
@@ -177,15 +176,13 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 	}
 
 	@Override
-	public void rotate(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
+	public void rotate(float par1, float par2, float par3, float par4, float par5, float par6) {
 		rotateLegs(par1, par2, par3, par4, par5, par6);
 		rotateTail(par1, par2, par3, par4, par5, par6);
 	}
 
-	public void rotateLegs(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
-		final ModelPartData part = playerdata.getPartData(EnumParts.LEGS);
+	public void rotateLegs(float par1, float par2, float par3, float par4, float par5, float par6) {
+		ModelPartData part = playerdata.getPartData(EnumParts.LEGS);
 		if (part.type == 2) {
 			spiderLegs.setRotationAngles(playerdata, par1, par2, par3, par4, par5, par6, npc);
 		} else if (part.type == 3) {
@@ -203,12 +200,11 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		}
 	}
 
-	public void rotateTail(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
-		final ModelPartData part = playerdata.getPartData(EnumParts.LEGS);
-		final ModelPartData partTail = playerdata.getPartData(EnumParts.TAIL);
-		final ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
-		final float rotateAngleY = MathHelper.cos(par1 * 0.6662f) * 0.2f * par2;
+	public void rotateTail(float par1, float par2, float par3, float par4, float par5, float par6) {
+		ModelPartData part = playerdata.getPartData(EnumParts.LEGS);
+		ModelPartData partTail = playerdata.getPartData(EnumParts.TAIL);
+		ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
+		float rotateAngleY = MathHelper.cos(par1 * 0.6662f) * 0.2f * par2;
 		float rotateAngleX = MathHelper.sin(par3 * 0.067f) * 0.05f;
 		rotationPointZ = 0.0f;
 		rotationPointY = 11.0f;
@@ -235,14 +231,14 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 			}
 		}
 		rotationPointZ += model.bipedRightLeg.rotationPointZ + 0.5f;
-		final ModelRenderer tail = this.tail;
-		final ModelRenderer feathers = this.feathers;
-		final ModelRenderer dragon = this.dragon;
-		final ModelRenderer squirrel = this.squirrel;
-		final ModelRenderer horse = this.horse;
-		final ModelRenderer fin = this.fin;
-		final ModelRenderer rodent = this.rodent;
-		final float rotateAngleX2 = rotateAngleX;
+		ModelRenderer tail = this.tail;
+		ModelRenderer feathers = this.feathers;
+		ModelRenderer dragon = this.dragon;
+		ModelRenderer squirrel = this.squirrel;
+		ModelRenderer horse = this.horse;
+		ModelRenderer fin = this.fin;
+		ModelRenderer rodent = this.rodent;
+		float rotateAngleX2 = rotateAngleX;
 		rodent.rotateAngleX = rotateAngleX2;
 		fin.rotateAngleX = rotateAngleX2;
 		horse.rotateAngleX = rotateAngleX2;
@@ -250,14 +246,14 @@ public class LayerLegs extends LayerInterface implements LayerPreRender {
 		dragon.rotateAngleX = rotateAngleX2;
 		feathers.rotateAngleX = rotateAngleX2;
 		tail.rotateAngleX = rotateAngleX2;
-		final ModelRenderer tail2 = this.tail;
-		final ModelRenderer feathers2 = this.feathers;
-		final ModelRenderer dragon2 = this.dragon;
-		final ModelRenderer squirrel2 = this.squirrel;
-		final ModelRenderer horse2 = this.horse;
-		final ModelRenderer fin2 = this.fin;
-		final ModelRenderer rodent2 = this.rodent;
-		final float rotateAngleY2 = rotateAngleY;
+		ModelRenderer tail2 = this.tail;
+		ModelRenderer feathers2 = this.feathers;
+		ModelRenderer dragon2 = this.dragon;
+		ModelRenderer squirrel2 = this.squirrel;
+		ModelRenderer horse2 = this.horse;
+		ModelRenderer fin2 = this.fin;
+		ModelRenderer rodent2 = this.rodent;
+		float rotateAngleY2 = rotateAngleY;
 		rodent2.rotateAngleY = rotateAngleY2;
 		fin2.rotateAngleY = rotateAngleY2;
 		horse2.rotateAngleY = rotateAngleY2;

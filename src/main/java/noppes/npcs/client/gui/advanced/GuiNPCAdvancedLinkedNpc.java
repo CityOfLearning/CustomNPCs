@@ -25,21 +25,21 @@ public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScroll
 	private GuiCustomScroll scroll;
 	private List<String> data;
 
-	public GuiNPCAdvancedLinkedNpc(final EntityNPCInterface npc) {
+	public GuiNPCAdvancedLinkedNpc(EntityNPCInterface npc) {
 		super(npc);
 		data = new ArrayList<String>();
 		GuiNPCAdvancedLinkedNpc.Instance = this;
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton button) {
+	public void buttonEvent(GuiButton button) {
 		if (button.id == 1) {
 			Client.sendData(EnumPacketServer.LinkedSet, "");
 		}
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		Client.sendData(EnumPacketServer.LinkedSet, guiCustomScroll.getSelected());
 	}
 
@@ -67,13 +67,13 @@ public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScroll
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data = new ArrayList<String>(list);
 		initGui();
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		scroll.setSelected(selected);
 	}
 }

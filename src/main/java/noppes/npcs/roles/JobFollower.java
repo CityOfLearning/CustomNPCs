@@ -18,7 +18,7 @@ public class JobFollower extends JobInterface implements IJobFollower {
 	private int range;
 	public String name;
 
-	public JobFollower(final EntityNPCInterface npc) {
+	public JobFollower(EntityNPCInterface npc) {
 		super(npc);
 		following = null;
 		ticks = 40;
@@ -37,9 +37,9 @@ public class JobFollower extends JobInterface implements IJobFollower {
 		}
 		ticks = 10;
 		following = null;
-		final List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(getRange(), getRange(), getRange()));
-		for (final EntityNPCInterface entity : list) {
+		for (EntityNPCInterface entity : list) {
 			if (entity != npc) {
 				if (entity.isKilled()) {
 					continue;
@@ -84,7 +84,7 @@ public class JobFollower extends JobInterface implements IJobFollower {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		name = compound.getString("FollowingEntityName");
 	}
 
@@ -98,12 +98,12 @@ public class JobFollower extends JobInterface implements IJobFollower {
 	}
 
 	@Override
-	public void setFollowing(final String name) {
+	public void setFollowing(String name) {
 		this.name = name;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setString("FollowingEntityName", name);
 		return compound;
 	}

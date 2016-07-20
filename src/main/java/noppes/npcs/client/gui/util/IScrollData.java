@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 public interface IScrollData {
-	void setData(final Vector<String> p0, final HashMap<String, Integer> p1);
+	void setData(Vector<String> p0, HashMap<String, Integer> p1);
 
-	void setSelected(final String p0);
+	void setSelected(String p0);
 }

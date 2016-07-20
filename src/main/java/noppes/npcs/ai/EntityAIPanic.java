@@ -16,7 +16,7 @@ public class EntityAIPanic extends EntityAIBase {
 	private double randPosY;
 	private double randPosZ;
 
-	public EntityAIPanic(final EntityCreature par1EntityCreature, final float par2) {
+	public EntityAIPanic(EntityCreature par1EntityCreature, float par2) {
 		theEntityCreature = par1EntityCreature;
 		speed = par2;
 		setMutexBits(AiMutex.PASSIVE);
@@ -32,7 +32,7 @@ public class EntityAIPanic extends EntityAIBase {
 		if ((theEntityCreature.getAttackTarget() == null) && !theEntityCreature.isBurning()) {
 			return false;
 		}
-		final Vec3 var1 = RandomPositionGeneratorAlt.findRandomTarget(theEntityCreature, 5, 4);
+		Vec3 var1 = RandomPositionGeneratorAlt.findRandomTarget(theEntityCreature, 5, 4);
 		if (var1 == null) {
 			return false;
 		}

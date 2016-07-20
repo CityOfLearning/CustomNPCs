@@ -10,7 +10,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNpcMonsterMale extends EntityNPCInterface {
-	public EntityNpcMonsterMale(final World world) {
+	public EntityNpcMonsterMale(World world) {
 		super(world);
 		display.setSkinTexture("customnpcs:textures/entity/monstermale/ZombieSteve.png");
 	}
@@ -19,9 +19,9 @@ public class EntityNpcMonsterMale extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
 			npc.ai.animationType = 8;
 			worldObj.spawnEntityInWorld(npc);

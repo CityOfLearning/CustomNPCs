@@ -54,7 +54,7 @@ public class PlayerData implements IExtendedEntityProperties {
 			playername = player.getName();
 			uuid = player.getPersistentID().toString();
 		}
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		dialogData.saveNBTData(compound);
 		bankData.saveNBTData(compound);
 		questData.saveNBTData(compound);
@@ -66,7 +66,7 @@ public class PlayerData implements IExtendedEntityProperties {
 		compound.setString("UUID", uuid);
 		compound.setInteger("PlayerCompanionId", companionID);
 		if (hasCompanion()) {
-			final NBTTagCompound nbt = new NBTTagCompound();
+			NBTTagCompound nbt = new NBTTagCompound();
 			if (activeCompanion.writeToNBTOptional(nbt)) {
 				compound.setTag("PlayerCompanion", nbt);
 			}
@@ -79,11 +79,11 @@ public class PlayerData implements IExtendedEntityProperties {
 	}
 
 	@Override
-	public void init(final Entity entity, final World world) {
+	public void init(Entity entity, World world) {
 	}
 
 	@Override
-	public void loadNBTData(final NBTTagCompound compound) {
+	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound data = PlayerDataController.instance.loadPlayerData(player.getPersistentID().toString());
 		if (data.hasNoTags()) {
 			data = PlayerDataController.instance.loadPlayerDataOld(player.getName());
@@ -92,11 +92,11 @@ public class PlayerData implements IExtendedEntityProperties {
 	}
 
 	@Override
-	public void saveNBTData(final NBTTagCompound compound) {
+	public void saveNBTData(NBTTagCompound compound) {
 		PlayerDataController.instance.savePlayerData(this);
 	}
 
-	public void setCompanion(final EntityNPCInterface npc) {
+	public void setCompanion(EntityNPCInterface npc) {
 		if ((npc != null) && (npc.advanced.role != 6)) {
 			return;
 		}
@@ -107,7 +107,7 @@ public class PlayerData implements IExtendedEntityProperties {
 		saveNBTData(null);
 	}
 
-	public void setNBT(final NBTTagCompound data) {
+	public void setNBT(NBTTagCompound data) {
 		dialogData.loadNBTData(data);
 		bankData.loadNBTData(data);
 		questData.loadNBTData(data);
@@ -124,7 +124,7 @@ public class PlayerData implements IExtendedEntityProperties {
 		}
 		companionID = data.getInteger("PlayerCompanionId");
 		if (data.hasKey("PlayerCompanion") && !hasCompanion()) {
-			final EntityCustomNpc npc = new EntityCustomNpc(player.worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(player.worldObj);
 			npc.readEntityFromNBT(data.getCompoundTag("PlayerCompanion"));
 			npc.setPosition(player.posX, player.posY, player.posZ);
 			if (npc.advanced.role == 6) {
@@ -135,19 +135,19 @@ public class PlayerData implements IExtendedEntityProperties {
 		}
 	}
 
-	public void updateCompanion(final World world) {
+	public void updateCompanion(World world) {
 		if (!hasCompanion() || (world == activeCompanion.worldObj)) {
 			return;
 		}
-		final RoleCompanion role = (RoleCompanion) activeCompanion.roleInterface;
+		RoleCompanion role = (RoleCompanion) activeCompanion.roleInterface;
 		role.owner = player;
 		if (!role.isFollowing()) {
 			return;
 		}
-		final NBTTagCompound nbt = new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
 		activeCompanion.writeToNBTOptional(nbt);
 		activeCompanion.isDead = true;
-		final EntityCustomNpc npc = new EntityCustomNpc(world);
+		EntityCustomNpc npc = new EntityCustomNpc(world);
 		npc.readEntityFromNBT(nbt);
 		npc.setPosition(player.posX, player.posY, player.posZ);
 		setCompanion(npc);

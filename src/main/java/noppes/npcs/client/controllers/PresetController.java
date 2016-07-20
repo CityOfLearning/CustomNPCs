@@ -19,14 +19,14 @@ public class PresetController {
 	public HashMap<String, Preset> presets;
 	private File dir;
 
-	public PresetController(final File dir) {
+	public PresetController(File dir) {
 		presets = new HashMap<String, Preset>();
 		PresetController.instance = this;
 		this.dir = dir;
 		load();
 	}
 
-	public void addPreset(final Preset preset) {
+	public void addPreset(Preset preset) {
 		while (presets.containsKey(preset.name.toLowerCase())) {
 			preset.name += "_";
 		}
@@ -34,7 +34,7 @@ public class PresetController {
 		save();
 	}
 
-	public Preset getPreset(final String username) {
+	public Preset getPreset(String username) {
 		if (presets.isEmpty()) {
 			load();
 		}
@@ -42,13 +42,13 @@ public class PresetController {
 	}
 
 	public void load() {
-		final NBTTagCompound compound = loadPreset();
-		final HashMap<String, Preset> presets = new HashMap<String, Preset>();
+		NBTTagCompound compound = loadPreset();
+		HashMap<String, Preset> presets = new HashMap<String, Preset>();
 		if (compound != null) {
-			final NBTTagList list = compound.getTagList("Presets", 10);
+			NBTTagList list = compound.getTagList("Presets", 10);
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final NBTTagCompound comp = list.getCompoundTagAt(i);
-				final Preset preset = new Preset();
+				NBTTagCompound comp = list.getCompoundTagAt(i);
+				Preset preset = new Preset();
 				preset.readFromNBT(comp);
 				presets.put(preset.name.toLowerCase(), preset);
 			}
@@ -58,9 +58,9 @@ public class PresetController {
 	}
 
 	private NBTTagCompound loadPreset() {
-		final String filename = "presets.dat";
+		String filename = "presets.dat";
 		try {
-			final File file = new File(dir, filename);
+			File file = new File(dir, filename);
 			if (!file.exists()) {
 				return null;
 			}
@@ -68,7 +68,7 @@ public class PresetController {
 		} catch (Exception e) {
 			LogWriter.except(e);
 			try {
-				final File file = new File(dir, filename + "_old");
+				File file = new File(dir, filename + "_old");
 				if (!file.exists()) {
 					return null;
 				}
@@ -80,7 +80,7 @@ public class PresetController {
 		}
 	}
 
-	public void removePreset(final String preset) {
+	public void removePreset(String preset) {
 		if (preset == null) {
 			return;
 		}
@@ -89,21 +89,21 @@ public class PresetController {
 	}
 
 	public void save() {
-		final NBTTagCompound compound = new NBTTagCompound();
-		final NBTTagList list = new NBTTagList();
-		for (final Preset preset : presets.values()) {
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (Preset preset : presets.values()) {
 			list.appendTag(preset.writeToNBT());
 		}
 		compound.setTag("Presets", list);
 		savePreset(compound);
 	}
 
-	private void savePreset(final NBTTagCompound compound) {
-		final String filename = "presets.dat";
+	private void savePreset(NBTTagCompound compound) {
+		String filename = "presets.dat";
 		try {
-			final File file = new File(dir, filename + "_new");
-			final File file2 = new File(dir, filename + "_old");
-			final File file3 = new File(dir, filename);
+			File file = new File(dir, filename + "_new");
+			File file2 = new File(dir, filename + "_old");
+			File file3 = new File(dir, filename);
 			CompressedStreamTools.writeCompressed(compound, new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();

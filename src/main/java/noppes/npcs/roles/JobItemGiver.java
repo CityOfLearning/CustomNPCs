@@ -35,7 +35,7 @@ public class JobItemGiver extends JobInterface {
 	private List<EntityPlayer> toCheck;
 	public Availability availability;
 
-	public JobItemGiver(final EntityNPCInterface npc) {
+	public JobItemGiver(EntityNPCInterface npc) {
 		super(npc);
 		cooldownType = 0;
 		givingMethod = 0;
@@ -66,7 +66,7 @@ public class JobItemGiver extends JobInterface {
 		ticks = 10;
 		(toCheck = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(3.0, 3.0, 3.0))).removeAll(recentlyChecked);
-		final List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0));
 		recentlyChecked.retainAll(listMax);
 		recentlyChecked.addAll(toCheck);
@@ -75,7 +75,7 @@ public class JobItemGiver extends JobInterface {
 
 	@Override
 	public void aiStartExecuting() {
-		for (final EntityPlayer player : toCheck) {
+		for (EntityPlayer player : toCheck) {
 			if (npc.canSee(player) && availability.isAvailable(player)) {
 				recentlyChecked.add(player);
 				interact(player);
@@ -83,7 +83,7 @@ public class JobItemGiver extends JobInterface {
 		}
 	}
 
-	private boolean canPlayerInteract(final PlayerItemGiverData data) {
+	private boolean canPlayerInteract(PlayerItemGiverData data) {
 		if (inventory.items.isEmpty()) {
 			return false;
 		}
@@ -101,9 +101,9 @@ public class JobItemGiver extends JobInterface {
 	public void delete() {
 	}
 
-	private int freeInventorySlots(final EntityPlayer player) {
+	private int freeInventorySlots(EntityPlayer player) {
 		int i = 0;
-		for (final ItemStack is : player.inventory.mainInventory) {
+		for (ItemStack is : player.inventory.mainInventory) {
 			if (is == null) {
 				++i;
 			}
@@ -115,25 +115,25 @@ public class JobItemGiver extends JobInterface {
 		return (int) (npc.worldObj.getTotalWorldTime() / 24000L);
 	}
 
-	public HashMap<String, Long> getNBTLines(final NBTTagList tagList) {
-		final HashMap<String, Long> map = new HashMap<String, Long>();
+	public HashMap<String, Long> getNBTLines(NBTTagList tagList) {
+		HashMap<String, Long> map = new HashMap<String, Long>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
-			final String line = nbttagcompound.getString("Line");
-			final long time = nbttagcompound.getLong("Time");
+			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+			String line = nbttagcompound.getString("Line");
+			long time = nbttagcompound.getLong("Time");
 			map.put(line, time);
 		}
 		return map;
 	}
 
-	private boolean giveItems(final EntityPlayer player) {
-		final PlayerItemGiverData data = PlayerDataController.instance.getPlayerData(player).itemgiverData;
+	private boolean giveItems(EntityPlayer player) {
+		PlayerItemGiverData data = PlayerDataController.instance.getPlayerData(player).itemgiverData;
 		if (!canPlayerInteract(data)) {
 			return false;
 		}
-		final Vector<ItemStack> items = new Vector<ItemStack>();
+		Vector<ItemStack> items = new Vector<ItemStack>();
 		Vector<ItemStack> toGive = new Vector<ItemStack>();
-		for (final ItemStack is : inventory.items.values()) {
+		for (ItemStack is : inventory.items.values()) {
 			if (is != null) {
 				items.add(is.copy());
 			}
@@ -144,7 +144,7 @@ public class JobItemGiver extends JobInterface {
 		if (isAllGiver()) {
 			toGive = items;
 		} else if (isRemainingGiver()) {
-			for (final ItemStack is : items) {
+			for (ItemStack is : items) {
 				if (!playerHasItem(player, is.getItem())) {
 					toGive.add(is);
 				}
@@ -153,7 +153,7 @@ public class JobItemGiver extends JobInterface {
 			toGive.add(items.get(npc.worldObj.rand.nextInt(items.size())).copy());
 		} else if (isGiverWhenNotOwnedAny()) {
 			boolean ownsItems = false;
-			for (final ItemStack is2 : items) {
+			for (ItemStack is2 : items) {
 				if (playerHasItem(player, is2.getItem())) {
 					ownsItems = true;
 					break;
@@ -164,9 +164,9 @@ public class JobItemGiver extends JobInterface {
 			}
 			toGive = items;
 		} else if (isChainedGiver()) {
-			final int itemIndex = data.getItemIndex(this);
+			int itemIndex = data.getItemIndex(this);
 			int i = 0;
-			for (final ItemStack item : inventory.items.values()) {
+			for (ItemStack item : inventory.items.values()) {
 				if (i == itemIndex) {
 					toGive.add(item);
 					break;
@@ -194,20 +194,20 @@ public class JobItemGiver extends JobInterface {
 		return false;
 	}
 
-	private boolean givePlayerItems(final EntityPlayer player, final Vector<ItemStack> toGive) {
+	private boolean givePlayerItems(EntityPlayer player, Vector<ItemStack> toGive) {
 		if (toGive.isEmpty()) {
 			return false;
 		}
 		if (freeInventorySlots(player) < toGive.size()) {
 			return false;
 		}
-		for (final ItemStack is : toGive) {
+		for (ItemStack is : toGive) {
 			npc.givePlayerItem(player, is);
 		}
 		return true;
 	}
 
-	private boolean interact(final EntityPlayer player) {
+	private boolean interact(EntityPlayer player) {
 		if (!giveItems(player)) {
 			npc.say(player, npc.advanced.getInteractLine());
 		}
@@ -250,10 +250,10 @@ public class JobItemGiver extends JobInterface {
 	public void killed() {
 	}
 
-	public NBTTagList newHashMapNBTList(final HashMap<String, Long> lines) {
-		final NBTTagList nbttaglist = new NBTTagList();
-		for (final String s : lines.keySet()) {
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+	public NBTTagList newHashMapNBTList(HashMap<String, Long> lines) {
+		NBTTagList nbttaglist = new NBTTagList();
+		for (String s : lines.keySet()) {
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setString("Line", s);
 			nbttagcompound.setLong("Time", lines.get(s));
 			nbttaglist.appendTag(nbttagcompound);
@@ -261,13 +261,13 @@ public class JobItemGiver extends JobInterface {
 		return nbttaglist;
 	}
 
-	private boolean playerHasItem(final EntityPlayer player, final Item item) {
-		for (final ItemStack is : player.inventory.mainInventory) {
+	private boolean playerHasItem(EntityPlayer player, Item item) {
+		for (ItemStack is : player.inventory.mainInventory) {
 			if ((is != null) && (is.getItem() == item)) {
 				return true;
 			}
 		}
-		for (final ItemStack is : player.inventory.armorInventory) {
+		for (ItemStack is : player.inventory.armorInventory) {
 			if ((is != null) && (is.getItem() == item)) {
 				return true;
 			}
@@ -276,7 +276,7 @@ public class JobItemGiver extends JobInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		itemGiverId = nbttagcompound.getInteger("ItemGiverId");
 		cooldownType = nbttagcompound.getInteger("igCooldownType");
 		givingMethod = nbttagcompound.getInteger("igGivingMethod");
@@ -290,7 +290,7 @@ public class JobItemGiver extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("igCooldownType", cooldownType);
 		nbttagcompound.setInteger("igGivingMethod", givingMethod);
 		nbttagcompound.setInteger("igCooldown", cooldown);

@@ -18,7 +18,7 @@ public class EntityAIWatchClosest extends EntityAIBase {
 	private float chance;
 	private Class watchedClass;
 
-	public EntityAIWatchClosest(final EntityNPCInterface par1EntityLiving, final Class par2Class, final float par3) {
+	public EntityAIWatchClosest(EntityNPCInterface par1EntityLiving, Class par2Class, float par3) {
 		npc = par1EntityLiving;
 		watchedClass = par2Class;
 		maxDistanceForPlayer = par3;

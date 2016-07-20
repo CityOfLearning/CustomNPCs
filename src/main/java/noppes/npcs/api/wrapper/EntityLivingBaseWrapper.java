@@ -15,12 +15,12 @@ import noppes.npcs.api.entity.IEntity;
 import noppes.npcs.api.entity.IEntityLivingBase;
 
 public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityWrapper<T> implements IEntityLivingBase {
-	public EntityLivingBaseWrapper(final T entity) {
+	public EntityLivingBaseWrapper(T entity) {
 		super(entity);
 	}
 
 	@Override
-	public void addPotionEffect(final int effect, int duration, int strength, final boolean hideParticles) {
+	public void addPotionEffect(int effect, int duration, int strength, boolean hideParticles) {
 		if ((effect < 0) || (effect >= Potion.potionTypes.length) || (Potion.potionTypes[effect] == null)) {
 			return;
 		}
@@ -45,7 +45,7 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public boolean canSeeEntity(final IEntity entity) {
+	public boolean canSeeEntity(IEntity entity) {
 		return this.entity.canEntityBeSeen(entity.getMCEntity());
 	}
 
@@ -55,8 +55,8 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public IItemStack getArmor(final int slot) {
-		final ItemStack item = entity.getEquipmentInSlot(slot + 1);
+	public IItemStack getArmor(int slot) {
+		ItemStack item = entity.getEquipmentInSlot(slot + 1);
 		if (item == null) {
 			return null;
 		}
@@ -75,7 +75,7 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 
 	@Override
 	public IItemStack getHeldItem() {
-		final ItemStack item = entity.getHeldItem();
+		ItemStack item = entity.getHeldItem();
 		if (item == null) {
 			return null;
 		}
@@ -93,8 +93,8 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public int getPotionEffect(final int effect) {
-		final PotionEffect pf = entity.getActivePotionEffect(Potion.potionTypes[effect]);
+	public int getPotionEffect(int effect) {
+		PotionEffect pf = entity.getActivePotionEffect(Potion.potionTypes[effect]);
 		if (pf == null) {
 			return -1;
 		}
@@ -117,12 +117,12 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public void setArmor(final int slot, final IItemStack item) {
+	public void setArmor(int slot, IItemStack item) {
 		entity.setCurrentItemOrArmor(slot + 1, (item == null) ? null : item.getMCItemStack());
 	}
 
 	@Override
-	public void setAttackTarget(final IEntityLivingBase living) {
+	public void setAttackTarget(IEntityLivingBase living) {
 		if (living == null) {
 			entity.setRevengeTarget((EntityLivingBase) null);
 		} else {
@@ -131,17 +131,17 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public void setHealth(final float health) {
+	public void setHealth(float health) {
 		entity.setHealth(health);
 	}
 
 	@Override
-	public void setHeldItem(final IItemStack item) {
+	public void setHeldItem(IItemStack item) {
 		entity.setCurrentItemOrArmor(0, (item == null) ? null : item.getMCItemStack());
 	}
 
 	@Override
-	public void setMaxHealth(final float health) {
+	public void setMaxHealth(float health) {
 		if (health < 0.0f) {
 			return;
 		}
@@ -154,7 +154,7 @@ public class EntityLivingBaseWrapper<T extends EntityLivingBase> extends EntityW
 	}
 
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return (type == 5) || super.typeOf(type);
 	}
 }

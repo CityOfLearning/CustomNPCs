@@ -22,14 +22,14 @@ import noppes.npcs.blocks.tiles.TileNpcEntity;
 import noppes.npcs.controllers.script.ScriptController;
 
 public class BlockWrapper implements IBlock {
-	protected final IWorld world;
-	protected final Block block;
-	protected final BlockPos pos;
-	protected final TileEntity tile;
-	private final IData tempdata;
-	private final IData storeddata;
+	protected IWorld world;
+	protected Block block;
+	protected BlockPos pos;
+	protected TileEntity tile;
+	private IData tempdata;
+	private IData storeddata;
 
-	public BlockWrapper(final World world, final Block block, final BlockPos pos) {
+	public BlockWrapper(World world, Block block, BlockPos pos) {
 		tempdata = new IData() {
 			@Override
 			public void clear() {
@@ -40,7 +40,7 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public Object get(final String key) {
+			public Object get(String key) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return null;
 				}
@@ -48,12 +48,12 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return (tile instanceof TileNpcEntity) && ((TileNpcEntity) tile).tempData.containsKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
+			public void put(String key, Object value) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return;
 				}
@@ -61,7 +61,7 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public void remove(final String key) {
+			public void remove(String key) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return;
 				}
@@ -78,15 +78,15 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public Object get(final String key) {
+			public Object get(String key) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return null;
 				}
-				final NBTTagCompound compound = ((TileNpcEntity) tile).extraData;
+				NBTTagCompound compound = ((TileNpcEntity) tile).extraData;
 				if (!compound.hasKey(key)) {
 					return null;
 				}
-				final NBTBase base = compound.getTag(key);
+				NBTBase base = compound.getTag(key);
 				if (base instanceof NBTBase.NBTPrimitive) {
 					return ((NBTBase.NBTPrimitive) base).getDouble();
 				}
@@ -94,16 +94,16 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return (tile instanceof TileNpcEntity) && ((TileNpcEntity) tile).extraData.hasKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
+			public void put(String key, Object value) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return;
 				}
-				final NBTTagCompound compound = ((TileNpcEntity) tile).extraData;
+				NBTTagCompound compound = ((TileNpcEntity) tile).extraData;
 				if (value instanceof Number) {
 					compound.setDouble(key, ((Number) value).doubleValue());
 				} else if (value instanceof String) {
@@ -113,7 +113,7 @@ public class BlockWrapper implements IBlock {
 			}
 
 			@Override
-			public void remove(final String key) {
+			public void remove(String key) {
 				if (!(tile instanceof TileNpcEntity)) {
 					return;
 				}
@@ -140,11 +140,11 @@ public class BlockWrapper implements IBlock {
 	}
 
 	@Override
-	public IItemStack getContainerSlot(final int slot) {
+	public IItemStack getContainerSlot(int slot) {
 		if ((tile == null) || !(tile instanceof IInventory)) {
 			return null;
 		}
-		final IInventory inv = (IInventory) tile;
+		IInventory inv = (IInventory) tile;
 		if ((slot < 0) || (slot >= inv.getSizeInventory())) {
 			return null;
 		}
@@ -203,7 +203,7 @@ public class BlockWrapper implements IBlock {
 
 	@Override
 	public boolean isRemoved() {
-		final IBlockState state = world.getMCWorld().getBlockState(pos);
+		IBlockState state = world.getMCWorld().getBlockState(pos);
 		return (state == null) || (state.getBlock() != block);
 	}
 
@@ -213,14 +213,14 @@ public class BlockWrapper implements IBlock {
 	}
 
 	@Override
-	public BlockWrapper setBlock(final IBlock block) {
+	public BlockWrapper setBlock(IBlock block) {
 		world.getMCWorld().setBlockState(pos, block.getMCBlock().getDefaultState());
 		return new BlockWrapper(world.getMCWorld(), block.getMCBlock(), pos);
 	}
 
 	@Override
-	public BlockWrapper setBlock(final String name) {
-		final Block block = Block.blockRegistry.getObject(new ResourceLocation(name));
+	public BlockWrapper setBlock(String name) {
+		Block block = Block.blockRegistry.getObject(new ResourceLocation(name));
 		if (block == null) {
 			return this;
 		}
@@ -229,11 +229,11 @@ public class BlockWrapper implements IBlock {
 	}
 
 	@Override
-	public void setContainerSlot(final int slot, final IItemStack item) {
+	public void setContainerSlot(int slot, IItemStack item) {
 		if ((tile == null) || !(tile instanceof IInventory)) {
 			return;
 		}
-		final IInventory inv = (IInventory) tile;
+		IInventory inv = (IInventory) tile;
 		if ((slot < 0) || (slot >= inv.getSizeInventory())) {
 			return;
 		}

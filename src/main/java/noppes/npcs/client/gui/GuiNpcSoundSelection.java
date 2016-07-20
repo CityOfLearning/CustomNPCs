@@ -33,14 +33,14 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
 	private String up;
 	private HashMap<String, List<String>> domains;
 
-	public GuiNpcSoundSelection(final GuiScreen parent, final String sound) {
+	public GuiNpcSoundSelection(GuiScreen parent, String sound) {
 		up = "..<" + StatCollector.translateToLocal("gui.up") + ">..";
 		domains = new HashMap<String, List<String>>();
-		final SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
-		final SoundRegistry registry = (SoundRegistry) ObfuscationReflectionHelper
-				.getPrivateValue((Class) SoundHandler.class, handler, 4);
-		final Set<ResourceLocation> set = registry.getKeys();
-		for (final ResourceLocation location : set) {
+		SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
+		SoundRegistry registry = (SoundRegistry) ObfuscationReflectionHelper.getPrivateValue((Class) SoundHandler.class,
+				handler, 4);
+		Set<ResourceLocation> set = registry.getKeys();
+		for (ResourceLocation location : set) {
 			List<String> list = domains.get(location.getResourceDomain());
 			if (list == null) {
 				domains.put(location.getResourceDomain(), list = new ArrayList<String>());
@@ -53,7 +53,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
 		if (guibutton.id == 1) {
 			MusicController.Instance.stopMusic();
@@ -96,7 +96,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		slot.drawScreen(i, j, f);
 		super.drawScreen(i, j, f);
 	}

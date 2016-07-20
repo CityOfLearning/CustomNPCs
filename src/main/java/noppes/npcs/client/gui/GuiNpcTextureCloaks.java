@@ -8,16 +8,16 @@ import net.minecraft.client.gui.GuiScreen;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcTextureCloaks extends GuiNpcSelectionInterface {
-	public GuiNpcTextureCloaks(final EntityNPCInterface npc, final GuiScreen parent) {
+	public GuiNpcTextureCloaks(EntityNPCInterface npc, GuiScreen parent) {
 		super(npc, parent,
 				npc.display.getCapeTexture().isEmpty() ? "customnpcs:textures/cloak/" : npc.display.getCapeTexture());
 		title = "Select Cloak";
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
-		final int l = -50;
-		final int i2 = (height / 2) + 30;
+	public void drawScreen(int i, int j, float f) {
+		int l = -50;
+		int i2 = (height / 2) + 30;
 		this.drawNpc(npc, l, i2, 2.0f, 180);
 		super.drawScreen(i, j, f);
 	}
@@ -37,9 +37,9 @@ public class GuiNpcTextureCloaks extends GuiNpcSelectionInterface {
 	@Override
 	public void initGui() {
 		super.initGui();
-		final int index = npc.display.getCapeTexture().lastIndexOf("/");
+		int index = npc.display.getCapeTexture().lastIndexOf("/");
 		if (index > 0) {
-			final String asset = npc.display.getCapeTexture().substring(index + 1);
+			String asset = npc.display.getCapeTexture().substring(index + 1);
 			if (npc.display.getCapeTexture().equals(assets.getAsset(asset))) {
 				slot.selected = asset;
 			}

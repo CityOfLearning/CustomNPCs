@@ -23,15 +23,15 @@ public class GuiNPCScenes extends GuiNPCInterface2 {
 	private DataScenes scenes;
 	private DataScenes.SceneContainer scene;
 
-	public GuiNPCScenes(final EntityNPCInterface npc) {
+	public GuiNPCScenes(EntityNPCInterface npc) {
 		super(npc);
 		scenes = npc.advanced.scenes;
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton button) {
+	public void buttonEvent(GuiButton button) {
 		if (button.id < 60) {
-			final DataScenes.SceneContainer scene = scenes.scenes.get(button.id / 10);
+			DataScenes.SceneContainer scene = scenes.scenes.get(button.id / 10);
 			if ((button.id % 10) == 1) {
 				scene.enabled = (((GuiNpcButton) button).getValue() == 1);
 			}
@@ -55,7 +55,7 @@ public class GuiNPCScenes extends GuiNPCInterface2 {
 	}
 
 	@Override
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		super.closeSubGui(gui);
 		if (gui instanceof SubGuiNpcTextArea) {
 			scene.lines = ((SubGuiNpcTextArea) gui).text;
@@ -69,7 +69,7 @@ public class GuiNPCScenes extends GuiNPCInterface2 {
 		addLabel(new GuiNpcLabel(102, "gui.button", guiLeft + 236, guiTop + 4));
 		int y = guiTop + 14;
 		for (int i = 0; i < scenes.scenes.size(); ++i) {
-			final DataScenes.SceneContainer scene = scenes.scenes.get(i);
+			DataScenes.SceneContainer scene = scenes.scenes.get(i);
 			addLabel(new GuiNpcLabel(0 + (i * 10), scene.name, guiLeft + 10, y + 5));
 			addButton(new GuiNpcButton(1 + (i * 10), guiLeft + 120, y, 60, 20,
 					new String[] { "gui.disabled", "gui.enabled" }, scene.enabled ? 1 : 0));

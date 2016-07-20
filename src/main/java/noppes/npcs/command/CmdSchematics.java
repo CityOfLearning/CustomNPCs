@@ -20,18 +20,18 @@ import noppes.npcs.controllers.SchematicController;
 
 public class CmdSchematics extends CommandNoppesBase {
 	@Override
-	public List addTabCompletionOptions(final ICommandSender par1, final String[] args, final BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender par1, String[] args, BlockPos pos) {
 		if (args[0].equalsIgnoreCase("build") && (args.length == 2)) {
-			final List<String> list = SchematicController.Instance.list();
+			List<String> list = SchematicController.Instance.list();
 			return CommandBase.getListOfStringsMatchingLastWord(args, list.toArray(new String[list.size()]));
 		}
 		return null;
 	}
 
 	@SubCommand(desc = "Build the schematic", usage = "<name> [rotation] [[world:]x,y,z]]", permission = 4)
-	public void build(final ICommandSender sender, final String[] args) throws CommandException {
-		final String name = args[0];
-		final Schematic schem = SchematicController.Instance.load(name);
+	public void build(ICommandSender sender, String[] args) throws CommandException {
+		String name = args[0];
+		Schematic schem = SchematicController.Instance.load(name);
 		if (schem == null) {
 			throw new CommandException("Unknown schematic: " + name, new Object[0]);
 		}
@@ -49,7 +49,7 @@ public class CmdSchematics extends CommandNoppesBase {
 		if (args.length > 2) {
 			String location = args[2];
 			if (location.contains(":")) {
-				final String[] par = location.split(":");
+				String[] par = location.split(":");
 				location = par[1];
 				world = getWorld(par[0]);
 				if (world == null) {
@@ -57,7 +57,7 @@ public class CmdSchematics extends CommandNoppesBase {
 				}
 			}
 			if (location.contains(",")) {
-				final String[] par = location.split(",");
+				String[] par = location.split(",");
 				if (par.length != 3) {
 					throw new CommandException("Location should be x,y,z", new Object[0]);
 				}
@@ -85,10 +85,10 @@ public class CmdSchematics extends CommandNoppesBase {
 		return "Schematic operation";
 	}
 
-	public World getWorld(final String t) {
-		final WorldServer[] worldServers;
+	public World getWorld(String t) {
+		WorldServer[] worldServers;
 		worldServers = MinecraftServer.getServer().worldServers;
-		for (final WorldServer w : worldServers) {
+		for (WorldServer w : worldServers) {
 			if ((w != null) && (w.provider.getDimensionId() + "").equalsIgnoreCase(t)) {
 				return w;
 			}
@@ -97,25 +97,25 @@ public class CmdSchematics extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Gives info about the current build", permission = 4)
-	public void info(final ICommandSender sender, final String[] args) {
+	public void info(ICommandSender sender, String[] args) {
 		SchematicController.Instance.info(sender);
 	}
 
 	@SubCommand(desc = "Lists available schematics", permission = 4)
-	public void list(final ICommandSender sender, final String[] args) throws CommandException {
-		final List<String> list = SchematicController.Instance.list();
+	public void list(ICommandSender sender, String[] args) throws CommandException {
+		List<String> list = SchematicController.Instance.list();
 		if (list.isEmpty()) {
 			throw new CommandException("No available schematics", new Object[0]);
 		}
 		String s = "";
-		for (final String file : list) {
+		for (String file : list) {
 			s = s + file + ", ";
 		}
 		sendMessage(sender, s, new Object[0]);
 	}
 
 	@SubCommand(desc = "Stops the current build", permission = 4)
-	public void stop(final ICommandSender sender, final String[] args) {
+	public void stop(ICommandSender sender, String[] args) {
 		SchematicController.Instance.stop(sender);
 	}
 }

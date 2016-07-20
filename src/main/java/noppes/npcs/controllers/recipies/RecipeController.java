@@ -28,7 +28,7 @@ import noppes.npcs.api.handler.data.IRecipe;
 public class RecipeController implements IRecipeHandler {
 	private static Collection<RecipeCarpentry> prevRecipes;
 	public static RecipeController instance;
-	public static final int version = 1;
+	public static int version = 1;
 	public static HashMap<Integer, RecipeCarpentry> syncRecipes;
 	static {
 		RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
@@ -46,9 +46,9 @@ public class RecipeController implements IRecipeHandler {
 	}
 
 	@Override
-	public IRecipe addRecipe(final String name, final boolean global, final ItemStack result, final int width,
-			final int height, final ItemStack... objects) {
-		final RecipeCarpentry recipe = new RecipeCarpentry(width, height, objects, result);
+	public IRecipe addRecipe(String name, boolean global, ItemStack result, int width, int height,
+			ItemStack... objects) {
+		RecipeCarpentry recipe = new RecipeCarpentry(width, height, objects, result);
 		recipe.isGlobal = global;
 		recipe.name = name;
 		try {
@@ -60,7 +60,7 @@ public class RecipeController implements IRecipeHandler {
 	}
 
 	@Override
-	public IRecipe addRecipe(final String name, final boolean global, final ItemStack result, final Object... objects) {
+	public IRecipe addRecipe(String name, boolean global, ItemStack result, Object... objects) {
 		RecipeCarpentry recipe = new RecipeCarpentry(name);
 		recipe.isGlobal = global;
 		recipe = RecipeCarpentry.createRecipe(recipe, result, objects);
@@ -74,12 +74,12 @@ public class RecipeController implements IRecipeHandler {
 
 	private boolean containsRecipeName(String name) {
 		name = name.toLowerCase();
-		for (final RecipeCarpentry recipe : globalRecipes.values()) {
+		for (RecipeCarpentry recipe : globalRecipes.values()) {
 			if (recipe.name.toLowerCase().equals(name)) {
 				return true;
 			}
 		}
-		for (final RecipeCarpentry recipe : anvilRecipes.values()) {
+		for (RecipeCarpentry recipe : anvilRecipes.values()) {
 			if (recipe.name.toLowerCase().equals(name)) {
 				return true;
 			}
@@ -88,8 +88,8 @@ public class RecipeController implements IRecipeHandler {
 	}
 
 	@Override
-	public RecipeCarpentry delete(final int id) {
-		final RecipeCarpentry recipe = getRecipe(id);
+	public RecipeCarpentry delete(int id) {
+		RecipeCarpentry recipe = getRecipe(id);
 		if (recipe == null) {
 			return null;
 		}
@@ -101,8 +101,8 @@ public class RecipeController implements IRecipeHandler {
 		return recipe;
 	}
 
-	public RecipeCarpentry findMatchingRecipe(final InventoryCrafting par1InventoryCrafting) {
-		for (final RecipeCarpentry recipe : anvilRecipes.values()) {
+	public RecipeCarpentry findMatchingRecipe(InventoryCrafting par1InventoryCrafting) {
+		for (RecipeCarpentry recipe : anvilRecipes.values()) {
 			if (recipe.isValid() && recipe.matches(par1InventoryCrafting, null)) {
 				return recipe;
 			}
@@ -120,7 +120,7 @@ public class RecipeController implements IRecipeHandler {
 		return new ArrayList<IRecipe>(globalRecipes.values());
 	}
 
-	public RecipeCarpentry getRecipe(final int id) {
+	public RecipeCarpentry getRecipe(int id) {
 		if (globalRecipes.containsKey(id)) {
 			return globalRecipes.get(id);
 		}
@@ -141,9 +141,9 @@ public class RecipeController implements IRecipeHandler {
 	}
 
 	private void loadCategories() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		try {
-			final File file = new File(saveDir, "recipes.dat");
+			File file = new File(saveDir, "recipes.dat");
 			if (file.exists()) {
 				this.loadCategories(file);
 			} else {
@@ -154,7 +154,7 @@ public class RecipeController implements IRecipeHandler {
 		} catch (Exception e) {
 			e.printStackTrace();
 			try {
-				final File file2 = new File(saveDir, "recipes.dat_old");
+				File file2 = new File(saveDir, "recipes.dat_old");
 				if (file2.exists()) {
 					this.loadCategories(file2);
 				}
@@ -164,15 +164,15 @@ public class RecipeController implements IRecipeHandler {
 		}
 	}
 
-	private void loadCategories(final File file) throws Exception {
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
+	private void loadCategories(File file) throws Exception {
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		nextId = nbttagcompound1.getInteger("LastId");
-		final NBTTagList list = nbttagcompound1.getTagList("Data", 10);
-		final HashMap<Integer, RecipeCarpentry> globalRecipes = new HashMap<Integer, RecipeCarpentry>();
-		final HashMap<Integer, RecipeCarpentry> anvilRecipes = new HashMap<Integer, RecipeCarpentry>();
+		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
+		HashMap<Integer, RecipeCarpentry> globalRecipes = new HashMap<Integer, RecipeCarpentry>();
+		HashMap<Integer, RecipeCarpentry> anvilRecipes = new HashMap<Integer, RecipeCarpentry>();
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final RecipeCarpentry recipe = RecipeCarpentry.read(list.getCompoundTagAt(i));
+				RecipeCarpentry recipe = RecipeCarpentry.read(list.getCompoundTagAt(i));
 				if (recipe.isGlobal) {
 					globalRecipes.put(recipe.id, recipe);
 				} else {
@@ -188,7 +188,7 @@ public class RecipeController implements IRecipeHandler {
 		loadDefaultRecipes(nbttagcompound1.getInteger("Version"));
 	}
 
-	private void loadDefaultRecipes(final int i) {
+	private void loadDefaultRecipes(int i) {
 		if (i == 1) {
 			return;
 		}
@@ -197,12 +197,12 @@ public class RecipeController implements IRecipeHandler {
 	}
 
 	public void reloadGlobalRecipes() {
-		final List list = CraftingManager.getInstance().getRecipeList();
+		List list = CraftingManager.getInstance().getRecipeList();
 		if (RecipeController.prevRecipes != null) {
 			list.removeAll(RecipeController.prevRecipes);
 		}
 		RecipeController.prevRecipes = new HashSet<RecipeCarpentry>();
-		for (final RecipeCarpentry recipe : globalRecipes.values()) {
+		for (RecipeCarpentry recipe : globalRecipes.values()) {
 			if (recipe.isValid()) {
 				RecipeController.prevRecipes.add(recipe);
 			}
@@ -212,25 +212,25 @@ public class RecipeController implements IRecipeHandler {
 
 	private void saveCategories() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final NBTTagList list = new NBTTagList();
-			for (final RecipeCarpentry recipe : globalRecipes.values()) {
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			NBTTagList list = new NBTTagList();
+			for (RecipeCarpentry recipe : globalRecipes.values()) {
 				if (recipe.savesRecipe) {
 					list.appendTag(recipe.writeNBT());
 				}
 			}
-			for (final RecipeCarpentry recipe : anvilRecipes.values()) {
+			for (RecipeCarpentry recipe : anvilRecipes.values()) {
 				if (recipe.savesRecipe) {
 					list.appendTag(recipe.writeNBT());
 				}
 			}
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setTag("Data", list);
 			nbttagcompound.setInteger("LastId", nextId);
 			nbttagcompound.setInteger("Version", 1);
-			final File file = new File(saveDir, "recipes.dat_new");
-			final File file2 = new File(saveDir, "recipes.dat_old");
-			final File file3 = new File(saveDir, "recipes.dat");
+			File file = new File(saveDir, "recipes.dat_new");
+			File file2 = new File(saveDir, "recipes.dat_old");
+			File file3 = new File(saveDir, "recipes.dat");
 			CompressedStreamTools.writeCompressed(nbttagcompound, new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();
@@ -248,8 +248,8 @@ public class RecipeController implements IRecipeHandler {
 		}
 	}
 
-	public RecipeCarpentry saveRecipe(final RecipeCarpentry recipe) throws IOException {
-		final RecipeCarpentry current = getRecipe(recipe.id);
+	public RecipeCarpentry saveRecipe(RecipeCarpentry recipe) throws IOException {
+		RecipeCarpentry current = getRecipe(recipe.id);
 		if ((current != null) && !current.name.equals(recipe.name)) {
 			while (containsRecipeName(recipe.name)) {
 				recipe.name += "_";

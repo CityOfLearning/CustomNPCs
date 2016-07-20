@@ -15,7 +15,7 @@ public class ContainerNPCCompanion extends ContainerNpcInterface {
 	public InventoryNPC currencyMatrix;
 	public RoleCompanion role;
 
-	public ContainerNPCCompanion(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCCompanion(EntityNPCInterface npc, EntityPlayer player) {
 		super(player);
 		role = (RoleCompanion) npc.roleInterface;
 		for (int k = 0; k < 3; ++k) {
@@ -42,13 +42,13 @@ public class ContainerNPCCompanion extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer entityplayer) {
+	public void onContainerClosed(EntityPlayer entityplayer) {
 		super.onContainerClosed(entityplayer);
 		role.setStats();
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

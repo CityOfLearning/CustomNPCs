@@ -32,8 +32,8 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 
 public class BlockMailbox extends BlockContainer implements ITileRenderer {
-	public static final PropertyInteger ROTATION;
-	public static final PropertyInteger TYPE;
+	public static PropertyInteger ROTATION;
+	public static PropertyInteger TYPE;
 	static {
 		ROTATION = PropertyInteger.create("rotation", 0, 8);
 		TYPE = PropertyInteger.create("type", 0, 2);
@@ -51,37 +51,36 @@ public class BlockMailbox extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileMailbox();
 	}
 
 	@Override
-	public int damageDropped(final IBlockState state) {
+	public int damageDropped(IBlockState state) {
 		return state.getValue(BlockMailbox.TYPE);
 	}
 
 	@Override
-	public ArrayList<ItemStack> getDrops(final IBlockAccess world, final BlockPos pos, final IBlockState state,
-			final int fortune) {
-		final ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-		final int damage = state.getValue(BlockMailbox.TYPE);
+	public ArrayList<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+		ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+		int damage = state.getValue(BlockMailbox.TYPE);
 		ret.add(new ItemStack(this, 1, damage));
 		return ret;
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return state.getValue(BlockMailbox.ROTATION) | (state.getValue(BlockMailbox.TYPE) << 2);
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockMailbox.TYPE, (Integer.valueOf(meta) >> 2))
 				.withProperty(BlockMailbox.ROTATION, (meta | 0x4));
 	}
 
 	@Override
-	public void getSubBlocks(final Item par1, final CreativeTabs par2CreativeTabs, final List par3List) {
+	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
 		par3List.add(new ItemStack(par1, 1, 0));
 		par3List.add(new ItemStack(par1, 1, 1));
 	}
@@ -105,8 +104,8 @@ public class BlockMailbox extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
+			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!par1World.isRemote) {
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.GUI, EnumGuiType.PlayerMailbox, pos.getX(),
 					pos.getY(), pos.getZ());
@@ -115,8 +114,8 @@ public class BlockMailbox extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entity, final ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
+			ItemStack stack) {
 		int l = MathHelper.floor_double(((entity.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
 		l %= 4;
 		world.setBlockState(pos,

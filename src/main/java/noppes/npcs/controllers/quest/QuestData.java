@@ -11,17 +11,17 @@ public class QuestData {
 	public boolean isCompleted;
 	public NBTTagCompound extraData;
 
-	public QuestData(final Quest quest) {
+	public QuestData(Quest quest) {
 		extraData = new NBTTagCompound();
 		this.quest = quest;
 	}
 
-	public void readEntityFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
 		isCompleted = nbttagcompound.getBoolean("QuestCompleted");
 		extraData = nbttagcompound.getCompoundTag("ExtraData");
 	}
 
-	public void writeEntityToNBT(final NBTTagCompound nbttagcompound) {
+	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setBoolean("QuestCompleted", isCompleted);
 		nbttagcompound.setTag("ExtraData", extraData);
 	}

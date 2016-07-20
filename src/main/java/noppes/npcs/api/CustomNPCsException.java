@@ -5,7 +5,7 @@
 package noppes.npcs.api;
 
 public class CustomNPCsException extends RuntimeException {
-	public CustomNPCsException(final String message, final Object... obs) {
+	public CustomNPCsException(String message, Object... obs) {
 		super(String.format(message, obs));
 	}
 }

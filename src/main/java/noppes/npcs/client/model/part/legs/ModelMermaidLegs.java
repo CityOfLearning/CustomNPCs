@@ -16,7 +16,7 @@ public class ModelMermaidLegs extends ModelRenderer {
 	private ModelRenderer fin1;
 	private ModelRenderer fin2;
 
-	public ModelMermaidLegs(final ModelBase base) {
+	public ModelMermaidLegs(ModelBase base) {
 		super(base);
 		textureWidth = 64.0f;
 		textureHeight = 32.0f;
@@ -44,21 +44,21 @@ public class ModelMermaidLegs extends ModelRenderer {
 	}
 
 	@Override
-	public void render(final float f5) {
+	public void render(float f5) {
 		if (isHidden || !showModel) {
 			return;
 		}
 		top.render(f5);
 	}
 
-	private void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(final float par1, final float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity) {
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity) {
 		float ani = MathHelper.sin(par1 * 0.6662f);
 		if (ani > 0.2) {
 			ani /= 3.0f;
@@ -66,9 +66,9 @@ public class ModelMermaidLegs extends ModelRenderer {
 		top.rotateAngleX = 0.26f - (ani * 0.2f * par2);
 		middle.rotateAngleX = 0.86f - (ani * 0.24f * par2);
 		bottom.rotateAngleX = 0.15f - (ani * 0.28f * par2);
-		final ModelRenderer fin2 = this.fin2;
-		final ModelRenderer fin3 = fin1;
-		final float n = 0.05f - (ani * 0.35f * par2);
+		ModelRenderer fin2 = this.fin2;
+		ModelRenderer fin3 = fin1;
+		float n = 0.05f - (ani * 0.35f * par2);
 		fin3.rotateAngleX = n;
 		fin2.rotateAngleX = n;
 	}

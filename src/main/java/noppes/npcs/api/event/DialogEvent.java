@@ -15,27 +15,26 @@ import noppes.npcs.api.handler.data.IDialogOption;
 public class DialogEvent extends NpcEvent {
 	@Cancelable
 	public static class OpenEvent extends DialogEvent {
-		public OpenEvent(final ICustomNpc npc, final EntityPlayer player, final IDialog dialog) {
+		public OpenEvent(ICustomNpc npc, EntityPlayer player, IDialog dialog) {
 			super(npc, player, dialog);
 		}
 	}
 
 	@Cancelable
 	public static class OptionEvent extends DialogEvent {
-		public final IDialogOption option;
+		public IDialogOption option;
 
-		public OptionEvent(final ICustomNpc npc, final EntityPlayer player, final IDialog dialog,
-				final IDialogOption option) {
+		public OptionEvent(ICustomNpc npc, EntityPlayer player, IDialog dialog, IDialogOption option) {
 			super(npc, player, dialog);
 			this.option = option;
 		}
 	}
 
-	public final IDialog dialog;
+	public IDialog dialog;
 
-	public final IPlayer player;
+	public IPlayer player;
 
-	public DialogEvent(final ICustomNpc npc, final EntityPlayer player, final IDialog dialog) {
+	public DialogEvent(ICustomNpc npc, EntityPlayer player, IDialog dialog) {
 		super(npc);
 		this.dialog = dialog;
 		this.player = (IPlayer) NpcAPI.Instance().getIEntity(player);

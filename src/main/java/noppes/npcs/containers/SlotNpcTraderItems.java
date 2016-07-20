@@ -9,7 +9,7 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 class SlotNpcTraderItems extends Slot {
-	public SlotNpcTraderItems(final IInventory iinventory, final int i, final int j, final int k) {
+	public SlotNpcTraderItems(IInventory iinventory, int i, int j, int k) {
 		super(iinventory, i, j, k);
 	}
 
@@ -19,11 +19,11 @@ class SlotNpcTraderItems extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
+	public boolean isItemValid(ItemStack itemstack) {
 		return false;
 	}
 
-	public void onPickupFromSlot(final ItemStack itemstack) {
+	public void onPickupFromSlot(ItemStack itemstack) {
 		if (itemstack == null) {
 			return;
 		}

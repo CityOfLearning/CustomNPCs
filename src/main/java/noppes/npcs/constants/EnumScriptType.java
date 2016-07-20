@@ -15,7 +15,7 @@ public enum EnumScriptType {
 
 	public String function;
 
-	private EnumScriptType(final String function) {
+	private EnumScriptType(String function) {
 		this.function = function;
 	}
 }

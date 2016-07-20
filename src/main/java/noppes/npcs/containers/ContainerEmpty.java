@@ -9,7 +9,7 @@ import net.minecraft.inventory.Container;
 
 public class ContainerEmpty extends Container {
 	@Override
-	public boolean canInteractWith(final EntityPlayer var1) {
+	public boolean canInteractWith(EntityPlayer var1) {
 		return false;
 	}
 }

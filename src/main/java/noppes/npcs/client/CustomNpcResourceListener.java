@@ -35,12 +35,12 @@ public class CustomNpcResourceListener implements IResourceManagerReloadListener
 		enlargeTexture("wool_colored_white");
 	}
 
-	private void enlargeTexture(final String texture) {
-		final TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+	private void enlargeTexture(String texture) {
+		TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 		if (manager == null) {
 			return;
 		}
-		final ResourceLocation location = new ResourceLocation("customnpcs:textures/cache/" + texture + ".png");
+		ResourceLocation location = new ResourceLocation("customnpcs:textures/cache/" + texture + ".png");
 		TextureCache ob = (TextureCache) manager.getTexture(location);
 		if (ob == null) {
 			ob = new TextureCache(location);
@@ -50,11 +50,11 @@ public class CustomNpcResourceListener implements IResourceManagerReloadListener
 	}
 
 	@Override
-	public void onResourceManagerReload(final IResourceManager var1) {
+	public void onResourceManagerReload(IResourceManager var1) {
 		if (var1 instanceof SimpleReloadableResourceManager) {
 			createTextureCache();
-			final SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) var1;
-			final FolderResourcePack pack = new FolderResourcePack(CustomNpcs.Dir);
+			SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) var1;
+			FolderResourcePack pack = new FolderResourcePack(CustomNpcs.Dir);
 			simplemanager.reloadResourcePack(pack);
 			try {
 				CustomNpcResourceListener.DefaultTextColor = Integer

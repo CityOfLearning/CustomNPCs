@@ -22,7 +22,7 @@ public class ModelNagaLegs extends ModelRenderer {
 	public boolean isSleeping;
 	public boolean isCrawling;
 
-	public ModelNagaLegs(final ModelBase base) {
+	public ModelNagaLegs(ModelBase base) {
 		super(base);
 		isRiding = false;
 		isSneaking = false;
@@ -109,7 +109,7 @@ public class ModelNagaLegs extends ModelRenderer {
 	}
 
 	@Override
-	public void render(final float par7) {
+	public void render(float par7) {
 		if (isHidden || !showModel) {
 			return;
 		}
@@ -129,8 +129,8 @@ public class ModelNagaLegs extends ModelRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	public void setRotationAngles(final float par1, final float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity) {
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity) {
 		nagaPart1.rotateAngleY = MathHelper.cos(par1 * 0.6662f) * 0.26f * par2;
 		nagaPart2.rotateAngleY = MathHelper.cos(par1 * 0.6662f) * 0.5f * par2;
 		nagaPart3.rotateAngleY = MathHelper.cos(par1 * 0.6662f) * 0.26f * par2;
@@ -150,66 +150,66 @@ public class ModelNagaLegs extends ModelRenderer {
 			nagaPart3.rotateAngleX = -1.5707964f;
 			nagaPart4.rotateAngleX = -1.5707964f;
 			nagaPart5.rotateAngleX = -1.5707964f;
-			final ModelRenderer nagaPart3 = this.nagaPart3;
+			ModelRenderer nagaPart3 = this.nagaPart3;
 			nagaPart3.rotationPointY -= 2.0f;
 			this.nagaPart3.rotationPointZ = 0.9f;
-			final ModelRenderer nagaPart4 = this.nagaPart4;
+			ModelRenderer nagaPart4 = this.nagaPart4;
 			nagaPart4.rotationPointY += 4.0f;
 			this.nagaPart4.rotationPointZ = 0.9f;
-			final ModelRenderer nagaPart5 = this.nagaPart5;
+			ModelRenderer nagaPart5 = this.nagaPart5;
 			nagaPart5.rotationPointY += 7.0f;
 			this.nagaPart5.rotationPointZ = 2.9f;
 		}
 		if (isRiding) {
-			final ModelRenderer nagaPart6 = nagaPart1;
+			ModelRenderer nagaPart6 = nagaPart1;
 			--nagaPart6.rotationPointY;
 			nagaPart1.rotateAngleX = -0.19634955f;
 			nagaPart1.rotationPointZ = -1.0f;
-			final ModelRenderer nagaPart7 = nagaPart2;
+			ModelRenderer nagaPart7 = nagaPart2;
 			nagaPart7.rotationPointY -= 4.0f;
 			nagaPart2.rotationPointZ = -1.0f;
-			final ModelRenderer nagaPart8 = nagaPart3;
+			ModelRenderer nagaPart8 = nagaPart3;
 			nagaPart8.rotationPointY -= 9.0f;
-			final ModelRenderer nagaPart9 = nagaPart3;
+			ModelRenderer nagaPart9 = nagaPart3;
 			--nagaPart9.rotationPointZ;
-			final ModelRenderer nagaPart10 = nagaPart4;
+			ModelRenderer nagaPart10 = nagaPart4;
 			nagaPart10.rotationPointY -= 13.0f;
-			final ModelRenderer nagaPart11 = nagaPart4;
+			ModelRenderer nagaPart11 = nagaPart4;
 			--nagaPart11.rotationPointZ;
-			final ModelRenderer nagaPart12 = nagaPart5;
+			ModelRenderer nagaPart12 = nagaPart5;
 			nagaPart12.rotationPointY -= 9.0f;
-			final ModelRenderer nagaPart13 = nagaPart5;
+			ModelRenderer nagaPart13 = nagaPart5;
 			--nagaPart13.rotationPointZ;
 			if (isSneaking) {
-				final ModelRenderer nagaPart14 = nagaPart1;
+				ModelRenderer nagaPart14 = nagaPart1;
 				nagaPart14.rotationPointZ += 5.0f;
-				final ModelRenderer nagaPart15 = nagaPart3;
+				ModelRenderer nagaPart15 = nagaPart3;
 				nagaPart15.rotationPointZ += 5.0f;
-				final ModelRenderer nagaPart16 = nagaPart4;
+				ModelRenderer nagaPart16 = nagaPart4;
 				nagaPart16.rotationPointZ += 5.0f;
-				final ModelRenderer nagaPart17 = nagaPart5;
+				ModelRenderer nagaPart17 = nagaPart5;
 				nagaPart17.rotationPointZ += 4.0f;
-				final ModelRenderer nagaPart18 = nagaPart1;
+				ModelRenderer nagaPart18 = nagaPart1;
 				--nagaPart18.rotationPointY;
-				final ModelRenderer nagaPart19 = nagaPart2;
+				ModelRenderer nagaPart19 = nagaPart2;
 				--nagaPart19.rotationPointY;
-				final ModelRenderer nagaPart20 = nagaPart3;
+				ModelRenderer nagaPart20 = nagaPart3;
 				--nagaPart20.rotationPointY;
-				final ModelRenderer nagaPart21 = nagaPart4;
+				ModelRenderer nagaPart21 = nagaPart4;
 				--nagaPart21.rotationPointY;
-				final ModelRenderer nagaPart22 = nagaPart5;
+				ModelRenderer nagaPart22 = nagaPart5;
 				--nagaPart22.rotationPointY;
 			}
 		} else if (isSneaking) {
-			final ModelRenderer nagaPart23 = nagaPart1;
+			ModelRenderer nagaPart23 = nagaPart1;
 			--nagaPart23.rotationPointY;
-			final ModelRenderer nagaPart24 = nagaPart2;
+			ModelRenderer nagaPart24 = nagaPart2;
 			--nagaPart24.rotationPointY;
-			final ModelRenderer nagaPart25 = nagaPart3;
+			ModelRenderer nagaPart25 = nagaPart3;
 			--nagaPart25.rotationPointY;
-			final ModelRenderer nagaPart26 = nagaPart4;
+			ModelRenderer nagaPart26 = nagaPart4;
 			--nagaPart26.rotationPointY;
-			final ModelRenderer nagaPart27 = nagaPart5;
+			ModelRenderer nagaPart27 = nagaPart5;
 			--nagaPart27.rotationPointY;
 			nagaPart1.rotationPointZ = 5.0f;
 			nagaPart2.rotationPointZ = 3.0f;

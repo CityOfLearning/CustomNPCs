@@ -25,10 +25,10 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	protected T entity;
 	private Map<String, Object> tempData;
 	private WorldWrapper worldWrapper;
-	private final IData tempdata;
-	private final IData storeddata;
+	private IData tempdata;
+	private IData storeddata;
 
-	public EntityWrapper(final T entity) {
+	public EntityWrapper(T entity) {
 		this.tempData = new HashMap<String, Object>();
 		this.tempdata = new IData() {
 			@Override
@@ -37,22 +37,22 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 			}
 
 			@Override
-			public Object get(final String key) {
+			public Object get(String key) {
 				return EntityWrapper.this.tempData.get(key);
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return EntityWrapper.this.tempData.containsKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
+			public void put(String key, Object value) {
 				EntityWrapper.this.tempData.put(key, value);
 			}
 
 			@Override
-			public void remove(final String key) {
+			public void remove(String key) {
 				EntityWrapper.this.tempData.remove(key);
 			}
 		};
@@ -63,12 +63,12 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 			}
 
 			@Override
-			public Object get(final String key) {
-				final NBTTagCompound compound = this.getStoredCompound();
+			public Object get(String key) {
+				NBTTagCompound compound = this.getStoredCompound();
 				if (!compound.hasKey(key)) {
 					return null;
 				}
-				final NBTBase base = compound.getTag(key);
+				NBTBase base = compound.getTag(key);
 				if (base instanceof NBTBase.NBTPrimitive) {
 					return ((NBTBase.NBTPrimitive) base).getDouble();
 				}
@@ -84,13 +84,13 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 			}
 
 			@Override
-			public boolean has(final String key) {
+			public boolean has(String key) {
 				return this.getStoredCompound().hasKey(key);
 			}
 
 			@Override
-			public void put(final String key, final Object value) {
-				final NBTTagCompound compound = this.getStoredCompound();
+			public void put(String key, Object value) {
+				NBTTagCompound compound = this.getStoredCompound();
 				if (value instanceof Number) {
 					compound.setDouble(key, ((Number) value).doubleValue());
 				} else if (value instanceof String) {
@@ -100,13 +100,13 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 			}
 
 			@Override
-			public void remove(final String key) {
-				final NBTTagCompound compound = this.getStoredCompound();
+			public void remove(String key) {
+				NBTTagCompound compound = this.getStoredCompound();
 				compound.removeTag(key);
 				this.saveStoredCompound(compound);
 			}
 
-			private void saveStoredCompound(final NBTTagCompound compound) {
+			private void saveStoredCompound(NBTTagCompound compound) {
 				EntityWrapper.this.entity.getEntityData().setTag("CNPCStoredData", compound);
 			}
 		};
@@ -120,7 +120,7 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	}
 
 	@Override
-	public void dropItem(final IItemStack item) {
+	public void dropItem(IItemStack item) {
 		this.entity.entityDropItem(item.getMCItemStack(), 0.0f);
 	}
 
@@ -253,23 +253,23 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	}
 
 	@Override
-	public void knockback(final int power, final float direction) {
-		final float v = (direction * 3.1415927f) / 180.0f;
+	public void knockback(int power, float direction) {
+		float v = (direction * 3.1415927f) / 180.0f;
 		this.entity.addVelocity(-MathHelper.sin(v) * power, 0.1 + (power * 0.04f), MathHelper.cos(v) * power);
-		final Entity entity = this.entity;
+		Entity entity = this.entity;
 		entity.motionX *= 0.6;
-		final Entity entity2 = this.entity;
+		Entity entity2 = this.entity;
 		entity2.motionZ *= 0.6;
 		this.entity.attackEntityFrom(DamageSource.outOfWorld, 1.0E-4f);
 	}
 
 	@Override
-	public void setBurning(final int ticks) {
+	public void setBurning(int ticks) {
 		this.entity.setFire(ticks);
 	}
 
 	@Override
-	public void setMount(final IEntity entity) {
+	public void setMount(IEntity entity) {
 		if (entity == null) {
 			this.entity.mountEntity((Entity) null);
 		} else {
@@ -278,12 +278,12 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	}
 
 	@Override
-	public void setPosition(final double x, final double y, final double z) {
+	public void setPosition(double x, double y, double z) {
 		this.entity.setPosition(x, y, z);
 	}
 
 	@Override
-	public void setRider(final IEntity entity) {
+	public void setRider(IEntity entity) {
 		if (entity != null) {
 			entity.getMCEntity().mountEntity(this.entity);
 		} else if (this.entity.riddenByEntity != null) {
@@ -292,27 +292,27 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	}
 
 	@Override
-	public void setRotation(final float rotation) {
+	public void setRotation(float rotation) {
 		this.entity.rotationYaw = rotation;
 	}
 
 	@Override
-	public void setX(final double x) {
+	public void setX(double x) {
 		this.entity.posX = x;
 	}
 
 	@Override
-	public void setY(final double y) {
+	public void setY(double y) {
 		this.entity.posY = y;
 	}
 
 	@Override
-	public void setZ(final double z) {
+	public void setZ(double z) {
 		this.entity.posZ = z;
 	}
 
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return type == 0;
 	}
 }

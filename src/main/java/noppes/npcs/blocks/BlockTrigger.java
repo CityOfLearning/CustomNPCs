@@ -13,7 +13,7 @@ import net.minecraft.world.World;
 import noppes.npcs.blocks.tiles.TileColorable;
 
 public abstract class BlockTrigger extends BlockRotated {
-	protected BlockTrigger(final Block block) {
+	protected BlockTrigger(Block block) {
 		super(block);
 	}
 
@@ -23,22 +23,20 @@ public abstract class BlockTrigger extends BlockRotated {
 	}
 
 	@Override
-	public int getStrongPower(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state,
-			final EnumFacing side) {
+	public int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
 		return getWeakPower(worldIn, pos, state, side);
 	}
 
 	@Override
-	public int getWeakPower(final IBlockAccess world, final BlockPos pos, final IBlockState state,
-			final EnumFacing side) {
-		final TileColorable tile = (TileColorable) world.getTileEntity(pos);
+	public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
+		TileColorable tile = (TileColorable) world.getTileEntity(pos);
 		if (tile != null) {
 			return tile.powerProvided();
 		}
 		return 0;
 	}
 
-	public void updateSurrounding(final World par1World, final BlockPos pos) {
+	public void updateSurrounding(World par1World, BlockPos pos) {
 		par1World.notifyNeighborsOfStateChange(pos, this);
 		par1World.notifyNeighborsOfStateChange(pos.down(), this);
 		par1World.notifyNeighborsOfStateChange(pos.up(), this);

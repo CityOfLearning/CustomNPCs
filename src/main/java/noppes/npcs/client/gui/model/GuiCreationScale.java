@@ -28,7 +28,7 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 
 	private List<EnumParts> data;
 
-	public GuiCreationScale(final EntityNPCInterface npc) {
+	public GuiCreationScale(EntityNPCInterface npc) {
 		super(npc);
 		data = new ArrayList<EnumParts>();
 		active = 3;
@@ -36,17 +36,17 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (btn.id == 13) {
-			final boolean bo = ((GuiNpcButton) btn).getValue() == 0;
+			boolean bo = ((GuiNpcButton) btn).getValue() == 0;
 			playerdata.getPartConfig(GuiCreationScale.selected).notShared = bo;
 			initGui();
 		}
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		if (scroll.selected >= 0) {
 			GuiCreationScale.selected = data.get(scroll.selected);
 			initGui();
@@ -59,20 +59,20 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 		if (scroll == null) {
 			scroll = new GuiCustomScroll(this, 0);
 		}
-		final ArrayList list = new ArrayList();
-		final EnumParts[] parts = { EnumParts.HEAD, EnumParts.BODY, EnumParts.ARM_LEFT, EnumParts.ARM_RIGHT,
+		ArrayList list = new ArrayList();
+		EnumParts[] parts = { EnumParts.HEAD, EnumParts.BODY, EnumParts.ARM_LEFT, EnumParts.ARM_RIGHT,
 				EnumParts.LEG_LEFT, EnumParts.LEG_RIGHT };
 		data.clear();
-		for (final EnumParts part : parts) {
+		for (EnumParts part : parts) {
 			Label_0210: {
 				if (part == EnumParts.ARM_RIGHT) {
-					final ModelPartConfig config = playerdata.getPartConfig(EnumParts.ARM_LEFT);
+					ModelPartConfig config = playerdata.getPartConfig(EnumParts.ARM_LEFT);
 					if (!config.notShared) {
 						break Label_0210;
 					}
 				}
 				if (part == EnumParts.LEG_RIGHT) {
-					final ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
+					ModelPartConfig config = playerdata.getPartConfig(EnumParts.LEG_LEFT);
 					if (!config.notShared) {
 						break Label_0210;
 					}
@@ -87,7 +87,7 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 		scroll.guiTop = guiTop + 46;
 		scroll.setSize(100, ySize - 74);
 		addScroll(scroll);
-		final ModelPartConfig config2 = playerdata.getPartConfig(GuiCreationScale.selected);
+		ModelPartConfig config2 = playerdata.getPartConfig(GuiCreationScale.selected);
 		int y = guiTop + 65;
 		addLabel(new GuiNpcLabel(10, "scale.width", guiLeft + 102, y + 5, 16777215));
 		addSlider(new GuiNpcSlider(this, 10, guiLeft + 150, y, 100, 20, config2.scaleX - 0.5f));
@@ -106,12 +106,12 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider slider) {
+	public void mouseDragged(GuiNpcSlider slider) {
 		super.mouseDragged(slider);
 		if ((slider.id >= 10) && (slider.id <= 12)) {
-			final int percent = (int) (50.0f + (slider.sliderValue * 100.0f));
+			int percent = (int) (50.0f + (slider.sliderValue * 100.0f));
 			slider.setString(percent + "%");
-			final ModelPartConfig config = playerdata.getPartConfig(GuiCreationScale.selected);
+			ModelPartConfig config = playerdata.getPartConfig(GuiCreationScale.selected);
 			if (slider.id == 10) {
 				config.scaleX = slider.sliderValue + 0.5f;
 			}
@@ -126,29 +126,29 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 	}
 
 	private void updateTransate() {
-		for (final EnumParts part : EnumParts.values()) {
-			final ModelPartConfig config = playerdata.getPartConfig(part);
+		for (EnumParts part : EnumParts.values()) {
+			ModelPartConfig config = playerdata.getPartConfig(part);
 			if (config != null) {
 				if (part == EnumParts.HEAD) {
 					config.setTranslate(0.0f, playerdata.getBodyY(), 0.0f);
 				} else if (part == EnumParts.ARM_LEFT) {
-					final ModelPartConfig body = playerdata.getPartConfig(EnumParts.BODY);
-					final float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
-					final float y = playerdata.getBodyY() + ((1.0f - config.scaleY) * -0.1f);
+					ModelPartConfig body = playerdata.getPartConfig(EnumParts.BODY);
+					float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
+					float y = playerdata.getBodyY() + ((1.0f - config.scaleY) * -0.1f);
 					config.setTranslate(-x, y, 0.0f);
 					if (!config.notShared) {
-						final ModelPartConfig arm = playerdata.getPartConfig(EnumParts.ARM_RIGHT);
+						ModelPartConfig arm = playerdata.getPartConfig(EnumParts.ARM_RIGHT);
 						arm.copyValues(config);
 					}
 				} else if (part == EnumParts.ARM_RIGHT) {
-					final ModelPartConfig body = playerdata.getPartConfig(EnumParts.BODY);
-					final float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
-					final float y = playerdata.getBodyY() + ((1.0f - config.scaleY) * -0.1f);
+					ModelPartConfig body = playerdata.getPartConfig(EnumParts.BODY);
+					float x = ((1.0f - body.scaleX) * 0.25f) + ((1.0f - config.scaleX) * 0.075f);
+					float y = playerdata.getBodyY() + ((1.0f - config.scaleY) * -0.1f);
 					config.setTranslate(x, y, 0.0f);
 				} else if (part == EnumParts.LEG_LEFT) {
 					config.setTranslate((config.scaleX * 0.125f) - 0.113f, playerdata.getLegsY(), 0.0f);
 					if (!config.notShared) {
-						final ModelPartConfig leg = playerdata.getPartConfig(EnumParts.LEG_RIGHT);
+						ModelPartConfig leg = playerdata.getPartConfig(EnumParts.LEG_RIGHT);
 						leg.copyValues(config);
 					}
 				} else if (part == EnumParts.LEG_RIGHT) {

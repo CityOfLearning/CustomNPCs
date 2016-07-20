@@ -15,23 +15,23 @@ import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.client.model.blocks.ModelTradingTable;
 
 public class BlockTradingRenderer extends BlockRendererInterface {
-	private static final ResourceLocation resource1;
-	private static final ResourceLocation resource2;
+	private static ResourceLocation resource1;
+	private static ResourceLocation resource2;
 	static {
 		resource1 = new ResourceLocation("customnpcs", "textures/models/TradingTable.png");
 		resource2 = new ResourceLocation("customnpcs", "textures/models/TradingArrows.png");
 	}
 
-	private final ModelTradingTable model;
+	private ModelTradingTable model;
 
 	public BlockTradingRenderer() {
 		model = new ModelTradingTable();
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double var2, final double var4, final double var6,
-			final float var8, final int blockDamage) {
-		final TileColorable tile = (TileColorable) var1;
+	public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8,
+			int blockDamage) {
+		TileColorable tile = (TileColorable) var1;
 		GlStateManager.enableLighting();
 		GlStateManager.pushMatrix();
 		GlStateManager.translate((float) var2 + 0.5f, (float) var4 + 1.42f, (float) var6 + 0.5f);
@@ -47,7 +47,7 @@ public class BlockTradingRenderer extends BlockRendererInterface {
 		GlStateManager.translate(var2 + 0.05, var4, var6 + 0.05);
 		GlStateManager.scale(0.9f, 0.9f, 0.9f);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(BlockTradingRenderer.resource2);
-		final WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
+		WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
 		tessellator.begin(7, DefaultVertexFormats.POSITION_TEX);
 		int i = 0;
 		int j = 1;

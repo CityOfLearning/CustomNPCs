@@ -15,7 +15,7 @@ import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 
 public class RecipesDefault {
-	public static void addRecipe(final String name, final Object ob, final boolean isGlobal, final Object... recipe) {
+	public static void addRecipe(String name, Object ob, boolean isGlobal, Object... recipe) {
 		ItemStack item;
 		if (ob instanceof Item) {
 			item = new ItemStack((Item) ob);
@@ -33,10 +33,10 @@ public class RecipesDefault {
 		}
 	}
 
-	public static void loadDefaultRecipes(final int i) {
-			addRecipe("Npc Wand", CustomItems.wand, true, "XX", " Y", " Y", 'X', Items.bread, 'Y', Items.stick);
-			addRecipe("Mob Cloner", CustomItems.cloner, true, "XX", "XY", " Y", 'X', Items.bread, 'Y', Items.stick);
-			addRecipe("Carpentry Bench", CustomItems.carpentyBench, true, "XYX", "Z Z", "Z Z", 'X', Blocks.planks, 'Z',
-					Items.stick, 'Y', Blocks.crafting_table);
+	public static void loadDefaultRecipes(int i) {
+		addRecipe("Npc Wand", CustomItems.wand, true, "XX", " Y", " Y", 'X', Items.bread, 'Y', Items.stick);
+		addRecipe("Mob Cloner", CustomItems.cloner, true, "XX", "XY", " Y", 'X', Items.bread, 'Y', Items.stick);
+		addRecipe("Carpentry Bench", CustomItems.carpentyBench, true, "XYX", "Z Z", "Z Z", 'X', Blocks.planks, 'Z',
+				Items.stick, 'Y', Blocks.crafting_table);
 	}
 }

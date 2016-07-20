@@ -26,7 +26,7 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	private GuiCustomScroll scrollFactions;
 	private int selected;
 
-	public SubGuiNpcFactionOptions(final FactionOptions options) {
+	public SubGuiNpcFactionOptions(FactionOptions options) {
 		data = new HashMap<String, Integer>();
 		selected = -1;
 		this.options = options;
@@ -37,8 +37,8 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			options.factionId = -1;
 			initGui();
@@ -65,13 +65,13 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		selected = data.get(guiCustomScroll.getSelected());
 		initGui();
 	}
 
-	private String getFactionName(final int faction) {
-		for (final String s : data.keySet()) {
+	private String getFactionName(int faction) {
+		for (String s : data.keySet()) {
 			if (data.get(s) == faction) {
 				return s;
 			}
@@ -132,9 +132,9 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final GuiCustomScroll scroll = getScroll(0);
-		final String name = scroll.getSelected();
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		GuiCustomScroll scroll = getScroll(0);
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		if (name != null) {
@@ -144,6 +144,6 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

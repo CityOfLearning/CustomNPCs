@@ -14,7 +14,7 @@ public class QuestAchievement extends Achievement {
 	private String description;
 	private String message;
 
-	public QuestAchievement(final String message, final String description) {
+	public QuestAchievement(String message, String description) {
 		super("", message, 0, 0, (CustomItems.letter == null) ? Items.paper : CustomItems.letter, (Achievement) null);
 		this.description = description;
 		this.message = message;

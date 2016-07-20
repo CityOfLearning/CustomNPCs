@@ -29,7 +29,7 @@ public class BankController {
 		if (BankController.instance == null) {
 			return true;
 		}
-		final File file = CustomNpcs.getWorldSaveDirectory();
+		File file = CustomNpcs.getWorldSaveDirectory();
 		return (file != null) && !BankController.instance.filePath.equals(file.getAbsolutePath());
 	}
 
@@ -43,7 +43,7 @@ public class BankController {
 		banks = new HashMap<Integer, Bank>();
 		this.loadBanks();
 		if (banks.isEmpty()) {
-			final Bank bank = new Bank();
+			Bank bank = new Bank();
 			bank.id = 0;
 			bank.name = "Default Bank";
 			for (int i = 0; i < 6; ++i) {
@@ -53,8 +53,8 @@ public class BankController {
 		}
 	}
 
-	public Bank getBank(final int bankId) {
-		final Bank bank = banks.get(bankId);
+	public Bank getBank(int bankId) {
+		Bank bank = banks.get(bankId);
 		if (bank != null) {
 			return bank;
 		}
@@ -62,13 +62,13 @@ public class BankController {
 	}
 
 	public NBTTagCompound getNBT() {
-		final NBTTagList list = new NBTTagList();
-		for (final Bank bank : banks.values()) {
-			final NBTTagCompound nbtfactions = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (Bank bank : banks.values()) {
+			NBTTagCompound nbtfactions = new NBTTagCompound();
 			bank.writeEntityToNBT(nbtfactions);
 			list.appendTag(nbtfactions);
 		}
-		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		nbttagcompound.setTag("Data", list);
 		return nbttagcompound;
 	}
@@ -81,19 +81,19 @@ public class BankController {
 	}
 
 	private void loadBanks() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		if (saveDir == null) {
 			return;
 		}
 		filePath = saveDir.getAbsolutePath();
 		try {
-			final File file = new File(saveDir, "bank.dat");
+			File file = new File(saveDir, "bank.dat");
 			if (file.exists()) {
 				this.loadBanks(file);
 			}
 		} catch (Exception e) {
 			try {
-				final File file2 = new File(saveDir, "bank.dat_old");
+				File file2 = new File(saveDir, "bank.dat_old");
 				if (file2.exists()) {
 					this.loadBanks(file2);
 				}
@@ -102,17 +102,17 @@ public class BankController {
 		}
 	}
 
-	private void loadBanks(final File file) throws IOException {
+	private void loadBanks(File file) throws IOException {
 		this.loadBanks(CompressedStreamTools.readCompressed(new FileInputStream(file)));
 	}
 
-	public void loadBanks(final NBTTagCompound nbttagcompound1) throws IOException {
-		final HashMap<Integer, Bank> banks = new HashMap<Integer, Bank>();
-		final NBTTagList list = nbttagcompound1.getTagList("Data", 10);
+	public void loadBanks(NBTTagCompound nbttagcompound1) throws IOException {
+		HashMap<Integer, Bank> banks = new HashMap<Integer, Bank>();
+		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final NBTTagCompound nbttagcompound2 = list.getCompoundTagAt(i);
-				final Bank bank = new Bank();
+				NBTTagCompound nbttagcompound2 = list.getCompoundTagAt(i);
+				Bank bank = new Bank();
 				bank.readEntityFromNBT(nbttagcompound2);
 				banks.put(bank.id, bank);
 			}
@@ -120,7 +120,7 @@ public class BankController {
 		this.banks = banks;
 	}
 
-	public void removeBank(final int bank) {
+	public void removeBank(int bank) {
 		if ((bank < 0) || (banks.size() <= 1)) {
 			return;
 		}
@@ -128,7 +128,7 @@ public class BankController {
 		saveBanks();
 	}
 
-	public void saveBank(final Bank bank) {
+	public void saveBank(Bank bank) {
 		if (bank.id < 0) {
 			bank.id = getUnusedId();
 		}
@@ -138,10 +138,10 @@ public class BankController {
 
 	public void saveBanks() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final File file = new File(saveDir, "bank.dat_new");
-			final File file2 = new File(saveDir, "bank.dat_old");
-			final File file3 = new File(saveDir, "bank.dat");
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			File file = new File(saveDir, "bank.dat_new");
+			File file2 = new File(saveDir, "bank.dat_old");
+			File file3 = new File(saveDir, "bank.dat");
 			CompressedStreamTools.writeCompressed(getNBT(), new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();

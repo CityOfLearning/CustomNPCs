@@ -18,7 +18,7 @@ public abstract class JobInterface implements INPCJob {
 	protected IItemStack mainhand;
 	protected IItemStack offhand;
 
-	public JobInterface(final EntityNPCInterface npc) {
+	public JobInterface(EntityNPCInterface npc) {
 		overrideMainHand = false;
 		overrideOffHand = false;
 		mainhand = null;
@@ -60,7 +60,7 @@ public abstract class JobInterface implements INPCJob {
 		return npc.advanced.job;
 	}
 
-	public String itemToString(final ItemStack item) {
+	public String itemToString(ItemStack item) {
 		if ((item == null) || (item.getItem() == null)) {
 			return null;
 		}
@@ -70,7 +70,7 @@ public abstract class JobInterface implements INPCJob {
 	public void killed() {
 	}
 
-	public abstract void readFromNBT(final NBTTagCompound p0);
+	public abstract void readFromNBT(NBTTagCompound p0);
 
 	public void reset() {
 	}
@@ -84,7 +84,7 @@ public abstract class JobInterface implements INPCJob {
 		}
 		int damage = 0;
 		if (s.contains(" - ")) {
-			final String[] split = s.split(" - ");
+			String[] split = s.split(" - ");
 			if (split.length == 2) {
 				try {
 					damage = Integer.parseInt(split[1]);
@@ -93,12 +93,12 @@ public abstract class JobInterface implements INPCJob {
 				s = split[0];
 			}
 		}
-		final Item item = Item.getByNameOrId(s);
+		Item item = Item.getByNameOrId(s);
 		if (item == null) {
 			return null;
 		}
 		return new ItemStack(item, 1, damage);
 	}
 
-	public abstract NBTTagCompound writeToNBT(final NBTTagCompound p0);
+	public abstract NBTTagCompound writeToNBT(NBTTagCompound p0);
 }

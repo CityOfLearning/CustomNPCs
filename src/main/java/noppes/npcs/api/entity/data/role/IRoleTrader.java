@@ -8,17 +8,17 @@ import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.entity.data.INPCRole;
 
 public interface IRoleTrader extends INPCRole {
-	IItemStack getCurrency1(final int p0);
+	IItemStack getCurrency1(int p0);
 
-	IItemStack getCurrency2(final int p0);
+	IItemStack getCurrency2(int p0);
 
 	String getMarket();
 
-	IItemStack getSold(final int p0);
+	IItemStack getSold(int p0);
 
-	void remove(final int p0);
+	void remove(int p0);
 
-	void set(final int p0, final IItemStack p1, final IItemStack p2, final IItemStack p3);
+	void set(int p0, IItemStack p1, IItemStack p2, IItemStack p3);
 
-	void setMarket(final String p0);
+	void setMarket(String p0);
 }

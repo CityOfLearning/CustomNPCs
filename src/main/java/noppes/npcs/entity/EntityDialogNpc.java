@@ -8,12 +8,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 public class EntityDialogNpc extends EntityNPCInterface {
-	public EntityDialogNpc(final World world) {
+	public EntityDialogNpc(World world) {
 		super(world);
 	}
 
 	@Override
-	public boolean interact(final EntityPlayer player) {
+	public boolean interact(EntityPlayer player) {
 		return false;
 	}
 
@@ -23,7 +23,7 @@ public class EntityDialogNpc extends EntityNPCInterface {
 	}
 
 	@Override
-	public boolean isInvisibleToPlayer(final EntityPlayer player) {
+	public boolean isInvisibleToPlayer(EntityPlayer player) {
 		return true;
 	}
 

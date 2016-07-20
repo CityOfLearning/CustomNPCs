@@ -24,21 +24,21 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	private Lines lines;
 	private GuiNpcTextField field;
 	private GuiNpcSoundSelection gui;
-	private final int guiLines = 7;
+	private int guiLines = 7;
 
-	public GuiNPCLinesEdit(final EntityNPCInterface npc, final Lines lines) {
+	public GuiNPCLinesEdit(EntityNPCInterface npc, Lines lines) {
 		super(npc);
 		this.lines = lines;
 		Client.sendData(EnumPacketServer.MainmenuAdvancedGet, new Object[0]);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		if(guibutton.id == 99){
+	protected void actionPerformed(GuiButton guibutton) {
+		if (guibutton.id == 99) {
 			saveLines();
 			Client.sendData(EnumPacketServer.MainmenuAdvancedSave, npc.advanced.writeToNBT(new NBTTagCompound()));
 		} else {
-			final GuiNpcButton button = (GuiNpcButton) guibutton;
+			GuiNpcButton button = (GuiNpcButton) guibutton;
 			field = getTextField(button.id + guiLines);
 			NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(this, field.getText()));
 		}
@@ -52,19 +52,19 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	@Override
 	public void initGui() {
 		super.initGui();
-		//There needs to be a dedicated save dialog button... come now
+		// There needs to be a dedicated save dialog button... come now
 		for (int i = 0; i < guiLines; ++i) {
 			String text = "";
 			String sound = "";
 			if (lines.lines.containsKey(i)) {
-				final Line line = lines.lines.get(i);
+				Line line = lines.lines.get(i);
 				text = line.text;
 				sound = line.sound;
 			}
 			addTextField(
 					new GuiNpcTextField(i, this, fontRendererObj, guiLeft + 4, guiTop + 4 + (i * 24), 200, 20, text));
-			addTextField(new GuiNpcTextField(i + guiLines, this, fontRendererObj, guiLeft + 208, guiTop + 4 + (i * 24), 146,
-					20, sound));
+			addTextField(new GuiNpcTextField(i + guiLines, this, fontRendererObj, guiLeft + 208, guiTop + 4 + (i * 24),
+					146, 20, sound));
 			addButton(new GuiNpcButton(i, guiLeft + 358, guiTop + 4 + (i * 24), 60, 20, "mco.template.button.select"));
 		}
 		addButton(new GuiNpcButton(99, guiLeft + 333, guiTop + 10 + (guiLines * 24), 70, 20, "Save Lines"));
@@ -72,16 +72,16 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 
 	@Override
 	public void save() {
-	//this is a terrible idea... a global save when the page changes?
+		// this is a terrible idea... a global save when the page changes?
 	}
 
 	private void saveLines() {
-		final HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
+		HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
 		for (int i = 0; i < guiLines; ++i) {
-			final GuiNpcTextField tf = getTextField(i);
-			final GuiNpcTextField tf2 = getTextField(i + guiLines);
+			GuiNpcTextField tf = getTextField(i);
+			GuiNpcTextField tf2 = getTextField(i + guiLines);
 			if (!tf.isEmpty()) {
-				final Line line = new Line();
+				Line line = new Line();
 				line.text = tf.getText();
 				line.sound = tf2.getText();
 				lines.put(i, line);
@@ -91,7 +91,7 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		npc.advanced.readToNBT(compound);
 		initGui();
 	}

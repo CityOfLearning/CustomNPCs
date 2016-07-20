@@ -14,7 +14,7 @@ import noppes.npcs.roles.RoleTrader;
 public class ContainerNPCTraderSetup extends Container {
 	public RoleTrader role;
 
-	public ContainerNPCTraderSetup(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCTraderSetup(EntityNPCInterface npc, EntityPlayer player) {
 		role = (RoleTrader) npc.roleInterface;
 		for (int i = 0; i < 18; ++i) {
 			int x = 7;
@@ -36,12 +36,12 @@ public class ContainerNPCTraderSetup extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

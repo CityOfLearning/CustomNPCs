@@ -53,20 +53,20 @@ public class ScriptController {
 		ScriptController.Instance = this;
 		manager = new ScriptEngineManager();
 		LogWriter.info("Script Engines Available:");
-		for (final ScriptEngineFactory fac : manager.getEngineFactories()) {
+		for (ScriptEngineFactory fac : manager.getEngineFactories()) {
 			if (fac.getExtensions().isEmpty()) {
 				continue;
 			}
 			if (!(manager.getEngineByName(fac.getLanguageName()) instanceof Invocable)) {
 				continue;
 			}
-			final String ext = "." + fac.getExtensions().get(0).toLowerCase();
+			String ext = "." + fac.getExtensions().get(0).toLowerCase();
 			LogWriter.info(fac.getLanguageName() + ": " + ext);
 			languages.put(fac.getLanguageName(), ext);
 		}
 	}
 
-	public ScriptEngine getEngineByName(final String language) {
+	public ScriptEngine getEngineByName(String language) {
 		return manager.getEngineByName(language);
 	}
 
@@ -74,13 +74,13 @@ public class ScriptController {
 		return new File(dir, "world_data.json");
 	}
 
-	private List<String> getScripts(final String language) {
-		final List<String> list = new ArrayList<String>();
-		final String ext = languages.get(language);
+	private List<String> getScripts(String language) {
+		List<String> list = new ArrayList<String>();
+		String ext = languages.get(language);
 		if (ext == null) {
 			return list;
 		}
-		for (final String script : scripts.keySet()) {
+		for (String script : scripts.keySet()) {
 			if (script.endsWith(ext)) {
 				list.add(script);
 			}
@@ -98,9 +98,9 @@ public class ScriptController {
 		}
 		WorldWrapper.tempData.clear();
 		scripts.clear();
-		for (final String language : languages.keySet()) {
-			final String ext = languages.get(language);
-			final File scriptDir = new File(dir, language.toLowerCase());
+		for (String language : languages.keySet()) {
+			String ext = languages.get(language);
+			File scriptDir = new File(dir, language.toLowerCase());
 			if (!scriptDir.exists()) {
 				scriptDir.mkdir();
 			} else {
@@ -110,9 +110,9 @@ public class ScriptController {
 		lastLoaded = System.currentTimeMillis();
 	}
 
-	private void loadDir(final File dir, final String name, final String ext) {
-		for (final File file : dir.listFiles()) {
-			final String filename = name + file.getName().toLowerCase();
+	private void loadDir(File dir, String name, String ext) {
+		for (File file : dir.listFiles()) {
+			String filename = name + file.getName().toLowerCase();
 			if (file.isDirectory()) {
 				loadDir(file, filename + "/", ext);
 			} else if (filename.endsWith(ext)) {
@@ -127,7 +127,7 @@ public class ScriptController {
 
 	public boolean loadStoredData() {
 		loadCategories();
-		final File file = getSavedFile();
+		File file = getSavedFile();
 		try {
 			if (!file.exists()) {
 				return false;
@@ -142,11 +142,11 @@ public class ScriptController {
 	}
 
 	public NBTTagList nbtLanguages() {
-		final NBTTagList list = new NBTTagList();
-		for (final String language : languages.keySet()) {
-			final NBTTagCompound compound = new NBTTagCompound();
-			final NBTTagList scripts = new NBTTagList();
-			for (final String script : getScripts(language)) {
+		NBTTagList list = new NBTTagList();
+		for (String language : languages.keySet()) {
+			NBTTagCompound compound = new NBTTagCompound();
+			NBTTagList scripts = new NBTTagList();
+			for (String script : getScripts(language)) {
 				scripts.appendTag(new NBTTagString(script));
 			}
 			compound.setTag("Scripts", scripts);
@@ -156,10 +156,10 @@ public class ScriptController {
 		return list;
 	}
 
-	private String readFile(final File file) throws IOException {
-		final BufferedReader br = new BufferedReader(new FileReader(file));
+	private String readFile(File file) throws IOException {
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		try {
-			final StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder();
 			for (String line = br.readLine(); line != null; line = br.readLine()) {
 				sb.append(line);
 				sb.append("\n");
@@ -171,7 +171,7 @@ public class ScriptController {
 	}
 
 	@SubscribeEvent
-	public void saveWorld(final WorldEvent.Save event) {
+	public void saveWorld(WorldEvent.Save event) {
 		if (!shouldSave || event.world.isRemote || (event.world != MinecraftServer.getServer().worldServers[0])) {
 			return;
 		}

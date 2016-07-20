@@ -18,18 +18,18 @@ public class RoleInnkeeper extends RoleInterface {
 	private String innName;
 	private HashMap<String, InnDoorData> doors;
 
-	public RoleInnkeeper(final EntityNPCInterface npc) {
+	public RoleInnkeeper(EntityNPCInterface npc) {
 		super(npc);
 		innName = "Inn";
 		doors = new HashMap<String, InnDoorData>();
 	}
 
-	private HashMap<String, InnDoorData> getInnDoors(final NBTTagList tagList) {
-		final HashMap<String, InnDoorData> list = new HashMap<String, InnDoorData>();
+	private HashMap<String, InnDoorData> getInnDoors(NBTTagList tagList) {
+		HashMap<String, InnDoorData> list = new HashMap<String, InnDoorData>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
-			final String name = nbttagcompound.getString("Name");
-			final InnDoorData door = new InnDoorData();
+			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+			String name = nbttagcompound.getString("Name");
+			InnDoorData door = new InnDoorData();
 			door.x = nbttagcompound.getInteger("posX");
 			door.y = nbttagcompound.getInteger("posY");
 			door.z = nbttagcompound.getInteger("posZ");
@@ -39,24 +39,24 @@ public class RoleInnkeeper extends RoleInterface {
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		npc.say(player, npc.advanced.getInteractLine());
 		if (doors.isEmpty()) {
 			player.addChatMessage(new ChatComponentTranslation("No Rooms available", new Object[0]));
 		}
 	}
 
-	private NBTBase nbtInnDoors(final HashMap<String, InnDoorData> doors1) {
-		final NBTTagList nbttaglist = new NBTTagList();
+	private NBTBase nbtInnDoors(HashMap<String, InnDoorData> doors1) {
+		NBTTagList nbttaglist = new NBTTagList();
 		if (doors1 == null) {
 			return nbttaglist;
 		}
-		for (final String name : doors1.keySet()) {
-			final InnDoorData door = doors1.get(name);
+		for (String name : doors1.keySet()) {
+			InnDoorData door = doors1.get(name);
 			if (door == null) {
 				continue;
 			}
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setString("Name", name);
 			nbttagcompound.setInteger("posX", door.x);
 			nbttagcompound.setInteger("posY", door.y);
@@ -67,13 +67,13 @@ public class RoleInnkeeper extends RoleInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		innName = nbttagcompound.getString("InnName");
 		doors = getInnDoors(nbttagcompound.getTagList("InnDoors", 10));
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setString("InnName", innName);
 		nbttagcompound.setTag("InnDoors", nbtInnDoors(doors));
 		return nbttagcompound;

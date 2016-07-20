@@ -15,9 +15,8 @@ public class ModelPlane extends ModelBox {
 	private PositionTextureVertex[] vertexPositions;
 	private TexturedQuad quad;
 
-	public ModelPlane(final ModelRenderer par1ModelRenderer, final int textureOffsetX, final int textureOffsetY,
-			float par4, float par5, float par6, final int par7, final int par8, final int par9, final float par10,
-			final EnumPlanePosition position) {
+	public ModelPlane(ModelRenderer par1ModelRenderer, int textureOffsetX, int textureOffsetY, float par4, float par5,
+			float par6, int par7, int par8, int par9, float par10, EnumPlanePosition position) {
 		super(par1ModelRenderer, textureOffsetX, textureOffsetY, par4, par5, par6, par7, par8, par9, par10);
 		vertexPositions = new PositionTextureVertex[8];
 		float var11 = par4 + par7;
@@ -30,18 +29,18 @@ public class ModelPlane extends ModelBox {
 		var12 += par10;
 		var13 += par10;
 		if (par1ModelRenderer.mirror) {
-			final float var14 = var11;
+			float var14 = var11;
 			var11 = par4;
 			par4 = var14;
 		}
-		final PositionTextureVertex var15 = new PositionTextureVertex(par4, par5, par6, 0.0f, 0.0f);
-		final PositionTextureVertex var16 = new PositionTextureVertex(var11, par5, par6, 0.0f, 8.0f);
-		final PositionTextureVertex var17 = new PositionTextureVertex(var11, var12, par6, 8.0f, 8.0f);
-		final PositionTextureVertex var18 = new PositionTextureVertex(par4, var12, par6, 8.0f, 0.0f);
-		final PositionTextureVertex var19 = new PositionTextureVertex(par4, par5, var13, 0.0f, 0.0f);
-		final PositionTextureVertex var20 = new PositionTextureVertex(var11, par5, var13, 0.0f, 8.0f);
-		final PositionTextureVertex var21 = new PositionTextureVertex(var11, var12, var13, 8.0f, 8.0f);
-		final PositionTextureVertex var22 = new PositionTextureVertex(par4, var12, var13, 8.0f, 0.0f);
+		PositionTextureVertex var15 = new PositionTextureVertex(par4, par5, par6, 0.0f, 0.0f);
+		PositionTextureVertex var16 = new PositionTextureVertex(var11, par5, par6, 0.0f, 8.0f);
+		PositionTextureVertex var17 = new PositionTextureVertex(var11, var12, par6, 8.0f, 8.0f);
+		PositionTextureVertex var18 = new PositionTextureVertex(par4, var12, par6, 8.0f, 0.0f);
+		PositionTextureVertex var19 = new PositionTextureVertex(par4, par5, var13, 0.0f, 0.0f);
+		PositionTextureVertex var20 = new PositionTextureVertex(var11, par5, var13, 0.0f, 8.0f);
+		PositionTextureVertex var21 = new PositionTextureVertex(var11, var12, var13, 8.0f, 8.0f);
+		PositionTextureVertex var22 = new PositionTextureVertex(par4, var12, var13, 8.0f, 0.0f);
 		vertexPositions[0] = var15;
 		vertexPositions[1] = var16;
 		vertexPositions[2] = var17;
@@ -71,7 +70,7 @@ public class ModelPlane extends ModelBox {
 	}
 
 	@Override
-	public void render(final WorldRenderer par1Tessellator, final float par2) {
+	public void render(WorldRenderer par1Tessellator, float par2) {
 		quad.draw(par1Tessellator, par2);
 	}
 }

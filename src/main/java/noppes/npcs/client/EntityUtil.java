@@ -12,7 +12,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityUtil {
-	public static void Copy(final EntityLivingBase copied, final EntityLivingBase entity) {
+	public static void Copy(EntityLivingBase copied, EntityLivingBase entity) {
 		entity.worldObj = copied.worldObj;
 		entity.deathTime = copied.deathTime;
 		entity.distanceWalkedModified = copied.distanceWalkedModified;
@@ -51,8 +51,8 @@ public class EntityUtil {
 		entity.swingProgressInt = copied.swingProgressInt;
 		entity.ticksExisted = copied.ticksExisted;
 		if ((entity instanceof EntityPlayer) && (copied instanceof EntityPlayer)) {
-			final EntityPlayer ePlayer = (EntityPlayer) entity;
-			final EntityPlayer cPlayer = (EntityPlayer) copied;
+			EntityPlayer ePlayer = (EntityPlayer) entity;
+			EntityPlayer cPlayer = (EntityPlayer) copied;
 			ePlayer.cameraYaw = cPlayer.cameraYaw;
 			ePlayer.prevCameraYaw = cPlayer.prevCameraYaw;
 			ePlayer.prevChasingPosX = cPlayer.prevChasingPosX;
@@ -72,8 +72,8 @@ public class EntityUtil {
 			entity.setCurrentItemOrArmor(i, copied.getEquipmentInSlot(i));
 		}
 		if ((copied instanceof EntityNPCInterface) && (entity instanceof EntityNPCInterface)) {
-			final EntityNPCInterface npc = (EntityNPCInterface) copied;
-			final EntityNPCInterface target = (EntityNPCInterface) entity;
+			EntityNPCInterface npc = (EntityNPCInterface) copied;
+			EntityNPCInterface target = (EntityNPCInterface) entity;
 			target.textureLocation = npc.textureLocation;
 			target.textureGlowLocation = npc.textureGlowLocation;
 			target.textureCloakLocation = npc.textureCloakLocation;
@@ -83,13 +83,13 @@ public class EntityUtil {
 			target.setDataWatcher(npc.getDataWatcher());
 		}
 		if ((entity instanceof EntityCustomNpc) && (copied instanceof EntityCustomNpc)) {
-			final EntityCustomNpc npc2 = (EntityCustomNpc) copied;
-			final EntityCustomNpc target2 = (EntityCustomNpc) entity;
+			EntityCustomNpc npc2 = (EntityCustomNpc) copied;
+			EntityCustomNpc target2 = (EntityCustomNpc) entity;
 			(target2.modelData = npc2.modelData.copy()).setEntityClass((Class<? extends EntityLivingBase>) null);
 		}
 	}
 
-	public static void setRecentlyHit(final EntityLivingBase entity) {
+	public static void setRecentlyHit(EntityLivingBase entity) {
 		// entity.recentlyHit = 100;
 	}
 }

@@ -20,12 +20,12 @@ public class CompanionGuard extends CompanionJobInterface {
 
 	@Override
 	public NBTTagCompound getNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setBoolean("CompanionGuardStanding", isStanding);
 		return compound;
 	}
 
-	public boolean isEntityApplicable(final Entity entity) {
+	public boolean isEntityApplicable(Entity entity) {
 		return !(entity instanceof EntityPlayer) && !(entity instanceof EntityNPCInterface)
 				&& !(entity instanceof EntityCreeper) && (entity instanceof IMob);
 	}
@@ -36,7 +36,7 @@ public class CompanionGuard extends CompanionJobInterface {
 	}
 
 	@Override
-	public void setNBT(final NBTTagCompound compound) {
+	public void setNBT(NBTTagCompound compound) {
 		isStanding = compound.getBoolean("CompanionGuardStanding");
 	}
 }

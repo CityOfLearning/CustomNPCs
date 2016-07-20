@@ -42,7 +42,7 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	private boolean categorySelection;
 	private GuiNpcSoundSelection gui;
 
-	public GuiNPCManageDialogs(final EntityNPCInterface npc) {
+	public GuiNPCManageDialogs(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		dialog = new Dialog();
@@ -52,8 +52,8 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void buttonEvent(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			save();
 			if (categorySelection) {
@@ -78,11 +78,11 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
 			if (categorySelection) {
-				final DialogCategory category = new DialogCategory();
+				DialogCategory category = new DialogCategory();
 				category.title = name;
 				Client.sendData(EnumPacketServer.DialogCategorySave, category.writeNBT(new NBTTagCompound()));
 			} else {
-				final Dialog dialog = new Dialog();
+				Dialog dialog = new Dialog();
 				dialog.title = name;
 				Client.sendData(EnumPacketServer.DialogSave, category.id, dialog.writeToNBT(new NBTTagCompound()));
 			}
@@ -129,10 +129,10 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			save();
-			final String selected = scroll.getSelected();
+			String selected = scroll.getSelected();
 			if (categorySelection) {
 				category = new DialogCategory();
 				Client.sendData(EnumPacketServer.DialogCategoryGet, data.get(selected));
@@ -202,16 +202,16 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void selected(final int ob, final String name) {
+	public void selected(int ob, String name) {
 		dialog.quest = ob;
 		Client.sendData(EnumPacketServer.DialogSave, category.id, dialog.writeToNBT(new NBTTagCompound()));
 		Client.sendData(EnumPacketServer.DialogGet, dialog.id);
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		getButton(0).setEnabled(true);
-		final String name = scroll.getSelected();
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		if (name != null) {
@@ -221,7 +221,7 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (categorySelection) {
 			category.readNBT(compound);
 			setSelected(category.title);
@@ -237,13 +237,13 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		if (subgui instanceof SubGuiNpcTextArea) {
-			final SubGuiNpcTextArea gui = (SubGuiNpcTextArea) subgui;
+			SubGuiNpcTextArea gui = (SubGuiNpcTextArea) subgui;
 			dialog.text = gui.text;
 		}
 		if (subgui instanceof SubGuiNpcDialogOption) {
@@ -255,16 +255,16 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
 		if (guiNpcTextField.id == 0) {
 			if (category.id < 0) {
 				guiNpcTextField.setText("");
 			} else {
-				final String name = guiNpcTextField.getText();
+				String name = guiNpcTextField.getText();
 				if (name.isEmpty() || data.containsKey(name)) {
 					guiNpcTextField.setText(category.title);
 				} else if (categorySelection && (category.id >= 0)) {
-					final String old = category.title;
+					String old = category.title;
 					data.remove(category.title);
 					category.title = name;
 					data.put(category.title, category.id);
@@ -276,11 +276,11 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 			if (dialog.id < 0) {
 				guiNpcTextField.setText("");
 			} else {
-				final String name = guiNpcTextField.getText();
+				String name = guiNpcTextField.getText();
 				if (name.isEmpty() || data.containsKey(name)) {
 					guiNpcTextField.setText(dialog.title);
 				} else if (!categorySelection && (dialog.id >= 0)) {
-					final String old = dialog.title;
+					String old = dialog.title;
 					data.remove(old);
 					dialog.title = name;
 					data.put(dialog.title, dialog.id);

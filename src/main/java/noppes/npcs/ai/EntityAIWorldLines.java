@@ -12,7 +12,7 @@ public class EntityAIWorldLines extends EntityAIBase {
 	private EntityNPCInterface npc;
 	private int cooldown;
 
-	public EntityAIWorldLines(final EntityNPCInterface npc) {
+	public EntityAIWorldLines(EntityNPCInterface npc) {
 		cooldown = 100;
 		this.npc = npc;
 		setMutexBits(AiMutex.PASSIVE);
@@ -24,8 +24,8 @@ public class EntityAIWorldLines extends EntityAIBase {
 			--cooldown;
 		}
 		return !npc.isAttacking() && !npc.isKilled() && npc.advanced.hasWorldLines()
-				&& (npc.getRNG().nextInt(600) == 1); 
-		//lets make this happen slightly more often 66% more likely
+				&& (npc.getRNG().nextInt(600) == 1);
+		// lets make this happen slightly more often 66% more likely
 	}
 
 	@Override

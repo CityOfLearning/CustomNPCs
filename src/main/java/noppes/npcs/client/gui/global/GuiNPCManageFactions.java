@@ -36,7 +36,7 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	private Faction faction;
 	private String selected;
 
-	public GuiNPCManageFactions(final EntityNPCInterface npc) {
+	public GuiNPCManageFactions(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		faction = new Faction();
@@ -45,15 +45,15 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			save();
 			String name;
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
-			final Faction faction = new Faction(-1, name, 65280, 1000);
-			final NBTTagCompound compound = new NBTTagCompound();
+			Faction faction = new Faction(-1, name, 65280, 1000);
+			NBTTagCompound compound = new NBTTagCompound();
 			faction.writeNBT(compound);
 			Client.sendData(EnumPacketServer.FactionSave, compound);
 		}
@@ -78,14 +78,14 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			save();
 			selected = scrollFactions.getSelected();
 			Client.sendData(EnumPacketServer.FactionGet, data.get(selected));
 		} else if (guiCustomScroll.id == 1) {
-			final HashSet<Integer> set = new HashSet<Integer>();
-			for (final String s : guiCustomScroll.getSelectedList()) {
+			HashSet<Integer> set = new HashSet<Integer>();
+			for (String s : guiCustomScroll.getSelectedList()) {
 				if (data.containsKey(s)) {
 					set.add(data.get(s));
 				}
@@ -129,15 +129,15 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 		addButton(new GuiNpcButton(4, guiLeft + 100, guiTop + 92, 45, 20, new String[] { "gui.no", "gui.yes" },
 				faction.getsAttacked ? 1 : 0));
 		addLabel(new GuiNpcLabel(6, "faction.hostiles", guiLeft + 8, guiTop + 145));
-		final ArrayList<String> hostileList = new ArrayList<String>(scrollFactions.getList());
+		ArrayList<String> hostileList = new ArrayList<String>(scrollFactions.getList());
 		hostileList.remove(faction.name);
-		final HashSet<String> set = new HashSet<String>();
-		for (final String s : data.keySet()) {
+		HashSet<String> set = new HashSet<String>();
+		for (String s : data.keySet()) {
 			if (!s.equals(faction.name) && faction.attackFactions.contains(data.get(s))) {
 				set.add(s);
 			}
 		}
-		final GuiCustomScroll scrollHostileFactions = new GuiCustomScroll(this, 1, true);
+		GuiCustomScroll scrollHostileFactions = new GuiCustomScroll(this, 1, true);
 		scrollHostileFactions.setSize(163, 58);
 		scrollHostileFactions.guiLeft = guiLeft + 4;
 		scrollHostileFactions.guiTop = guiTop + 154;
@@ -149,15 +149,15 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	@Override
 	public void save() {
 		if ((selected != null) && data.containsKey(selected) && (faction != null)) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			faction.writeNBT(compound);
 			Client.sendData(EnumPacketServer.FactionSave, compound);
 		}
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final String name = scrollFactions.getSelected();
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		String name = scrollFactions.getSelected();
 		this.data = data;
 		scrollFactions.setList(list);
 		if (name != null) {
@@ -166,20 +166,20 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		(faction = new Faction()).readNBT(compound);
 		setSelected(faction.name);
 		initGui();
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		this.selected = selected;
 		scrollFactions.setSelected(selected);
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		if (subgui instanceof SubGuiColorSelector) {
 			faction.color = ((SubGuiColorSelector) subgui).color;
 			initGui();
@@ -187,14 +187,14 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
 		if (faction.id == -1) {
 			return;
 		}
 		if (guiNpcTextField.id == 0) {
-			final String name = guiNpcTextField.getText();
+			String name = guiNpcTextField.getText();
 			if (!name.isEmpty() && !data.containsKey(name)) {
-				final String old = faction.name;
+				String old = faction.name;
 				data.remove(faction.name);
 				faction.name = name;
 				data.put(faction.name, faction.id);

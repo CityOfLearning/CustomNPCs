@@ -25,15 +25,15 @@ import noppes.npcs.entity.data.DataDisplay;
 public class GuiNpcDisplay extends GuiNPCInterface2 implements ITextfieldListener, IGuiData {
 	private DataDisplay display;
 
-	public GuiNpcDisplay(final EntityNPCInterface npc) {
+	public GuiNpcDisplay(EntityNPCInterface npc) {
 		super(npc, 1);
 		display = npc.display;
 		Client.sendData(EnumPacketServer.MainmenuDisplayGet, new Object[0]);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			display.setShowName(button.getValue());
 		}
@@ -131,13 +131,13 @@ public class GuiNpcDisplay extends GuiNPCInterface2 implements ITextfieldListene
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		display.readToNBT(compound);
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
 			if (!textfield.isEmpty()) {
 				display.setName(textfield.getText());

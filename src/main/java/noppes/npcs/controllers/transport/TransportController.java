@@ -37,7 +37,7 @@ public class TransportController {
 		lastUsedID = 0;
 		(TransportController.instance = this).loadCategories();
 		if (categories.isEmpty()) {
-			final TransportCategory cat = new TransportCategory();
+			TransportCategory cat = new TransportCategory();
 			cat.id = 1;
 			cat.title = "Default";
 			categories.put(cat.id, cat);
@@ -46,7 +46,7 @@ public class TransportController {
 
 	private boolean containsCategoryName(String name) {
 		name = name.toLowerCase();
-		for (final TransportCategory cat : categories.values()) {
+		for (TransportCategory cat : categories.values()) {
 			if (cat.title.toLowerCase().equals(name)) {
 				return true;
 			}
@@ -56,7 +56,7 @@ public class TransportController {
 
 	public boolean containsLocationName(String name) {
 		name = name.toLowerCase();
-		for (final TransportLocation loc : locations.values()) {
+		for (TransportLocation loc : locations.values()) {
 			if (loc.name.toLowerCase().equals(name)) {
 				return true;
 			}
@@ -65,24 +65,24 @@ public class TransportController {
 	}
 
 	public NBTTagCompound getNBT() {
-		final NBTTagList list = new NBTTagList();
-		for (final TransportCategory category : categories.values()) {
-			final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (TransportCategory category : categories.values()) {
+			NBTTagCompound compound = new NBTTagCompound();
 			category.writeNBT(compound);
 			list.appendTag(compound);
 		}
-		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		nbttagcompound.setInteger("lastID", lastUsedID);
 		nbttagcompound.setTag("NPCTransportCategories", list);
 		return nbttagcompound;
 	}
 
-	public TransportLocation getTransport(final int transportId) {
+	public TransportLocation getTransport(int transportId) {
 		return locations.get(transportId);
 	}
 
-	public TransportLocation getTransport(final String name) {
-		for (final TransportLocation loc : locations.values()) {
+	public TransportLocation getTransport(String name) {
+		for (TransportLocation loc : locations.values()) {
 			if (loc.name.equals(name)) {
 				return loc;
 			}
@@ -92,7 +92,7 @@ public class TransportController {
 
 	private int getUniqueIdCategory() {
 		int id = 0;
-		for (final int catid : categories.keySet()) {
+		for (int catid : categories.keySet()) {
 			if (catid > id) {
 				id = catid;
 			}
@@ -102,7 +102,7 @@ public class TransportController {
 
 	private int getUniqueIdLocation() {
 		if (lastUsedID == 0) {
-			for (final int catid : locations.keySet()) {
+			for (int catid : locations.keySet()) {
 				if (catid > lastUsedID) {
 					lastUsedID = catid;
 				}
@@ -112,19 +112,19 @@ public class TransportController {
 	}
 
 	private void loadCategories() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		if (saveDir == null) {
 			return;
 		}
 		try {
-			final File file = new File(saveDir, "transport.dat");
+			File file = new File(saveDir, "transport.dat");
 			if (!file.exists()) {
 				return;
 			}
 			this.loadCategories(file);
 		} catch (IOException e) {
 			try {
-				final File file2 = new File(saveDir, "transport.dat_old");
+				File file2 = new File(saveDir, "transport.dat_old");
 				if (!file2.exists()) {
 					return;
 				}
@@ -134,20 +134,20 @@ public class TransportController {
 		}
 	}
 
-	public void loadCategories(final File file) throws IOException {
-		final HashMap<Integer, TransportLocation> locations = new HashMap<Integer, TransportLocation>();
-		final HashMap<Integer, TransportCategory> categories = new HashMap<Integer, TransportCategory>();
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
+	public void loadCategories(File file) throws IOException {
+		HashMap<Integer, TransportLocation> locations = new HashMap<Integer, TransportLocation>();
+		HashMap<Integer, TransportCategory> categories = new HashMap<Integer, TransportCategory>();
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		lastUsedID = nbttagcompound1.getInteger("lastID");
-		final NBTTagList list = nbttagcompound1.getTagList("NPCTransportCategories", 10);
+		NBTTagList list = nbttagcompound1.getTagList("NPCTransportCategories", 10);
 		if (list == null) {
 			return;
 		}
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final TransportCategory category = new TransportCategory();
-			final NBTTagCompound compound = list.getCompoundTagAt(i);
+			TransportCategory category = new TransportCategory();
+			NBTTagCompound compound = list.getCompoundTagAt(i);
 			category.readNBT(compound);
-			for (final TransportLocation location : category.locations.values()) {
+			for (TransportLocation location : category.locations.values()) {
 				locations.put(location.id, location);
 			}
 			categories.put(category.id, category);
@@ -156,23 +156,23 @@ public class TransportController {
 		this.categories = categories;
 	}
 
-	public void removeCategory(final int id) {
+	public void removeCategory(int id) {
 		if (categories.size() == 1) {
 			return;
 		}
-		final TransportCategory cat = categories.get(id);
+		TransportCategory cat = categories.get(id);
 		if (cat == null) {
 			return;
 		}
-		for (final int i : cat.locations.keySet()) {
+		for (int i : cat.locations.keySet()) {
 			locations.remove(i);
 		}
 		categories.remove(id);
 		saveCategories();
 	}
 
-	public TransportLocation removeLocation(final int location) {
-		final TransportLocation loc = locations.get(location);
+	public TransportLocation removeLocation(int location) {
+		TransportLocation loc = locations.get(location);
 		if (loc == null) {
 			return null;
 		}
@@ -184,10 +184,10 @@ public class TransportController {
 
 	public void saveCategories() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final File file = new File(saveDir, "transport.dat_new");
-			final File file2 = new File(saveDir, "transport.dat_old");
-			final File file3 = new File(saveDir, "transport.dat");
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			File file = new File(saveDir, "transport.dat_new");
+			File file2 = new File(saveDir, "transport.dat_old");
+			File file3 = new File(saveDir, "transport.dat");
 			CompressedStreamTools.writeCompressed(getNBT(), new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();
@@ -210,7 +210,7 @@ public class TransportController {
 			id = getUniqueIdCategory();
 		}
 		if (categories.containsKey(id)) {
-			final TransportCategory category = categories.get(id);
+			TransportCategory category = categories.get(id);
 			if (!category.title.equals(name)) {
 				while (containsCategoryName(name)) {
 					name += "_";
@@ -221,7 +221,7 @@ public class TransportController {
 			while (containsCategoryName(name)) {
 				name += "_";
 			}
-			final TransportCategory category = new TransportCategory();
+			TransportCategory category = new TransportCategory();
 			category.id = id;
 			category.title = name;
 			categories.put(id, category);
@@ -229,14 +229,14 @@ public class TransportController {
 		saveCategories();
 	}
 
-	public TransportLocation saveLocation(final int categoryId, final NBTTagCompound compound,
-			final EntityPlayerMP player, final EntityNPCInterface npc) {
-		final TransportCategory category = categories.get(categoryId);
+	public TransportLocation saveLocation(int categoryId, NBTTagCompound compound, EntityPlayerMP player,
+			EntityNPCInterface npc) {
+		TransportCategory category = categories.get(categoryId);
 		if ((category == null) || (npc.advanced.role != 4)) {
 			return null;
 		}
-		final RoleTransporter role = (RoleTransporter) npc.roleInterface;
-		final TransportLocation location = new TransportLocation();
+		RoleTransporter role = (RoleTransporter) npc.roleInterface;
+		TransportLocation location = new TransportLocation();
 		location.readNBT(compound);
 		location.category = category;
 		if (role.hasTransport()) {
@@ -244,8 +244,8 @@ public class TransportController {
 		}
 		if ((location.id < 0) || !locations.get(location.id).name.equals(location.name)) {
 			while (containsLocationName(location.name)) {
-				final StringBuilder sb = new StringBuilder();
-				final TransportLocation transportLocation = location;
+				StringBuilder sb = new StringBuilder();
+				TransportLocation transportLocation = location;
 				transportLocation.name = sb.append(transportLocation.name).append("_").toString();
 			}
 		}
@@ -258,9 +258,9 @@ public class TransportController {
 		return location;
 	}
 
-	public void setLocation(final TransportLocation location) {
+	public void setLocation(TransportLocation location) {
 		if (locations.containsKey(location.id)) {
-			for (final TransportCategory cat : categories.values()) {
+			for (TransportCategory cat : categories.values()) {
 				cat.locations.remove(location.id);
 			}
 		}

@@ -29,7 +29,7 @@ public class BlockWaypoint extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileWaypoint();
 	}
 
@@ -39,17 +39,17 @@ public class BlockWaypoint extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return e == EnumPacketServer.SaveTileEntity;
 	}
 
 	@Override
-	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
+			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (par1World.isRemote) {
 			return false;
 		}
-		final ItemStack currentItem = player.inventory.getCurrentItem();
+		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
 				&& CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.Waypoint, null, pos.getX(), pos.getY(), pos.getZ());
@@ -59,8 +59,8 @@ public class BlockWaypoint extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entity, final ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
+			ItemStack stack) {
 		if ((entity instanceof EntityPlayer) && !world.isRemote) {
 			NoppesUtilServer.sendOpenGui((EntityPlayer) entity, EnumGuiType.Waypoint, null, pos.getX(), pos.getY(),
 					pos.getZ());

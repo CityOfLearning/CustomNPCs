@@ -18,9 +18,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ContainerMerchantAdd extends ContainerNpcInterface {
 	private IMerchant theMerchant;
 	private InventoryBasic merchantInventory;
-	private final World theWorld;
+	private World theWorld;
 
-	public ContainerMerchantAdd(final EntityPlayer player, final IMerchant par2IMerchant, final World par3World) {
+	public ContainerMerchantAdd(EntityPlayer player, IMerchant par2IMerchant, World par3World) {
 		super(player);
 		theMerchant = par2IMerchant;
 		theWorld = par3World;
@@ -44,7 +44,7 @@ public class ContainerMerchantAdd extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer par1EntityPlayer) {
+	public void onContainerClosed(EntityPlayer par1EntityPlayer) {
 		super.onContainerClosed(par1EntityPlayer);
 		theMerchant.setCustomer((EntityPlayer) null);
 		super.onContainerClosed(par1EntityPlayer);
@@ -61,24 +61,24 @@ public class ContainerMerchantAdd extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onCraftGuiOpened(final ICrafting par1ICrafting) {
+	public void onCraftGuiOpened(ICrafting par1ICrafting) {
 		super.onCraftGuiOpened(par1ICrafting);
 	}
 
 	@Override
-	public void onCraftMatrixChanged(final IInventory par1IInventory) {
+	public void onCraftMatrixChanged(IInventory par1IInventory) {
 		super.onCraftMatrixChanged(par1IInventory);
 	}
 
-	public void setCurrentRecipeIndex(final int par1) {
+	public void setCurrentRecipeIndex(int par1) {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int par2) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
 		ItemStack itemstack = null;
-		final Slot slot = inventorySlots.get(par2);
+		Slot slot = inventorySlots.get(par2);
 		if ((slot != null) && slot.getHasStack()) {
-			final ItemStack itemstack2 = slot.getStack();
+			ItemStack itemstack2 = slot.getStack();
 			itemstack = itemstack2.copy();
 			if ((par2 != 0) && (par2 != 1) && (par2 != 2)) {
 				if ((par2 >= 3) && (par2 < 30)) {
@@ -106,6 +106,6 @@ public class ContainerMerchantAdd extends ContainerNpcInterface {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void updateProgressBar(final int par1, final int par2) {
+	public void updateProgressBar(int par1, int par2) {
 	}
 }

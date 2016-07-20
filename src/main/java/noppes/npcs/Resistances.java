@@ -20,7 +20,7 @@ public class Resistances {
 		explosion = 1.0f;
 	}
 
-	public float applyResistance(final DamageSource source, float damage) {
+	public float applyResistance(DamageSource source, float damage) {
 		if (source.damageType.equals("arrow") || source.damageType.equals("thrown") || source.isProjectile()) {
 			damage *= 2.0f - arrow;
 		} else if (source.damageType.equals("player") || source.damageType.equals("mob")) {
@@ -31,7 +31,7 @@ public class Resistances {
 		return damage;
 	}
 
-	public void readToNBT(final NBTTagCompound compound) {
+	public void readToNBT(NBTTagCompound compound) {
 		knockback = compound.getFloat("Knockback");
 		arrow = compound.getFloat("Arrow");
 		melee = compound.getFloat("Melee");
@@ -39,7 +39,7 @@ public class Resistances {
 	}
 
 	public NBTTagCompound writeToNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setFloat("Knockback", knockback);
 		compound.setFloat("Arrow", arrow);
 		compound.setFloat("Melee", melee);

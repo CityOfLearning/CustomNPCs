@@ -41,27 +41,27 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public void closeInventory(final EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	public PlayerMail copy() {
-		final PlayerMail mail = new PlayerMail();
+		PlayerMail mail = new PlayerMail();
 		mail.readNBT(writeNBT());
 		return mail;
 	}
 
 	@Override
-	public ItemStack decrStackSize(final int par1, final int par2) {
+	public ItemStack decrStackSize(int par1, int par2) {
 		if (items[par1] == null) {
 			return null;
 		}
 		if (items[par1].stackSize <= par2) {
-			final ItemStack itemstack = items[par1];
+			ItemStack itemstack = items[par1];
 			items[par1] = null;
 			markDirty();
 			return itemstack;
 		}
-		final ItemStack itemstack = items[par1].splitStack(par2);
+		ItemStack itemstack = items[par1].splitStack(par2);
 		if (items[par1].stackSize == 0) {
 			items[par1] = null;
 		}
@@ -75,7 +75,7 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public int getField(final int id) {
+	public int getField(int id) {
 		return 0;
 	}
 
@@ -104,7 +104,7 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(final int var1) {
+	public ItemStack getStackInSlot(int var1) {
 		return items[var1];
 	}
 
@@ -118,12 +118,12 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(final int var1, final ItemStack var2) {
+	public boolean isItemValidForSlot(int var1, ItemStack var2) {
 		return true;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(final EntityPlayer var1) {
+	public boolean isUseableByPlayer(EntityPlayer var1) {
 		return true;
 	}
 
@@ -136,10 +136,10 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public void openInventory(final EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		subject = compound.getString("Subject");
 		sender = compound.getString("Sender");
 		time = compound.getLong("Time");
@@ -151,10 +151,10 @@ public class PlayerMail implements IInventory, IPlayerMail {
 		}
 		questTitle = compound.getString("MailQuestTitle");
 		items = new ItemStack[getSizeInventory()];
-		final NBTTagList nbttaglist = compound.getTagList("MailItems", 10);
+		NBTTagList nbttaglist = compound.getTagList("MailItems", 10);
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
-			final int j = nbttagcompound1.getByte("Slot") & 0xFF;
+			NBTTagCompound nbttagcompound1 = nbttaglist.getCompoundTagAt(i);
+			int j = nbttagcompound1.getByte("Slot") & 0xFF;
 			if ((j >= 0) && (j < items.length)) {
 				items[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
 			}
@@ -162,9 +162,9 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(final int var1) {
+	public ItemStack removeStackFromSlot(int var1) {
 		if (items[var1] != null) {
-			final ItemStack itemstack = items[var1];
+			ItemStack itemstack = items[var1];
 			items[var1] = null;
 			return itemstack;
 		}
@@ -172,11 +172,11 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	@Override
-	public void setField(final int id, final int value) {
+	public void setField(int id, int value) {
 	}
 
 	@Override
-	public void setInventorySlotContents(final int par1, final ItemStack par2ItemStack) {
+	public void setInventorySlotContents(int par1, ItemStack par2ItemStack) {
 		items[par1] = par2ItemStack;
 		if ((par2ItemStack != null) && (par2ItemStack.stackSize > getInventoryStackLimit())) {
 			par2ItemStack.stackSize = getInventoryStackLimit();
@@ -185,7 +185,7 @@ public class PlayerMail implements IInventory, IPlayerMail {
 	}
 
 	public NBTTagCompound writeNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setString("Subject", subject);
 		compound.setString("Sender", sender);
 		compound.setLong("Time", time);
@@ -196,10 +196,10 @@ public class PlayerMail implements IInventory, IPlayerMail {
 		if (hasQuest()) {
 			compound.setString("MailQuestTitle", getQuest().title);
 		}
-		final NBTTagList nbttaglist = new NBTTagList();
+		NBTTagList nbttaglist = new NBTTagList();
 		for (int i = 0; i < items.length; ++i) {
 			if (items[i] != null) {
-				final NBTTagCompound nbttagcompound1 = new NBTTagCompound();
+				NBTTagCompound nbttagcompound1 = new NBTTagCompound();
 				nbttagcompound1.setByte("Slot", (byte) i);
 				items[i].writeToNBT(nbttagcompound1);
 				nbttaglist.appendTag(nbttagcompound1);

@@ -31,7 +31,7 @@ public class GuiNpcMobSpawnerAdd extends GuiNPCInterface implements GuiYesNoCall
 
 	private NBTTagCompound compound;
 
-	public GuiNpcMobSpawnerAdd(final NBTTagCompound compound) {
+	public GuiNpcMobSpawnerAdd(NBTTagCompound compound) {
 		toClone = EntityList.createEntityFromNBT(compound, Minecraft.getMinecraft().theWorld);
 		this.compound = compound;
 		setBackground("menubg.png");
@@ -40,14 +40,14 @@ public class GuiNpcMobSpawnerAdd extends GuiNPCInterface implements GuiYesNoCall
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void buttonEvent(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
-			final String name = getTextField(0).getText();
+			String name = getTextField(0).getText();
 			if (name.isEmpty()) {
 				return;
 			}
-			final int tab = ((GuiNpcButton) guibutton).getValue() + 1;
+			int tab = ((GuiNpcButton) guibutton).getValue() + 1;
 			if (!GuiNpcMobSpawnerAdd.serverSide) {
 				if (ClientCloneController.Instance.getCloneData(null, name, tab) != null) {
 					displayGuiScreen(new GuiYesNo(this, "Warning", "You are about to overwrite a clone", 1));
@@ -70,9 +70,9 @@ public class GuiNpcMobSpawnerAdd extends GuiNPCInterface implements GuiYesNoCall
 	}
 
 	@Override
-	public void confirmClicked(final boolean confirm, final int id) {
+	public void confirmClicked(boolean confirm, int id) {
 		if (confirm) {
-			final String name = getTextField(0).getText();
+			String name = getTextField(0).getText();
 			if (!GuiNpcMobSpawnerAdd.serverSide) {
 				ClientCloneController.Instance.addClone(compound, name, GuiNpcMobSpawnerAdd.tab);
 			} else {
@@ -87,7 +87,7 @@ public class GuiNpcMobSpawnerAdd extends GuiNPCInterface implements GuiYesNoCall
 	@Override
 	public void initGui() {
 		super.initGui();
-		final String name = toClone.getName();
+		String name = toClone.getName();
 		addLabel(new GuiNpcLabel(0, "Save as", guiLeft + 4, guiTop + 6));
 		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 4, guiTop + 18, 200, 20, name));
 		addLabel(new GuiNpcLabel(1, "Tab", guiLeft + 10, guiTop + 50));
@@ -104,7 +104,7 @@ public class GuiNpcMobSpawnerAdd extends GuiNPCInterface implements GuiYesNoCall
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("NameExists")) {
 			if (compound.getBoolean("NameExists")) {
 				displayGuiScreen(new GuiYesNo(this, "Warning", "You are about to overwrite a clone", 1));

@@ -7,9 +7,9 @@ package noppes.npcs.api.entity.data;
 import noppes.npcs.api.IItemStack;
 
 public interface INPCInventory {
-	IItemStack getArmor(final int p0);
+	IItemStack getArmor(int p0);
 
-	IItemStack getDropItem(final int p0);
+	IItemStack getDropItem(int p0);
 
 	int getExpMax();
 
@@ -23,15 +23,15 @@ public interface INPCInventory {
 
 	IItemStack getRightHand();
 
-	void setArmor(final int p0, final IItemStack p1);
+	void setArmor(int p0, IItemStack p1);
 
-	void setDropItem(final int p0, final IItemStack p1, final int p2);
+	void setDropItem(int p0, IItemStack p1, int p2);
 
-	void setExp(final int p0, final int p1);
+	void setExp(int p0, int p1);
 
-	void setLeftHand(final IItemStack p0);
+	void setLeftHand(IItemStack p0);
 
-	void setProjectile(final IItemStack p0);
+	void setProjectile(IItemStack p0);
 
-	void setRightHand(final IItemStack p0);
+	void setRightHand(IItemStack p0);
 }

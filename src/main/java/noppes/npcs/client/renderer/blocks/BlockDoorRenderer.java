@@ -29,16 +29,16 @@ public class BlockDoorRenderer extends BlockRendererInterface {
 	}
 
 	private boolean overrideModel() {
-		final ItemStack held = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
+		ItemStack held = Minecraft.getMinecraft().thePlayer.getCurrentEquippedItem();
 		return (held != null) && ((held.getItem() == CustomItems.wand) || (held.getItem() == CustomItems.scripter)
 				|| (held.getItem() == CustomItems.scriptedDoorTool));
 	}
 
-	private void renderBlock(final TileDoor tile, final Block b, final IBlockState state) {
+	private void renderBlock(TileDoor tile, Block b, IBlockState state) {
 		bindTexture(TextureMap.locationBlocksTexture);
 		GlStateManager.translate(-0.5f, 0.0f, 0.5f);
-		final BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		final IBakedModel ibakedmodel = dispatcher.getBlockModelShapes().getModelForState(state);
+		BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		IBakedModel ibakedmodel = dispatcher.getBlockModelShapes().getModelForState(state);
 		if (ibakedmodel == null) {
 			dispatcher.renderBlockBrightness(state, 1.0f);
 		} else {
@@ -47,23 +47,22 @@ public class BlockDoorRenderer extends BlockRendererInterface {
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double x, final double y, final double z,
-			final float var8, final int blockDamage) {
-		final TileDoor tile = (TileDoor) var1;
-		final IBlockState original = CustomItems.scriptedDoor.getStateFromMeta(tile.getBlockMetadata());
+	public void renderTileEntityAt(TileEntity var1, double x, double y, double z, float var8, int blockDamage) {
+		TileDoor tile = (TileDoor) var1;
+		IBlockState original = CustomItems.scriptedDoor.getStateFromMeta(tile.getBlockMetadata());
 		BlockPos lowerPos = tile.getPos();
 		if (original.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.UPPER) {
 			lowerPos = tile.getPos().down();
 		}
-		final BlockPos upperPos = lowerPos.up();
-		final TileDoor lowerTile = (TileDoor) getWorld().getTileEntity(lowerPos);
-		final TileDoor upperTile = (TileDoor) getWorld().getTileEntity(upperPos);
+		BlockPos upperPos = lowerPos.up();
+		TileDoor lowerTile = (TileDoor) getWorld().getTileEntity(lowerPos);
+		TileDoor upperTile = (TileDoor) getWorld().getTileEntity(upperPos);
 		if ((lowerTile == null) || (upperTile == null)) {
 			return;
 		}
-		final IBlockState lowerState = CustomItems.scriptedDoor.getStateFromMeta(lowerTile.getBlockMetadata());
-		final IBlockState upperState = CustomItems.scriptedDoor.getStateFromMeta(upperTile.getBlockMetadata());
-		final int meta = BlockDoor.combineMetadata(getWorld(), tile.getPos());
+		IBlockState lowerState = CustomItems.scriptedDoor.getStateFromMeta(lowerTile.getBlockMetadata());
+		IBlockState upperState = CustomItems.scriptedDoor.getStateFromMeta(upperTile.getBlockMetadata());
+		int meta = BlockDoor.combineMetadata(getWorld(), tile.getPos());
 		Block b = lowerTile.blockModel;
 		if (overrideModel()) {
 			b = CustomItems.scriptedDoor;

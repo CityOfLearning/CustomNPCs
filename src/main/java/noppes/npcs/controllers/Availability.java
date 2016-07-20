@@ -73,25 +73,25 @@ public class Availability implements ICompatibilty {
 		minPlayerLevel = 0;
 	}
 
-	public boolean dialogAvailable(final int id, final EnumAvailabilityDialog en, final EntityPlayer player) {
+	public boolean dialogAvailable(int id, EnumAvailabilityDialog en, EntityPlayer player) {
 		if (en == EnumAvailabilityDialog.Always) {
 			return true;
 		}
-		final boolean hasRead = PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(id);
+		boolean hasRead = PlayerDataController.instance.getPlayerData(player).dialogData.dialogsRead.contains(id);
 		return (hasRead && (en == EnumAvailabilityDialog.After)) || (!hasRead && (en == EnumAvailabilityDialog.Before));
 	}
 
-	private boolean factionAvailable(final int id, final EnumAvailabilityFaction stance,
-			final EnumAvailabilityFactionType available, final EntityPlayer player) {
+	private boolean factionAvailable(int id, EnumAvailabilityFaction stance, EnumAvailabilityFactionType available,
+			EntityPlayer player) {
 		if (available == EnumAvailabilityFactionType.Always) {
 			return true;
 		}
-		final Faction faction = FactionController.getInstance().getFaction(id);
+		Faction faction = FactionController.getInstance().getFaction(id);
 		if (faction == null) {
 			return true;
 		}
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
-		final int points = data.getFactionPoints(id);
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
+		int points = data.getFactionPoints(id);
 		EnumAvailabilityFaction current = EnumAvailabilityFaction.Neutral;
 		if (faction.neutralPoints >= points) {
 			current = EnumAvailabilityFaction.Hostile;
@@ -108,15 +108,15 @@ public class Availability implements ICompatibilty {
 		return version;
 	}
 
-	public boolean isAvailable(final EntityPlayer player) {
+	public boolean isAvailable(EntityPlayer player) {
 		if (daytime == EnumDayTime.Day) {
-			final long time = player.worldObj.getWorldTime() % 24000L;
+			long time = player.worldObj.getWorldTime() % 24000L;
 			if (time > 12000L) {
 				return false;
 			}
 		}
 		if (daytime == EnumDayTime.Night) {
-			final long time = player.worldObj.getWorldTime() % 24000L;
+			long time = player.worldObj.getWorldTime() % 24000L;
 			if (time < 12000L) {
 				return false;
 			}
@@ -133,7 +133,7 @@ public class Availability implements ICompatibilty {
 				&& (player.experienceLevel >= minPlayerLevel);
 	}
 
-	public boolean questAvailable(final int id, final EnumAvailabilityQuest en, final EntityPlayer player) {
+	public boolean questAvailable(int id, EnumAvailabilityQuest en, EntityPlayer player) {
 		return (en == EnumAvailabilityQuest.Always)
 				|| ((en == EnumAvailabilityQuest.After) && PlayerQuestController.isQuestFinished(player, id))
 				|| ((en == EnumAvailabilityQuest.Before) && !PlayerQuestController.isQuestFinished(player, id))
@@ -141,7 +141,7 @@ public class Availability implements ICompatibilty {
 				|| ((en == EnumAvailabilityQuest.NotActive) && !PlayerQuestController.isQuestActive(player, id));
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		version = compound.getInteger("ModRev");
 		VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
 		dialogAvailable = EnumAvailabilityDialog.values()[compound.getInteger("AvailabilityDialog")];
@@ -170,29 +170,29 @@ public class Availability implements ICompatibilty {
 		minPlayerLevel = compound.getInteger("AvailabilityMinPlayerLevel");
 	}
 
-	public void setFaction2Availability(final int value) {
+	public void setFaction2Availability(int value) {
 		faction2Available = EnumAvailabilityFactionType.values()[value];
 	}
 
-	public void setFaction2AvailabilityStance(final int integer) {
+	public void setFaction2AvailabilityStance(int integer) {
 		faction2Stance = EnumAvailabilityFaction.values()[integer];
 	}
 
-	public void setFactionAvailability(final int value) {
+	public void setFactionAvailability(int value) {
 		factionAvailable = EnumAvailabilityFactionType.values()[value];
 	}
 
-	public void setFactionAvailabilityStance(final int integer) {
+	public void setFactionAvailabilityStance(int integer) {
 		factionStance = EnumAvailabilityFaction.values()[integer];
 	}
 
 	@Override
-	public void setVersion(final int version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("ModRev", version);
 		compound.setInteger("AvailabilityDialog", dialogAvailable.ordinal());
 		compound.setInteger("AvailabilityDialog2", dialog2Available.ordinal());

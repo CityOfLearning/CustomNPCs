@@ -8,7 +8,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIAnimation extends EntityAIBase {
-	public static int getWalkingAnimationGuiIndex(final int animation) {
+	public static int getWalkingAnimationGuiIndex(int animation) {
 		if (animation == 4) {
 			return 1;
 		}
@@ -27,7 +27,7 @@ public class EntityAIAnimation extends EntityAIBase {
 		return 0;
 	}
 
-	public static boolean isWalkingAnimation(final int animation) {
+	public static boolean isWalkingAnimation(int animation) {
 		return getWalkingAnimationGuiIndex(animation) != 0;
 	}
 
@@ -40,7 +40,7 @@ public class EntityAIAnimation extends EntityAIBase {
 
 	public int temp;
 
-	public EntityAIAnimation(final EntityNPCInterface npc) {
+	public EntityAIAnimation(EntityNPCInterface npc) {
 		isAttacking = false;
 		isDead = false;
 		isAtStartpoint = false;
@@ -57,7 +57,7 @@ public class EntityAIAnimation extends EntityAIBase {
 	public void resetTask() {
 	}
 
-	private void setAnimation(final int animation) {
+	private void setAnimation(int animation) {
 		npc.setCurrentAnimation(animation);
 		npc.updateHitbox();
 		npc.setPosition(npc.posX, npc.posY, npc.posZ);

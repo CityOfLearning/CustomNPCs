@@ -18,9 +18,9 @@ import noppes.npcs.api.entity.IPlayer;
 
 public class NpcEvent extends Event {
 	public static class CollideEvent extends NpcEvent {
-		public final IEntity entity;
+		public IEntity entity;
 
-		public CollideEvent(final ICustomNpc npc, final Entity entity) {
+		public CollideEvent(ICustomNpc npc, Entity entity) {
 			super(npc);
 			this.entity = NpcAPI.Instance().getIEntity(entity);
 		}
@@ -28,13 +28,12 @@ public class NpcEvent extends Event {
 
 	@Cancelable
 	public static class DamagedEvent extends NpcEvent {
-		public final IEntityLivingBase source;
-		public final DamageSource mcDamageSource;
+		public IEntityLivingBase source;
+		public DamageSource mcDamageSource;
 		public float damage;
 		public boolean clearTarget;
 
-		public DamagedEvent(final ICustomNpc npc, final EntityLivingBase source, final float damage,
-				final DamageSource mcDamageSource) {
+		public DamagedEvent(ICustomNpc npc, EntityLivingBase source, float damage, DamageSource mcDamageSource) {
 			super(npc);
 			clearTarget = false;
 			this.source = (IEntityLivingBase) NpcAPI.Instance().getIEntity(source);
@@ -44,11 +43,11 @@ public class NpcEvent extends Event {
 	}
 
 	public static class DiedEvent extends NpcEvent {
-		public final DamageSource mcDamageSource;
-		public final String type;
-		public final IEntity source;
+		public DamageSource mcDamageSource;
+		public String type;
+		public IEntity source;
 
-		public DiedEvent(final ICustomNpc npc, final DamageSource damagesource, final Entity entity) {
+		public DiedEvent(ICustomNpc npc, DamageSource damagesource, Entity entity) {
 			super(npc);
 			mcDamageSource = damagesource;
 			type = damagesource.damageType;
@@ -57,25 +56,25 @@ public class NpcEvent extends Event {
 	}
 
 	public static class InitEvent extends NpcEvent {
-		public InitEvent(final ICustomNpc npc) {
+		public InitEvent(ICustomNpc npc) {
 			super(npc);
 		}
 	}
 
 	@Cancelable
 	public static class InteractEvent extends NpcEvent {
-		public final IPlayer player;
+		public IPlayer player;
 
-		public InteractEvent(final ICustomNpc npc, final EntityPlayer player) {
+		public InteractEvent(ICustomNpc npc, EntityPlayer player) {
 			super(npc);
 			this.player = (IPlayer) NpcAPI.Instance().getIEntity(player);
 		}
 	}
 
 	public static class KilledEntityEvent extends NpcEvent {
-		public final IEntityLivingBase entity;
+		public IEntityLivingBase entity;
 
-		public KilledEntityEvent(final ICustomNpc npc, final EntityLivingBase entity) {
+		public KilledEntityEvent(ICustomNpc npc, EntityLivingBase entity) {
 			super(npc);
 			this.entity = (IEntityLivingBase) NpcAPI.Instance().getIEntity(entity);
 		}
@@ -83,10 +82,10 @@ public class NpcEvent extends Event {
 
 	@Cancelable
 	public static class MeleeAttackEvent extends NpcEvent {
-		public final IEntityLivingBase target;
+		public IEntityLivingBase target;
 		public float damage;
 
-		public MeleeAttackEvent(final ICustomNpc npc, final EntityLivingBase target, final float damage) {
+		public MeleeAttackEvent(ICustomNpc npc, EntityLivingBase target, float damage) {
 			super(npc);
 			this.target = (IEntityLivingBase) NpcAPI.Instance().getIEntity(target);
 			this.damage = damage;
@@ -95,10 +94,10 @@ public class NpcEvent extends Event {
 
 	@Cancelable
 	public static class RangedLaunchedEvent extends NpcEvent {
-		public final IEntityLivingBase target;
+		public IEntityLivingBase target;
 		public float damage;
 
-		public RangedLaunchedEvent(final ICustomNpc npc, final EntityLivingBase target, final float damage) {
+		public RangedLaunchedEvent(ICustomNpc npc, EntityLivingBase target, float damage) {
 			super(npc);
 			this.target = (IEntityLivingBase) NpcAPI.Instance().getIEntity(target);
 			this.damage = damage;
@@ -109,7 +108,7 @@ public class NpcEvent extends Event {
 	public static class TargetEvent extends NpcEvent {
 		public IEntityLivingBase entity;
 
-		public TargetEvent(final ICustomNpc npc, final EntityLivingBase entity) {
+		public TargetEvent(ICustomNpc npc, EntityLivingBase entity) {
 			super(npc);
 			this.entity = (IEntityLivingBase) NpcAPI.Instance().getIEntity(entity);
 		}
@@ -117,32 +116,32 @@ public class NpcEvent extends Event {
 
 	@Cancelable
 	public static class TargetLostEvent extends NpcEvent {
-		public final IEntityLivingBase entity;
+		public IEntityLivingBase entity;
 
-		public TargetLostEvent(final ICustomNpc npc, final EntityLivingBase entity) {
+		public TargetLostEvent(ICustomNpc npc, EntityLivingBase entity) {
 			super(npc);
 			this.entity = (IEntityLivingBase) NpcAPI.Instance().getIEntity(entity);
 		}
 	}
 
 	public static class TimerEvent extends NpcEvent {
-		public final int id;
+		public int id;
 
-		public TimerEvent(final ICustomNpc npc, final int id) {
+		public TimerEvent(ICustomNpc npc, int id) {
 			super(npc);
 			this.id = id;
 		}
 	}
 
 	public static class UpdateEvent extends NpcEvent {
-		public UpdateEvent(final ICustomNpc npc) {
+		public UpdateEvent(ICustomNpc npc) {
 			super(npc);
 		}
 	}
 
-	public final ICustomNpc npc;
+	public ICustomNpc npc;
 
-	public NpcEvent(final ICustomNpc npc) {
+	public NpcEvent(ICustomNpc npc) {
 		this.npc = npc;
 	}
 }

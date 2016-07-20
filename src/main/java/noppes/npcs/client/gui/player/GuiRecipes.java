@@ -26,7 +26,7 @@ import noppes.npcs.controllers.recipies.RecipeController;
 
 @SideOnly(Side.CLIENT)
 public class GuiRecipes extends GuiNPCInterface {
-	private static final ResourceLocation resource;
+	private static ResourceLocation resource;
 	static {
 		resource = new ResourceLocation("customnpcs", "textures/gui/slot.png");
 	}
@@ -48,7 +48,7 @@ public class GuiRecipes extends GuiNPCInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton button) {
+	protected void actionPerformed(GuiButton button) {
 		if (!button.enabled) {
 			return;
 		}
@@ -61,7 +61,7 @@ public class GuiRecipes extends GuiNPCInterface {
 		updateButton();
 	}
 
-	private void drawItem(final ItemStack item, final int x, final int y, final int xMouse, final int yMouse) {
+	private void drawItem(ItemStack item, int x, int y, int xMouse, int yMouse) {
 		GlStateManager.pushMatrix();
 		GlStateManager.enableRescaleNormal();
 		RenderHelper.enableGUIStandardItemLighting();
@@ -74,30 +74,30 @@ public class GuiRecipes extends GuiNPCInterface {
 		GlStateManager.popMatrix();
 	}
 
-	private void drawOverlay(final ItemStack item, final int x, final int y, final int xMouse, final int yMouse) {
+	private void drawOverlay(ItemStack item, int x, int y, int xMouse, int yMouse) {
 		if (isPointInRegion(x - guiLeft, y - guiTop, 16, 16, xMouse, yMouse)) {
 			renderToolTip(item, xMouse, yMouse);
 		}
 	}
 
 	@Override
-	public void drawScreen(final int xMouse, final int yMouse, final float f) {
+	public void drawScreen(int xMouse, int yMouse, float f) {
 		super.drawScreen(xMouse, yMouse, f);
 		mc.renderEngine.bindTexture(GuiRecipes.resource);
 		label.label = page + 1 + "/" + MathHelper.ceiling_float_int(recipes.size() / 4.0f);
 		label.x = guiLeft + ((256 - Minecraft.getMinecraft().fontRendererObj.getStringWidth(label.label)) / 2);
 		for (int i = 0; i < 4; ++i) {
-			final int index = i + (page * 4);
+			int index = i + (page * 4);
 			if (index >= recipes.size()) {
 				break;
 			}
-			final IRecipe irecipe = recipes.get(index);
+			IRecipe irecipe = recipes.get(index);
 			if (irecipe.getRecipeOutput() != null) {
 				int x = guiLeft + 5 + ((i / 2) * 126);
 				int y = guiTop + 15 + ((i % 2) * 76);
 				drawItem(irecipe.getRecipeOutput(), x + 98, y + 28, xMouse, yMouse);
 				if (irecipe instanceof RecipeCarpentry) {
-					final RecipeCarpentry recipe = (RecipeCarpentry) irecipe;
+					RecipeCarpentry recipe = (RecipeCarpentry) irecipe;
 					x += (72 - (recipe.recipeWidth * 18)) / 2;
 					y += (72 - (recipe.recipeHeight * 18)) / 2;
 					for (int j = 0; j < recipe.recipeWidth; ++j) {
@@ -105,7 +105,7 @@ public class GuiRecipes extends GuiNPCInterface {
 							mc.renderEngine.bindTexture(GuiRecipes.resource);
 							GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 							this.drawTexturedModalRect(x + (j * 18), y + (k * 18), 0, 0, 18, 18);
-							final ItemStack item = recipe.getCraftingItem(j + (k * recipe.recipeWidth));
+							ItemStack item = recipe.getCraftingItem(j + (k * recipe.recipeWidth));
 							if (item != null) {
 								drawItem(item, x + (j * 18) + 1, y + (k * 18) + 1, xMouse, yMouse);
 							}
@@ -115,13 +115,13 @@ public class GuiRecipes extends GuiNPCInterface {
 			}
 		}
 		for (int i = 0; i < 4; ++i) {
-			final int index = i + (page * 4);
+			int index = i + (page * 4);
 			if (index >= recipes.size()) {
 				break;
 			}
-			final IRecipe irecipe = recipes.get(index);
+			IRecipe irecipe = recipes.get(index);
 			if (irecipe instanceof RecipeCarpentry) {
-				final RecipeCarpentry recipe2 = (RecipeCarpentry) irecipe;
+				RecipeCarpentry recipe2 = (RecipeCarpentry) irecipe;
 				if (recipe2.getRecipeOutput() != null) {
 					int x2 = guiLeft + 5 + ((i / 2) * 126);
 					int y2 = guiTop + 15 + ((i % 2) * 76);
@@ -130,7 +130,7 @@ public class GuiRecipes extends GuiNPCInterface {
 					y2 += (72 - (recipe2.recipeHeight * 18)) / 2;
 					for (int j = 0; j < recipe2.recipeWidth; ++j) {
 						for (int k = 0; k < recipe2.recipeHeight; ++k) {
-							final ItemStack item = recipe2.getCraftingItem(j + (k * recipe2.recipeWidth));
+							ItemStack item = recipe2.getCraftingItem(j + (k * recipe2.recipeWidth));
 							if (item != null) {
 								drawOverlay(item, x2 + (j * 18) + 1, y2 + (k * 18) + 1, xMouse, yMouse);
 							}
@@ -151,10 +151,10 @@ public class GuiRecipes extends GuiNPCInterface {
 		updateButton();
 	}
 
-	protected boolean isPointInRegion(final int p_146978_1_, final int p_146978_2_, final int p_146978_3_,
-			final int p_146978_4_, int p_146978_5_, int p_146978_6_) {
-		final int k1 = guiLeft;
-		final int l1 = guiTop;
+	protected boolean isPointInRegion(int p_146978_1_, int p_146978_2_, int p_146978_3_, int p_146978_4_,
+			int p_146978_5_, int p_146978_6_) {
+		int k1 = guiLeft;
+		int l1 = guiTop;
 		p_146978_5_ -= k1;
 		p_146978_6_ -= l1;
 		return (p_146978_5_ >= (p_146978_1_ - 1)) && (p_146978_5_ < (p_146978_1_ + p_146978_3_ + 1))
@@ -166,14 +166,14 @@ public class GuiRecipes extends GuiNPCInterface {
 	}
 
 	private void updateButton() {
-		final GuiNpcButton right = this.right;
-		final GuiNpcButton right2 = this.right;
-		final boolean b = page > 0;
+		GuiNpcButton right = this.right;
+		GuiNpcButton right2 = this.right;
+		boolean b = page > 0;
 		right2.enabled = b;
 		right.visible = b;
-		final GuiNpcButton left = this.left;
-		final GuiNpcButton left2 = this.left;
-		final boolean b2 = (page + 1) < MathHelper.ceiling_float_int(recipes.size() / 4.0f);
+		GuiNpcButton left = this.left;
+		GuiNpcButton left2 = this.left;
+		boolean b2 = (page + 1) < MathHelper.ceiling_float_int(recipes.size() / 4.0f);
 		left2.enabled = b2;
 		left.visible = b2;
 	}

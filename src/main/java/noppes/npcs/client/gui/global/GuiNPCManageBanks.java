@@ -32,7 +32,7 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	private Bank bank;
 	private String selected;
 
-	public GuiNPCManageBanks(final EntityNPCInterface npc, final ContainerManageBanks container) {
+	public GuiNPCManageBanks(EntityNPCInterface npc, ContainerManageBanks container) {
 		super(npc, container);
 		data = new HashMap<String, Integer>();
 		bank = new Bank();
@@ -44,17 +44,17 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 6) {
 			save();
 			scroll.clear();
 			String name;
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
-			final Bank bank = new Bank();
+			Bank bank = new Bank();
 			bank.name = name;
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			bank.writeEntityToNBT(compound);
 			Client.sendData(EnumPacketServer.BankSave, compound);
 		} else if (button.id == 7) {
@@ -67,7 +67,7 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			save();
 			selected = scroll.getSelected();
@@ -76,7 +76,7 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		fontRendererObj.drawString("Tab Cost", 23, 28, CustomNpcResourceListener.DefaultTextColor);
 		fontRendererObj.drawString("Upg. Cost", 123, 28, CustomNpcResourceListener.DefaultTextColor);
 		fontRendererObj.drawString("Start", 6, 70, CustomNpcResourceListener.DefaultTextColor);
@@ -96,8 +96,8 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 		scroll.guiTop = guiTop + 8;
 		addScroll(scroll);
 		for (int i = 0; i < 6; ++i) {
-			final int x = guiLeft + 6;
-			final int y = guiTop + 36 + (i * 22);
+			int x = guiLeft + 6;
+			int y = guiTop + 36 + (i * 22);
 			addButton(new GuiNpcButton(i, x + 50, y, 80, 20,
 					new String[] { "Can Upgrade", "Can't Upgrade", "Upgraded" }, 0));
 			getButton(i).setEnabled(false);
@@ -120,7 +120,7 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	@Override
 	public void save() {
 		if ((selected != null) && data.containsKey(selected) && (bank != null)) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			bank.currencyInventory = container.bank.currencyInventory;
 			bank.upgradeInventory = container.bank.upgradeInventory;
 			bank.writeEntityToNBT(compound);
@@ -129,8 +129,8 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final String name = scroll.getSelected();
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		if (name != null) {
@@ -139,8 +139,8 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final Bank bank = new Bank();
+	public void setGuiData(NBTTagCompound compound) {
+		Bank bank = new Bank();
 		bank.readEntityFromNBT(compound);
 		this.bank = bank;
 		if (bank.id == -1) {
@@ -168,18 +168,18 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		this.selected = selected;
 		scroll.setSelected(selected);
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
 		if (bank.id != -1) {
 			if (guiNpcTextField.id == 0) {
-				final String name = guiNpcTextField.getText();
+				String name = guiNpcTextField.getText();
 				if (!name.isEmpty() && !data.containsKey(name)) {
-					final String old = bank.name;
+					String old = bank.name;
 					data.remove(bank.name);
 					bank.name = name;
 					data.put(bank.name, bank.id);

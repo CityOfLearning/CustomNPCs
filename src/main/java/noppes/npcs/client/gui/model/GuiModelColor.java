@@ -22,8 +22,8 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 
 public class GuiModelColor extends SubGuiInterface implements ITextfieldListener {
-	private static final ResourceLocation color;
-	private static final ResourceLocation colorgui;
+	private static ResourceLocation color;
+	private static ResourceLocation colorgui;
 	static {
 		color = new ResourceLocation("moreplayermodels:textures/gui/color.png");
 		colorgui = new ResourceLocation("moreplayermodels:textures/gui/color_gui.png");
@@ -34,7 +34,7 @@ public class GuiModelColor extends SubGuiInterface implements ITextfieldListener
 
 	private ModelPartData data;
 
-	public GuiModelColor(final GuiScreen parent, final ModelPartData data) {
+	public GuiModelColor(GuiScreen parent, ModelPartData data) {
 		this.data = data;
 		ySize = 230;
 		closeOnEsc = false;
@@ -42,14 +42,14 @@ public class GuiModelColor extends SubGuiInterface implements ITextfieldListener
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 66) {
 			close();
 		}
 	}
 
 	@Override
-	public void drawScreen(final int par1, final int par2, final float par3) {
+	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.getTextureManager().bindTexture(GuiModelColor.color);
@@ -67,15 +67,15 @@ public class GuiModelColor extends SubGuiInterface implements ITextfieldListener
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
-		final String prev = textfield.getText();
+	public void keyTyped(char c, int i) {
+		String prev = textfield.getText();
 		super.keyTyped(c, i);
-		final String newText = textfield.getText();
+		String newText = textfield.getText();
 		if (newText.equals(prev)) {
 			return;
 		}
 		try {
-			final int color = Integer.parseInt(textfield.getText(), 16);
+			int color = Integer.parseInt(textfield.getText(), 16);
 			data.color = color;
 			textfield.setTextColor(color);
 		} catch (NumberFormatException e) {
@@ -84,16 +84,16 @@ public class GuiModelColor extends SubGuiInterface implements ITextfieldListener
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if ((i < colorX) || (i > (colorX + 120)) || (j < colorY) || (j > (colorY + 120))) {
 			return;
 		}
 		InputStream stream = null;
 		try {
-			final IResource resource = mc.getResourceManager().getResource(GuiModelColor.color);
-			final BufferedImage bufferedimage = ImageIO.read(stream = resource.getInputStream());
-			final int color = bufferedimage.getRGB((i - guiLeft - 4) * 4, (j - guiTop - 50) * 4) & 0xFFFFFF;
+			IResource resource = mc.getResourceManager().getResource(GuiModelColor.color);
+			BufferedImage bufferedimage = ImageIO.read(stream = resource.getInputStream());
+			int color = bufferedimage.getRGB((i - guiLeft - 4) * 4, (j - guiTop - 50) * 4) & 0xFFFFFF;
 			if (color != 0) {
 				data.color = color;
 				textfield.setTextColor(color);
@@ -111,7 +111,7 @@ public class GuiModelColor extends SubGuiInterface implements ITextfieldListener
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		int color = 0;
 		try {
 			color = Integer.parseInt(textfield.getText(), 16);

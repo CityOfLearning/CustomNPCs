@@ -25,7 +25,7 @@ public class EntityAIAvoidTarget extends EntityAIBase {
 	private PathNavigate entityPathNavigate;
 	private Class targetEntityClass;
 
-	public EntityAIAvoidTarget(final EntityNPCInterface par1EntityNPC) {
+	public EntityAIAvoidTarget(EntityNPCInterface par1EntityNPC) {
 		npc = par1EntityNPC;
 		distanceFromEntity = npc.stats.aggroRange;
 		health = npc.getHealth();
@@ -46,7 +46,7 @@ public class EntityAIAvoidTarget extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		final EntityLivingBase target = npc.getAttackTarget();
+		EntityLivingBase target = npc.getAttackTarget();
 		if (target == null) {
 			return false;
 		}
@@ -57,7 +57,7 @@ public class EntityAIAvoidTarget extends EntityAIBase {
 				return false;
 			}
 		} else {
-			final List var1 = npc.worldObj.getEntitiesWithinAABB(targetEntityClass,
+			List var1 = npc.worldObj.getEntitiesWithinAABB(targetEntityClass,
 					npc.getEntityBoundingBox().expand(distanceFromEntity, 3.0, distanceFromEntity));
 			if (var1.isEmpty()) {
 				return false;
@@ -67,10 +67,10 @@ public class EntityAIAvoidTarget extends EntityAIBase {
 		if (!npc.getEntitySenses().canSee(closestLivingEntity) && npc.ai.directLOS) {
 			return false;
 		}
-		final Vec3 var2 = RandomPositionGeneratorAlt.findRandomTargetBlockAwayFrom(npc, 16, 7,
+		Vec3 var2 = RandomPositionGeneratorAlt.findRandomTargetBlockAwayFrom(npc, 16, 7,
 				new Vec3(closestLivingEntity.posX, closestLivingEntity.posY, closestLivingEntity.posZ));
-		final boolean var3 = npc.inventory.getProjectile() == null;
-		final boolean var4 = var3 ? (health == npc.getHealth())
+		boolean var3 = npc.inventory.getProjectile() == null;
+		boolean var4 = var3 ? (health == npc.getHealth())
 				: ((npc.getRangedTask() != null) && !npc.getRangedTask().hasFired());
 		if (var2 == null) {
 			return false;

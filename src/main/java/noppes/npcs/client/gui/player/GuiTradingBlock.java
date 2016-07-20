@@ -25,11 +25,11 @@ import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerTradingBlock;
 
 public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiData {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	public Map<Integer, ItemStack> items;
 	private ContainerTradingBlock container;
 
-	public GuiTradingBlock(final ContainerTradingBlock container) {
+	public GuiTradingBlock(ContainerTradingBlock container) {
 		super(null, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/tradingblock.png");
 		items = new HashMap<Integer, ItemStack>();
@@ -42,14 +42,14 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
+	public void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 0) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.TradeAccept, new Object[0]);
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawWorldBackground(0);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc = Minecraft.getMinecraft();
@@ -67,10 +67,10 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 		}
 		ItemStack hover = null;
 		for (int k = 0; k < 9; ++k) {
-			final ItemStack itemstack = items.get(k);
+			ItemStack itemstack = items.get(k);
 			if (itemstack != null) {
-				final int x = guiLeft + 8 + ((k % 5) * 18);
-				final int y = guiTop + 8 + ((k / 5) * 18);
+				int x = guiLeft + 8 + ((k % 5) * 18);
+				int y = guiTop + 8 + ((k / 5) * 18);
 				GlStateManager.enableRescaleNormal();
 				RenderHelper.enableGUIStandardItemLighting();
 				itemRender.renderItemAndEffectIntoGUI(itemstack, x, y);
@@ -94,7 +94,7 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 	}
 
-	private void drawSquare(final int x, final int y, final int width, final int height, final int thick) {
+	private void drawSquare(int x, int y, int width, int height, int thick) {
 		drawRect(x, y, x + width, y + thick, -16711936);
 		drawRect(x, y, x + thick, y + height, -16711936);
 		drawRect(x, y + height, x + width, (y + height) - thick, -16711936);
@@ -124,10 +124,10 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("Player")) {
 			items = new HashMap<Integer, ItemStack>();
-			final String id = compound.getString("Player");
+			String id = compound.getString("Player");
 			if (id.isEmpty()) {
 				container.tile.trader2 = null;
 			} else {

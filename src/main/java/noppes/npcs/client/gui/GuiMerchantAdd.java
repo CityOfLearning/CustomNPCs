@@ -31,19 +31,19 @@ import noppes.npcs.containers.ContainerMerchantAdd;
 public class GuiMerchantAdd extends GuiContainer {
 	@SideOnly(Side.CLIENT)
 	static class MerchantButton extends GuiButton {
-		private final boolean field_146157_o;
+		private boolean field_146157_o;
 
-		public MerchantButton(final int par1, final int par2, final int par3, final boolean par4) {
+		public MerchantButton(int par1, int par2, int par3, boolean par4) {
 			super(par1, par2, par3, 12, 19, "");
 			field_146157_o = par4;
 		}
 
 		@Override
-		public void drawButton(final Minecraft p_146112_1_, final int p_146112_2_, final int p_146112_3_) {
+		public void drawButton(Minecraft p_146112_1_, int p_146112_2_, int p_146112_3_) {
 			if (visible) {
 				p_146112_1_.getTextureManager().bindTexture(GuiMerchantAdd.merchantGuiTextures);
 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-				final boolean flag = (p_146112_2_ >= xPosition) && (p_146112_3_ >= yPosition)
+				boolean flag = (p_146112_2_ >= xPosition) && (p_146112_3_ >= yPosition)
 						&& (p_146112_2_ < (xPosition + width)) && (p_146112_3_ < (yPosition + height));
 				int k = 0;
 				int l = 176;
@@ -60,7 +60,7 @@ public class GuiMerchantAdd extends GuiContainer {
 		}
 	}
 
-	private static final ResourceLocation merchantGuiTextures;
+	private static ResourceLocation merchantGuiTextures;
 	static {
 		merchantGuiTextures = new ResourceLocation("textures/gui/container/villager.png");
 	}
@@ -86,9 +86,9 @@ public class GuiMerchantAdd extends GuiContainer {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton par1GuiButton) {
+	protected void actionPerformed(GuiButton par1GuiButton) {
 		boolean flag = false;
-		final Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
 		if (par1GuiButton == nextRecipeButtonIndex) {
 			++currentRecipeIndex;
 			flag = true;
@@ -97,7 +97,7 @@ public class GuiMerchantAdd extends GuiContainer {
 			flag = true;
 		}
 		if (par1GuiButton.id == 4) {
-			final MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
+			MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
 			if (currentRecipeIndex < merchantrecipelist.size()) {
 				merchantrecipelist.remove(currentRecipeIndex);
 				if (currentRecipeIndex > 0) {
@@ -121,9 +121,9 @@ public class GuiMerchantAdd extends GuiContainer {
 				if (item2 != null) {
 					item2 = item2.copy();
 				}
-				final MerchantRecipe recipe = new MerchantRecipe(item1, item2, sold);
+				MerchantRecipe recipe = new MerchantRecipe(item1, item2, sold);
 				recipe.increaseMaxTradeUses(2147483639);
-				final MerchantRecipeList merchantrecipelist2 = theIMerchant.getRecipes(mc.thePlayer);
+				MerchantRecipeList merchantrecipelist2 = theIMerchant.getRecipes(mc.thePlayer);
 				merchantrecipelist2.add(recipe);
 				Client.sendData(EnumPacketServer.MerchantUpdate, ServerEventsHandler.Merchant.getEntityId(),
 						merchantrecipelist2);
@@ -131,24 +131,24 @@ public class GuiMerchantAdd extends GuiContainer {
 		}
 		if (flag) {
 			((ContainerMerchantAdd) inventorySlots).setCurrentRecipeIndex(currentRecipeIndex);
-			final PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
+			PacketBuffer packetbuffer = new PacketBuffer(Unpooled.buffer());
 			packetbuffer.writeInt(currentRecipeIndex);
 			this.mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("MC|TrSel", packetbuffer));
 		}
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float par1, final int par2, final int par3) {
-		final Minecraft mc = Minecraft.getMinecraft();
+	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+		Minecraft mc = Minecraft.getMinecraft();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.getTextureManager().bindTexture(GuiMerchantAdd.merchantGuiTextures);
-		final int k = (width - xSize) / 2;
-		final int l = (height - ySize) / 2;
+		int k = (width - xSize) / 2;
+		int l = (height - ySize) / 2;
 		this.drawTexturedModalRect(k, l, 0, 0, xSize, ySize);
-		final MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
+		MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
 		if ((merchantrecipelist != null) && !merchantrecipelist.isEmpty()) {
-			final int i1 = currentRecipeIndex;
-			final MerchantRecipe merchantrecipe = merchantrecipelist.get(i1);
+			int i1 = currentRecipeIndex;
+			MerchantRecipe merchantrecipe = merchantrecipelist.get(i1);
 			if (merchantrecipe.isRecipeDisabled()) {
 				mc.getTextureManager().bindTexture(GuiMerchantAdd.merchantGuiTextures);
 				GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -160,7 +160,7 @@ public class GuiMerchantAdd extends GuiContainer {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		fontRendererObj.drawString(field_94082_v, (xSize / 2) - (fontRendererObj.getStringWidth(field_94082_v) / 2), 6,
 				CustomNpcResourceListener.DefaultTextColor);
 		fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, (ySize - 96) + 2,
@@ -168,19 +168,19 @@ public class GuiMerchantAdd extends GuiContainer {
 	}
 
 	@Override
-	public void drawScreen(final int par1, final int par2, final float par3) {
+	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		final Minecraft mc = Minecraft.getMinecraft();
-		final MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
+		Minecraft mc = Minecraft.getMinecraft();
+		MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
 		if ((merchantrecipelist != null) && !merchantrecipelist.isEmpty()) {
-			final int k = (width - xSize) / 2;
-			final int l = (height - ySize) / 2;
-			final int i1 = currentRecipeIndex;
-			final MerchantRecipe merchantrecipe = merchantrecipelist.get(i1);
+			int k = (width - xSize) / 2;
+			int l = (height - ySize) / 2;
+			int i1 = currentRecipeIndex;
+			MerchantRecipe merchantrecipe = merchantrecipelist.get(i1);
 			GlStateManager.pushMatrix();
-			final ItemStack itemstack = merchantrecipe.getItemToBuy();
-			final ItemStack itemstack2 = merchantrecipe.getSecondItemToBuy();
-			final ItemStack itemstack3 = merchantrecipe.getItemToSell();
+			ItemStack itemstack = merchantrecipe.getItemToBuy();
+			ItemStack itemstack2 = merchantrecipe.getSecondItemToBuy();
+			ItemStack itemstack3 = merchantrecipe.getItemToSell();
 			RenderHelper.enableGUIStandardItemLighting();
 			GlStateManager.enableRescaleNormal();
 			GlStateManager.enableColorMaterial();
@@ -217,8 +217,8 @@ public class GuiMerchantAdd extends GuiContainer {
 	@Override
 	public void initGui() {
 		super.initGui();
-		final int i = (width - xSize) / 2;
-		final int j = (height - ySize) / 2;
+		int i = (width - xSize) / 2;
+		int j = (height - ySize) / 2;
 		buttonList.add(nextRecipeButtonIndex = new MerchantButton(1, i + 120 + 27, (j + 24) - 1, true));
 		buttonList.add(previousRecipeButtonIndex = new MerchantButton(2, (i + 36) - 19, (j + 24) - 1, false));
 		buttonList.add(new GuiNpcButton(4, i + xSize, j + 20, 60, 20, "gui.remove"));
@@ -230,8 +230,8 @@ public class GuiMerchantAdd extends GuiContainer {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
-		final Minecraft mc = Minecraft.getMinecraft();
-		final MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
+		Minecraft mc = Minecraft.getMinecraft();
+		MerchantRecipeList merchantrecipelist = theIMerchant.getRecipes(mc.thePlayer);
 		if (merchantrecipelist != null) {
 			nextRecipeButtonIndex.enabled = (currentRecipeIndex < (merchantrecipelist.size() - 1));
 			previousRecipeButtonIndex.enabled = (currentRecipeIndex > 0);

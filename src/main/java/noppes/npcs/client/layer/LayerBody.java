@@ -22,7 +22,7 @@ public class LayerBody extends LayerInterface {
 	private ModelPlaneRenderer skirt;
 	private Model2DRenderer fin;
 
-	public LayerBody(final RenderLiving render) {
+	public LayerBody(RenderLiving render) {
 		super(render);
 		createParts();
 	}
@@ -40,61 +40,61 @@ public class LayerBody extends LayerInterface {
 		breasts.setScale(0.17f, 0.19f);
 		breasts.setThickness(1.0f);
 		breasts2 = new ModelRenderer(model);
-		final Model2DRenderer bottom = new Model2DRenderer(model, 20.0f, 22.0f, 8, 4);
+		Model2DRenderer bottom = new Model2DRenderer(model, 20.0f, 22.0f, 8, 4);
 		bottom.setRotationPoint(-3.6f, 5.0f, -3.1f);
 		bottom.setScale(0.225f, 0.2f);
 		bottom.setThickness(2.0f);
 		bottom.rotateAngleX = -0.31415927f;
 		breasts2.addChild(bottom);
 		breasts3 = new ModelRenderer(model);
-		final Model2DRenderer right = new Model2DRenderer(model, 20.0f, 23.0f, 3, 2);
+		Model2DRenderer right = new Model2DRenderer(model, 20.0f, 23.0f, 3, 2);
 		right.setRotationPoint(-3.8f, 5.3f, -3.6f);
 		right.setScale(0.12f, 0.14f);
 		right.setThickness(1.75f);
 		breasts3.addChild(right);
-		final Model2DRenderer right2 = new Model2DRenderer(model, 20.0f, 22.0f, 3, 1);
+		Model2DRenderer right2 = new Model2DRenderer(model, 20.0f, 22.0f, 3, 1);
 		right2.setRotationPoint(-3.79f, 4.1f, -3.14f);
 		right2.setScale(0.06f, 0.07f);
 		right2.setThickness(1.75f);
 		right2.rotateAngleX = 0.34906584f;
 		breasts3.addChild(right2);
-		final Model2DRenderer right3 = new Model2DRenderer(model, 20.0f, 24.0f, 3, 1);
+		Model2DRenderer right3 = new Model2DRenderer(model, 20.0f, 24.0f, 3, 1);
 		right3.setRotationPoint(-3.79f, 5.3f, -3.6f);
 		right3.setScale(0.06f, 0.07f);
 		right3.setThickness(1.75f);
 		right3.rotateAngleX = -0.34906584f;
 		breasts3.addChild(right3);
-		final Model2DRenderer right4 = new Model2DRenderer(model, 21.0f, 23.0f, 1, 2);
+		Model2DRenderer right4 = new Model2DRenderer(model, 21.0f, 23.0f, 1, 2);
 		right4.setRotationPoint(-1.8f, 5.3f, -3.14f);
 		right4.setScale(0.12f, 0.14f);
 		right4.setThickness(1.75f);
 		right4.rotateAngleY = 0.34906584f;
 		breasts3.addChild(right4);
-		final Model2DRenderer left = new Model2DRenderer(model, 25.0f, 23.0f, 3, 2);
+		Model2DRenderer left = new Model2DRenderer(model, 25.0f, 23.0f, 3, 2);
 		left.setRotationPoint(0.8f, 5.3f, -3.6f);
 		left.setScale(0.12f, 0.14f);
 		left.setThickness(1.75f);
 		breasts3.addChild(left);
-		final Model2DRenderer left2 = new Model2DRenderer(model, 25.0f, 22.0f, 3, 1);
+		Model2DRenderer left2 = new Model2DRenderer(model, 25.0f, 22.0f, 3, 1);
 		left2.setRotationPoint(0.81f, 4.1f, -3.18f);
 		left2.setScale(0.06f, 0.07f);
 		left2.setThickness(1.75f);
 		left2.rotateAngleX = 0.34906584f;
 		breasts3.addChild(left2);
-		final Model2DRenderer left3 = new Model2DRenderer(model, 25.0f, 24.0f, 3, 1);
+		Model2DRenderer left3 = new Model2DRenderer(model, 25.0f, 24.0f, 3, 1);
 		left3.setRotationPoint(0.81f, 5.3f, -3.6f);
 		left3.setScale(0.06f, 0.07f);
 		left3.setThickness(1.75f);
 		left3.rotateAngleX = -0.34906584f;
 		breasts3.addChild(left3);
-		final Model2DRenderer left4 = new Model2DRenderer(model, 24.0f, 23.0f, 1, 2);
+		Model2DRenderer left4 = new Model2DRenderer(model, 24.0f, 23.0f, 1, 2);
 		left4.setRotationPoint(0.8f, 5.3f, -3.6f);
 		left4.setScale(0.12f, 0.14f);
 		left4.setThickness(1.75f);
 		left4.rotateAngleY = -0.34906584f;
 		breasts3.addChild(left4);
 		(skirt = new ModelPlaneRenderer(model, 58, 18)).addSidePlane(0.0f, 0.0f, 0.0f, 9, 2);
-		final ModelPlaneRenderer part1 = new ModelPlaneRenderer(model, 58, 18);
+		ModelPlaneRenderer part1 = new ModelPlaneRenderer(model, 58, 18);
 		part1.addSidePlane(2.0f, 0.0f, 0.0f, 9, 2);
 		part1.rotateAngleY = -1.5707964f;
 		skirt.addChild(part1);
@@ -106,8 +106,7 @@ public class LayerBody extends LayerInterface {
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
 		model.bipedBody.postRender(0.0625f);
 		renderSkirt(par7);
 		renderWings(par7);
@@ -115,8 +114,8 @@ public class LayerBody extends LayerInterface {
 		renderBreasts(par7);
 	}
 
-	private void renderBreasts(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.BREASTS);
+	private void renderBreasts(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.BREASTS);
 		if (data == null) {
 			return;
 		}
@@ -133,8 +132,8 @@ public class LayerBody extends LayerInterface {
 		}
 	}
 
-	private void renderFin(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.FIN);
+	private void renderFin(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.FIN);
 		if (data == null) {
 			return;
 		}
@@ -142,8 +141,8 @@ public class LayerBody extends LayerInterface {
 		fin.render(par7);
 	}
 
-	private void renderSkirt(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.SKIRT);
+	private void renderSkirt(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.SKIRT);
 		if (data == null) {
 			return;
 		}
@@ -157,8 +156,8 @@ public class LayerBody extends LayerInterface {
 		GlStateManager.popMatrix();
 	}
 
-	private void renderWings(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.WINGS);
+	private void renderWings(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.WINGS);
 		if (data == null) {
 			return;
 		}
@@ -168,40 +167,39 @@ public class LayerBody extends LayerInterface {
 	}
 
 	@Override
-	public void rotate(final float par1, final float par2, final float par3, final float par4, final float par5,
-			final float par6) {
+	public void rotate(float par1, float par2, float par3, float par4, float par5, float par6) {
 		rWing.rotateAngleX = 0.7141593f;
 		rWing.rotateAngleZ = 0.5090659f;
 		lWing.rotateAngleX = 0.7141593f;
 		lWing.rotateAngleZ = -0.5090659f;
-		final float motion = Math.abs(MathHelper.sin((par1 * 0.033f) + 3.1415927f) * 0.4f) * par2;
+		float motion = Math.abs(MathHelper.sin((par1 * 0.033f) + 3.1415927f) * 0.4f) * par2;
 		if (!npc.onGround || (motion > 0.01)) {
-			final float speed = 0.55f + (0.5f * motion);
-			final float y = MathHelper.sin(par3 * 0.55f);
-			final Model2DRenderer rWing = this.rWing;
+			float speed = 0.55f + (0.5f * motion);
+			float y = MathHelper.sin(par3 * 0.55f);
+			Model2DRenderer rWing = this.rWing;
 			rWing.rotateAngleZ += y * 0.5f * speed;
-			final Model2DRenderer rWing2 = this.rWing;
+			Model2DRenderer rWing2 = this.rWing;
 			rWing2.rotateAngleX += y * 0.5f * speed;
-			final Model2DRenderer lWing = this.lWing;
+			Model2DRenderer lWing = this.lWing;
 			lWing.rotateAngleZ -= y * 0.5f * speed;
-			final Model2DRenderer lWing2 = this.lWing;
+			Model2DRenderer lWing2 = this.lWing;
 			lWing2.rotateAngleX += y * 0.5f * speed;
 		} else {
-			final Model2DRenderer lWing3 = lWing;
+			Model2DRenderer lWing3 = lWing;
 			lWing3.rotateAngleZ += (MathHelper.cos(par3 * 0.09f) * 0.05f) + 0.05f;
-			final Model2DRenderer rWing3 = rWing;
+			Model2DRenderer rWing3 = rWing;
 			rWing3.rotateAngleZ -= (MathHelper.cos(par3 * 0.09f) * 0.05f) + 0.05f;
-			final Model2DRenderer lWing4 = lWing;
+			Model2DRenderer lWing4 = lWing;
 			lWing4.rotateAngleX += MathHelper.sin(par3 * 0.067f) * 0.05f;
-			final Model2DRenderer rWing4 = rWing;
+			Model2DRenderer rWing4 = rWing;
 			rWing4.rotateAngleX += MathHelper.sin(par3 * 0.067f) * 0.05f;
 		}
 		setRotation(skirt, 0.3f, -0.2f, -0.2f);
-		final ModelPlaneRenderer skirt = this.skirt;
+		ModelPlaneRenderer skirt = this.skirt;
 		skirt.rotateAngleX += model.bipedLeftArm.rotateAngleX * 0.04f;
-		final ModelPlaneRenderer skirt2 = this.skirt;
+		ModelPlaneRenderer skirt2 = this.skirt;
 		skirt2.rotateAngleZ += model.bipedLeftArm.rotateAngleX * 0.06f;
-		final ModelPlaneRenderer skirt3 = this.skirt;
+		ModelPlaneRenderer skirt3 = this.skirt;
 		skirt3.rotateAngleZ -= (MathHelper.cos(par3 * 0.09f) * 0.04f) - 0.05f;
 	}
 }

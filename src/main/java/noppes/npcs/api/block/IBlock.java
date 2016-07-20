@@ -15,7 +15,7 @@ public interface IBlock {
 
 	int getContainerSize();
 
-	IItemStack getContainerSlot(final int p0);
+	IItemStack getContainerSlot(int p0);
 
 	Block getMCBlock();
 
@@ -41,9 +41,9 @@ public interface IBlock {
 
 	void remove();
 
-	IBlock setBlock(final IBlock p0);
+	IBlock setBlock(IBlock p0);
 
-	IBlock setBlock(final String p0);
+	IBlock setBlock(String p0);
 
-	void setContainerSlot(final int p0, final IItemStack p1);
+	void setContainerSlot(int p0, IItemStack p1);
 }

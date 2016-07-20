@@ -30,7 +30,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	private EnumPlayerData selection;
 	private String search;
 
-	public GuiNpcManagePlayerData(final EntityNPCInterface npc, final GuiNPCInterface2 parent) {
+	public GuiNpcManagePlayerData(EntityNPCInterface npc, GuiNPCInterface2 parent) {
 		super(npc);
 		selectedPlayer = null;
 		selected = null;
@@ -41,8 +41,8 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			if (selected != null) {
 				if (selection == EnumPlayerData.Players) {
@@ -68,7 +68,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		selected = guiCustomScroll.getSelected();
 		if (selection == EnumPlayerData.Players) {
 			selectedPlayer = selected;
@@ -76,7 +76,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
 		scroll.drawScreen(i, j, f);
 	}
@@ -85,8 +85,8 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 		if (search.isEmpty() || (selection != EnumPlayerData.Players)) {
 			return new ArrayList<String>(data.keySet());
 		}
-		final List<String> list = new ArrayList<String>();
-		for (final String name : data.keySet()) {
+		List<String> list = new ArrayList<String>();
+		for (String name : data.keySet()) {
 			if (name.toLowerCase().contains(search)) {
 				list.add(name);
 			}
@@ -130,7 +130,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		super.keyTyped(c, i);
 		if (selection != EnumPlayerData.Players) {
 			return;
@@ -143,7 +143,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if ((k == 0) && (scroll != null)) {
 			scroll.mouseClicked(i, j, k);
@@ -155,7 +155,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data.putAll(data);
 		scroll.setList(getSearchList());
 		if ((selection == EnumPlayerData.Players) && (selectedPlayer != null)) {
@@ -165,6 +165,6 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

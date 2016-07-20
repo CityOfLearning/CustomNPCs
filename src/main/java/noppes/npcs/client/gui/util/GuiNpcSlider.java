@@ -18,15 +18,14 @@ public class GuiNpcSlider extends GuiButton {
 	public float sliderValue;
 	public boolean dragging;
 
-	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos, final float sliderValue) {
+	public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, float sliderValue) {
 		this(parent, id, xPos, yPos, "", sliderValue);
 		if (listener != null) {
 			listener.mouseDragged(this);
 		}
 	}
 
-	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos, final int width,
-			final int height, final float sliderValue) {
+	public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, int width, int height, float sliderValue) {
 		this(parent, id, xPos, yPos, "", sliderValue);
 		this.width = width;
 		this.height = height;
@@ -35,8 +34,7 @@ public class GuiNpcSlider extends GuiButton {
 		}
 	}
 
-	public GuiNpcSlider(final GuiScreen parent, final int id, final int xPos, final int yPos,
-			final String displayString, final float sliderValue) {
+	public GuiNpcSlider(GuiScreen parent, int id, int xPos, int yPos, String displayString, float sliderValue) {
 		super(id, xPos, yPos, 150, 20, NoppesStringUtils.translate(displayString));
 		this.sliderValue = 1.0f;
 		this.id = id;
@@ -51,12 +49,12 @@ public class GuiNpcSlider extends GuiButton {
 	}
 
 	@Override
-	public int getHoverState(final boolean par1) {
+	public int getHoverState(boolean par1) {
 		return 0;
 	}
 
 	@Override
-	public void mouseDragged(final Minecraft mc, final int par2, final int par3) {
+	public void mouseDragged(Minecraft mc, int par2, int par3) {
 		if (!visible) {
 			return;
 		}
@@ -82,7 +80,7 @@ public class GuiNpcSlider extends GuiButton {
 	}
 
 	@Override
-	public boolean mousePressed(final Minecraft par1Minecraft, final int par2, final int par3) {
+	public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
 		if (enabled && visible && (par2 >= xPosition) && (par3 >= yPosition) && (par2 < (xPosition + width))
 				&& (par3 < (yPosition + height))) {
 			sliderValue = (par2 - (xPosition + 4)) / (width - 8);
@@ -101,14 +99,14 @@ public class GuiNpcSlider extends GuiButton {
 	}
 
 	@Override
-	public void mouseReleased(final int par1, final int par2) {
+	public void mouseReleased(int par1, int par2) {
 		dragging = false;
 		if (listener != null) {
 			listener.mouseReleased(this);
 		}
 	}
 
-	public void setString(final String str) {
+	public void setString(String str) {
 		displayString = NoppesStringUtils.translate(str);
 	}
 }

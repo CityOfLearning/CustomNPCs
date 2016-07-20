@@ -7,11 +7,11 @@ package noppes.npcs.api.entity.data;
 public interface IData {
 	void clear();
 
-	Object get(final String p0);
+	Object get(String p0);
 
-	boolean has(final String p0);
+	boolean has(String p0);
 
-	void put(final String p0, final Object p1);
+	void put(String p0, Object p1);
 
-	void remove(final String p0);
+	void remove(String p0);
 }

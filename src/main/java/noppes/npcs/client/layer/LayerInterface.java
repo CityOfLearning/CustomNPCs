@@ -22,33 +22,33 @@ public abstract class LayerInterface implements LayerRenderer {
 	protected ModelData playerdata;
 	public ModelBiped model;
 
-	public LayerInterface(final RenderLiving render) {
+	public LayerInterface(RenderLiving render) {
 		this.render = render;
 		model = (ModelBiped) render.getMainModel();
 	}
 
-	private int blend(final int color1, final int color2, final float ratio) {
+	private int blend(int color1, int color2, float ratio) {
 		if (ratio >= 1.0f) {
 			return color2;
 		}
 		if (ratio <= 0.0f) {
 			return color1;
 		}
-		final int aR = (color1 & 0xFF0000) >> 16;
-		final int aG = (color1 & 0xFF00) >> 8;
-		final int aB = color1 & 0xFF;
-		final int bR = (color2 & 0xFF0000) >> 16;
-		final int bG = (color2 & 0xFF00) >> 8;
-		final int bB = color2 & 0xFF;
-		final int R = (int) (aR + ((bR - aR) * ratio));
-		final int G = (int) (aG + ((bG - aG) * ratio));
-		final int B = (int) (aB + ((bB - aB) * ratio));
+		int aR = (color1 & 0xFF0000) >> 16;
+		int aG = (color1 & 0xFF00) >> 8;
+		int aB = color1 & 0xFF;
+		int bR = (color2 & 0xFF0000) >> 16;
+		int bG = (color2 & 0xFF00) >> 8;
+		int bB = color2 & 0xFF;
+		int R = (int) (aR + ((bR - aR) * ratio));
+		int G = (int) (aG + ((bG - aG) * ratio));
+		int B = (int) (aB + ((bB - aB) * ratio));
 		return (R << 16) | (G << 8) | B;
 	}
 
 	@Override
-	public void doRenderLayer(final EntityLivingBase entity, final float par2, final float par3, final float par8,
-			final float par4, final float par5, final float par6, final float par7) {
+	public void doRenderLayer(EntityLivingBase entity, float par2, float par3, float par8, float par4, float par5,
+			float par6, float par7) {
 		npc = (EntityCustomNpc) entity;
 		if (npc.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer)) {
 			return;
@@ -81,7 +81,7 @@ public abstract class LayerInterface implements LayerRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	public void preRender(final ModelPartData data) {
+	public void preRender(ModelPartData data) {
 		if (data.playerTexture) {
 			ClientProxy.bindTexture(npc.textureLocation);
 		} else {
@@ -98,22 +98,20 @@ public abstract class LayerInterface implements LayerRenderer {
 				color = npc.display.getTint();
 			}
 		}
-		final float red = ((color >> 16) & 0xFF) / 255.0f;
-		final float green = ((color >> 8) & 0xFF) / 255.0f;
-		final float blue = (color & 0xFF) / 255.0f;
+		float red = ((color >> 16) & 0xFF) / 255.0f;
+		float green = ((color >> 8) & 0xFF) / 255.0f;
+		float blue = (color & 0xFF) / 255.0f;
 		GlStateManager.color(red, green, blue, npc.isInvisible() ? 0.15f : 0.99f);
 	}
 
-	public abstract void render(final float p0, final float p1, final float p2, final float p3, final float p4,
-			final float p5);
+	public abstract void render(float p0, float p1, float p2, float p3, float p4, float p5);
 
-	public abstract void rotate(final float p0, final float p1, final float p2, final float p3, final float p4,
-			final float p5);
+	public abstract void rotate(float p0, float p1, float p2, float p3, float p4, float p5);
 
-	public void setColor(final ModelPartData data, final EntityLivingBase entity) {
+	public void setColor(ModelPartData data, EntityLivingBase entity) {
 	}
 
-	public void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	public void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;

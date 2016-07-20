@@ -47,41 +47,41 @@ public interface INPCAi {
 
 	int getWanderingRange();
 
-	void setAnimation(final int p0);
+	void setAnimation(int p0);
 
-	void setAttackInvisible(final boolean p0);
+	void setAttackInvisible(boolean p0);
 
-	void setAttackLOS(final boolean p0);
+	void setAttackLOS(boolean p0);
 
-	void setAvoidsWater(final boolean p0);
+	void setAvoidsWater(boolean p0);
 
-	void setCanSwim(final boolean p0);
+	void setCanSwim(boolean p0);
 
-	void setDoorInteract(final int p0);
+	void setDoorInteract(int p0);
 
-	void setInteractWithNPCs(final boolean p0);
+	void setInteractWithNPCs(boolean p0);
 
-	void setLeapAtTarget(final boolean p0);
+	void setLeapAtTarget(boolean p0);
 
-	void setMovingPathType(final int p0, final boolean p1);
+	void setMovingPathType(int p0, boolean p1);
 
-	void setMovingType(final int p0);
+	void setMovingType(int p0);
 
-	void setRetaliateType(final int p0);
+	void setRetaliateType(int p0);
 
-	void setReturnsHome(final boolean p0);
+	void setReturnsHome(boolean p0);
 
-	void setSheltersFrom(final int p0);
+	void setSheltersFrom(int p0);
 
-	void setStandingType(final int p0);
+	void setStandingType(int p0);
 
-	void setStopOnInteract(final boolean p0);
+	void setStopOnInteract(boolean p0);
 
-	void setTacticalRange(final int p0);
+	void setTacticalRange(int p0);
 
-	void setTacticalType(final int p0);
+	void setTacticalType(int p0);
 
-	void setWalkingSpeed(final int p0);
+	void setWalkingSpeed(int p0);
 
-	void setWanderingRange(final int p0);
+	void setWanderingRange(int p0);
 }

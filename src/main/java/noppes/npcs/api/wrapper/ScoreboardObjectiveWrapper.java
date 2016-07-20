@@ -11,7 +11,7 @@ import noppes.npcs.api.IScoreboardObjective;
 public class ScoreboardObjectiveWrapper implements IScoreboardObjective {
 	private ScoreObjective objective;
 
-	protected ScoreboardObjectiveWrapper(final ScoreObjective objective) {
+	protected ScoreboardObjectiveWrapper(ScoreObjective objective) {
 		this.objective = objective;
 	}
 
@@ -36,7 +36,7 @@ public class ScoreboardObjectiveWrapper implements IScoreboardObjective {
 	}
 
 	@Override
-	public void setDisplayName(final String name) {
+	public void setDisplayName(String name) {
 		if ((name.length() <= 0) || (name.length() > 32)) {
 			throw new CustomNPCsException("Score objective display name must be between 1-32 characters: %s",
 					new Object[] { name });

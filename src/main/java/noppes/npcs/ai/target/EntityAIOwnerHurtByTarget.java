@@ -14,7 +14,7 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget {
 	EntityLivingBase theOwnerAttacker;
 	private int timer;
 
-	public EntityAIOwnerHurtByTarget(final EntityNPCInterface npc) {
+	public EntityAIOwnerHurtByTarget(EntityNPCInterface npc) {
 		super(npc, false);
 		this.npc = npc;
 		setMutexBits(AiMutex.PASSIVE);
@@ -25,19 +25,19 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget {
 		if (!npc.isFollower() || (npc.roleInterface == null) || !npc.roleInterface.defendOwner()) {
 			return false;
 		}
-		final EntityLivingBase entitylivingbase = npc.getOwner();
+		EntityLivingBase entitylivingbase = npc.getOwner();
 		if (entitylivingbase == null) {
 			return false;
 		}
 		theOwnerAttacker = entitylivingbase.getAITarget();
-		final int i = entitylivingbase.getRevengeTimer();
+		int i = entitylivingbase.getRevengeTimer();
 		return (i != timer) && this.isSuitableTarget(theOwnerAttacker, false);
 	}
 
 	@Override
 	public void startExecuting() {
 		taskOwner.setAttackTarget(theOwnerAttacker);
-		final EntityLivingBase entitylivingbase = npc.getOwner();
+		EntityLivingBase entitylivingbase = npc.getOwner();
 		if (entitylivingbase != null) {
 			timer = entitylivingbase.getRevengeTimer();
 		}

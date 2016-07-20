@@ -9,13 +9,13 @@ import net.minecraft.client.Minecraft;
 public class GuiColorButton extends GuiNpcButton {
 	public int color;
 
-	public GuiColorButton(final int id, final int x, final int y, final int color) {
+	public GuiColorButton(int id, int x, int y, int color) {
 		super(id, x, y, 50, 20, "");
 		this.color = color;
 	}
 
 	@Override
-	public void drawButton(final Minecraft mc, final int mouseX, final int mouseY) {
+	public void drawButton(Minecraft mc, int mouseX, int mouseY) {
 		if (!visible) {
 			return;
 		}

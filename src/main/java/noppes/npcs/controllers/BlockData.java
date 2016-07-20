@@ -11,14 +11,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 
 public class BlockData {
-	public static BlockData getData(final NBTTagCompound compound) {
-		final BlockPos pos = new BlockPos(compound.getInteger("BuildX"), compound.getInteger("BuildY"),
+	public static BlockData getData(NBTTagCompound compound) {
+		BlockPos pos = new BlockPos(compound.getInteger("BuildX"), compound.getInteger("BuildY"),
 				compound.getInteger("BuildZ"));
-		final Block b = Block.getBlockFromName(compound.getString("Block"));
+		Block b = Block.getBlockFromName(compound.getString("Block"));
 		if (b == null) {
 			return null;
 		}
-		final IBlockState state = b.getStateFromMeta(compound.getInteger("Meta"));
+		IBlockState state = b.getStateFromMeta(compound.getInteger("Meta"));
 		NBTTagCompound tile = null;
 		if (compound.hasKey("Tile")) {
 			tile = compound.getCompoundTag("Tile");
@@ -32,14 +32,14 @@ public class BlockData {
 
 	private ItemStack stack;
 
-	public BlockData(final BlockPos pos, final IBlockState state, final NBTTagCompound tile) {
+	public BlockData(BlockPos pos, IBlockState state, NBTTagCompound tile) {
 		this.pos = pos;
 		this.state = state;
 		this.tile = tile;
 	}
 
 	public NBTTagCompound getNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("BuildX", pos.getX());
 		compound.setInteger("BuildY", pos.getY());
 		compound.setInteger("BuildZ", pos.getZ());

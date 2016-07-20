@@ -21,23 +21,23 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
 
 public class ItemScriptedDoor extends ItemDoor implements IPermission {
-	public ItemScriptedDoor(final Block block) {
+	public ItemScriptedDoor(Block block) {
 		super(block);
 		maxStackSize = 1;
 		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return e == EnumPacketServer.ScriptDoorDataSave;
 	}
 
 	@Override
-	public boolean onItemUse(final ItemStack stack, final EntityPlayer playerIn, final World worldIn,
-			final BlockPos pos, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-		final boolean res = super.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
+	public boolean onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
+		boolean res = super.onItemUse(stack, playerIn, worldIn, pos, side, hitX, hitY, hitZ);
 		if (res && !worldIn.isRemote) {
-			final BlockPos newPos = pos.up();
+			BlockPos newPos = pos.up();
 			NoppesUtilServer.sendOpenGui(playerIn, EnumGuiType.ScriptDoor, null, newPos.getX(), newPos.getY(),
 					newPos.getZ());
 			return true;
@@ -46,12 +46,12 @@ public class ItemScriptedDoor extends ItemDoor implements IPermission {
 	}
 
 	@Override
-	public ItemStack onItemUseFinish(final ItemStack stack, final World worldIn, final EntityPlayer playerIn) {
+	public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityPlayer playerIn) {
 		return stack;
 	}
 
 	@Override
-	public Item setUnlocalizedName(final String name) {
+	public Item setUnlocalizedName(String name) {
 		GameRegistry.registerItem(this, name);
 		CustomNpcs.proxy.registerItem(this, name, 0);
 		return super.setUnlocalizedName(name);

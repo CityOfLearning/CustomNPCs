@@ -15,7 +15,7 @@ public enum EnumCompanionTalent {
 
 	public ItemStack item;
 
-	private EnumCompanionTalent(final Item item) {
+	private EnumCompanionTalent(Item item) {
 		this.item = new ItemStack(item);
 	}
 }

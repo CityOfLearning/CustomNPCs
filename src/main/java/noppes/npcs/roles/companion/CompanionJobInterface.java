@@ -19,5 +19,5 @@ public abstract class CompanionJobInterface {
 	public void onUpdate() {
 	}
 
-	public abstract void setNBT(final NBTTagCompound p0);
+	public abstract void setNBT(NBTTagCompound p0);
 }

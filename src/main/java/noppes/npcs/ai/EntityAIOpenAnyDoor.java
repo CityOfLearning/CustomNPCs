@@ -29,7 +29,7 @@ public class EntityAIOpenAnyDoor extends EntityAIBase {
 	private float entityPositionZ;
 	private int closeDoorTemporisation;
 
-	public EntityAIOpenAnyDoor(final EntityNPCInterface npc) {
+	public EntityAIOpenAnyDoor(EntityNPCInterface npc) {
 		this.npc = npc;
 	}
 
@@ -38,17 +38,17 @@ public class EntityAIOpenAnyDoor extends EntityAIBase {
 		return (closeDoorTemporisation > 0) && !hasStoppedDoorInteraction;
 	}
 
-	public Block getDoor(final BlockPos pos) {
-		final IBlockState state = npc.worldObj.getBlockState(pos);
-		final Block block = state.getBlock();
+	public Block getDoor(BlockPos pos) {
+		IBlockState state = npc.worldObj.getBlockState(pos);
+		Block block = state.getBlock();
 		if (block.isFullBlock() || (block == Blocks.iron_door)) {
 			return null;
 		}
 		if (block instanceof BlockDoor) {
 			return block;
 		}
-		final Set<IProperty> set = state.getProperties().keySet();
-		for (final IProperty prop : set) {
+		Set<IProperty> set = state.getProperties().keySet();
+		for (IProperty prop : set) {
 			if ((prop instanceof PropertyBool) && prop.getName().equals("open")) {
 				property = prop;
 				return block;
@@ -62,11 +62,11 @@ public class EntityAIOpenAnyDoor extends EntityAIBase {
 		setDoorState(door, position, false);
 	}
 
-	public void setDoorState(final Block block, final BlockPos position, final boolean open) {
+	public void setDoorState(Block block, BlockPos position, boolean open) {
 		if (block instanceof BlockDoor) {
 			((BlockDoor) block).toggleDoor(npc.worldObj, position, open);
 		} else {
-			final IBlockState state = npc.worldObj.getBlockState(position);
+			IBlockState state = npc.worldObj.getBlockState(position);
 			if (state.getBlock() != block) {
 				return;
 			}
@@ -80,11 +80,11 @@ public class EntityAIOpenAnyDoor extends EntityAIBase {
 		if (!npc.isCollidedHorizontally) {
 			return false;
 		}
-		final PathEntity pathentity = npc.getNavigator().getPath();
+		PathEntity pathentity = npc.getNavigator().getPath();
 		if ((pathentity != null) && !pathentity.isFinished()) {
 			for (int i = 0; i < Math.min(pathentity.getCurrentPathIndex() + 2,
 					pathentity.getCurrentPathLength()); ++i) {
-				final PathPoint pathpoint = pathentity.getPathPointFromIndex(i);
+				PathPoint pathpoint = pathentity.getPathPointFromIndex(i);
 				position = new BlockPos(pathpoint.xCoord, pathpoint.yCoord + 1, pathpoint.zCoord);
 				if (npc.getDistanceSq(position.getX(), npc.posY, position.getZ()) <= 2.25) {
 					door = getDoor(position);
@@ -112,9 +112,9 @@ public class EntityAIOpenAnyDoor extends EntityAIBase {
 	@Override
 	public void updateTask() {
 		--closeDoorTemporisation;
-		final float f = (float) ((position.getX() + 0.5f) - npc.posX);
-		final float f2 = (float) ((position.getZ() + 0.5f) - npc.posZ);
-		final float f3 = (entityPositionX * f) + (entityPositionZ * f2);
+		float f = (float) ((position.getX() + 0.5f) - npc.posX);
+		float f2 = (float) ((position.getZ() + 0.5f) - npc.posZ);
+		float f3 = (entityPositionX * f) + (entityPositionZ * f2);
 		if (f3 < 0.0f) {
 			hasStoppedDoorInteraction = true;
 		}

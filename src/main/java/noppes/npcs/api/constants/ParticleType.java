@@ -7,17 +7,17 @@ package noppes.npcs.api.constants;
 import net.minecraft.util.EnumParticleTypes;
 
 public class ParticleType {
-	public static final int NONE = 0;
-	public static final int SMOKE = 1;
-	public static final int PORTAL = 2;
-	public static final int REDSTONE = 3;
-	public static final int LIGHTNING = 4;
-	public static final int LARGE_SMOKE = 5;
-	public static final int MAGIC = 6;
-	public static final int ENCHANT = 7;
-	public static final int CRIT = 8;
+	public static int NONE = 0;
+	public static int SMOKE = 1;
+	public static int PORTAL = 2;
+	public static int REDSTONE = 3;
+	public static int LIGHTNING = 4;
+	public static int LARGE_SMOKE = 5;
+	public static int MAGIC = 6;
+	public static int ENCHANT = 7;
+	public static int CRIT = 8;
 
-	public static EnumParticleTypes getMCType(final int type) {
+	public static EnumParticleTypes getMCType(int type) {
 		if (type == 1) {
 			return EnumParticleTypes.SMOKE_NORMAL;
 		}

@@ -39,29 +39,29 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 	}
 
 	@Override
-	public boolean apply(final Object ob) {
+	public boolean apply(Object ob) {
 		return isEntityApplicable((Entity) ob);
 	}
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("Rotation", rotation);
-		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
 	}
 
-	public boolean isEntityApplicable(final Entity var1) {
+	public boolean isEntityApplicable(Entity var1) {
 		return (var1 instanceof EntityPlayerMP) || (var1 instanceof EntityEnderPearl);
 	}
 
 	@Override
-	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
-		final NBTTagCompound compound = pkt.getNbtCompound();
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound compound = pkt.getNbtCompound();
 		rotation = compound.getInteger("Rotation");
 	}
 
-	public void readExtraNBT(final NBTTagCompound compound) {
+	public void readExtraNBT(NBTTagCompound compound) {
 		availability.readFromNBT(compound.getCompoundTag("BorderAvailability"));
 		rotation = compound.getInteger("BorderRotation");
 		height = compound.getInteger("BorderHeight");
@@ -69,7 +69,7 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		readExtraNBT(compound);
 		if (getWorld() != null) {
@@ -83,19 +83,19 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 		if (worldObj.isRemote) {
 			return;
 		}
-		final AxisAlignedBB box = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1,
+		AxisAlignedBB box = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1,
 				pos.getY() + height + 1, pos.getZ() + 1);
-		final List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, box, this);
-		for (final Entity entity : list) {
+		List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class, box, this);
+		for (Entity entity : list) {
 			if (entity instanceof EntityEnderPearl) {
-				final EntityEnderPearl pearl = (EntityEnderPearl) entity;
+				EntityEnderPearl pearl = (EntityEnderPearl) entity;
 				if (!(pearl.getThrower() instanceof EntityPlayer)
 						|| availability.isAvailable((EntityPlayer) pearl.getThrower())) {
 					continue;
 				}
 				entity.isDead = true;
 			} else {
-				final EntityPlayer player = (EntityPlayer) entity;
+				EntityPlayer player = (EntityPlayer) entity;
 				if (availability.isAvailable(player)) {
 					continue;
 				}
@@ -121,7 +121,7 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 		}
 	}
 
-	public void writeExtraNBT(final NBTTagCompound compound) {
+	public void writeExtraNBT(NBTTagCompound compound) {
 		compound.setTag("BorderAvailability", availability.writeToNBT(new NBTTagCompound()));
 		compound.setInteger("BorderRotation", rotation);
 		compound.setInteger("BorderHeight", height);
@@ -129,7 +129,7 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		writeExtraNBT(compound);
 	}

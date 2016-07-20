@@ -13,14 +13,14 @@ public class EntityAIBustDoor extends EntityAIDoorInteract {
 	private int breakingTime;
 	private int previousBreakProgress;
 
-	public EntityAIBustDoor(final EntityLiving par1EntityLiving) {
+	public EntityAIBustDoor(EntityLiving par1EntityLiving) {
 		super(par1EntityLiving);
 		previousBreakProgress = -1;
 	}
 
 	@Override
 	public boolean continueExecuting() {
-		final double var1 = theEntity.getDistanceSq(doorPosition);
+		double var1 = theEntity.getDistanceSq(doorPosition);
 		return (breakingTime <= 240) && !BlockDoor.isOpen(theEntity.worldObj, doorPosition) && (var1 < 4.0);
 	}
 
@@ -49,7 +49,7 @@ public class EntityAIBustDoor extends EntityAIDoorInteract {
 			theEntity.swingItem();
 		}
 		++breakingTime;
-		final int var1 = (int) ((breakingTime / 240.0f) * 10.0f);
+		int var1 = (int) ((breakingTime / 240.0f) * 10.0f);
 		if (var1 != previousBreakProgress) {
 			theEntity.worldObj.sendBlockBreakProgress(theEntity.getEntityId(), doorPosition, var1);
 			previousBreakProgress = var1;

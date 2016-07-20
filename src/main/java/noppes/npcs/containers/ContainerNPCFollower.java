@@ -14,7 +14,7 @@ public class ContainerNPCFollower extends ContainerNpcInterface {
 	public InventoryNPC currencyMatrix;
 	public RoleFollower role;
 
-	public ContainerNPCFollower(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCFollower(EntityNPCInterface npc, EntityPlayer player) {
 		super(player);
 		role = (RoleFollower) npc.roleInterface;
 		currencyMatrix = new InventoryNPC("currency", 1, this);
@@ -25,10 +25,10 @@ public class ContainerNPCFollower extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer entityplayer) {
+	public void onContainerClosed(EntityPlayer entityplayer) {
 		super.onContainerClosed(entityplayer);
 		if (!entityplayer.worldObj.isRemote) {
-			final ItemStack itemstack = currencyMatrix.removeStackFromSlot(0);
+			ItemStack itemstack = currencyMatrix.removeStackFromSlot(0);
 			if ((itemstack != null) && !entityplayer.worldObj.isRemote) {
 				entityplayer.entityDropItem(itemstack, 0.0f);
 			}
@@ -36,7 +36,7 @@ public class ContainerNPCFollower extends ContainerNpcInterface {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

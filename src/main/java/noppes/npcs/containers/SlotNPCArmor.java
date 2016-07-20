@@ -13,9 +13,9 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 class SlotNPCArmor extends Slot {
-	final int armorType;
+	int armorType;
 
-	SlotNPCArmor(final IInventory iinventory, final int i, final int j, final int k, final int l) {
+	SlotNPCArmor(IInventory iinventory, int i, int j, int k, int l) {
 		super(iinventory, i, j, k);
 		armorType = l;
 	}
@@ -32,7 +32,7 @@ class SlotNPCArmor extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
+	public boolean isItemValid(ItemStack itemstack) {
 		if (itemstack.getItem() instanceof ItemArmor) {
 			return ((ItemArmor) itemstack.getItem()).armorType == armorType;
 		}

@@ -14,5 +14,5 @@ public interface IEntityLiving<T extends EntityLiving> extends IEntityLivingBase
 
 	boolean isNavigating();
 
-	void navigateTo(final double p0, final double p1, final double p2, final double p3);
+	void navigateTo(double p0, double p1, double p2, double p3);
 }

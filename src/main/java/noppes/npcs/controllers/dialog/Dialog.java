@@ -55,8 +55,8 @@ public class Dialog implements ICompatibilty, IDialog {
 		disableEsc = false;
 	}
 
-	public Dialog copy(final EntityPlayer player) {
-		final Dialog dialog = new Dialog();
+	public Dialog copy(EntityPlayer player) {
+		Dialog dialog = new Dialog();
 		dialog.id = id;
 		dialog.text = text;
 		dialog.title = title;
@@ -68,8 +68,8 @@ public class Dialog implements ICompatibilty, IDialog {
 		dialog.hideNPC = hideNPC;
 		dialog.showWheel = showWheel;
 		dialog.disableEsc = disableEsc;
-		for (final int slot : options.keySet()) {
-			final DialogOption option = options.get(slot);
+		for (int slot : options.keySet()) {
+			DialogOption option = options.get(slot);
 			if (option.optionType == EnumOptionType.DIALOG_OPTION) {
 				if (!option.hasDialog()) {
 					continue;
@@ -111,8 +111,8 @@ public class Dialog implements ICompatibilty, IDialog {
 		return version;
 	}
 
-	public boolean hasDialogs(final EntityPlayer player) {
-		for (final DialogOption option : options.values()) {
+	public boolean hasDialogs(EntityPlayer player) {
+		for (DialogOption option : options.values()) {
 			if ((option != null) && (option.optionType == EnumOptionType.DIALOG_OPTION) && option.hasDialog()
 					&& option.isAvailable(player)) {
 				return true;
@@ -122,7 +122,7 @@ public class Dialog implements ICompatibilty, IDialog {
 	}
 
 	public boolean hasOtherOptions() {
-		for (final DialogOption option : options.values()) {
+		for (DialogOption option : options.values()) {
 			if ((option != null) && (option.optionType != EnumOptionType.DISABLED)) {
 				return true;
 			}
@@ -134,12 +134,12 @@ public class Dialog implements ICompatibilty, IDialog {
 		return getQuest() != null;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		id = compound.getInteger("DialogId");
 		readNBTPartial(compound);
 	}
 
-	public void readNBTPartial(final NBTTagCompound compound) {
+	public void readNBTPartial(NBTTagCompound compound) {
 		version = compound.getInteger("ModRev");
 		VersionCompatibility.CheckAvailabilityCompatibility(this, compound);
 		title = compound.getString("DialogTitle");
@@ -151,12 +151,12 @@ public class Dialog implements ICompatibilty, IDialog {
 		hideNPC = compound.getBoolean("DialogHideNPC");
 		showWheel = compound.getBoolean("DialogShowWheel");
 		disableEsc = compound.getBoolean("DialogDisableEsc");
-		final NBTTagList options = compound.getTagList("Options", 10);
-		final HashMap<Integer, DialogOption> newoptions = new HashMap<Integer, DialogOption>();
+		NBTTagList options = compound.getTagList("Options", 10);
+		HashMap<Integer, DialogOption> newoptions = new HashMap<Integer, DialogOption>();
 		for (int iii = 0; iii < options.tagCount(); ++iii) {
-			final NBTTagCompound option = options.getCompoundTagAt(iii);
-			final int opslot = option.getInteger("OptionSlot");
-			final DialogOption dia = new DialogOption();
+			NBTTagCompound option = options.getCompoundTagAt(iii);
+			int opslot = option.getInteger("OptionSlot");
+			DialogOption dia = new DialogOption();
 			dia.readNBT(option.getCompoundTag("Option"));
 			newoptions.put(opslot, dia);
 			dia.slot = opslot;
@@ -167,17 +167,17 @@ public class Dialog implements ICompatibilty, IDialog {
 	}
 
 	@Override
-	public void setVersion(final int version) {
+	public void setVersion(int version) {
 		this.version = version;
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("DialogId", id);
 		return writeToNBTPartial(compound);
 	}
 
-	public NBTTagCompound writeToNBTPartial(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBTPartial(NBTTagCompound compound) {
 		compound.setString("DialogTitle", title);
 		compound.setString("DialogText", text);
 		compound.setInteger("DialogQuest", quest);
@@ -189,9 +189,9 @@ public class Dialog implements ICompatibilty, IDialog {
 		if ((sound != null) && !sound.isEmpty()) {
 			compound.setString("DialogSound", sound);
 		}
-		final NBTTagList options = new NBTTagList();
-		for (final int opslot : this.options.keySet()) {
-			final NBTTagCompound listcompound = new NBTTagCompound();
+		NBTTagList options = new NBTTagList();
+		for (int opslot : this.options.keySet()) {
+			NBTTagCompound listcompound = new NBTTagCompound();
 			listcompound.setInteger("OptionSlot", opslot);
 			listcompound.setTag("Option", this.options.get(opslot).writeNBT());
 			options.appendTag(listcompound);

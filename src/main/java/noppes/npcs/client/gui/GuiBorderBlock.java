@@ -19,14 +19,14 @@ import noppes.npcs.constants.EnumPacketServer;
 public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 	private TileBorder tile;
 
-	public GuiBorderBlock(final int x, final int y, final int z) {
+	public GuiBorderBlock(int x, int y, int z) {
 		tile = (TileBorder) player.worldObj.getTileEntity(new BlockPos(x, y, z));
 		Client.sendData(EnumPacketServer.GetTileEntity, x, y, z);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			close();
 		}
@@ -57,13 +57,13 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 		}
 		tile.height = getTextField(0).getInteger();
 		tile.message = getTextField(1).getText();
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		tile.writeToNBT(compound);
 		Client.sendData(EnumPacketServer.SaveTileEntity, compound);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		tile.readFromNBT(compound);
 	}
 }

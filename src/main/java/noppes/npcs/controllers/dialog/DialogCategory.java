@@ -20,15 +20,15 @@ public class DialogCategory {
 		dialogs = new HashMap<Integer, Dialog>();
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		id = compound.getInteger("Slot");
 		title = compound.getString("Title");
-		final NBTTagList dialogsList = compound.getTagList("Dialogs", 10);
+		NBTTagList dialogsList = compound.getTagList("Dialogs", 10);
 		if (dialogsList != null) {
 			for (int ii = 0; ii < dialogsList.tagCount(); ++ii) {
-				final Dialog dialog = new Dialog();
+				Dialog dialog = new Dialog();
 				dialog.category = this;
-				final NBTTagCompound comp = dialogsList.getCompoundTagAt(ii);
+				NBTTagCompound comp = dialogsList.getCompoundTagAt(ii);
 				dialog.readNBT(comp);
 				dialog.id = comp.getInteger("DialogId");
 				dialogs.put(dialog.id, dialog);
@@ -36,11 +36,11 @@ public class DialogCategory {
 		}
 	}
 
-	public NBTTagCompound writeNBT(final NBTTagCompound nbtfactions) {
+	public NBTTagCompound writeNBT(NBTTagCompound nbtfactions) {
 		nbtfactions.setInteger("Slot", id);
 		nbtfactions.setString("Title", title);
-		final NBTTagList dialogs = new NBTTagList();
-		for (final Dialog dialog : this.dialogs.values()) {
+		NBTTagList dialogs = new NBTTagList();
+		for (Dialog dialog : this.dialogs.values()) {
 			dialogs.appendTag(dialog.writeToNBT(new NBTTagCompound()));
 		}
 		nbtfactions.setTag("Dialogs", dialogs);

@@ -12,7 +12,7 @@ public enum EnumCompanionStage {
 	public int animation;
 	public String name;
 
-	private EnumCompanionStage(final int age, final int animation, final String name) {
+	private EnumCompanionStage(int age, int animation, String name) {
 		matureAge = age;
 		this.animation = animation;
 		this.name = name;

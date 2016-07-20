@@ -7,5 +7,5 @@ package noppes.npcs.client.layer;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public interface LayerPreRender {
-	void preRender(final EntityCustomNpc p0);
+	void preRender(EntityCustomNpc p0);
 }

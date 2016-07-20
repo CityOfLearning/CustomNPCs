@@ -18,7 +18,7 @@ import noppes.npcs.quests.QuestLocation;
 public class GuiNpcQuestTypeLocation extends SubGuiInterface implements ITextfieldListener {
 	private QuestLocation quest;
 
-	public GuiNpcQuestTypeLocation(final EntityNPCInterface npc, final Quest q, final GuiScreen parent) {
+	public GuiNpcQuestTypeLocation(EntityNPCInterface npc, Quest q, GuiScreen parent) {
 		this.npc = npc;
 		title = "Quest Location Setup";
 		quest = (QuestLocation) q.questInterface;
@@ -29,7 +29,7 @@ public class GuiNpcQuestTypeLocation extends SubGuiInterface implements ITextfie
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		super.actionPerformed(guibutton);
 		if (guibutton.id == 0) {
 			close();
@@ -52,7 +52,7 @@ public class GuiNpcQuestTypeLocation extends SubGuiInterface implements ITextfie
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
 			quest.location = textfield.getText();
 		}

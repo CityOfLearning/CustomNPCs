@@ -23,7 +23,7 @@ import noppes.npcs.controllers.ChunkController;
 
 public class CmdConfig extends CommandNoppesBase {
 	@SubCommand(desc = "Set how many active chunkloaders you can have", usage = "<number>", permission = 4)
-	public void chunkloaders(final ICommandSender sender, final String[] args) throws CommandException {
+	public void chunkloaders(ICommandSender sender, String[] args) throws CommandException {
 		if (args.length == 0) {
 			sendMessage(sender, "ChunkLoaders: " + ChunkController.instance.size() + "/" + CustomNpcs.ChuckLoaders,
 					new Object[0]);
@@ -34,7 +34,7 @@ public class CmdConfig extends CommandNoppesBase {
 				throw new CommandException("Didnt get a number", new Object[0]);
 			}
 			CustomNpcs.Config.updateConfig();
-			final int size = ChunkController.instance.size();
+			int size = ChunkController.instance.size();
 			if (size > CustomNpcs.ChuckLoaders) {
 				ChunkController.instance.unload(size - CustomNpcs.ChuckLoaders);
 				sendMessage(sender, (size - CustomNpcs.ChuckLoaders) + " chunksloaders unloaded", new Object[0]);
@@ -45,7 +45,7 @@ public class CmdConfig extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Get/Set font", usage = "[type] [size]", permission = 4)
-	public void font(final ICommandSender sender, String[] args) {
+	public void font(ICommandSender sender, String[] args) {
 		if (!(sender instanceof EntityPlayerMP)) {
 			return;
 		}
@@ -65,7 +65,7 @@ public class CmdConfig extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Freezes/Unfreezes npcs", usage = "[true/false]", permission = 4)
-	public void freezenpcs(final ICommandSender sender, final String[] args) {
+	public void freezenpcs(ICommandSender sender, String[] args) {
 		if (args.length == 0) {
 			sendMessage(sender, "Frozen NPCs: " + CustomNpcs.FreezeNPCs, new Object[0]);
 		} else {
@@ -85,15 +85,15 @@ public class CmdConfig extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Disable/Enable the ice melting", usage = "[true/false]", permission = 4)
-	public void icemelts(final ICommandSender sender, final String[] args) {
+	public void icemelts(ICommandSender sender, String[] args) {
 		if (args.length == 0) {
 			sendMessage(sender, "IceMelts: " + CustomNpcs.IceMeltsEnabled, new Object[0]);
 		} else {
 			CustomNpcs.IceMeltsEnabled = Boolean.parseBoolean(args[0]);
 			CustomNpcs.Config.updateConfig();
-			final Set<ResourceLocation> names = Block.blockRegistry.getKeys();
-			for (final ResourceLocation name : names) {
-				final Block block = Block.blockRegistry.getObject(name);
+			Set<ResourceLocation> names = Block.blockRegistry.getKeys();
+			for (ResourceLocation name : names) {
+				Block block = Block.blockRegistry.getObject(name);
 				if (block instanceof BlockIce) {
 					block.setTickRandomly(CustomNpcs.IceMeltsEnabled);
 				}
@@ -103,15 +103,15 @@ public class CmdConfig extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Disable/Enable the natural leaves decay", usage = "[true/false]", permission = 4)
-	public void leavesdecay(final ICommandSender sender, final String[] args) {
+	public void leavesdecay(ICommandSender sender, String[] args) {
 		if (args.length == 0) {
 			sendMessage(sender, "LeavesDecay: " + CustomNpcs.LeavesDecayEnabled, new Object[0]);
 		} else {
 			CustomNpcs.LeavesDecayEnabled = Boolean.parseBoolean(args[0]);
 			CustomNpcs.Config.updateConfig();
-			final Set<ResourceLocation> names = Block.blockRegistry.getKeys();
-			for (final ResourceLocation name : names) {
-				final Block block = Block.blockRegistry.getObject(name);
+			Set<ResourceLocation> names = Block.blockRegistry.getKeys();
+			for (ResourceLocation name : names) {
+				Block block = Block.blockRegistry.getObject(name);
 				if (block instanceof BlockLeavesBase) {
 					block.setTickRandomly(CustomNpcs.LeavesDecayEnabled);
 				}
@@ -121,15 +121,15 @@ public class CmdConfig extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Disable/Enable the vines growing", usage = "[true/false]", permission = 4)
-	public void vinegrowth(final ICommandSender sender, final String[] args) {
+	public void vinegrowth(ICommandSender sender, String[] args) {
 		if (args.length == 0) {
 			sendMessage(sender, "VineGrowth: " + CustomNpcs.VineGrowthEnabled, new Object[0]);
 		} else {
 			CustomNpcs.VineGrowthEnabled = Boolean.parseBoolean(args[0]);
 			CustomNpcs.Config.updateConfig();
-			final Set<ResourceLocation> names = Block.blockRegistry.getKeys();
-			for (final ResourceLocation name : names) {
-				final Block block = Block.blockRegistry.getObject(name);
+			Set<ResourceLocation> names = Block.blockRegistry.getKeys();
+			for (ResourceLocation name : names) {
+				Block block = Block.blockRegistry.getObject(name);
 				if (block instanceof BlockVine) {
 					block.setTickRandomly(CustomNpcs.VineGrowthEnabled);
 				}

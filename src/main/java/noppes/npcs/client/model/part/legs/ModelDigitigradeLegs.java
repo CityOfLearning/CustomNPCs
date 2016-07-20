@@ -19,7 +19,7 @@ public class ModelDigitigradeLegs extends ModelRenderer {
 	private ModelRenderer leftfoot;
 	private ModelBiped base;
 
-	public ModelDigitigradeLegs(final ModelBiped base) {
+	public ModelDigitigradeLegs(ModelBiped base) {
 		super(base);
 		this.base = base;
 		(rightleg = new ModelRenderer(base, 0, 16)).addBox(-2.0f, 0.0f, -2.0f, 4, 6, 4);
@@ -64,14 +64,14 @@ public class ModelDigitigradeLegs extends ModelRenderer {
 		leftleglow.addChild(leftfoot);
 	}
 
-	private void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(final float par1, final float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity) {
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity) {
 		rightleg.rotateAngleX = base.bipedRightLeg.rotateAngleX - 0.3f;
 		leftleg.rotateAngleX = base.bipedLeftLeg.rotateAngleX - 0.3f;
 		rightleg.rotationPointY = base.bipedRightLeg.rotationPointY;
@@ -79,9 +79,9 @@ public class ModelDigitigradeLegs extends ModelRenderer {
 		rightleg.rotationPointZ = base.bipedRightLeg.rotationPointZ;
 		leftleg.rotationPointZ = base.bipedLeftLeg.rotationPointZ;
 		if (!base.isSneak) {
-			final ModelRenderer leftleg = this.leftleg;
+			ModelRenderer leftleg = this.leftleg;
 			--leftleg.rotationPointY;
-			final ModelRenderer rightleg = this.rightleg;
+			ModelRenderer rightleg = this.rightleg;
 			--rightleg.rotationPointY;
 		}
 	}

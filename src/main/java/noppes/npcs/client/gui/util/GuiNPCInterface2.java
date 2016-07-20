@@ -12,11 +12,11 @@ public abstract class GuiNPCInterface2 extends GuiNPCInterface {
 	private ResourceLocation background;
 	private GuiNpcMenu menu;
 
-	public GuiNPCInterface2(final EntityNPCInterface npc) {
+	public GuiNPCInterface2(EntityNPCInterface npc) {
 		this(npc, -1);
 	}
 
-	public GuiNPCInterface2(final EntityNPCInterface npc, final int activeMenu) {
+	public GuiNPCInterface2(EntityNPCInterface npc, int activeMenu) {
 		super(npc);
 		background = new ResourceLocation("customnpcs:textures/gui/menubg.png");
 		xSize = 420;
@@ -31,7 +31,7 @@ public abstract class GuiNPCInterface2 extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		if (drawDefaultBackground) {
 			drawDefaultBackground();
 		}
@@ -40,7 +40,7 @@ public abstract class GuiNPCInterface2 extends GuiNPCInterface {
 		this.drawTexturedModalRect(guiLeft, guiTop, 0, 0, 200, 220);
 		this.drawTexturedModalRect((guiLeft + xSize) - 230, guiTop, 26, 0, 230, 220);
 		menu.drawElements(getFontRenderer(), i, j, mc, f);
-		final boolean bo = drawDefaultBackground;
+		boolean bo = drawDefaultBackground;
 		drawDefaultBackground = false;
 		super.drawScreen(i, j, f);
 		drawDefaultBackground = bo;
@@ -53,7 +53,7 @@ public abstract class GuiNPCInterface2 extends GuiNPCInterface {
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if (!hasSubGui()) {
 			menu.mouseClicked(i, j, k);

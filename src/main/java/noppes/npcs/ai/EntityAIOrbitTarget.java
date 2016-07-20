@@ -29,7 +29,7 @@ public class EntityAIOrbitTarget extends EntityAIBase {
 	private float decayRate;
 	private int tick;
 
-	public EntityAIOrbitTarget(final EntityNPCInterface par1EntityCreature, final double par2, final boolean par5) {
+	public EntityAIOrbitTarget(EntityNPCInterface par1EntityCreature, double par2, boolean par5) {
 		delay = 0;
 		angle = 0.0f;
 		direction = 1;
@@ -59,7 +59,7 @@ public class EntityAIOrbitTarget extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		final int delay = this.delay - 1;
+		int delay = this.delay - 1;
 		this.delay = delay;
 		if (delay > 0) {
 			return false;
@@ -81,12 +81,12 @@ public class EntityAIOrbitTarget extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		canNavigate = true;
-		final Random random = npc.getRNG();
+		Random random = npc.getRNG();
 		direction = ((random.nextInt(10) > 5) ? 1 : -1);
 		decayRate = random.nextFloat() + (distance / 16.0f);
 		targetDistance = npc.getDistanceToEntity(targetEntity);
-		final double d0 = npc.posX - targetEntity.posX;
-		final double d2 = npc.posZ - targetEntity.posZ;
+		double d0 = npc.posX - targetEntity.posX;
+		double d2 = npc.posZ - targetEntity.posZ;
 		angle = (float) ((Math.atan2(d2, d0) * 180.0) / 3.141592653589793);
 		if (npc.getRangedTask() != null) {
 			npc.getRangedTask().navOverride(true);
@@ -97,8 +97,8 @@ public class EntityAIOrbitTarget extends EntityAIBase {
 	public void updateTask() {
 		npc.getLookHelper().setLookPositionWithEntity(targetEntity, 30.0f, 30.0f);
 		if (npc.getNavigator().noPath() && (tick >= 0) && npc.onGround && !npc.isInWater()) {
-			final double d0 = targetDistance * MathHelper.cos((angle / 180.0f) * 3.1415927f);
-			final double d2 = targetDistance * MathHelper.sin((angle / 180.0f) * 3.1415927f);
+			double d0 = targetDistance * MathHelper.cos((angle / 180.0f) * 3.1415927f);
+			double d2 = targetDistance * MathHelper.sin((angle / 180.0f) * 3.1415927f);
 			movePosX = targetEntity.posX + d0;
 			movePosY = targetEntity.getEntityBoundingBox().maxY;
 			movePosZ = targetEntity.posZ + d2;

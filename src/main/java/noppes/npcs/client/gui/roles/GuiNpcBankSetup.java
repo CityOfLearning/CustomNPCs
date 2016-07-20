@@ -24,18 +24,18 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 	private HashMap<String, Integer> data;
 	private RoleBank role;
 
-	public GuiNpcBankSetup(final EntityNPCInterface npc) {
+	public GuiNpcBankSetup(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		role = (RoleBank) npc.roleInterface;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			role.bankId = data.get(scroll.getSelected());
 			save();
@@ -60,7 +60,7 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if ((k == 0) && (scroll != null)) {
 			scroll.mouseClicked(i, j, k);
@@ -73,9 +73,9 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		String name = null;
-		final Bank bank = role.getBank();
+		Bank bank = role.getBank();
 		if (bank != null) {
 			name = bank.name;
 		}
@@ -87,7 +87,7 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		scroll.setSelected(selected);
 	}
 }

@@ -16,7 +16,7 @@ import noppes.npcs.blocks.tiles.TileScriptedDoor;
 public class BlockScriptedDoorWrapper extends BlockWrapper implements IBlockScriptedDoor {
 	private TileScriptedDoor tile;
 
-	public BlockScriptedDoorWrapper(final World world, final Block block, final BlockPos pos) {
+	public BlockScriptedDoorWrapper(World world, Block block, BlockPos pos) {
 		super(world, block, pos);
 		tile = (TileScriptedDoor) super.tile;
 	}
@@ -28,7 +28,7 @@ public class BlockScriptedDoorWrapper extends BlockWrapper implements IBlockScri
 
 	@Override
 	public boolean getOpen() {
-		final IBlockState state = world.getMCWorld().getBlockState(pos);
+		IBlockState state = world.getMCWorld().getBlockState(pos);
 		return state.getValue(BlockDoor.OPEN).equals(true);
 	}
 
@@ -38,7 +38,7 @@ public class BlockScriptedDoorWrapper extends BlockWrapper implements IBlockScri
 	}
 
 	@Override
-	public void setBlockModel(final String name) {
+	public void setBlockModel(String name) {
 		Block b = null;
 		if (name != null) {
 			b = Block.getBlockFromName(name);
@@ -47,7 +47,7 @@ public class BlockScriptedDoorWrapper extends BlockWrapper implements IBlockScri
 	}
 
 	@Override
-	public void setOpen(final boolean open) {
+	public void setOpen(boolean open) {
 		if ((getOpen() == open) || isRemoved()) {
 			return;
 		}

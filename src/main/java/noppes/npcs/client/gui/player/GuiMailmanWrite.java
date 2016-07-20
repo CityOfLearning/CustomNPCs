@@ -40,9 +40,9 @@ import noppes.npcs.controllers.mail.PlayerMail;
 @SideOnly(Side.CLIENT)
 public class GuiMailmanWrite extends GuiContainerNPCInterface
 		implements ITextfieldListener, IGuiError, IGuiClose, GuiYesNoCallback {
-	private static final ResourceLocation bookGuiTextures;
-	private static final ResourceLocation bookWidgets;
-	private static final ResourceLocation bookInventory;
+	private static ResourceLocation bookGuiTextures;
+	private static ResourceLocation bookWidgets;
+	private static ResourceLocation bookInventory;
 	public static GuiScreen parent;
 	public static PlayerMail mail;
 	static {
@@ -66,7 +66,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 
 	private GuiNpcLabel error;
 
-	public GuiMailmanWrite(final ContainerMail container, final boolean canEdit, final boolean canSend) {
+	public GuiMailmanWrite(ContainerMail container, boolean canEdit, boolean canSend) {
 		super(null, container);
 		bookImageWidth = 192;
 		bookImageHeight = 192;
@@ -96,9 +96,9 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton par1GuiButton) {
+	protected void actionPerformed(GuiButton par1GuiButton) {
 		if (par1GuiButton.enabled) {
-			final int id = par1GuiButton.id;
+			int id = par1GuiButton.id;
 			if (id == 0) {
 				GuiMailmanWrite.mail.message.setTag("pages", bookPages);
 				if (canSend) {
@@ -111,8 +111,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 				close();
 			}
 			if (id == 4) {
-				final GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"),
-						0);
+				GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
 				displayGuiScreen(guiyesno);
 			} else if (id == 1) {
 				if (currPage < (bookTotalPages - 1)) {
@@ -145,7 +144,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public void confirmClicked(final boolean flag, final int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (flag) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.MailDelete, GuiMailmanWrite.mail.time,
 					GuiMailmanWrite.mail.sender);
@@ -156,7 +155,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public void drawScreen(final int par1, final int par2, final float par3) {
+	public void drawScreen(int par1, int par2, float par3) {
 		drawWorldBackground(0);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.getTextureManager().bindTexture(GuiMailmanWrite.bookGuiTextures);
@@ -167,7 +166,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 		mc.getTextureManager().bindTexture(GuiMailmanWrite.bookInventory);
 		this.drawTexturedModalRect(guiLeft + 20, guiTop + 173, 0, 82, 180, 55);
 		this.drawTexturedModalRect(guiLeft + 20, guiTop + 228, 0, 140, 180, 28);
-		final String s = I18n.format("book.pageIndicator", new Object[] { currPage + 1, bookTotalPages });
+		String s = I18n.format("book.pageIndicator", new Object[] { currPage + 1, bookTotalPages });
 		String s2 = "";
 		if ((bookPages != null) && (currPage >= 0) && (currPage < bookPages.tagCount())) {
 			s2 = bookPages.getStringTagAt(currPage);
@@ -181,7 +180,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 				s2 = s2 + "" + EnumChatFormatting.GRAY + "_";
 			}
 		}
-		final int l = mc.fontRendererObj.getStringWidth(s);
+		int l = mc.fontRendererObj.getStringWidth(s);
 		mc.fontRendererObj.drawString(s, ((guiLeft - l) + bookImageWidth) - 44, guiTop + 18, 0);
 		mc.fontRendererObj.drawSplitString(s2, guiLeft + 36, guiTop + 18 + 16, 116, 0);
 		drawGradientRect(guiLeft + 175, guiTop + 136, guiLeft + 269, guiTop + 154, -1072689136, -804253680);
@@ -200,16 +199,16 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 		return "";
 	}
 
-	private void func_74159_a(final String par1Str) {
+	private void func_74159_a(String par1Str) {
 		if ((bookPages != null) && (currPage >= 0) && (currPage < bookPages.tagCount())) {
 			bookPages.set(currPage, new NBTTagString(par1Str));
 		}
 	}
 
-	private void func_74160_b(final String par1Str) {
-		final String s1 = func_74158_i();
-		final String s2 = s1 + par1Str;
-		final int i = mc.fontRendererObj.splitStringWidth(s2 + "" + EnumChatFormatting.BLACK + "_", 118);
+	private void func_74160_b(String par1Str) {
+		String s1 = func_74158_i();
+		String s2 = s1 + par1Str;
+		int i = mc.fontRendererObj.splitStringWidth(s2 + "" + EnumChatFormatting.BLACK + "_", 118);
 		if ((i <= 118) && (s2.length() < 256)) {
 			func_74159_a(s2);
 		}
@@ -258,7 +257,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public void keyTyped(final char par1, final int par2) {
+	public void keyTyped(char par1, int par2) {
 		if (!GuiNpcTextField.isActive() && canEdit) {
 			keyTypedInBook(par1, par2);
 		} else {
@@ -266,7 +265,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 		}
 	}
 
-	private void keyTypedInBook(final char par1, final int par2) {
+	private void keyTypedInBook(char par1, int par2) {
 		switch (par1) {
 		case '\u0016': {
 			func_74160_b(GuiScreen.getClipboardString());
@@ -274,7 +273,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 		default: {
 			switch (par2) {
 			case 14: {
-				final String s = func_74158_i();
+				String s = func_74158_i();
 				if (s.length() > 0) {
 					func_74159_a(s.substring(0, s.length() - 1));
 				}
@@ -306,13 +305,13 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public void setClose(final int i, final NBTTagCompound data) {
+	public void setClose(int i, NBTTagCompound data) {
 		player.addChatMessage(
 				new ChatComponentTranslation("mailbox.succes", new Object[] { data.getString("username") }));
 	}
 
 	@Override
-	public void setError(final int i, final NBTTagCompound data) {
+	public void setError(int i, NBTTagCompound data) {
 		if (i == 0) {
 			error.label = StatCollector.translateToLocal("mailbox.errorUsername");
 		}
@@ -322,7 +321,7 @@ public class GuiMailmanWrite extends GuiContainerNPCInterface
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textField) {
+	public void unFocused(GuiNpcTextField textField) {
 		if (textField.id == 0) {
 			username = textField.getText();
 		}

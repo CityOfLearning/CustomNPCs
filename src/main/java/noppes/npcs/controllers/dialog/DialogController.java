@@ -36,7 +36,7 @@ public class DialogController {
 
 	private boolean containsCategoryName(String name) {
 		name = name.toLowerCase();
-		for (final DialogCategory cat : categories.values()) {
+		for (DialogCategory cat : categories.values()) {
 			if (cat.title.toLowerCase().equals(name)) {
 				return true;
 			}
@@ -44,8 +44,8 @@ public class DialogController {
 		return false;
 	}
 
-	private boolean containsDialogName(final DialogCategory category, final Dialog dialog) {
-		for (final Dialog dia : category.dialogs.values()) {
+	private boolean containsDialogName(DialogCategory category, Dialog dialog) {
+		for (Dialog dia : category.dialogs.values()) {
 			if ((dia.id != dialog.id) && dia.title.equalsIgnoreCase(dialog.title)) {
 				return true;
 			}
@@ -58,14 +58,14 @@ public class DialogController {
 	}
 
 	public Map<String, Integer> getScroll() {
-		final Map<String, Integer> map = new HashMap<String, Integer>();
-		for (final DialogCategory category : categories.values()) {
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		for (DialogCategory category : categories.values()) {
 			map.put(category.title, category.id);
 		}
 		return map;
 	}
 
-	public boolean hasDialog(final int dialogId) {
+	public boolean hasDialog(int dialogId) {
 		return dialogs.containsKey(dialogId);
 	}
 
@@ -94,22 +94,22 @@ public class DialogController {
 		} catch (Exception e) {
 			LogWriter.except(e);
 		}
-		final File dir = getDir();
+		File dir = getDir();
 		if (!dir.exists()) {
 			dir.mkdir();
 			loadDefaultDialogs();
 		} else {
-			for (final File file2 : dir.listFiles()) {
+			for (File file2 : dir.listFiles()) {
 				if (file2.isDirectory()) {
-					final DialogCategory category = loadCategoryDir(file2);
-					final Iterator<Map.Entry<Integer, Dialog>> ite = category.dialogs.entrySet().iterator();
+					DialogCategory category = loadCategoryDir(file2);
+					Iterator<Map.Entry<Integer, Dialog>> ite = category.dialogs.entrySet().iterator();
 					while (ite.hasNext()) {
-						final Map.Entry<Integer, Dialog> entry = ite.next();
-						final int id = entry.getKey();
+						Map.Entry<Integer, Dialog> entry = ite.next();
+						int id = entry.getKey();
 						if (id > lastUsedDialogID) {
 							lastUsedDialogID = id;
 						}
-						final Dialog dialog = entry.getValue();
+						Dialog dialog = entry.getValue();
 						if (dialogs.containsKey(id)) {
 							LogWriter.error("Duplicate id " + dialog.id + " from category " + category.title);
 							ite.remove();
@@ -125,20 +125,20 @@ public class DialogController {
 		}
 	}
 
-	private void loadCategoriesOld(final File file) throws Exception {
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
-		final NBTTagList list = nbttagcompound1.getTagList("Data", 10);
+	private void loadCategoriesOld(File file) throws Exception {
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
+		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
 		if (list == null) {
 			return;
 		}
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final DialogCategory category = new DialogCategory();
+			DialogCategory category = new DialogCategory();
 			category.readNBT(list.getCompoundTagAt(i));
 			saveCategory(category);
-			final Iterator<Map.Entry<Integer, Dialog>> ita = category.dialogs.entrySet().iterator();
+			Iterator<Map.Entry<Integer, Dialog>> ita = category.dialogs.entrySet().iterator();
 			while (ita.hasNext()) {
-				final Map.Entry<Integer, Dialog> entry = ita.next();
-				final Dialog dialog = entry.getValue();
+				Map.Entry<Integer, Dialog> entry = ita.next();
+				Dialog dialog = entry.getValue();
 				dialog.id = entry.getKey();
 				dialog.category = category;
 				if (dialogs.containsKey(dialog.id)) {
@@ -150,14 +150,14 @@ public class DialogController {
 		}
 	}
 
-	private DialogCategory loadCategoryDir(final File dir) {
-		final DialogCategory category = new DialogCategory();
+	private DialogCategory loadCategoryDir(File dir) {
+		DialogCategory category = new DialogCategory();
 		category.title = dir.getName();
-		for (final File file : dir.listFiles()) {
+		for (File file : dir.listFiles()) {
 			if (file.isFile()) {
 				if (file.getName().endsWith(".json")) {
 					try {
-						final Dialog dialog = new Dialog();
+						Dialog dialog = new Dialog();
 						dialog.id = Integer.parseInt(file.getName().substring(0, file.getName().length() - 5));
 						dialog.readNBTPartial(NBTJsonUtil.LoadFile(file));
 						category.dialogs.put(dialog.id, dialog);
@@ -172,20 +172,20 @@ public class DialogController {
 	}
 
 	private void loadDefaultDialogs() {
-		final DialogCategory cat = new DialogCategory();
+		DialogCategory cat = new DialogCategory();
 		cat.id = lastUsedCatID++;
 		cat.title = "Villager";
-		final Dialog dia1 = new Dialog();
+		Dialog dia1 = new Dialog();
 		dia1.id = 1;
 		dia1.category = cat;
 		dia1.title = "Start";
 		dia1.text = "Hello {player}, \n\nWelcome to our village. I hope you enjoy your stay";
-		final Dialog dia2 = new Dialog();
+		Dialog dia2 = new Dialog();
 		dia2.id = 2;
 		dia2.category = cat;
 		dia2.title = "Ask about village";
 		dia2.text = "This village has been around for ages. Enjoy your stay here.";
-		final Dialog dia3 = new Dialog();
+		Dialog dia3 = new Dialog();
 		dia3.id = 3;
 		dia3.category = cat;
 		dia3.title = "Who are you";
@@ -193,21 +193,21 @@ public class DialogController {
 		cat.dialogs.put(dia1.id, dia1);
 		cat.dialogs.put(dia2.id, dia2);
 		cat.dialogs.put(dia3.id, dia3);
-		final DialogOption option = new DialogOption();
+		DialogOption option = new DialogOption();
 		option.title = "Tell me something about this village";
 		option.dialogId = 2;
 		option.optionType = EnumOptionType.DIALOG_OPTION;
-		final DialogOption option2 = new DialogOption();
+		DialogOption option2 = new DialogOption();
 		option2.title = "Who are you?";
 		option2.dialogId = 3;
 		option2.optionType = EnumOptionType.DIALOG_OPTION;
-		final DialogOption option3 = new DialogOption();
+		DialogOption option3 = new DialogOption();
 		option3.title = "Goodbye";
 		option3.optionType = EnumOptionType.QUIT_OPTION;
 		dia1.options.put(0, option2);
 		dia1.options.put(1, option);
 		dia1.options.put(2, option3);
-		final DialogOption option4 = new DialogOption();
+		DialogOption option4 = new DialogOption();
 		option4.title = "Back";
 		option4.dialogId = 1;
 		dia2.options.put(1, option4);
@@ -220,24 +220,24 @@ public class DialogController {
 		saveDialog(cat.id, dia3);
 	}
 
-	public void removeCategory(final int category) {
-		final DialogCategory cat = categories.get(category);
+	public void removeCategory(int category) {
+		DialogCategory cat = categories.get(category);
 		if (cat == null) {
 			return;
 		}
-		final File dir = new File(getDir(), cat.title);
+		File dir = new File(getDir(), cat.title);
 		if (!dir.delete()) {
 			return;
 		}
-		for (final int dia : cat.dialogs.keySet()) {
+		for (int dia : cat.dialogs.keySet()) {
 			dialogs.remove(dia);
 		}
 		categories.remove(category);
 	}
 
-	public void removeDialog(final Dialog dialog) {
-		final DialogCategory category = dialog.category;
-		final File file = new File(new File(getDir(), category.title), dialog.id + ".json");
+	public void removeDialog(Dialog dialog) {
+		DialogCategory category = dialog.category;
+		File file = new File(new File(getDir(), category.title), dialog.id + ".json");
 		if (!file.delete()) {
 			return;
 		}
@@ -245,16 +245,16 @@ public class DialogController {
 		dialogs.remove(dialog.id);
 	}
 
-	public void saveCategory(final DialogCategory category) {
+	public void saveCategory(DialogCategory category) {
 		category.title = NoppesStringUtils.cleanFileName(category.title);
 		if (categories.containsKey(category.id)) {
-			final DialogCategory currentCategory = categories.get(category.id);
+			DialogCategory currentCategory = categories.get(category.id);
 			if (!currentCategory.title.equals(category.title)) {
 				while (containsCategoryName(category.title)) {
 					category.title += "_";
 				}
-				final File newdir = new File(getDir(), category.title);
-				final File olddir = new File(getDir(), currentCategory.title);
+				File newdir = new File(getDir(), category.title);
+				File olddir = new File(getDir(), currentCategory.title);
 				if (newdir.exists()) {
 					return;
 				}
@@ -271,7 +271,7 @@ public class DialogController {
 			while (containsCategoryName(category.title)) {
 				category.title += "_";
 			}
-			final File dir = new File(getDir(), category.title);
+			File dir = new File(getDir(), category.title);
 			if (!dir.exists()) {
 				dir.mkdirs();
 			}
@@ -279,8 +279,8 @@ public class DialogController {
 		categories.put(category.id, category);
 	}
 
-	public Dialog saveDialog(final int categoryId, final Dialog dialog) {
-		final DialogCategory category = categories.get(categoryId);
+	public Dialog saveDialog(int categoryId, Dialog dialog) {
+		DialogCategory category = categories.get(categoryId);
 		if (category == null) {
 			return dialog;
 		}
@@ -294,12 +294,12 @@ public class DialogController {
 		}
 		dialogs.put(dialog.id, dialog);
 		category.dialogs.put(dialog.id, dialog);
-		final File dir = new File(getDir(), category.title);
+		File dir = new File(getDir(), category.title);
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		final File file = new File(dir, dialog.id + ".json_new");
-		final File file2 = new File(dir, dialog.id + ".json");
+		File file = new File(dir, dialog.id + ".json_new");
+		File file2 = new File(dir, dialog.id + ".json");
 		try {
 			NBTJsonUtil.SaveFile(file, dialog.writeToNBTPartial(new NBTTagCompound()));
 			if (file2.exists()) {

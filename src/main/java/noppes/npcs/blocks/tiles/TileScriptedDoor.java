@@ -66,7 +66,7 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 		return scriptLanguage;
 	}
 
-	public NBTTagCompound getNBT(final NBTTagCompound compound) {
+	public NBTTagCompound getNBT(NBTTagCompound compound) {
 		compound.setTag("Scripts", NBTTags.NBTScript(scripts));
 		compound.setString("ScriptLanguage", scriptLanguage);
 		compound.setBoolean("ScriptEnabled", enabled);
@@ -90,19 +90,19 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 
 	@Override
 	public String noticeString() {
-		final BlockPos pos = getPos();
+		BlockPos pos = getPos();
 		return Objects.toStringHelper(this).add("x", pos.getX()).add("y", pos.getY()).add("z", pos.getZ()).toString();
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		setNBT(compound);
 		timers.readFromNBT(compound);
 	}
 
 	@Override
-	public void runScript(final EnumScriptType type, final Event event) {
+	public void runScript(EnumScriptType type, Event event) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -110,7 +110,7 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 			hasInited = true;
 			EventHooks.onScriptBlockInit(this);
 		}
-		for (final ScriptContainer script : scripts) {
+		for (ScriptContainer script : scripts) {
 			if (!script.errored) {
 				if (!script.hasCode()) {
 					continue;
@@ -125,16 +125,16 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 	}
 
 	@Override
-	public void setEnabled(final boolean bo) {
+	public void setEnabled(boolean bo) {
 		enabled = bo;
 	}
 
 	@Override
-	public void setLanguage(final String lang) {
+	public void setLanguage(String lang) {
 		scriptLanguage = lang;
 	}
 
-	public void setNBT(final NBTTagCompound compound) {
+	public void setNBT(NBTTagCompound compound) {
 		scripts = NBTTags.GetScript(compound.getTagList("Scripts", 10), this);
 		scriptLanguage = compound.getString("ScriptLanguage");
 		enabled = compound.getBoolean("ScriptEnabled");
@@ -157,7 +157,7 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		getNBT(compound);
 		timers.writeToNBT(compound);

@@ -23,12 +23,12 @@ import noppes.npcs.constants.EnumPacketClient;
 
 public class ContainerTradingBlock extends ContainerNpcInterface {
 	public class SlotTrader extends Slot {
-		public SlotTrader(final IInventory par1iInventory, final int par2, final int par3, final int par4) {
+		public SlotTrader(IInventory par1iInventory, int par2, int par3, int par4) {
 			super(par1iInventory, par2, par3, par4);
 		}
 
 		@Override
-		public boolean isItemValid(final ItemStack par1ItemStack) {
+		public boolean isItemValid(ItemStack par1ItemStack) {
 			if (player.worldObj.isRemote) {
 				return (tile.trader1 != null) && (tile.trader2 != null) && (state < 3);
 			}
@@ -41,7 +41,7 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 			if (player.worldObj.isRemote || !tile.isFull()) {
 				return;
 			}
-			final EntityPlayer other = tile.other(player);
+			EntityPlayer other = tile.other(player);
 			if (other == null) {
 				return;
 			}
@@ -53,13 +53,13 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 		}
 	}
 
-	public static Map<Integer, ItemStack> CompToItem(final NBTTagCompound compound) {
-		final Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
-		final NBTTagList list = compound.getTagList("Items", 10);
+	public static Map<Integer, ItemStack> CompToItem(NBTTagCompound compound) {
+		Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		NBTTagList list = compound.getTagList("Items", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final NBTTagCompound c = list.getCompoundTagAt(i);
-			final int slot = c.getInteger("Slot");
-			final ItemStack item = ItemStack.loadItemStackFromNBT(c);
+			NBTTagCompound c = list.getCompoundTagAt(i);
+			int slot = c.getInteger("Slot");
+			ItemStack item = ItemStack.loadItemStackFromNBT(c);
 			if (item != null) {
 				items.put(slot, item);
 			}
@@ -75,7 +75,7 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 
 	public int state;
 
-	public ContainerTradingBlock(final EntityPlayer player, final BlockPos pos) {
+	public ContainerTradingBlock(EntityPlayer player, BlockPos pos) {
 		super(player);
 		craftMatrix = new InventoryCrafting(this, 9, 1);
 		state = 0;
@@ -93,8 +93,8 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer player) {
-		final TileEntity tile = player.worldObj.getTileEntity(pos);
+	public boolean canInteractWith(EntityPlayer player) {
+		TileEntity tile = player.worldObj.getTileEntity(pos);
 		if ((tile == null) || !(tile instanceof TileTrading)) {
 			return false;
 		}
@@ -103,12 +103,12 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 	}
 
 	public NBTTagCompound itemsToComp() {
-		final NBTTagCompound compound = new NBTTagCompound();
-		final NBTTagList list = new NBTTagList();
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
 		for (int i = 0; i < craftMatrix.getSizeInventory(); ++i) {
-			final ItemStack item = craftMatrix.getStackInSlot(i);
+			ItemStack item = craftMatrix.getStackInSlot(i);
 			if (item != null) {
-				final NBTTagCompound c = new NBTTagCompound();
+				NBTTagCompound c = new NBTTagCompound();
 				c.setInteger("Slot", i);
 				item.writeToNBT(c);
 				list.appendTag(c);
@@ -119,12 +119,12 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 	}
 
 	@Override
-	public void onContainerClosed(final EntityPlayer player) {
+	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);
 		if (player.worldObj.isRemote) {
 			return;
 		}
-		final EntityPlayer other = tile.other(player);
+		EntityPlayer other = tile.other(player);
 		if (tile.trader1 == player) {
 			tile.trader1 = null;
 		} else {
@@ -134,7 +134,7 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 			((ContainerTradingBlock) other.openContainer).setState(4);
 		}
 		for (int i = 0; i < craftMatrix.getSizeInventory(); ++i) {
-			final ItemStack itemstack = craftMatrix.removeStackFromSlot(i);
+			ItemStack itemstack = craftMatrix.removeStackFromSlot(i);
 			if (itemstack != null) {
 				if (!player.inventory.addItemStackToInventory(itemstack)) {
 					player.dropItem(itemstack, true, false);
@@ -143,20 +143,20 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 		}
 	}
 
-	public void setState(final int i) {
+	public void setState(int i) {
 		if (state == i) {
 			return;
 		}
 		state = i;
 		if (!player.worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			compound.setInteger("State", i);
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.GUI_DATA, compound);
 		}
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

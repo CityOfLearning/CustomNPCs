@@ -50,8 +50,8 @@ public class FactionController implements IFactionHandler {
 	}
 
 	@Override
-	public IFaction create(String name, final int color) {
-		final Faction faction = new Faction();
+	public IFaction create(String name, int color) {
+		Faction faction = new Faction();
 		while (hasName(name)) {
 			name += "_";
 		}
@@ -62,11 +62,11 @@ public class FactionController implements IFactionHandler {
 	}
 
 	@Override
-	public IFaction delete(final int id) {
+	public IFaction delete(int id) {
 		if ((id < 0) || (factions.size() <= 1)) {
 			return null;
 		}
-		final Faction faction = factions.remove(id);
+		Faction faction = factions.remove(id);
 		if (faction == null) {
 			return null;
 		}
@@ -75,12 +75,12 @@ public class FactionController implements IFactionHandler {
 		return faction;
 	}
 
-	public Faction getFaction(final int faction) {
+	public Faction getFaction(int faction) {
 		return factions.get(faction);
 	}
 
-	public Faction getFactionFromName(final String factioname) {
-		for (final Map.Entry<Integer, Faction> entryfaction : getInstance().factions.entrySet()) {
+	public Faction getFactionFromName(String factioname) {
+		for (Map.Entry<Integer, Faction> entryfaction : getInstance().factions.entrySet()) {
 			if (entryfaction.getValue().name.equalsIgnoreCase(factioname)) {
 				return entryfaction.getValue();
 			}
@@ -97,9 +97,9 @@ public class FactionController implements IFactionHandler {
 	}
 
 	public String[] getNames() {
-		final String[] names = new String[factions.size()];
+		String[] names = new String[factions.size()];
 		int i = 0;
-		for (final Faction faction : factions.values()) {
+		for (Faction faction : factions.values()) {
 			names[i] = faction.name.toLowerCase();
 			++i;
 		}
@@ -107,14 +107,14 @@ public class FactionController implements IFactionHandler {
 	}
 
 	public NBTTagCompound getNBT() {
-		final NBTTagList list = new NBTTagList();
-		for (final int slot : factions.keySet()) {
-			final Faction faction = factions.get(slot);
-			final NBTTagCompound nbtfactions = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (int slot : factions.keySet()) {
+			Faction faction = factions.get(slot);
+			NBTTagCompound nbtfactions = new NBTTagCompound();
 			faction.writeNBT(nbtfactions);
 			list.appendTag(nbtfactions);
 		}
-		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		nbttagcompound.setInteger("lastID", lastUsedID);
 		nbttagcompound.setTag("NPCFactions", list);
 		return nbttagcompound;
@@ -122,7 +122,7 @@ public class FactionController implements IFactionHandler {
 
 	public int getUnusedId() {
 		if (lastUsedID == 0) {
-			for (final int catid : factions.keySet()) {
+			for (int catid : factions.keySet()) {
 				if (catid > lastUsedID) {
 					lastUsedID = catid;
 				}
@@ -131,11 +131,11 @@ public class FactionController implements IFactionHandler {
 		return ++lastUsedID;
 	}
 
-	public boolean hasName(final String newName) {
+	public boolean hasName(String newName) {
 		if (newName.trim().isEmpty()) {
 			return true;
 		}
-		for (final Faction faction : factions.values()) {
+		for (Faction faction : factions.values()) {
 			if (faction.name.equals(newName)) {
 				return true;
 			}
@@ -149,18 +149,18 @@ public class FactionController implements IFactionHandler {
 	}
 
 	private void loadFactions() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		if (saveDir == null) {
 			return;
 		}
 		try {
-			final File file = new File(saveDir, "factions.dat");
+			File file = new File(saveDir, "factions.dat");
 			if (file.exists()) {
 				loadFactionsFile(file);
 			}
 		} catch (Exception e) {
 			try {
-				final File file2 = new File(saveDir, "factions.dat_old");
+				File file2 = new File(saveDir, "factions.dat_old");
 				if (file2.exists()) {
 					loadFactionsFile(file2);
 				}
@@ -169,15 +169,15 @@ public class FactionController implements IFactionHandler {
 		}
 	}
 
-	public void loadFactions(final DataInputStream stream) throws IOException {
-		final HashMap<Integer, Faction> factions = new HashMap<Integer, Faction>();
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.read(stream);
+	public void loadFactions(DataInputStream stream) throws IOException {
+		HashMap<Integer, Faction> factions = new HashMap<Integer, Faction>();
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.read(stream);
 		lastUsedID = nbttagcompound1.getInteger("lastID");
-		final NBTTagList list = nbttagcompound1.getTagList("NPCFactions", 10);
+		NBTTagList list = nbttagcompound1.getTagList("NPCFactions", 10);
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final NBTTagCompound nbttagcompound2 = list.getCompoundTagAt(i);
-				final Faction faction = new Faction();
+				NBTTagCompound nbttagcompound2 = list.getCompoundTagAt(i);
+				Faction faction = new Faction();
 				faction.readNBT(nbttagcompound2);
 				factions.put(faction.id, faction);
 			}
@@ -185,21 +185,21 @@ public class FactionController implements IFactionHandler {
 		this.factions = factions;
 	}
 
-	private void loadFactionsFile(final File file) throws IOException {
-		final DataInputStream var1 = new DataInputStream(
+	private void loadFactionsFile(File file) throws IOException {
+		DataInputStream var1 = new DataInputStream(
 				new BufferedInputStream(new GZIPInputStream(new FileInputStream(file))));
 		this.loadFactions(var1);
 		var1.close();
 	}
 
-	public void saveFaction(final Faction faction) {
+	public void saveFaction(Faction faction) {
 		if (faction.id < 0) {
 			faction.id = getUnusedId();
 			while (hasName(faction.name)) {
 				faction.name += "_";
 			}
 		} else {
-			final Faction existing = factions.get(faction.id);
+			Faction existing = factions.get(faction.id);
 			if ((existing != null) && !existing.name.equals(faction.name)) {
 				while (hasName(faction.name)) {
 					faction.name += "_";
@@ -213,10 +213,10 @@ public class FactionController implements IFactionHandler {
 
 	public void saveFactions() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final File file = new File(saveDir, "factions.dat_new");
-			final File file2 = new File(saveDir, "factions.dat_old");
-			final File file3 = new File(saveDir, "factions.dat");
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			File file = new File(saveDir, "factions.dat_new");
+			File file2 = new File(saveDir, "factions.dat_old");
+			File file3 = new File(saveDir, "factions.dat");
 			CompressedStreamTools.writeCompressed(getNBT(), new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();

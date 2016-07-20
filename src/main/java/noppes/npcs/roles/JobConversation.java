@@ -32,14 +32,14 @@ public class JobConversation extends JobInterface {
 			return npc.isEmpty() || text.isEmpty();
 		}
 
-		public void readEntityFromNBT(final NBTTagCompound compound) {
+		public void readEntityFromNBT(NBTTagCompound compound) {
 			text = compound.getString("Line");
 			npc = compound.getString("Npc");
 			sound = compound.getString("Sound");
 			delay = compound.getInteger("Delay");
 		}
 
-		public void writeEntityToNBT(final NBTTagCompound compound) {
+		public void writeEntityToNBT(NBTTagCompound compound) {
 			compound.setString("Line", text);
 			compound.setString("Npc", npc);
 			compound.setString("Sound", sound);
@@ -62,7 +62,7 @@ public class JobConversation extends JobInterface {
 
 	public int mode;
 
-	public JobConversation(final EntityNPCInterface npc) {
+	public JobConversation(EntityNPCInterface npc) {
 		super(npc);
 		availability = new Availability();
 		names = new ArrayList<String>();
@@ -80,7 +80,7 @@ public class JobConversation extends JobInterface {
 
 	@Override
 	public boolean aiContinueExecute() {
-		for (final EntityNPCInterface npc : npcs.values()) {
+		for (EntityNPCInterface npc : npcs.values()) {
 			if (npc.isKilled() || npc.isAttacking()) {
 				return false;
 			}
@@ -103,7 +103,7 @@ public class JobConversation extends JobInterface {
 				return false;
 			}
 		}
-		for (final ConversationLine line : lines.values()) {
+		for (ConversationLine line : lines.values()) {
 			if (line != null) {
 				if (line.isEmpty()) {
 					continue;
@@ -129,9 +129,9 @@ public class JobConversation extends JobInterface {
 		}
 		say(nextLine);
 		boolean seenNext = false;
-		final ConversationLine compare = nextLine;
+		ConversationLine compare = nextLine;
 		nextLine = null;
-		for (final ConversationLine line : lines.values()) {
+		for (ConversationLine line : lines.values()) {
 			if (line.isEmpty()) {
 				continue;
 			}
@@ -147,9 +147,9 @@ public class JobConversation extends JobInterface {
 		if (nextLine != null) {
 			ticks = nextLine.delay;
 		} else if (hasQuest()) {
-			final List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+			List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 					npc.getEntityBoundingBox().expand(range, range, range));
-			for (final EntityPlayer player : inRange) {
+			for (EntityPlayer player : inRange) {
 				if (availability.isAvailable(player)) {
 					PlayerQuestController.addActiveQuest(getQuest(), player);
 				}
@@ -157,11 +157,11 @@ public class JobConversation extends JobInterface {
 		}
 	}
 
-	public ConversationLine getLine(final int slot) {
+	public ConversationLine getLine(int slot) {
 		if (lines.containsKey(slot)) {
 			return lines.get(slot);
 		}
-		final ConversationLine line = new ConversationLine();
+		ConversationLine line = new ConversationLine();
 		lines.put(slot, line);
 		return line;
 	}
@@ -183,7 +183,7 @@ public class JobConversation extends JobInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		names.clear();
 		availability.readFromNBT(compound.getCompoundTag("ConversationAvailability"));
 		quest = compound.getInteger("ConversationQuest");
@@ -191,11 +191,11 @@ public class JobConversation extends JobInterface {
 		questTitle = compound.getString("ConversationQuestTitle");
 		range = compound.getInteger("ConversationRange");
 		mode = compound.getInteger("ConversationMode");
-		final NBTTagList nbttaglist = compound.getTagList("ConversationLines", 10);
-		final HashMap<Integer, ConversationLine> map = new HashMap<Integer, ConversationLine>();
+		NBTTagList nbttaglist = compound.getTagList("ConversationLines", 10);
+		HashMap<Integer, ConversationLine> map = new HashMap<Integer, ConversationLine>();
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-			final ConversationLine line = new ConversationLine();
+			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+			ConversationLine line = new ConversationLine();
 			line.readEntityFromNBT(nbttagcompound);
 			if (!line.npc.isEmpty() && !names.contains(line.npc.toLowerCase())) {
 				names.add(line.npc.toLowerCase());
@@ -220,14 +220,14 @@ public class JobConversation extends JobInterface {
 		hasStarted = false;
 	}
 
-	private void say(final ConversationLine line) {
-		final List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+	private void say(ConversationLine line) {
+		List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(range, range, range));
-		final EntityNPCInterface npc = npcs.get(line.npc.toLowerCase());
+		EntityNPCInterface npc = npcs.get(line.npc.toLowerCase());
 		if (npc == null) {
 			return;
 		}
-		for (final EntityPlayer player : inRange) {
+		for (EntityPlayer player : inRange) {
 			if (availability.isAvailable(player)) {
 				npc.say(player, line);
 			}
@@ -240,14 +240,14 @@ public class JobConversation extends JobInterface {
 			return false;
 		}
 		npcs.clear();
-		final List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0));
-		for (final EntityNPCInterface npc : list) {
+		for (EntityNPCInterface npc : list) {
 			if (!npc.isKilled() && !npc.isAttacking() && names.contains(npc.getName().toLowerCase())) {
 				npcs.put(npc.getName().toLowerCase(), npc);
 			}
 		}
-		final boolean bo = names.size() == npcs.size();
+		boolean bo = names.size() == npcs.size();
 		if (!bo) {
 			ticks = 20;
 		}
@@ -255,16 +255,16 @@ public class JobConversation extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("ConversationAvailability", availability.writeToNBT(new NBTTagCompound()));
 		compound.setInteger("ConversationQuest", quest);
 		compound.setInteger("ConversationDelay", generalDelay);
 		compound.setInteger("ConversationRange", range);
 		compound.setInteger("ConversationMode", mode);
-		final NBTTagList nbttaglist = new NBTTagList();
-		for (final int slot : lines.keySet()) {
-			final ConversationLine line = lines.get(slot);
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int slot : lines.keySet()) {
+			ConversationLine line = lines.get(slot);
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("Slot", slot);
 			line.writeEntityToNBT(nbttagcompound);
 			nbttaglist.appendTag(nbttagcompound);

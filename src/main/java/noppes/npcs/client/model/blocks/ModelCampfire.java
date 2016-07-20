@@ -56,14 +56,14 @@ public class ModelCampfire extends ModelBase {
 		setRotation(Log2, 0.2974289f, 3.141593f, 0.0f);
 	}
 
-	public void renderLog(final float f5) {
+	public void renderLog(float f5) {
 		Log3.render(f5);
 		Log1.render(f5);
 		Log4.render(f5);
 		Log2.render(f5);
 	}
 
-	public void renderRock(final float f5) {
+	public void renderRock(float f5) {
 		Rock1.render(f5);
 		Rock2.render(f5);
 		Rock3.render(f5);
@@ -74,7 +74,7 @@ public class ModelCampfire extends ModelBase {
 		Rock8.render(f5);
 	}
 
-	private void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;

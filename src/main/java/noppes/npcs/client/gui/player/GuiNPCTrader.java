@@ -17,12 +17,12 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
 
 public class GuiNPCTrader extends GuiContainerNPCInterface {
-	private final ResourceLocation resource;
-	private final ResourceLocation slot;
+	private ResourceLocation resource;
+	private ResourceLocation slot;
 	private RoleTrader role;
 	private ContainerNPCTrader container;
 
-	public GuiNPCTrader(final EntityNPCInterface npc, final ContainerNPCTrader container) {
+	public GuiNPCTrader(EntityNPCInterface npc, ContainerNPCTrader container) {
 		super(npc, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/trader.png");
 		slot = new ResourceLocation("customnpcs", "textures/gui/slot.png");
@@ -35,7 +35,7 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawWorldBackground(0);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
@@ -43,8 +43,8 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 		GlStateManager.enableRescaleNormal();
 		mc.renderEngine.bindTexture(slot);
 		for (int slot = 0; slot < 18; ++slot) {
-			final int x = guiLeft + ((slot % 3) * 72) + 10;
-			final int y = guiTop + ((slot / 3) * 21) + 6;
+			int x = guiLeft + ((slot % 3) * 72) + 10;
+			int y = guiTop + ((slot / 3) * 21) + 6;
 			ItemStack item = role.inventoryCurrency.items.get(slot);
 			ItemStack item2 = role.inventoryCurrency.items.get(slot + 18);
 			if (item == null) {
@@ -52,12 +52,12 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 				item2 = null;
 			}
 			if (NoppesUtilPlayer.compareItems(item, item2, false, false)) {
-				final ItemStack copy;
+				ItemStack copy;
 				item = (copy = item.copy());
 				copy.stackSize += item2.stackSize;
 				item2 = null;
 			}
-			final ItemStack sold = role.inventorySold.items.get(slot);
+			ItemStack sold = role.inventorySold.items.get(slot);
 			GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 			mc.renderEngine.bindTexture(this.slot);
 			this.drawTexturedModalRect(x + 42, y, 0, 0, 18, 18);
@@ -78,10 +78,10 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		for (int slot = 0; slot < 18; ++slot) {
-			final int x = ((slot % 3) * 72) + 10;
-			final int y = ((slot / 3) * 21) + 6;
+			int x = ((slot % 3) * 72) + 10;
+			int y = ((slot / 3) * 21) + 6;
 			ItemStack item = role.inventoryCurrency.items.get(slot);
 			ItemStack item2 = role.inventoryCurrency.items.get(slot + 18);
 			if (item == null) {
@@ -89,12 +89,12 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 				item2 = null;
 			}
 			if (NoppesUtilPlayer.compareItems(item, item2, role.ignoreDamage, role.ignoreNBT)) {
-				final ItemStack copy;
+				ItemStack copy;
 				item = (copy = item.copy());
 				copy.stackSize += item2.stackSize;
 				item2 = null;
 			}
-			final ItemStack sold = role.inventorySold.items.get(slot);
+			ItemStack sold = role.inventorySold.items.get(slot);
 			if (item != null) {
 				if (sold != null) {
 					if (isPointInRegion(x + 43, y + 1, 16, 16, par1, par2)) {
@@ -108,12 +108,12 @@ public class GuiNPCTrader extends GuiContainerNPCInterface {
 									role.ignoreNBT)) {
 								drawGradientRect(x - 1, y, x + 17, y + 18, 1886851088, 1886851088);
 							}
-							final String title = StatCollector.translateToLocal("trader.insufficient");
+							String title = StatCollector.translateToLocal("trader.insufficient");
 							fontRendererObj.drawString(title, (xSize - fontRendererObj.getStringWidth(title)) / 2, 131,
 									14483456);
 							GlStateManager.translate(0.0f, 0.0f, -300.0f);
 						} else {
-							final String title = StatCollector.translateToLocal("trader.sufficient");
+							String title = StatCollector.translateToLocal("trader.sufficient");
 							fontRendererObj.drawString(title, (xSize - fontRendererObj.getStringWidth(title)) / 2, 131,
 									56576);
 						}

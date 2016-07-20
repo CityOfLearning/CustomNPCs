@@ -11,7 +11,7 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIRangedAttack extends EntityAIBase {
-	private final EntityNPCInterface npc;
+	private EntityNPCInterface npc;
 	private EntityLivingBase attackTarget;
 	private int rangedAttackTime;
 	private int field_75318_f;
@@ -19,7 +19,7 @@ public class EntityAIRangedAttack extends EntityAIBase {
 	private boolean hasFired;
 	private boolean navOverride;
 
-	public EntityAIRangedAttack(final IRangedAttackMob par1IRangedAttackMob) {
+	public EntityAIRangedAttack(IRangedAttackMob par1IRangedAttackMob) {
 		rangedAttackTime = 0;
 		field_75318_f = 0;
 		field_70846_g = 0;
@@ -37,7 +37,7 @@ public class EntityAIRangedAttack extends EntityAIBase {
 		return hasFired;
 	}
 
-	public void navOverride(final boolean nav) {
+	public void navOverride(boolean nav) {
 		navOverride = nav;
 		setMutexBits(navOverride ? AiMutex.PATHING : (AiMutex.LOOK + AiMutex.PASSIVE));
 	}
@@ -64,16 +64,15 @@ public class EntityAIRangedAttack extends EntityAIBase {
 	@Override
 	public void updateTask() {
 		npc.getLookHelper().setLookPositionWithEntity(attackTarget, 30.0f, 30.0f);
-		final double var1 = npc.getDistanceSq(attackTarget.posX, attackTarget.getEntityBoundingBox().minY,
-				attackTarget.posZ);
-		final float range = npc.stats.ranged.getRange() * npc.stats.ranged.getRange();
+		double var1 = npc.getDistanceSq(attackTarget.posX, attackTarget.getEntityBoundingBox().minY, attackTarget.posZ);
+		float range = npc.stats.ranged.getRange() * npc.stats.ranged.getRange();
 		if (!navOverride && npc.ai.directLOS) {
 			if (npc.getEntitySenses().canSee(attackTarget)) {
 				++field_75318_f;
 			} else {
 				field_75318_f = 0;
 			}
-			final int v = (npc.ai.tacticalVariant == 0) ? 20 : 5;
+			int v = (npc.ai.tacticalVariant == 0) ? 20 : 5;
 			if ((var1 <= range) && (field_75318_f >= v)) {
 				npc.getNavigator().clearPathEntity();
 			} else {

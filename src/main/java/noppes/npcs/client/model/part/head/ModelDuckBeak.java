@@ -17,7 +17,7 @@ public class ModelDuckBeak extends ModelRenderer {
 	ModelRenderer Middle;
 	ModelRenderer Top;
 
-	public ModelDuckBeak(final ModelBiped base) {
+	public ModelDuckBeak(ModelBiped base) {
 		super(base);
 		(Top3 = new ModelRenderer(base, 14, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 1, 3);
 		Top3.setRotationPoint(-1.0f, -2.0f, -5.0f);
@@ -47,7 +47,7 @@ public class ModelDuckBeak extends ModelRenderer {
 	}
 
 	@Override
-	public void render(final float f) {
+	public void render(float f) {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0.0f, 0.0f, -1.0f * f);
 		GlStateManager.scale(0.82f, 0.82f, 0.7f);
@@ -55,7 +55,7 @@ public class ModelDuckBeak extends ModelRenderer {
 		GlStateManager.popMatrix();
 	}
 
-	private void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;

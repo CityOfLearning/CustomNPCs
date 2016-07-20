@@ -25,7 +25,7 @@ public class JobHealer extends JobInterface {
 	public HashMap<Integer, Integer> effects;
 	private List<EntityLivingBase> affected;
 
-	public JobHealer(final EntityNPCInterface npc) {
+	public JobHealer(EntityNPCInterface npc) {
 		super(npc);
 		healTicks = 0;
 		range = 8;
@@ -54,7 +54,7 @@ public class JobHealer extends JobInterface {
 
 	@Override
 	public void aiStartExecuting() {
-		for (final EntityLivingBase entity : affected) {
+		for (EntityLivingBase entity : affected) {
 			boolean isEnemy = false;
 			if (entity instanceof EntityPlayer) {
 				isEnemy = npc.faction.isAggressiveToPlayer((EntityPlayer) entity);
@@ -67,7 +67,7 @@ public class JobHealer extends JobInterface {
 				if ((type != 2) && isEnemy && (type != 1) && !isEnemy && (type != 0)) {
 					continue;
 				}
-				for (final Integer potionEffect : effects.keySet()) {
+				for (Integer potionEffect : effects.keySet()) {
 					entity.addPotionEffect(new PotionEffect(potionEffect, 100, effects.get(potionEffect)));
 				}
 			}
@@ -76,7 +76,7 @@ public class JobHealer extends JobInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		range = nbttagcompound.getInteger("HealerRange");
 		type = nbttagcompound.getByte("HealerType");
 		effects = NBTTags.getIntegerIntegerMap(nbttagcompound.getTagList("BeaconEffects", 10));
@@ -84,7 +84,7 @@ public class JobHealer extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("HealerRange", range);
 		nbttagcompound.setByte("HealerType", type);
 		nbttagcompound.setTag("BeaconEffects", NBTTags.nbtIntegerIntegerMap(effects));

@@ -23,7 +23,7 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 	private JobPuppet job;
 	private JobPuppet.PartConfig part;
 
-	public GuiNpcPuppet(final GuiScreen parent, final EntityCustomNpc npc) {
+	public GuiNpcPuppet(GuiScreen parent, EntityCustomNpc npc) {
 		super(npc);
 		type = 6;
 		this.parent = parent;
@@ -34,7 +34,7 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (btn.id < 7) {
 			type = btn.id;
@@ -43,7 +43,7 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 		if (!(btn instanceof GuiNpcButton)) {
 			return;
 		}
-		final GuiNpcButton button = (GuiNpcButton) btn;
+		GuiNpcButton button = (GuiNpcButton) btn;
 		if (btn.id == 29) {
 			part.disabled = (button.getValue() == 1);
 		}
@@ -68,12 +68,12 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		this.drawNpc(320, 200);
 		super.drawScreen(i, j, f);
 	}
 
-	private void drawSlider(int y, final JobPuppet.PartConfig config) {
+	private void drawSlider(int y, JobPuppet.PartConfig config) {
 		part = config;
 		addButton(new GuiNpcButton(29, guiLeft + 100, y, 80, 20, new String[] { "gui.enabled", "gui.disabled" },
 				config.disabled ? 1 : 0));
@@ -94,19 +94,19 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 		int y = guiTop;
 		addLabel(new GuiNpcLabel(26, "gui.settings", guiLeft + 55, y + 5, 16777215));
 		if (type == 6) {
-			final int i = 30;
-			final int j = guiLeft + 120;
+			int i = 30;
+			int j = guiLeft + 120;
 			y += 14;
 			addButton(
 					new GuiNpcButton(i, j, y, 60, 20, new String[] { "gui.yes", "gui.no" }, job.whileStanding ? 0 : 1));
 			addLabel(new GuiNpcLabel(30, "puppet.standing", guiLeft + 30, y + 5, 16777215));
-			final int k = 31;
-			final int l = guiLeft + 120;
+			int k = 31;
+			int l = guiLeft + 120;
 			y += 22;
 			addButton(new GuiNpcButton(k, l, y, 60, 20, new String[] { "gui.yes", "gui.no" }, job.whileMoving ? 0 : 1));
 			addLabel(new GuiNpcLabel(31, "puppet.walking", guiLeft + 30, y + 5, 16777215));
-			final int m = 32;
-			final int j2 = guiLeft + 120;
+			int m = 32;
+			int j2 = guiLeft + 120;
 			y += 22;
 			addButton(new GuiNpcButton(m, j2, y, 60, 20, new String[] { "gui.yes", "gui.no" },
 					job.whileAttacking ? 0 : 1));
@@ -168,8 +168,8 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider slider) {
-		final int percent = (int) (slider.sliderValue * 360.0f);
+	public void mouseDragged(GuiNpcSlider slider) {
+		int percent = (int) (slider.sliderValue * 360.0f);
 		slider.setString(percent + "%");
 		if (slider.id == 10) {
 			part.rotationX = slider.sliderValue - 0.5f;
@@ -184,11 +184,11 @@ public class GuiNpcPuppet extends GuiNPCInterface implements ISliderListener {
 	}
 
 	@Override
-	public void mousePressed(final GuiNpcSlider slider) {
+	public void mousePressed(GuiNpcSlider slider) {
 	}
 
 	@Override
-	public void mouseReleased(final GuiNpcSlider slider) {
+	public void mouseReleased(GuiNpcSlider slider) {
 	}
 
 	@Override

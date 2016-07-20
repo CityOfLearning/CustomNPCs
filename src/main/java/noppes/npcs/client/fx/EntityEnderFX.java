@@ -17,22 +17,22 @@ import noppes.npcs.client.ClientProxy;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class EntityEnderFX extends EntityPortalFX {
-	private static final ResourceLocation resource;
+	private static ResourceLocation resource;
 	static {
 		resource = new ResourceLocation("textures/particle/particles.png");
 	}
 	private float portalParticleScale;
 	private int particleNumber;
 	private EntityCustomNpc npc;
-	private final ResourceLocation location;
+	private ResourceLocation location;
 	private boolean move;
 	private float startX;
 	private float startY;
 
 	private float startZ;
 
-	public EntityEnderFX(final EntityCustomNpc npc, final double par2, final double par4, final double par6,
-			final double par8, final double par10, final double par12, final ModelPartData data) {
+	public EntityEnderFX(EntityCustomNpc npc, double par2, double par4, double par6, double par8, double par10,
+			double par12, ModelPartData data) {
 		super(npc.worldObj, par2, par4, par6, par8, par10, par12);
 		move = true;
 		startX = 0.0f;
@@ -40,7 +40,7 @@ public class EntityEnderFX extends EntityPortalFX {
 		startZ = 0.0f;
 		this.npc = npc;
 		particleNumber = npc.getRNG().nextInt(2);
-		final float n = (rand.nextFloat() * 0.2f) + 0.5f;
+		float n = (rand.nextFloat() * 0.2f) + 0.5f;
 		particleScale = n;
 		portalParticleScale = n;
 		particleRed = ((data.color >> 16) & 0xFF) / 255.0f;
@@ -65,14 +65,14 @@ public class EntityEnderFX extends EntityPortalFX {
 	}
 
 	@Override
-	public void renderParticle(final WorldRenderer renderer, final Entity entity, final float par2, final float par3,
-			final float par4, final float par5, final float par6, final float par7) {
+	public void renderParticle(WorldRenderer renderer, Entity entity, float par2, float par3, float par4, float par5,
+			float par6, float par7) {
 		if (move) {
 			startX = (float) (npc.prevPosX + ((npc.posX - npc.prevPosX) * par2));
 			startY = (float) (npc.prevPosY + ((npc.posY - npc.prevPosY) * par2));
 			startZ = (float) (npc.prevPosZ + ((npc.posZ - npc.prevPosZ) * par2));
 		}
-		final Tessellator tessellator = Tessellator.getInstance();
+		Tessellator tessellator = Tessellator.getInstance();
 		tessellator.draw();
 		float scale = (particleAge + par2) / particleMaxAge;
 		scale = 1.0f - scale;
@@ -80,14 +80,14 @@ public class EntityEnderFX extends EntityPortalFX {
 		scale = 1.0f - scale;
 		particleScale = portalParticleScale * scale;
 		ClientProxy.bindTexture(location);
-		final float f = 0.875f;
-		final float f2 = f + 0.125f;
-		final float f3 = 0.75f - (particleNumber * 0.25f);
-		final float f4 = f3 + 0.25f;
-		final float f5 = 0.1f * particleScale;
-		final float f6 = (float) (((prevPosX + ((posX - prevPosX) * par2)) - EntityFX.interpPosX) + startX);
-		final float f7 = (float) (((prevPosY + ((posY - prevPosY) * par2)) - EntityFX.interpPosY) + startY);
-		final float f8 = (float) (((prevPosZ + ((posZ - prevPosZ) * par2)) - EntityFX.interpPosZ) + startZ);
+		float f = 0.875f;
+		float f2 = f + 0.125f;
+		float f3 = 0.75f - (particleNumber * 0.25f);
+		float f4 = f3 + 0.25f;
+		float f5 = 0.1f * particleScale;
+		float f6 = (float) (((prevPosX + ((posX - prevPosX) * par2)) - EntityFX.interpPosX) + startX);
+		float f7 = (float) (((prevPosY + ((posY - prevPosY) * par2)) - EntityFX.interpPosY) + startY);
+		float f8 = (float) (((prevPosZ + ((posZ - prevPosZ) * par2)) - EntityFX.interpPosZ) + startZ);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		renderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
 		renderer.pos(f6 - (par3 * f5) - (par6 * f5), f7 - (par4 * f5), f8 - (par5 * f5) - (par7 * f5)).tex(f2, f4)

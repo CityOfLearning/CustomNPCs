@@ -29,7 +29,7 @@ public class SpawnData extends WeightedRandom.Item {
 		type = 0;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		id = compound.getInteger("SpawnId");
 		name = compound.getString("SpawnName");
 		itemWeight = compound.getInteger("SpawnWeight");
@@ -41,7 +41,7 @@ public class SpawnData extends WeightedRandom.Item {
 		type = compound.getInteger("SpawnType");
 	}
 
-	public NBTTagCompound writeNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeNBT(NBTTagCompound compound) {
 		compound.setInteger("SpawnId", id);
 		compound.setString("SpawnName", name);
 		compound.setInteger("SpawnWeight", itemWeight);

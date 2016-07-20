@@ -13,15 +13,15 @@ import noppes.npcs.client.model.blocks.ModelMailboxUS;
 import noppes.npcs.client.model.blocks.ModelMailboxWow;
 
 public class BlockMailboxRenderer extends TileEntitySpecialRenderer {
-	private static final ResourceLocation text1;
-	private static final ResourceLocation text2;
+	private static ResourceLocation text1;
+	private static ResourceLocation text2;
 	static {
 		text1 = new ResourceLocation("customnpcs", "textures/models/mailbox1.png");
 		text2 = new ResourceLocation("customnpcs", "textures/models/mailbox2.png");
 	}
-	private final ModelMailboxUS model;
+	private ModelMailboxUS model;
 
-	private final ModelMailboxWow model2;
+	private ModelMailboxWow model2;
 
 	public BlockMailboxRenderer() {
 		model = new ModelMailboxUS();
@@ -29,8 +29,8 @@ public class BlockMailboxRenderer extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double var2, final double var4, final double var6,
-			final float var8, final int blockDamage) {
+	public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8,
+			int blockDamage) {
 		int meta = 0;
 		int type = var1.getBlockMetadata();
 		if (var1.getPos() != BlockPos.ORIGIN) {

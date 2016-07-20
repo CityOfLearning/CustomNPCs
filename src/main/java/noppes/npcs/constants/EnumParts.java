@@ -10,8 +10,8 @@ public enum EnumParts {
 					"breasts"), PARTICLES("particles"), ARM_LEFT(
 							"armleft"), ARM_RIGHT("armright"), LEG_LEFT("legleft"), LEG_RIGHT("legright");
 
-	public static EnumParts FromName(final String name) {
-		for (final EnumParts e : values()) {
+	public static EnumParts FromName(String name) {
+		for (EnumParts e : values()) {
 			if (e.name.equals(name)) {
 				return e;
 			}
@@ -23,7 +23,7 @@ public enum EnumParts {
 
 	public int patterns;
 
-	private EnumParts(final String name) {
+	private EnumParts(String name) {
 		patterns = 1;
 		this.name = name;
 	}

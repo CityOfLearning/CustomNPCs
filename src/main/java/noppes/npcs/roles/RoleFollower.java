@@ -37,7 +37,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	public boolean refuseSoulStone;
 	public EntityPlayer owner;
 
-	public RoleFollower(final EntityNPCInterface npc) {
+	public RoleFollower(EntityNPCInterface npc) {
 		super(npc);
 		isFollowing = true;
 		dialogHire = StatCollector.translateToLocal("follower.hireText") + " {days} "
@@ -52,7 +52,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public void addDays(final int days) {
+	public void addDays(int days) {
 		daysHired = days + getDays();
 		hiredTime = npc.worldObj.getTotalWorldTime();
 	}
@@ -61,7 +61,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	public boolean aiShouldExecute() {
 		owner = getOwner();
 		if (!infiniteDays && (owner != null) && (getDays() <= 0)) {
-			final RoleEvent.FollowerFinishedEvent event = new RoleEvent.FollowerFinishedEvent(owner, npc.wrappedNPC);
+			RoleEvent.FollowerFinishedEvent event = new RoleEvent.FollowerFinishedEvent(owner, npc.wrappedNPC);
 			EventHooks.onNPCRole(npc, event);
 			owner.addChatMessage(new ChatComponentTranslation(NoppesStringUtils.formatText(dialogFarewell, owner, npc),
 					new Object[0]));
@@ -87,13 +87,13 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 		if (daysHired <= 0) {
 			return 0;
 		}
-		final int days = (int) ((npc.worldObj.getTotalWorldTime() - hiredTime) / 24000L);
+		int days = (int) ((npc.worldObj.getTotalWorldTime() - hiredTime) / 24000L);
 		return daysHired - days;
 	}
 
 	@Override
 	public IPlayer getFollowing() {
-		final EntityPlayer owner = getOwner();
+		EntityPlayer owner = getOwner();
 		if (owner != null) {
 			return (IPlayer) NpcAPI.Instance().getIEntity(owner);
 		}
@@ -115,7 +115,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 			return null;
 		}
 		try {
-			final UUID uuid = UUID.fromString(ownerUUID);
+			UUID uuid = UUID.fromString(ownerUUID);
 			if (uuid != null) {
 				return npc.worldObj.getPlayerEntityByUUID(uuid);
 			}
@@ -129,7 +129,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		if ((ownerUUID == null) || ownerUUID.isEmpty()) {
 			npc.say(player, npc.advanced.getInteractLine());
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerFollowerHire, npc);
@@ -152,7 +152,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		ownerUUID = nbttagcompound.getString("MercenaryOwner");
 		daysHired = nbttagcompound.getInteger("MercenaryDaysHired");
 		hiredTime = nbttagcompound.getLong("MercenaryHiredTime");
@@ -167,7 +167,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public void setFollowing(final IPlayer player) {
+	public void setFollowing(IPlayer player) {
 		if (player == null) {
 			setOwner(null);
 		} else {
@@ -176,17 +176,17 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public void setGuiDisabled(final boolean disabled) {
+	public void setGuiDisabled(boolean disabled) {
 		disableGui = disabled;
 	}
 
 	@Override
-	public void setInfinite(final boolean infinite) {
+	public void setInfinite(boolean infinite) {
 		infiniteDays = infinite;
 	}
 
-	public void setOwner(final EntityPlayer player) {
-		final UUID id = player.getUniqueID();
+	public void setOwner(EntityPlayer player) {
+		UUID id = player.getUniqueID();
 		if ((ownerUUID == null) || (id == null) || !ownerUUID.equals(id)) {
 			killed();
 		}
@@ -194,7 +194,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("MercenaryDaysHired", daysHired);
 		nbttagcompound.setLong("MercenaryHiredTime", hiredTime);
 		nbttagcompound.setString("MercenaryDialogHired", dialogHire);

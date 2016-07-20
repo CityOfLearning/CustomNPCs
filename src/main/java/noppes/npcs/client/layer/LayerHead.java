@@ -31,7 +31,7 @@ public class LayerHead extends LayerInterface {
 	private ModelRenderer ears;
 	private ModelRenderer bunnyEars;
 
-	public LayerHead(final RenderLiving render) {
+	public LayerHead(RenderLiving render) {
 		super(render);
 		createParts();
 	}
@@ -45,7 +45,7 @@ public class LayerHead extends LayerInterface {
 		large.setRotationPoint(-2.0f, -3.0f, -7.0f);
 		(bunnySnout = new ModelRenderer(model, 24, 0)).addBox(1.0f, 1.0f, 0.0f, 4, 2, 1);
 		bunnySnout.setRotationPoint(-3.0f, -4.0f, -5.0f);
-		final ModelRenderer tooth = new ModelRenderer(model, 24, 3);
+		ModelRenderer tooth = new ModelRenderer(model, 24, 3);
 		tooth.addBox(2.0f, 3.0f, 0.0f, 2, 1, 1);
 		tooth.setRotationPoint(0.0f, 0.0f, 0.0f);
 		bunnySnout.addChild(tooth);
@@ -62,43 +62,42 @@ public class LayerHead extends LayerInterface {
 		antennasBack = new ModelAntennasBack(model);
 		antennasFront = new ModelAntennasFront(model);
 		ears = new ModelRenderer(model);
-		final Model2DRenderer right = new Model2DRenderer(model, 56.0f, 0.0f, 8, 4);
+		Model2DRenderer right = new Model2DRenderer(model, 56.0f, 0.0f, 8, 4);
 		right.setRotationPoint(-7.44f, -7.3f, -0.0f);
 		right.setScale(0.234f, 0.234f);
 		right.setThickness(1.16f);
 		ears.addChild(right);
-		final Model2DRenderer left = new Model2DRenderer(model, 56.0f, 0.0f, 8, 4);
+		Model2DRenderer left = new Model2DRenderer(model, 56.0f, 0.0f, 8, 4);
 		left.setRotationPoint(7.44f, -7.3f, 1.15f);
 		left.setScale(0.234f, 0.234f);
 		setRotation(left, 0.0f, 3.1415927f, 0.0f);
 		left.setThickness(1.16f);
 		ears.addChild(left);
-		final Model2DRenderer right2 = new Model2DRenderer(model, 56.0f, 4.0f, 8, 4);
+		Model2DRenderer right2 = new Model2DRenderer(model, 56.0f, 4.0f, 8, 4);
 		right2.setRotationPoint(-7.44f, -7.3f, 1.14f);
 		right2.setScale(0.234f, 0.234f);
 		right2.setThickness(1.16f);
 		ears.addChild(right2);
-		final Model2DRenderer left2 = new Model2DRenderer(model, 56.0f, 4.0f, 8, 4);
+		Model2DRenderer left2 = new Model2DRenderer(model, 56.0f, 4.0f, 8, 4);
 		left2.setRotationPoint(7.44f, -7.3f, 2.31f);
 		left2.setScale(0.234f, 0.234f);
 		setRotation(left2, 0.0f, 3.1415927f, 0.0f);
 		left2.setThickness(1.16f);
 		ears.addChild(left2);
 		bunnyEars = new ModelRenderer(model);
-		final ModelRenderer earleft = new ModelRenderer(model, 56, 0);
+		ModelRenderer earleft = new ModelRenderer(model, 56, 0);
 		earleft.mirror = true;
 		earleft.addBox(-1.466667f, -4.0f, 0.0f, 3, 7, 1);
 		earleft.setRotationPoint(2.533333f, -11.0f, 0.0f);
 		bunnyEars.addChild(earleft);
-		final ModelRenderer earright = new ModelRenderer(model, 56, 0);
+		ModelRenderer earright = new ModelRenderer(model, 56, 0);
 		earright.addBox(-1.5f, -4.0f, 0.0f, 3, 7, 1);
 		earright.setRotationPoint(-2.466667f, -11.0f, 0.0f);
 		bunnyEars.addChild(earright);
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
 		model.bipedHead.postRender(0.0625f);
 		renderSnout(par7);
 		renderBeard(par7);
@@ -108,8 +107,8 @@ public class LayerHead extends LayerInterface {
 		renderEars(par7);
 	}
 
-	private void renderBeard(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.BEARD);
+	private void renderBeard(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.BEARD);
 		if (data == null) {
 			return;
 		}
@@ -117,8 +116,8 @@ public class LayerHead extends LayerInterface {
 		beard.render(par7);
 	}
 
-	private void renderEars(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.EARS);
+	private void renderEars(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.EARS);
 		if (data == null) {
 			return;
 		}
@@ -130,8 +129,8 @@ public class LayerHead extends LayerInterface {
 		}
 	}
 
-	private void renderHair(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.HAIR);
+	private void renderHair(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.HAIR);
 		if (data == null) {
 			return;
 		}
@@ -139,8 +138,8 @@ public class LayerHead extends LayerInterface {
 		hair.render(par7);
 	}
 
-	private void renderHorns(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.HORNS);
+	private void renderHorns(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.HORNS);
 		if (data == null) {
 			return;
 		}
@@ -156,8 +155,8 @@ public class LayerHead extends LayerInterface {
 		}
 	}
 
-	private void renderMohawk(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.MOHAWK);
+	private void renderMohawk(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.MOHAWK);
 		if (data == null) {
 			return;
 		}
@@ -165,8 +164,8 @@ public class LayerHead extends LayerInterface {
 		mohawk.render(par7);
 	}
 
-	private void renderSnout(final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.SNOUT);
+	private void renderSnout(float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.SNOUT);
 		if (data == null) {
 			return;
 		}
@@ -185,9 +184,8 @@ public class LayerHead extends LayerInterface {
 	}
 
 	@Override
-	public void rotate(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
-		final ModelRenderer head = model.bipedHead;
+	public void rotate(float par2, float par3, float par4, float par5, float par6, float par7) {
+		ModelRenderer head = model.bipedHead;
 		if (head.rotateAngleX < 0.0f) {
 			beard.rotateAngleX = 0.0f;
 			hair.rotateAngleX = -head.rotateAngleX * 1.2f;

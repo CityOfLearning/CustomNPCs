@@ -18,7 +18,7 @@ public class ClientCloneController extends ServerCloneController {
 
 	@Override
 	public File getDir() {
-		final File dir = new File(CustomNpcs.Dir, "clones");
+		File dir = new File(CustomNpcs.Dir, "clones");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}

@@ -12,7 +12,7 @@ import noppes.npcs.ModelPartData;
 import noppes.npcs.constants.EnumParts;
 
 public class Preset {
-	public static void FillDefault(final HashMap<String, Preset> presets) {
+	public static void FillDefault(HashMap<String, Preset> presets) {
 		ModelData data = new ModelData();
 		Preset preset = new Preset();
 		preset.name = "Elf Male";
@@ -156,7 +156,7 @@ public class Preset {
 		preset.data = data;
 		data.getPartConfig(EnumParts.LEG_LEFT).setScale(0.65f, 0.75f);
 		data.getPartConfig(EnumParts.ARM_LEFT).setScale(0.5f, 1.45f);
-		final ModelPartData part = data.getOrCreatePart(EnumParts.PARTICLES);
+		ModelPartData part = data.getOrCreatePart(EnumParts.PARTICLES);
 		part.type = 1;
 		part.color = 16711680;
 		presets.put("enderchibi", preset);
@@ -170,13 +170,13 @@ public class Preset {
 		data = new ModelData();
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		name = compound.getString("PresetName");
 		data.readFromNBT(compound.getCompoundTag("PresetData"));
 	}
 
 	public NBTTagCompound writeToNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setString("PresetName", name);
 		compound.setTag("PresetData", data.writeToNBT());
 		return compound;

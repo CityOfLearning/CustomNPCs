@@ -23,7 +23,7 @@ public class DataTimers implements ITimers {
 		private int timerTicks;
 		private int ticks;
 
-		public Timer(final int id, final int ticks, final boolean repeat) {
+		public Timer(int id, int ticks, boolean repeat) {
 			this.ticks = 0;
 			this.id = id;
 			this.repeat = repeat;
@@ -40,7 +40,7 @@ public class DataTimers implements ITimers {
 			} else {
 				stop(id);
 			}
-			final Object ob = parent;
+			Object ob = parent;
 			if (ob instanceof EntityNPCInterface) {
 				EventHooks.onNPCTimer((EntityNPCInterface) ob, id);
 			} else {
@@ -53,22 +53,22 @@ public class DataTimers implements ITimers {
 
 	private Map<Integer, Timer> timers;
 
-	public DataTimers(final Object parent) {
+	public DataTimers(Object parent) {
 		timers = new HashMap<Integer, Timer>();
 		this.parent = parent;
 	}
 
 	@Override
-	public boolean has(final int id) {
+	public boolean has(int id) {
 		return timers.containsKey(id);
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
-		final Map<Integer, Timer> timers = new HashMap<Integer, Timer>();
-		final NBTTagList list = compound.getTagList("NpcsTimers", 10);
+	public void readFromNBT(NBTTagCompound compound) {
+		Map<Integer, Timer> timers = new HashMap<Integer, Timer>();
+		NBTTagList list = compound.getTagList("NpcsTimers", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final NBTTagCompound c = list.getCompoundTagAt(i);
-			final Timer t = new Timer(c.getInteger("ID"), c.getInteger("TimerTicks"), c.getBoolean("Repeat"));
+			NBTTagCompound c = list.getCompoundTagAt(i);
+			Timer t = new Timer(c.getInteger("ID"), c.getInteger("TimerTicks"), c.getBoolean("Repeat"));
 			t.ticks = c.getInteger("Ticks");
 			timers.put(t.id, t);
 		}
@@ -76,7 +76,7 @@ public class DataTimers implements ITimers {
 	}
 
 	@Override
-	public void start(final int id, final int ticks, final boolean repeat) {
+	public void start(int id, int ticks, boolean repeat) {
 		if (timers.containsKey(id)) {
 			throw new CustomNPCsException("There is already a timer with id: " + id, new Object[0]);
 		}
@@ -84,20 +84,20 @@ public class DataTimers implements ITimers {
 	}
 
 	@Override
-	public boolean stop(final int id) {
+	public boolean stop(int id) {
 		return timers.remove(id) != null;
 	}
 
 	public void update() {
-		for (final Timer timer : new ArrayList<Timer>(timers.values())) {
+		for (Timer timer : new ArrayList<Timer>(timers.values())) {
 			timer.update();
 		}
 	}
 
-	public void writeToNBT(final NBTTagCompound compound) {
-		final NBTTagList list = new NBTTagList();
-		for (final Timer timer : timers.values()) {
-			final NBTTagCompound c = new NBTTagCompound();
+	public void writeToNBT(NBTTagCompound compound) {
+		NBTTagList list = new NBTTagList();
+		for (Timer timer : timers.values()) {
+			NBTTagCompound c = new NBTTagCompound();
 			c.setInteger("ID", timer.id);
 			c.setInteger("TimerTicks", timer.id);
 			c.setBoolean("Repeat", timer.repeat);

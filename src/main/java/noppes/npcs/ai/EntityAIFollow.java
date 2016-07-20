@@ -14,7 +14,7 @@ public class EntityAIFollow extends EntityAIBase {
 	private EntityLivingBase owner;
 	public int updateTick;
 
-	public EntityAIFollow(final EntityNPCInterface npc) {
+	public EntityAIFollow(EntityNPCInterface npc) {
 		updateTick = 0;
 		this.npc = npc;
 		setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
@@ -54,7 +54,7 @@ public class EntityAIFollow extends EntityAIBase {
 		}
 		updateTick = 0;
 		npc.getLookHelper().setLookPositionWithEntity(owner, 10.0f, npc.getVerticalFaceSpeed());
-		final double distance = npc.getDistanceSqToEntity(owner);
+		double distance = npc.getDistanceSqToEntity(owner);
 		double speed = 1.0 + (distance / 150.0);
 		if (speed > 3.0) {
 			speed = 3.0;

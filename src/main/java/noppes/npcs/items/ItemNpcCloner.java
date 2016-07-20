@@ -25,20 +25,20 @@ public class ItemNpcCloner extends Item implements IPermission {
 	}
 
 	@Override
-	public int getColorFromItemStack(final ItemStack par1ItemStack, final int par2) {
+	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
 		return 9127187;
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return (e == EnumPacketServer.CloneList) || (e == EnumPacketServer.SpawnMob)
 				|| (e == EnumPacketServer.MobSpawner) || (e == EnumPacketServer.ClonePreSave)
 				|| (e == EnumPacketServer.CloneRemove) || (e == EnumPacketServer.CloneSave);
 	}
 
 	@Override
-	public boolean onItemUse(final ItemStack par1ItemStack, final EntityPlayer par2EntityPlayer, final World par3World,
-			final BlockPos pos, final EnumFacing par7, final float par8, final float par9, final float par10) {
+	public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, BlockPos pos,
+			EnumFacing par7, float par8, float par9, float par10) {
 		if (!par3World.isRemote) {
 			NoppesUtilServer.sendOpenGui(par2EntityPlayer, EnumGuiType.MobSpawner, null, pos.getX(), pos.getY(),
 					pos.getZ());
@@ -47,7 +47,7 @@ public class ItemNpcCloner extends Item implements IPermission {
 	}
 
 	@Override
-	public Item setUnlocalizedName(final String name) {
+	public Item setUnlocalizedName(String name) {
 		GameRegistry.registerItem(this, name);
 		CustomNpcs.proxy.registerItem(this, name, 0);
 		return super.setUnlocalizedName(name);

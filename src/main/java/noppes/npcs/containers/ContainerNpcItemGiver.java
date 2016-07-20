@@ -14,7 +14,7 @@ import noppes.npcs.roles.JobItemGiver;
 public class ContainerNpcItemGiver extends Container {
 	private JobItemGiver role;
 
-	public ContainerNpcItemGiver(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNpcItemGiver(EntityNPCInterface npc, EntityPlayer player) {
 		role = (JobItemGiver) npc.jobInterface;
 		for (int j1 = 0; j1 < 9; ++j1) {
 			addSlotToContainer(new Slot(role.inventory, j1, 6 + (j1 * 18), 90));
@@ -30,12 +30,12 @@ public class ContainerNpcItemGiver extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

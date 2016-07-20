@@ -29,8 +29,8 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (!data.containsKey(scroll.getSelected())) {
 			return;
 		}
@@ -41,7 +41,7 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 	}
 
 	@Override
-	public void confirmClicked(final boolean flag, final int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (flag) {
 			Client.sendData(EnumPacketServer.RemoteDelete, data.get(scroll.getSelected()));
 		}
@@ -57,8 +57,8 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 		scroll.guiLeft = guiLeft + 4;
 		scroll.guiTop = guiTop + 4;
 		addScroll(scroll);
-		final String title = StatCollector.translateToLocal("Dimensions");
-		final int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
+		String title = StatCollector.translateToLocal("Dimensions");
+		int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
 		addLabel(new GuiNpcLabel(0, title, guiLeft + x, guiTop - 8));
 		addButton(new GuiNpcButton(4, guiLeft + 170, guiTop + 72, 82, 20, "remote.tp"));
 	}
@@ -69,14 +69,14 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.mouseClicked(i, j, k);
 	}
@@ -86,13 +86,13 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		scroll.setList(list);
 		this.data = data;
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		getButton(3).setDisplayText(selected);
 	}
 }

@@ -10,7 +10,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class EntityAIJob extends EntityAIBase {
 	private EntityNPCInterface npc;
 
-	public EntityAIJob(final EntityNPCInterface npc) {
+	public EntityAIJob(EntityNPCInterface npc) {
 		this.npc = npc;
 	}
 

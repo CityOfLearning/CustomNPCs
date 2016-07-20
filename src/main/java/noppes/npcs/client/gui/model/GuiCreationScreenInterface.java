@@ -45,7 +45,7 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 
 	protected NBTTagCompound original;
 
-	public GuiCreationScreenInterface(final EntityNPCInterface npc) {
+	public GuiCreationScreenInterface(EntityNPCInterface npc) {
 		super(npc);
 		saving = false;
 		hasSaving = true;
@@ -62,7 +62,7 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (btn.id == 1) {
 			openGui(new GuiCreationEntities(npc));
@@ -90,7 +90,7 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 	}
 
 	@Override
-	public void drawScreen(final int x, final int y, final float f) {
+	public void drawScreen(int x, int y, float f) {
 		super.drawScreen(x, y, f);
 		entity = playerdata.getEntity(npc);
 		EntityLivingBase entity = this.entity;
@@ -111,7 +111,7 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 		if (entity == null) {
 			addButton(new GuiNpcButton(2, guiLeft, guiTop + 23, 60, 20, "gui.parts"));
 		} else if (!(entity instanceof EntityNPCInterface)) {
-			final GuiCreationExtra gui = new GuiCreationExtra(npc);
+			GuiCreationExtra gui = new GuiCreationExtra(npc);
 			gui.playerdata = playerdata;
 			if (!gui.getData(entity).isEmpty()) {
 				addButton(new GuiNpcButton(2, guiLeft, guiTop + 23, 60, 20, "gui.extra"));
@@ -141,14 +141,14 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		if (!saving) {
 			super.mouseClicked(i, j, k);
 		}
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider slider) {
+	public void mouseDragged(GuiNpcSlider slider) {
 		if (slider.id == 500) {
 			GuiCreationScreenInterface.rotation = slider.sliderValue;
 			slider.setString("" + (int) (GuiCreationScreenInterface.rotation * 360.0f));
@@ -156,11 +156,11 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 	}
 
 	@Override
-	public void mousePressed(final GuiNpcSlider slider) {
+	public void mousePressed(GuiNpcSlider slider) {
 	}
 
 	@Override
-	public void mouseReleased(final GuiNpcSlider slider) {
+	public void mouseReleased(GuiNpcSlider slider) {
 	}
 
 	@Override
@@ -168,19 +168,19 @@ public abstract class GuiCreationScreenInterface extends GuiNPCInterface impleme
 		Keyboard.enableRepeatEvents(false);
 	}
 
-	public void openGui(final GuiScreen gui) {
+	public void openGui(GuiScreen gui) {
 		mc.displayGuiScreen(gui);
 	}
 
 	@Override
 	public void save() {
-		final NBTTagCompound newCompound = playerdata.writeToNBT();
+		NBTTagCompound newCompound = playerdata.writeToNBT();
 		Client.sendData(EnumPacketServer.MainmenuDisplaySave, npc.display.writeToNBT(new NBTTagCompound()));
 		Client.sendData(EnumPacketServer.ModelDataSave, newCompound);
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		initGui();
 	}
 }

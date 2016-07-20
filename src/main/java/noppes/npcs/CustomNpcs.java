@@ -147,7 +147,7 @@ public class CustomNpcs {
 
 	public static File getWorldSaveDirectory() {
 		try {
-			final MinecraftServer server = MinecraftServer.getServer();
+			MinecraftServer server = MinecraftServer.getServer();
 			if (server == null) {
 				return null;
 			}
@@ -155,7 +155,7 @@ public class CustomNpcs {
 			if (!server.isDedicatedServer()) {
 				saves = new File(Minecraft.getMinecraft().mcDataDir, "saves");
 			}
-			final File savedir = new File(new File(saves, server.getFolderName()), "customnpcs");
+			File savedir = new File(new File(saves, server.getFolderName()), "customnpcs");
 			if (!savedir.exists()) {
 				savedir.mkdir();
 			}
@@ -170,17 +170,17 @@ public class CustomNpcs {
 	}
 
 	@Mod.EventHandler
-	public void load(final FMLInitializationEvent ev) {
+	public void load(FMLInitializationEvent ev) {
 		ForgeModContainer.fullBoundingBoxLadders = true;
 		new RecipeController();
 		CustomNpcs.proxy.postload();
 	}
 
 	@Mod.EventHandler
-	public void load(final FMLPreInitializationEvent ev) {
+	public void load(FMLPreInitializationEvent ev) {
 		CustomNpcs.Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCs");
 		CustomNpcs.ChannelPlayer = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCsPlayer");
-		final MinecraftServer server = MinecraftServer.getServer();
+		MinecraftServer server = MinecraftServer.getServer();
 		String dir = "";
 		if (server != null) {
 			dir = new File(".").getAbsolutePath();
@@ -223,8 +223,8 @@ public class CustomNpcs {
 		registerNpc(EntityCustomNpc.class, "CustomNpc");
 		registerNpc(EntityNPC64x32.class, "CustomNpc64x32");
 		registerNewEntity(EntityChairMount.class, "CustomNpcChairMount", 64, 10, false);
-		final ArrayList<BiomeGenBase> list = new ArrayList<BiomeGenBase>();
-		for (final BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+		ArrayList<BiomeGenBase> list = new ArrayList<BiomeGenBase>();
+		for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 			if (base != null) {
 				list.add(base);
 			}
@@ -233,23 +233,22 @@ public class CustomNpcs {
 		CustomNpcs.proxy.load();
 	}
 
-	private void registerNewEntity(final Class<? extends Entity> cl, final String name, final int range,
-			final int update, final boolean velocity) {
+	private void registerNewEntity(Class<? extends Entity> cl, String name, int range, int update, boolean velocity) {
 		EntityRegistry.registerModEntity(cl, name, CustomNpcs.NewEntityStartId++, this, range, update, velocity);
 	}
 
-	private void registerNpc(final Class<? extends Entity> cl, final String name) {
+	private void registerNpc(Class<? extends Entity> cl, String name) {
 		EntityList.stringToClassMapping.put(name, cl);
 		EntityRegistry.registerModEntity(cl, name, CustomNpcs.NewEntityStartId++, this, 64, 3, true);
 	}
 
 	@Mod.EventHandler
-	public void serverstart(final FMLServerStartingEvent event) {
+	public void serverstart(FMLServerStartingEvent event) {
 		event.registerServerCommand(CustomNpcs.NoppesCommand);
 	}
 
 	@Mod.EventHandler
-	public void setAboutToStart(final FMLServerAboutToStartEvent event) {
+	public void setAboutToStart(FMLServerAboutToStartEvent event) {
 		ChunkController.instance.clear();
 		new QuestController();
 		new PlayerDataController();
@@ -261,9 +260,9 @@ public class CustomNpcs {
 		new MassBlockController();
 		ScriptController.Instance.loadStoredData();
 		ScriptController.HasStart = false;
-		final Set<ResourceLocation> names = Block.blockRegistry.getKeys();
-		for (final ResourceLocation name : names) {
-			final Block block = Block.blockRegistry.getObject(name);
+		Set<ResourceLocation> names = Block.blockRegistry.getKeys();
+		for (ResourceLocation name : names) {
+			Block block = Block.blockRegistry.getObject(name);
 			if (block instanceof BlockLeavesBase) {
 				block.setTickRandomly(CustomNpcs.LeavesDecayEnabled);
 			}
@@ -277,7 +276,7 @@ public class CustomNpcs {
 	}
 
 	@Mod.EventHandler
-	public void started(final FMLServerStartedEvent event) {
+	public void started(FMLServerStartedEvent event) {
 		RecipeController.instance.load();
 		new DialogController();
 		new BankController();
@@ -287,7 +286,7 @@ public class CustomNpcs {
 	}
 
 	@Mod.EventHandler
-	public void stopped(final FMLServerStoppedEvent event) {
+	public void stopped(FMLServerStoppedEvent event) {
 		ServerCloneController.Instance = null;
 	}
 }

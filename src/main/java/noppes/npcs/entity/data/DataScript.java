@@ -27,7 +27,7 @@ public class DataScript implements IScriptHandler {
 	private boolean enabled;
 	public boolean hasInited;
 
-	public DataScript(final EntityNPCInterface npc) {
+	public DataScript(EntityNPCInterface npc) {
 		scripts = new ArrayList<ScriptContainer>();
 		scriptLanguage = "ECMAScript";
 		enabled = false;
@@ -61,18 +61,18 @@ public class DataScript implements IScriptHandler {
 
 	@Override
 	public String noticeString() {
-		final BlockPos pos = npc.getPosition();
+		BlockPos pos = npc.getPosition();
 		return Objects.toStringHelper(npc).add("x", pos.getX()).add("y", pos.getY()).add("z", pos.getZ()).toString();
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		scripts = NBTTags.GetScript(compound.getTagList("Scripts", 10), this);
 		scriptLanguage = compound.getString("ScriptLanguage");
 		enabled = compound.getBoolean("ScriptEnabled");
 	}
 
 	@Override
-	public void runScript(final EnumScriptType type, final Event event) {
+	public void runScript(EnumScriptType type, Event event) {
 		if (!isEnabled()) {
 			return;
 		}
@@ -80,7 +80,7 @@ public class DataScript implements IScriptHandler {
 			hasInited = true;
 			EventHooks.onNPCInit(npc);
 		}
-		for (final ScriptContainer script : scripts) {
+		for (ScriptContainer script : scripts) {
 			if (!script.errored) {
 				if (!script.hasCode()) {
 					continue;
@@ -95,16 +95,16 @@ public class DataScript implements IScriptHandler {
 	}
 
 	@Override
-	public void setEnabled(final boolean bo) {
+	public void setEnabled(boolean bo) {
 		enabled = bo;
 	}
 
 	@Override
-	public void setLanguage(final String lang) {
+	public void setLanguage(String lang) {
 		scriptLanguage = lang;
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("Scripts", NBTTags.NBTScript(scripts));
 		compound.setString("ScriptLanguage", scriptLanguage);
 		compound.setBoolean("ScriptEnabled", enabled);

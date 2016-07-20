@@ -15,13 +15,13 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class RoleBank extends RoleInterface {
 	public int bankId;
 
-	public RoleBank(final EntityNPCInterface npc) {
+	public RoleBank(EntityNPCInterface npc) {
 		super(npc);
 		bankId = -1;
 	}
 
 	public Bank getBank() {
-		final Bank bank = BankController.getInstance().banks.get(bankId);
+		Bank bank = BankController.getInstance().banks.get(bankId);
 		if (bank != null) {
 			return bank;
 		}
@@ -29,19 +29,19 @@ public class RoleBank extends RoleInterface {
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
-		final BankData data = PlayerDataController.instance.getBankData(player, bankId).getBankOrDefault(bankId);
+	public void interact(EntityPlayer player) {
+		BankData data = PlayerDataController.instance.getBankData(player, bankId).getBankOrDefault(bankId);
 		data.openBankGui(player, npc, bankId, 0);
 		npc.say(player, npc.advanced.getInteractLine());
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		bankId = nbttagcompound.getInteger("RoleBankID");
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("RoleBankID", bankId);
 		return nbttagcompound;
 	}

@@ -21,12 +21,12 @@ public class GuiNPCSoundsMenu extends GuiNPCInterface2 implements ITextfieldList
 	private GuiNpcSoundSelection gui;
 	private GuiNpcTextField selectedField;
 
-	public GuiNPCSoundsMenu(final EntityNPCInterface npc) {
+	public GuiNPCSoundsMenu(EntityNPCInterface npc) {
 		super(npc);
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton button) {
+	public void buttonEvent(GuiButton button) {
 		if (button.id == 6) {
 			npc.advanced.disablePitch = (((GuiNpcButton) button).getValue() == 0);
 		} else {
@@ -75,7 +75,7 @@ public class GuiNPCSoundsMenu extends GuiNPCInterface2 implements ITextfieldList
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
 			npc.advanced.setSound(0, textfield.getText());
 		}

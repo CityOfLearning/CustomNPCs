@@ -17,7 +17,7 @@ public class SubGuiNpcProjectiles extends SubGuiInterface implements ITextfieldL
 	private String[] potionNames;
 	private String[] trailNames;
 
-	public SubGuiNpcProjectiles(final DataRanged stats) {
+	public SubGuiNpcProjectiles(DataRanged stats) {
 		potionNames = new String[] { "gui.none", "tile.fire.name", "potion.poison", "potion.hunger", "potion.weakness",
 				"potion.moveSlowdown", "potion.confusion", "potion.blindness", "potion.wither" };
 		trailNames = new String[] { "gui.none", "Smoke", "Portal", "Redstone", "Lightning", "LargeSmoke", "Magic",
@@ -30,8 +30,8 @@ public class SubGuiNpcProjectiles extends SubGuiInterface implements ITextfieldL
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			stats.setHasGravity(button.getValue() == 1);
 			initGui();
@@ -133,7 +133,7 @@ public class SubGuiNpcProjectiles extends SubGuiInterface implements ITextfieldL
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 1) {
 			stats.setStrength(textfield.getInteger());
 		} else if (textfield.id == 2) {

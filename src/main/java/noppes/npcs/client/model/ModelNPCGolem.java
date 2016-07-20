@@ -12,19 +12,19 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class ModelNPCGolem extends ModelBipedAlt {
 	private ModelRenderer bipedLowerBody;
 
-	public ModelNPCGolem(final float scale) {
+	public ModelNPCGolem(float scale) {
 		super(scale);
 		init(0.0f, 0.0f);
 	}
 
-	private float func_78172_a(final float par1, final float par2) {
+	private float func_78172_a(float par1, float par2) {
 		return (Math.abs((par1 % par2) - (par2 * 0.5f)) - (par2 * 0.25f)) / (par2 * 0.25f);
 	}
 
-	public void init(final float f, final float f1) {
-		final short short1 = 128;
-		final short short2 = 128;
-		final float f2 = -7.0f;
+	public void init(float f, float f1) {
+		short short1 = 128;
+		short short2 = 128;
+		float f2 = -7.0f;
 		(bipedHead = new ModelRenderer(this).setTextureSize(short1, short2)).setRotationPoint(0.0f, f2, -2.0f);
 		bipedHead.setTextureOffset(0, 0).addBox(-4.0f, -12.0f, -5.5f, 8, 10, 8, f);
 		bipedHead.setTextureOffset(24, 0).addBox(-1.0f, -5.0f, -7.5f, 2, 4, 2, f);
@@ -55,16 +55,15 @@ public class ModelNPCGolem extends ModelBipedAlt {
 	}
 
 	@Override
-	public void render(final Entity par1Entity, final float par2, final float par3, final float par4, final float par5,
-			final float par6, final float par7) {
+	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 		super.render(par1Entity, par2, par3, par4, par5, par6, par7);
 		bipedLowerBody.render(par7);
 	}
 
 	@Override
-	public void setRotationAngles(final float par1, final float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity) {
-		final EntityNPCInterface npc = (EntityNPCInterface) entity;
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity) {
+		EntityNPCInterface npc = (EntityNPCInterface) entity;
 		isRiding = npc.isRiding();
 		if (isSneak && ((npc.currentAnimation == 7) || (npc.currentAnimation == 2))) {
 			isSneak = false;
@@ -77,8 +76,8 @@ public class ModelNPCGolem extends ModelBipedAlt {
 		bipedRightLeg.rotateAngleX = 1.5f * func_78172_a(par1, 13.0f) * par2;
 		bipedLeftLeg.rotateAngleY = 0.0f;
 		bipedRightLeg.rotateAngleY = 0.0f;
-		final float f6 = MathHelper.sin(swingProgress * 3.1415927f);
-		final float f7 = MathHelper.sin((16.0f - ((1.0f - swingProgress) * (1.0f - swingProgress))) * 3.1415927f);
+		float f6 = MathHelper.sin(swingProgress * 3.1415927f);
+		float f7 = MathHelper.sin((16.0f - ((1.0f - swingProgress) * (1.0f - swingProgress))) * 3.1415927f);
 		if (swingProgress > 0.0) {
 			bipedRightArm.rotateAngleZ = 0.0f;
 			bipedLeftArm.rotateAngleZ = 0.0f;
@@ -88,20 +87,20 @@ public class ModelNPCGolem extends ModelBipedAlt {
 			bipedLeftArm.rotateAngleX = 0.0f;
 			bipedRightArm.rotateAngleX = -1.5707964f;
 			bipedLeftArm.rotateAngleX = -1.5707964f;
-			final ModelRenderer bipedRightArm = this.bipedRightArm;
+			ModelRenderer bipedRightArm = this.bipedRightArm;
 			bipedRightArm.rotateAngleX -= (f6 * 1.2f) - (f7 * 0.4f);
-			final ModelRenderer bipedLeftArm = this.bipedLeftArm;
+			ModelRenderer bipedLeftArm = this.bipedLeftArm;
 			bipedLeftArm.rotateAngleX -= (f6 * 1.2f) - (f7 * 0.4f);
 		} else if (aimedBow) {
-			final float f8 = 0.0f;
-			final float f9 = 0.0f;
+			float f8 = 0.0f;
+			float f9 = 0.0f;
 			bipedRightArm.rotateAngleZ = 0.0f;
 			bipedRightArm.rotateAngleX = -1.5707964f + bipedHead.rotateAngleX;
-			final ModelRenderer bipedRightArm2 = bipedRightArm;
+			ModelRenderer bipedRightArm2 = bipedRightArm;
 			bipedRightArm2.rotateAngleX -= (f8 * 1.2f) - (f9 * 0.4f);
-			final ModelRenderer bipedRightArm3 = bipedRightArm;
+			ModelRenderer bipedRightArm3 = bipedRightArm;
 			bipedRightArm3.rotateAngleZ += (MathHelper.cos(par3 * 0.09f) * 0.05f) + 0.05f;
-			final ModelRenderer bipedRightArm4 = bipedRightArm;
+			ModelRenderer bipedRightArm4 = bipedRightArm;
 			bipedRightArm4.rotateAngleX += MathHelper.sin(par3 * 0.067f) * 0.05f;
 			bipedLeftArm.rotateAngleX = (-0.2f - (1.5f * func_78172_a(par1, 13.0f))) * par2;
 			bipedBody.rotateAngleY = -(0.1f - (f8 * 0.6f)) + bipedHead.rotateAngleY;
@@ -117,9 +116,9 @@ public class ModelNPCGolem extends ModelBipedAlt {
 			bipedLeftArm.rotateAngleZ = 0.0f;
 		}
 		if (isRiding) {
-			final ModelRenderer bipedRightArm5 = bipedRightArm;
+			ModelRenderer bipedRightArm5 = bipedRightArm;
 			bipedRightArm5.rotateAngleX -= 0.62831855f;
-			final ModelRenderer bipedLeftArm2 = bipedLeftArm;
+			ModelRenderer bipedLeftArm2 = bipedLeftArm;
 			bipedLeftArm2.rotateAngleX -= 0.62831855f;
 			bipedLeftLeg.rotateAngleX = -1.2566371f;
 			bipedRightLeg.rotateAngleX = -1.2566371f;

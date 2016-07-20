@@ -12,18 +12,17 @@ import net.minecraft.world.World;
 
 public class ItemMusicViolin extends ItemMusic {
 	@Override
-	public EnumAction getItemUseAction(final ItemStack par1ItemStack) {
+	public EnumAction getItemUseAction(ItemStack par1ItemStack) {
 		return EnumAction.BOW;
 	}
 
 	@Override
-	public int getMaxItemUseDuration(final ItemStack par1ItemStack) {
+	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
 		return 72000;
 	}
 
 	@Override
-	public ItemStack onItemRightClick(final ItemStack par1ItemStack, final World par2World,
-			final EntityPlayer par3EntityPlayer) {
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
 		return super.onItemRightClick(par1ItemStack, par2World, par3EntityPlayer);
 	}

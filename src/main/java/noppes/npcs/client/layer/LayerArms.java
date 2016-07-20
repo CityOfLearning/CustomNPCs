@@ -14,7 +14,7 @@ public class LayerArms extends LayerInterface {
 	private Model2DRenderer lClaw;
 	private Model2DRenderer rClaw;
 
-	public LayerArms(final RenderNPCInterface render) {
+	public LayerArms(RenderNPCInterface render) {
 		super(render);
 		createParts();
 	}
@@ -29,9 +29,8 @@ public class LayerArms extends LayerInterface {
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
-		final ModelPartData data = playerdata.getPartData(EnumParts.CLAWS);
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
+		ModelPartData data = playerdata.getPartData(EnumParts.CLAWS);
 		if (data == null) {
 			return;
 		}
@@ -51,7 +50,6 @@ public class LayerArms extends LayerInterface {
 	}
 
 	@Override
-	public void rotate(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void rotate(float par2, float par3, float par4, float par5, float par6, float par7) {
 	}
 }

@@ -8,7 +8,7 @@ import net.minecraft.entity.passive.EntityAnimal;
 import noppes.npcs.api.entity.IAnimal;
 
 public class AnimalWrapper<T extends EntityAnimal> extends EntityLivingWrapper<T> implements IAnimal {
-	public AnimalWrapper(final T entity) {
+	public AnimalWrapper(T entity) {
 		super(entity);
 	}
 
@@ -18,7 +18,7 @@ public class AnimalWrapper<T extends EntityAnimal> extends EntityLivingWrapper<T
 	}
 
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return (type == 4) || super.typeOf(type);
 	}
 }

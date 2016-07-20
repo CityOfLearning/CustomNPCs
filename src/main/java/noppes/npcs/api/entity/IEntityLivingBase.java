@@ -8,13 +8,13 @@ import net.minecraft.entity.EntityLivingBase;
 import noppes.npcs.api.IItemStack;
 
 public interface IEntityLivingBase<T extends EntityLivingBase> extends IEntity<T> {
-	void addPotionEffect(final int p0, final int p1, final int p2, final boolean p3);
+	void addPotionEffect(int p0, int p1, int p2, boolean p3);
 
-	boolean canSeeEntity(final IEntity p0);
+	boolean canSeeEntity(IEntity p0);
 
 	void clearPotionEffects();
 
-	IItemStack getArmor(final int p0);
+	IItemStack getArmor(int p0);
 
 	IEntityLivingBase getAttackTarget();
 
@@ -29,21 +29,21 @@ public interface IEntityLivingBase<T extends EntityLivingBase> extends IEntity<T
 	@Override
 	T getMCEntity();
 
-	int getPotionEffect(final int p0);
+	int getPotionEffect(int p0);
 
 	boolean isAttacking();
 
 	boolean isChild();
 
-	void setArmor(final int p0, final IItemStack p1);
+	void setArmor(int p0, IItemStack p1);
 
-	void setAttackTarget(final IEntityLivingBase p0);
+	void setAttackTarget(IEntityLivingBase p0);
 
-	void setHealth(final float p0);
+	void setHealth(float p0);
 
-	void setHeldItem(final IItemStack p0);
+	void setHeldItem(IItemStack p0);
 
-	void setMaxHealth(final float p0);
+	void setMaxHealth(float p0);
 
 	void swingHand();
 }

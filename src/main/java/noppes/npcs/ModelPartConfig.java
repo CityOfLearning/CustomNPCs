@@ -26,7 +26,7 @@ public class ModelPartConfig {
 		notShared = false;
 	}
 
-	public float checkValue(final float given, final float min, final float max) {
+	public float checkValue(float given, float min, float max) {
 		if (given < min) {
 			return min;
 		}
@@ -36,7 +36,7 @@ public class ModelPartConfig {
 		return given;
 	}
 
-	public void copyValues(final ModelPartConfig config) {
+	public void copyValues(ModelPartConfig config) {
 		scaleX = config.scaleX;
 		scaleY = config.scaleY;
 		scaleZ = config.scaleZ;
@@ -57,7 +57,7 @@ public class ModelPartConfig {
 		return scaleZ;
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		scaleX = checkValue(compound.getFloat("ScaleX"), 0.5f, 1.5f);
 		scaleY = checkValue(compound.getFloat("ScaleY"), 0.5f, 1.5f);
 		scaleZ = checkValue(compound.getFloat("ScaleZ"), 0.5f, 1.5f);
@@ -67,19 +67,19 @@ public class ModelPartConfig {
 		notShared = compound.getBoolean("NotShared");
 	}
 
-	public void setScale(final float x, final float y) {
+	public void setScale(float x, float y) {
 		scaleX = x;
 		scaleZ = x;
 		scaleY = y;
 	}
 
-	public void setScale(final float x, final float y, final float z) {
+	public void setScale(float x, float y, float z) {
 		scaleX = ValueUtil.correctFloat(x, 0.5f, 1.5f);
 		scaleY = ValueUtil.correctFloat(y, 0.5f, 1.5f);
 		scaleZ = ValueUtil.correctFloat(z, 0.5f, 1.5f);
 	}
 
-	public void setTranslate(final float transX, final float transY, final float transZ) {
+	public void setTranslate(float transX, float transY, float transZ) {
 		this.transX = transX;
 		this.transY = transY;
 		this.transZ = transZ;
@@ -91,7 +91,7 @@ public class ModelPartConfig {
 	}
 
 	public NBTTagCompound writeToNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setFloat("ScaleX", scaleX);
 		compound.setFloat("ScaleY", scaleY);
 		compound.setFloat("ScaleZ", scaleZ);

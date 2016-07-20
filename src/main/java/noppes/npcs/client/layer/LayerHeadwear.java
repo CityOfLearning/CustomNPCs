@@ -14,7 +14,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 public class LayerHeadwear extends LayerInterface implements LayerPreRender {
 	private ModelHeadwear headwear;
 
-	public LayerHeadwear(final RenderLiving render) {
+	public LayerHeadwear(RenderLiving render) {
 		super(render);
 		createParts();
 	}
@@ -24,22 +24,21 @@ public class LayerHeadwear extends LayerInterface implements LayerPreRender {
 	}
 
 	@Override
-	public void preRender(final EntityCustomNpc player) {
+	public void preRender(EntityCustomNpc player) {
 		model.bipedHeadwear.isHidden = (CustomNpcs.HeadWearType == 1);
 		headwear.config = null;
 	}
 
 	@Override
-	public void render(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void render(float par2, float par3, float par4, float par5, float par6, float par7) {
 		if (CustomNpcs.HeadWearType != 1) {
 			return;
 		}
 		if ((npc.hurtTime <= 0) && (npc.deathTime <= 0)) {
-			final int color = npc.display.getTint();
-			final float red = ((color >> 16) & 0xFF) / 255.0f;
-			final float green = ((color >> 8) & 0xFF) / 255.0f;
-			final float blue = (color & 0xFF) / 255.0f;
+			int color = npc.display.getTint();
+			float red = ((color >> 16) & 0xFF) / 255.0f;
+			float green = ((color >> 8) & 0xFF) / 255.0f;
+			float blue = (color & 0xFF) / 255.0f;
 			GlStateManager.color(red, green, blue, 1.0f);
 		}
 		ClientProxy.bindTexture(npc.textureLocation);
@@ -48,7 +47,6 @@ public class LayerHeadwear extends LayerInterface implements LayerPreRender {
 	}
 
 	@Override
-	public void rotate(final float par2, final float par3, final float par4, final float par5, final float par6,
-			final float par7) {
+	public void rotate(float par2, float par3, float par4, float par5, float par6, float par7) {
 	}
 }

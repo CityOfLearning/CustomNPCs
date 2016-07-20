@@ -33,15 +33,15 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 3) {
 			Client.sendData(EnumPacketServer.RemoteFreeze, new Object[0]);
 		}
 		if (id == 5) {
-			for (final int ids : data.values()) {
+			for (int ids : data.values()) {
 				Client.sendData(EnumPacketServer.RemoteReset, ids);
-				final Entity entity = player.worldObj.getEntityByID(ids);
+				Entity entity = player.worldObj.getEntityByID(ids);
 				if ((entity != null) && (entity instanceof EntityNPCInterface)) {
 					((EntityNPCInterface) entity).reset();
 				}
@@ -54,12 +54,12 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 			Client.sendData(EnumPacketServer.RemoteMainMenu, data.get(scroll.getSelected()));
 		}
 		if (id == 1) {
-			final GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
+			GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
 			displayGuiScreen(guiyesno);
 		}
 		if (id == 2) {
 			Client.sendData(EnumPacketServer.RemoteReset, data.get(scroll.getSelected()));
-			final Entity entity2 = player.worldObj.getEntityByID(data.get(scroll.getSelected()));
+			Entity entity2 = player.worldObj.getEntityByID(data.get(scroll.getSelected()));
 			if ((entity2 != null) && (entity2 instanceof EntityNPCInterface)) {
 				((EntityNPCInterface) entity2).reset();
 			}
@@ -71,7 +71,7 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 	}
 
 	@Override
-	public void confirmClicked(final boolean flag, final int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (flag) {
 			Client.sendData(EnumPacketServer.RemoteDelete, data.get(scroll.getSelected()));
 		}
@@ -87,8 +87,8 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 		scroll.guiLeft = guiLeft + 4;
 		scroll.guiTop = guiTop + 4;
 		addScroll(scroll);
-		final String title = StatCollector.translateToLocal("remote.title");
-		final int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
+		String title = StatCollector.translateToLocal("remote.title");
+		int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
 		addLabel(new GuiNpcLabel(0, title, guiLeft + x, guiTop - 8));
 		addButton(new GuiNpcButton(0, guiLeft + 170, guiTop + 6, 82, 20, "selectServer.edit"));
 		addButton(new GuiNpcButton(1, guiLeft + 170, guiTop + 28, 82, 20, "selectWorld.deleteButton"));
@@ -104,14 +104,14 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.mouseClicked(i, j, k);
 	}
@@ -121,13 +121,13 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		scroll.setList(list);
 		this.data = data;
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		getButton(3).setDisplayText(selected);
 	}
 }

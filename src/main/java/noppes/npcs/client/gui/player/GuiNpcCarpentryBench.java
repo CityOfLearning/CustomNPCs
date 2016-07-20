@@ -15,11 +15,11 @@ import noppes.npcs.containers.ContainerCarpentryBench;
 import noppes.npcs.controllers.recipies.RecipeController;
 
 public class GuiNpcCarpentryBench extends GuiContainerNPCInterface {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	private ContainerCarpentryBench container;
 	private GuiNpcButton button;
 
-	public GuiNpcCarpentryBench(final ContainerCarpentryBench container) {
+	public GuiNpcCarpentryBench(ContainerCarpentryBench container) {
 		super(null, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/carpentry.png");
 		this.container = container;
@@ -30,17 +30,17 @@ public class GuiNpcCarpentryBench extends GuiContainerNPCInterface {
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
+	public void buttonEvent(GuiButton guibutton) {
 		displayGuiScreen(new GuiRecipes());
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		button.enabled = ((RecipeController.instance != null) && !RecipeController.instance.anvilRecipes.isEmpty());
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
-		final int l = (width - xSize) / 2;
-		final int i2 = (height - ySize) / 2;
+		int l = (width - xSize) / 2;
+		int i2 = (height - ySize) / 2;
 		String title = StatCollector.translateToLocal("tile.npcCarpentyBench.name");
 		if (container.getType() == 1) {
 			title = StatCollector.translateToLocal("tile.anvil.name");

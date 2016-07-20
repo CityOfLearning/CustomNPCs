@@ -14,7 +14,7 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 public class SubGuiNpcCommand extends SubGuiInterface implements ITextfieldListener {
 	public String command;
 
-	public SubGuiNpcCommand(final String command) {
+	public SubGuiNpcCommand(String command) {
 		this.command = command;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -23,8 +23,8 @@ public class SubGuiNpcCommand extends SubGuiInterface implements ITextfieldListe
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 66) {
 			close();
 		}
@@ -44,7 +44,7 @@ public class SubGuiNpcCommand extends SubGuiInterface implements ITextfieldListe
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 4) {
 			command = textfield.getText();
 		}

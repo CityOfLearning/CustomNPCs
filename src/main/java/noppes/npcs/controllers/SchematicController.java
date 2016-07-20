@@ -55,7 +55,7 @@ public class SchematicController {
 				"Tier_House3", "Tower", "Wall", "Wall_Corner");
 	}
 
-	public void build(final Schematic schem, final ICommandSender sender) {
+	public void build(Schematic schem, ICommandSender sender) {
 		if ((building != null) && building.isBuilding) {
 			info(sender);
 			return;
@@ -67,14 +67,14 @@ public class SchematicController {
 	}
 
 	public File getDir() {
-		final File dir = new File(CustomNpcs.getWorldSaveDirectory(), "schematics");
+		File dir = new File(CustomNpcs.getWorldSaveDirectory(), "schematics");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		return dir;
 	}
 
-	public void info(final ICommandSender sender) {
+	public void info(ICommandSender sender) {
 		if (building == null) {
 			sendMessage(sender, "Nothing is being build");
 		} else {
@@ -86,10 +86,10 @@ public class SchematicController {
 	}
 
 	public List<String> list() {
-		final List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<String>();
 		list.addAll(included);
-		for (final File file : getDir().listFiles()) {
-			final String name = file.getName();
+		for (File file : getDir().listFiles()) {
+			String name = file.getName();
 			if (name.toLowerCase().endsWith(".schematic") && !name.contains(" ")) {
 				list.add(name.substring(0, name.length() - 10));
 			}
@@ -98,13 +98,13 @@ public class SchematicController {
 		return list;
 	}
 
-	public Schematic load(final String name) {
+	public Schematic load(String name) {
 		InputStream stream = null;
 		if (included.contains(name)) {
 			stream = MinecraftServer.class.getResourceAsStream("/assets/customnpcs/schematics/" + name + ".schematic");
 		}
 		if (stream == null) {
-			final File file = new File(getDir(), name + ".schematic");
+			File file = new File(getDir(), name + ".schematic");
 			if (!file.exists()) {
 				return null;
 			}
@@ -115,7 +115,7 @@ public class SchematicController {
 			}
 		}
 		try {
-			final Schematic schema = new Schematic(name);
+			Schematic schema = new Schematic(name);
 			schema.load(CompressedStreamTools.readCompressed(stream));
 			stream.close();
 			return schema;
@@ -125,13 +125,12 @@ public class SchematicController {
 		}
 	}
 
-	public void save(final ICommandSender sender, String name, final BlockPos pos, final short height,
-			final short width, final short length) {
+	public void save(ICommandSender sender, String name, BlockPos pos, short height, short width, short length) {
 		name = name.replace(" ", "_");
 		if (included.contains(name)) {
 			return;
 		}
-		final Schematic schema = new Schematic(name);
+		Schematic schema = new Schematic(name);
 		schema.height = height;
 		schema.width = width;
 		schema.length = length;
@@ -139,20 +138,20 @@ public class SchematicController {
 		schema.blockArray = new short[schema.size];
 		schema.blockDataArray = new byte[schema.size];
 		NoppesUtilServer.NotifyOPs("Creating schematic at: " + pos + " might lag slightly", new Object[0]);
-		final World world = sender.getEntityWorld();
+		World world = sender.getEntityWorld();
 		schema.tileList = new NBTTagList();
 		for (int i = 0; i < schema.size; ++i) {
-			final int x = i % width;
-			final int z = ((i - x) / width) % length;
-			final int y = (((i - x) / width) - z) / length;
-			final IBlockState state = world.getBlockState(pos.add(x, y, z));
+			int x = i % width;
+			int z = ((i - x) / width) % length;
+			int y = (((i - x) / width) - z) / length;
+			IBlockState state = world.getBlockState(pos.add(x, y, z));
 			if (state.getBlock() != Blocks.air) {
 				if (state.getBlock() != CustomItems.copy) {
 					schema.blockArray[i] = (short) Block.blockRegistry.getIDForObject(state.getBlock());
 					schema.blockDataArray[i] = (byte) state.getBlock().getMetaFromState(state);
 					if (state.getBlock() instanceof ITileEntityProvider) {
-						final TileEntity tile = world.getTileEntity(pos.add(x, y, z));
-						final NBTTagCompound compound = new NBTTagCompound();
+						TileEntity tile = world.getTileEntity(pos.add(x, y, z));
+						NBTTagCompound compound = new NBTTagCompound();
 						tile.writeToNBT(compound);
 						compound.setInteger("x", x);
 						compound.setInteger("y", y);
@@ -162,7 +161,7 @@ public class SchematicController {
 				}
 			}
 		}
-		final File file = new File(getDir(), name + ".schematic");
+		File file = new File(getDir(), name + ".schematic");
 		NoppesUtilServer.NotifyOPs("Schematic " + name + " succesfully created", new Object[0]);
 		try {
 			CompressedStreamTools.writeCompressed(schema.save(), new FileOutputStream(file));
@@ -171,14 +170,14 @@ public class SchematicController {
 		}
 	}
 
-	private void sendMessage(final ICommandSender sender, final String message) {
+	private void sendMessage(ICommandSender sender, String message) {
 		if (sender == null) {
 			return;
 		}
 		sender.addChatMessage(new ChatComponentText(message));
 	}
 
-	public void stop(final ICommandSender sender) {
+	public void stop(ICommandSender sender) {
 		if ((building == null) || !building.isBuilding) {
 			sendMessage(sender, "Not building");
 		} else {

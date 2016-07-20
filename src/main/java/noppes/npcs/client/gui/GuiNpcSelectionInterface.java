@@ -30,7 +30,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 	private HashSet<String> dataFolder;
 	protected HashSet<String> dataTextures;
 
-	public GuiNpcSelectionInterface(final EntityNPCInterface npc, final GuiScreen parent, final String sound) {
+	public GuiNpcSelectionInterface(EntityNPCInterface npc, GuiScreen parent, String sound) {
 		super(npc);
 		up = "..<" + StatCollector.translateToLocal("gui.up") + ">..";
 		root = "";
@@ -44,8 +44,8 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 2) {
 			close();
 			NoppesUtil.openGUI(player, parent);
@@ -74,7 +74,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		slot.drawScreen(i, j, f);
 		super.drawScreen(i, j, f);
 	}
@@ -106,17 +106,17 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 	public void initGui() {
 		super.initGui();
 		dataFolder.clear();
-		final String ss = "Current Folder: /assets" + root;
+		String ss = "Current Folder: /assets" + root;
 		addLabel(new GuiNpcLabel(0, ss, (width / 2) - (fontRendererObj.getStringWidth(ss) / 2), 20, 16777215));
-		final Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<String>();
 		if (!assets.isRoot) {
 			list.add(up);
 		}
-		for (final String folder : assets.folders) {
+		for (String folder : assets.folders) {
 			list.add("/" + folder);
 			dataFolder.add("/" + folder);
 		}
-		for (final String texture : assets.files) {
+		for (String texture : assets.files) {
 			list.add(texture);
 			dataTextures.add(texture);
 		}

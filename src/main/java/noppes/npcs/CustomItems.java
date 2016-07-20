@@ -86,7 +86,7 @@ public class CustomItems {
 	public static Block builder;
 	public static Block copy;
 	public static Block trading;
-	
+
 	public static CreativeTabNpcs tab;
 
 	static {
@@ -160,8 +160,7 @@ public class CustomItems {
 				.setCreativeTab(CustomItems.tab);
 		CustomItems.satchel = new ItemNpcInterface(26952).setUnlocalizedName("npcSatchel")
 				.setCreativeTab(CustomItems.tab);
-		CustomItems.bag = new ItemNpcInterface(26953).setUnlocalizedName("npcBag")
-				.setCreativeTab(CustomItems.tab);
+		CustomItems.bag = new ItemNpcInterface(26953).setUnlocalizedName("npcBag").setCreativeTab(CustomItems.tab);
 
 		CustomItems.tab.item = CustomItems.wand;
 	}

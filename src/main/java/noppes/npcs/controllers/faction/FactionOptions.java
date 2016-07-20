@@ -26,11 +26,11 @@ public class FactionOptions {
 		faction2Points = 100;
 	}
 
-	public void addPoints(final EntityPlayer player) {
+	public void addPoints(EntityPlayer player) {
 		if ((factionId < 0) && (faction2Id < 0)) {
 			return;
 		}
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
 		if ((factionId >= 0) && (factionPoints > 0)) {
 			this.addPoints(player, data, factionId, decreaseFactionPoints, factionPoints);
 		}
@@ -39,24 +39,23 @@ public class FactionOptions {
 		}
 	}
 
-	private void addPoints(final EntityPlayer player, final PlayerFactionData data, final int factionId,
-			final boolean decrease, final int points) {
-		final Faction faction = FactionController.getInstance().getFaction(factionId);
+	private void addPoints(EntityPlayer player, PlayerFactionData data, int factionId, boolean decrease, int points) {
+		Faction faction = FactionController.getInstance().getFaction(factionId);
 		if (faction == null) {
 			return;
 		}
 		if (!faction.hideFaction) {
-			final String message = decrease ? "faction.decreasepoints" : "faction.increasepoints";
+			String message = decrease ? "faction.decreasepoints" : "faction.increasepoints";
 			player.addChatMessage(new ChatComponentTranslation(message, new Object[] { faction.name, points }));
 		}
 		data.increasePoints(factionId, decrease ? (-points) : points);
 	}
 
-	public boolean hasFaction(final int id) {
+	public boolean hasFaction(int id) {
 		return (factionId == id) || (faction2Id == id);
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		factionId = compound.getInteger("OptionFactions1");
 		faction2Id = compound.getInteger("OptionFactions2");
 		decreaseFactionPoints = compound.getBoolean("DecreaseFaction1Points");
@@ -65,7 +64,7 @@ public class FactionOptions {
 		faction2Points = compound.getInteger("OptionFaction2Points");
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound par1NBTTagCompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		par1NBTTagCompound.setInteger("OptionFactions1", factionId);
 		par1NBTTagCompound.setInteger("OptionFactions2", faction2Id);
 		par1NBTTagCompound.setInteger("OptionFaction1Points", factionPoints);

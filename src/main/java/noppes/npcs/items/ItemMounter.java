@@ -19,18 +19,18 @@ public class ItemMounter extends Item implements IPermission {
 	}
 
 	@Override
-	public int getColorFromItemStack(final ItemStack par1ItemStack, final int par2) {
+	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
 		return 9127187;
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return (e == EnumPacketServer.SpawnRider) || (e == EnumPacketServer.PlayerRider)
 				|| (e == EnumPacketServer.CloneList);
 	}
 
 	@Override
-	public Item setUnlocalizedName(final String name) {
+	public Item setUnlocalizedName(String name) {
 		GameRegistry.registerItem(this, name);
 		CustomNpcs.proxy.registerItem(this, name, 0);
 		return super.setUnlocalizedName(name);

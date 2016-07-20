@@ -20,23 +20,23 @@ import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
 
 public class LogWriter {
-	private static final Logger logger;
-	private static final SimpleDateFormat dateformat;
+	private static Logger logger;
+	private static SimpleDateFormat dateformat;
 	private static Handler handler;
 
 	static {
 		logger = Logger.getLogger("CustomNPCs");
 		dateformat = new SimpleDateFormat("HH:mm:ss");
 		try {
-			final File dir = new File("logs");
+			File dir = new File("logs");
 			if (!dir.exists()) {
 				dir.mkdir();
 			}
-			final File file = new File(dir, "CustomNPCs-latest.log");
-			final File lock = new File(dir, "CustomNPCs-latest.log.lck");
-			final File file2 = new File(dir, "CustomNPCs-1.log");
-			final File file3 = new File(dir, "CustomNPCs-2.log");
-			final File file4 = new File(dir, "CustomNPCs-3.log");
+			File file = new File(dir, "CustomNPCs-latest.log");
+			File lock = new File(dir, "CustomNPCs-latest.log.lck");
+			File file2 = new File(dir, "CustomNPCs-1.log");
+			File file3 = new File(dir, "CustomNPCs-2.log");
+			File file4 = new File(dir, "CustomNPCs-3.log");
 			if (lock.exists()) {
 				lock.delete();
 			}
@@ -54,14 +54,14 @@ public class LogWriter {
 			}
 			(LogWriter.handler = new StreamHandler(new FileOutputStream(file), new Formatter() {
 				@Override
-				public String format(final LogRecord record) {
-					final StackTraceElement element = Thread.currentThread().getStackTrace()[8];
-					final String line = "[" + element.getClassName() + ":" + element.getLineNumber() + "] ";
-					final String time = "[" + LogWriter.dateformat.format(new Date(record.getMillis())) + "]["
+				public String format(LogRecord record) {
+					StackTraceElement element = Thread.currentThread().getStackTrace()[8];
+					String line = "[" + element.getClassName() + ":" + element.getLineNumber() + "] ";
+					String time = "[" + LogWriter.dateformat.format(new Date(record.getMillis())) + "]["
 							+ record.getLevel() + "/" + "CustomNPCs" + "]" + line;
 					if (record.getThrown() != null) {
-						final StringWriter sw = new StringWriter();
-						final PrintWriter pw = new PrintWriter(sw);
+						StringWriter sw = new StringWriter();
+						PrintWriter pw = new PrintWriter(sw);
 						record.getThrown().printStackTrace(pw);
 						return time + sw.toString();
 					}
@@ -70,7 +70,7 @@ public class LogWriter {
 			})).setLevel(Level.ALL);
 			LogWriter.logger.addHandler(LogWriter.handler);
 			LogWriter.logger.setUseParentHandlers(false);
-			final Handler consoleHandler = new ConsoleHandler();
+			Handler consoleHandler = new ConsoleHandler();
 			consoleHandler.setFormatter(LogWriter.handler.getFormatter());
 			consoleHandler.setLevel(Level.ALL);
 			LogWriter.logger.addHandler(consoleHandler);
@@ -83,28 +83,28 @@ public class LogWriter {
 		}
 	}
 
-	public static void error(final Object msg) {
+	public static void error(Object msg) {
 		LogWriter.logger.log(Level.SEVERE, msg.toString());
 		LogWriter.handler.flush();
 	}
 
-	public static void error(final Object msg, final Exception e) {
+	public static void error(Object msg, Exception e) {
 		LogWriter.logger.log(Level.SEVERE, msg.toString());
 		LogWriter.logger.log(Level.SEVERE, e.getMessage(), e);
 		LogWriter.handler.flush();
 	}
 
-	public static void except(final Exception e) {
+	public static void except(Exception e) {
 		LogWriter.logger.log(Level.SEVERE, e.getMessage(), e);
 		LogWriter.handler.flush();
 	}
 
-	public static void info(final Object msg) {
+	public static void info(Object msg) {
 		LogWriter.logger.log(Level.FINE, msg.toString());
 		LogWriter.handler.flush();
 	}
 
-	public static void warn(final Object msg) {
+	public static void warn(Object msg) {
 		LogWriter.logger.log(Level.WARNING, msg.toString());
 		LogWriter.handler.flush();
 	}

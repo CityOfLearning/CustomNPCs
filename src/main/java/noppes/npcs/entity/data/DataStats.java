@@ -35,7 +35,7 @@ public class DataStats implements INPCStats {
 	public DataRanged ranged;
 	private EntityNPCInterface npc;
 
-	public DataStats(final EntityNPCInterface npc) {
+	public DataStats(EntityNPCInterface npc) {
 		aggroRange = 16;
 		maxHealth = 20;
 		respawnTime = 20;
@@ -82,7 +82,7 @@ public class DataStats implements INPCStats {
 	}
 
 	@Override
-	public boolean getImmune(final int type) {
+	public boolean getImmune(int type) {
 		if (type == 0) {
 			return potionImmune;
 		}
@@ -120,7 +120,7 @@ public class DataStats implements INPCStats {
 	}
 
 	@Override
-	public float getResistance(final int type) {
+	public float getResistance(int type) {
 		if (type == 0) {
 			return resistances.melee;
 		}
@@ -146,7 +146,7 @@ public class DataStats implements INPCStats {
 		return spawnCycle;
 	}
 
-	public void readToNBT(final NBTTagCompound compound) {
+	public void readToNBT(NBTTagCompound compound) {
 		resistances.readToNBT(compound.getCompoundTag("Resistances"));
 		setMaxHealth(compound.getInteger("MaxHealth"));
 		hideKilledBody = compound.getBoolean("HideBodyWhenKilled");
@@ -168,33 +168,33 @@ public class DataStats implements INPCStats {
 	}
 
 	@Override
-	public void setAggroRange(final int range) {
+	public void setAggroRange(int range) {
 		aggroRange = range;
 	}
 
 	@Override
-	public void setCombatRegen(final int regen) {
+	public void setCombatRegen(int regen) {
 		combatRegen = regen;
 	}
 
 	@Override
-	public void setCreatureType(final int type) {
+	public void setCreatureType(int type) {
 		creatureType = EnumCreatureAttribute.values()[type];
 	}
 
 	@Override
-	public void setHealthRegen(final int regen) {
+	public void setHealthRegen(int regen) {
 		healthRegen = regen;
 	}
 
 	@Override
-	public void setHideDeadBody(final boolean hide) {
+	public void setHideDeadBody(boolean hide) {
 		hideKilledBody = hide;
 		npc.updateClient = true;
 	}
 
 	@Override
-	public void setImmune(final int type, final boolean bo) {
+	public void setImmune(int type, boolean bo) {
 		if (type == 0) {
 			potionImmune = bo;
 		} else if (type == 1) {
@@ -214,14 +214,14 @@ public class DataStats implements INPCStats {
 	}
 
 	@Override
-	public void setMaxHealth(final int maxHealth) {
+	public void setMaxHealth(int maxHealth) {
 		this.maxHealth = maxHealth;
 		npc.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(maxHealth);
 		npc.updateClient = true;
 	}
 
 	@Override
-	public void setResistance(final int type, float value) {
+	public void setResistance(int type, float value) {
 		value = ValueUtil.correctFloat(value, 0.0f, 2.0f);
 		if (type == 0) {
 			resistances.melee = value;
@@ -235,16 +235,16 @@ public class DataStats implements INPCStats {
 	}
 
 	@Override
-	public void setRespawnTime(final int seconds) {
+	public void setRespawnTime(int seconds) {
 		respawnTime = seconds;
 	}
 
 	@Override
-	public void setRespawnType(final int type) {
+	public void setRespawnType(int type) {
 		spawnCycle = type;
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("Resistances", resistances.writeToNBT());
 		compound.setInteger("MaxHealth", maxHealth);
 		compound.setInteger("AggroRange", aggroRange);

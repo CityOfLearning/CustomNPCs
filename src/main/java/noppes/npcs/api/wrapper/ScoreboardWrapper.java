@@ -31,9 +31,9 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public IScoreboardObjective addObjective(final String objective, final String criteria) {
+	public IScoreboardObjective addObjective(String objective, String criteria) {
 		getObjectiveWithException(objective);
-		final IScoreObjectiveCriteria icriteria = IScoreObjectiveCriteria.INSTANCES.get(criteria);
+		IScoreObjectiveCriteria icriteria = IScoreObjectiveCriteria.INSTANCES.get(criteria);
 		if (icriteria == null) {
 			throw new CustomNPCsException("Unknown score criteria: %s", new Object[] { criteria });
 		}
@@ -41,12 +41,12 @@ public class ScoreboardWrapper implements IScoreboard {
 			throw new CustomNPCsException("Score objective must be between 1-16 characters: %s",
 					new Object[] { objective });
 		}
-		final ScoreObjective obj = board.addScoreObjective(objective, icriteria);
+		ScoreObjective obj = board.addScoreObjective(objective, icriteria);
 		return new ScoreboardObjectiveWrapper(obj);
 	}
 
 	@Override
-	public IScoreboardTeam addTeam(final String name) {
+	public IScoreboardTeam addTeam(String name) {
 		if (hasTeam(name)) {
 			return null;
 		}
@@ -54,8 +54,8 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public void deletePlayerScore(final String player, final String objective, final String datatag) {
-		final ScoreObjective objec = getObjectiveWithException(objective);
+	public void deletePlayerScore(String player, String objective, String datatag) {
+		ScoreObjective objec = getObjectiveWithException(objective);
 		if (!test(datatag)) {
 			return;
 		}
@@ -65,8 +65,8 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public IScoreboardObjective getObjective(final String name) {
-		final ScoreObjective obj = board.getObjective(name);
+	public IScoreboardObjective getObjective(String name) {
+		ScoreObjective obj = board.getObjective(name);
 		if (obj == null) {
 			return null;
 		}
@@ -75,16 +75,16 @@ public class ScoreboardWrapper implements IScoreboard {
 
 	@Override
 	public IScoreboardObjective[] getObjectives() {
-		final List<ScoreObjective> collection = new ArrayList<ScoreObjective>(board.getScoreObjectives());
-		final IScoreboardObjective[] objectives = new IScoreboardObjective[collection.size()];
+		List<ScoreObjective> collection = new ArrayList<ScoreObjective>(board.getScoreObjectives());
+		IScoreboardObjective[] objectives = new IScoreboardObjective[collection.size()];
 		for (int i = 0; i < collection.size(); ++i) {
 			objectives[i] = new ScoreboardObjectiveWrapper(collection.get(i));
 		}
 		return objectives;
 	}
 
-	private ScoreObjective getObjectiveWithException(final String objective) {
-		final ScoreObjective objec = board.getObjective(objective);
+	private ScoreObjective getObjectiveWithException(String objective) {
+		ScoreObjective objec = board.getObjective(objective);
 		if (objec == null) {
 			throw new CustomNPCsException("Score objective does not exist: %s", new Object[] { objective });
 		}
@@ -92,8 +92,8 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public int getPlayerScore(final String player, final String objective, final String datatag) {
-		final ScoreObjective objec = getObjectiveWithException(objective);
+	public int getPlayerScore(String player, String objective, String datatag) {
+		ScoreObjective objec = getObjectiveWithException(objective);
 		if (objec.getCriteria().isReadOnly() || !test(datatag)) {
 			return 0;
 		}
@@ -101,8 +101,8 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public IScoreboardTeam getTeam(final String name) {
-		final ScorePlayerTeam team = board.getPlayersTeam(name);
+	public IScoreboardTeam getTeam(String name) {
+		ScorePlayerTeam team = board.getPlayersTeam(name);
 		if (team == null) {
 			return null;
 		}
@@ -111,8 +111,8 @@ public class ScoreboardWrapper implements IScoreboard {
 
 	@Override
 	public IScoreboardTeam[] getTeams() {
-		final List<ScorePlayerTeam> list = new ArrayList<ScorePlayerTeam>(board.getTeams());
-		final IScoreboardTeam[] teams = new IScoreboardTeam[list.size()];
+		List<ScorePlayerTeam> list = new ArrayList<ScorePlayerTeam>(board.getTeams());
+		IScoreboardTeam[] teams = new IScoreboardTeam[list.size()];
 		for (int i = 0; i < list.size(); ++i) {
 			teams[i] = new ScoreboardTeamWrapper(list.get(i), board);
 		}
@@ -120,56 +120,56 @@ public class ScoreboardWrapper implements IScoreboard {
 	}
 
 	@Override
-	public boolean hasObjective(final String objective) {
+	public boolean hasObjective(String objective) {
 		return board.getObjective(objective) != null;
 	}
 
 	@Override
-	public boolean hasPlayerObjective(final String player, final String objective, final String datatag) {
-		final ScoreObjective objec = getObjectiveWithException(objective);
+	public boolean hasPlayerObjective(String player, String objective, String datatag) {
+		ScoreObjective objec = getObjectiveWithException(objective);
 		return test(datatag) && (board.getObjectivesForEntity(player).get(objec) != null);
 	}
 
 	@Override
-	public boolean hasTeam(final String name) {
+	public boolean hasTeam(String name) {
 		return board.getPlayersTeam(name) != null;
 	}
 
 	@Override
-	public void removeObjective(final String objective) {
-		final ScoreObjective obj = board.getObjective(objective);
+	public void removeObjective(String objective) {
+		ScoreObjective obj = board.getObjective(objective);
 		if (obj != null) {
 			board.removeObjective(obj);
 		}
 	}
 
 	@Override
-	public void removeTeam(final String name) {
-		final ScorePlayerTeam team = board.getPlayersTeam(name);
+	public void removeTeam(String name) {
+		ScorePlayerTeam team = board.getPlayersTeam(name);
 		if (team != null) {
 			board.removeTeam(team);
 		}
 	}
 
 	@Override
-	public void setPlayerScore(final String player, final String objective, final int score, final String datatag) {
-		final ScoreObjective objec = getObjectiveWithException(objective);
+	public void setPlayerScore(String player, String objective, int score, String datatag) {
+		ScoreObjective objec = getObjectiveWithException(objective);
 		if (objec.getCriteria().isReadOnly() || (score < Integer.MIN_VALUE) || (score > Integer.MAX_VALUE)
 				|| !test(datatag)) {
 			return;
 		}
-		final Score sco = board.getValueFromObjective(player, objec);
+		Score sco = board.getValueFromObjective(player, objec);
 		sco.setScorePoints(score);
 	}
 
-	private boolean test(final String datatag) {
+	private boolean test(String datatag) {
 		if (datatag.isEmpty()) {
 			return true;
 		}
 		try {
-			final Entity entity = CommandBase.getEntity(MinecraftServer.getServer(), datatag);
-			final NBTTagCompound nbttagcompound = JsonToNBT.getTagFromJson(datatag);
-			final NBTTagCompound nbttagcompound2 = new NBTTagCompound();
+			Entity entity = CommandBase.getEntity(MinecraftServer.getServer(), datatag);
+			NBTTagCompound nbttagcompound = JsonToNBT.getTagFromJson(datatag);
+			NBTTagCompound nbttagcompound2 = new NBTTagCompound();
 			entity.writeToNBT(nbttagcompound2);
 			return NBTUtil.func_181123_a(nbttagcompound, nbttagcompound2, true);
 		} catch (Exception e) {

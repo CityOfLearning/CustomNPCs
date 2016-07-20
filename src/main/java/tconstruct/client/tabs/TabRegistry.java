@@ -26,8 +26,8 @@ public class TabRegistry {
 		TabRegistry.mc = FMLClientHandler.instance().getClient();
 	}
 
-	public static void addTabsToList(final List buttonList) {
-		for (final AbstractTab tab : TabRegistry.tabList) {
+	public static void addTabsToList(List buttonList) {
+		for (AbstractTab tab : TabRegistry.tabList) {
 			if (tab.shouldAddToList()) {
 				buttonList.add(tab);
 			}
@@ -40,9 +40,9 @@ public class TabRegistry {
 				return 60;
 			}
 			try {
-				final Class<?> c = Class.forName("codechicken.nei.NEIClientConfig");
-				final Object hidden = c.getMethod("isHidden", new Class[0]).invoke(null, new Object[0]);
-				final Object enabled = c.getMethod("isEnabled", new Class[0]).invoke(null, new Object[0]);
+				Class<?> c = Class.forName("codechicken.nei.NEIClientConfig");
+				Object hidden = c.getMethod("isHidden", new Class[0]).invoke(null, new Object[0]);
+				Object enabled = c.getMethod("isEnabled", new Class[0]).invoke(null, new Object[0]);
 				if ((hidden != null) && (hidden instanceof Boolean) && (enabled != null) && (enabled instanceof Boolean)
 						&& ((Boolean) hidden || !(Boolean) enabled)) {
 					return 60;
@@ -60,18 +60,18 @@ public class TabRegistry {
 	public static void openInventoryGui() {
 		TabRegistry.mc.thePlayer.sendQueue
 				.addToSendQueue(new C0DPacketCloseWindow(TabRegistry.mc.thePlayer.openContainer.windowId));
-		final GuiInventory inventory = new GuiInventory(TabRegistry.mc.thePlayer);
+		GuiInventory inventory = new GuiInventory(TabRegistry.mc.thePlayer);
 		TabRegistry.mc.displayGuiScreen(inventory);
 	}
 
-	public static void registerTab(final AbstractTab tab) {
+	public static void registerTab(AbstractTab tab) {
 		TabRegistry.tabList.add(tab);
 	}
 
-	public static void updateTabValues(final int cornerX, final int cornerY, final Class<?> selectedButton) {
+	public static void updateTabValues(int cornerX, int cornerY, Class<?> selectedButton) {
 		int count = 2;
 		for (int i = 0; i < TabRegistry.tabList.size(); ++i) {
-			final AbstractTab t = TabRegistry.tabList.get(i);
+			AbstractTab t = TabRegistry.tabList.get(i);
 			if (t.shouldAddToList()) {
 				t.id = count;
 				t.xPosition = cornerX + ((count - 2) * 28);
@@ -84,12 +84,12 @@ public class TabRegistry {
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
-	public void guiPostInit(final GuiScreenEvent.InitGuiEvent.Post event) {
+	public void guiPostInit(GuiScreenEvent.InitGuiEvent.Post event) {
 		if (event.gui instanceof GuiInventory) {
-			final int xSize = 176;
-			final int ySize = 166;
+			int xSize = 176;
+			int ySize = 166;
 			int guiLeft = (event.gui.width - xSize) / 2;
-			final int guiTop = (event.gui.height - ySize) / 2;
+			int guiTop = (event.gui.height - ySize) / 2;
 			guiLeft += getPotionOffset();
 			updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
 			addTabsToList(event.buttonList);

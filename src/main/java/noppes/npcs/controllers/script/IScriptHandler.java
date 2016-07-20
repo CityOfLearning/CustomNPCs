@@ -20,9 +20,9 @@ public interface IScriptHandler {
 
 	String noticeString();
 
-	void runScript(final EnumScriptType p0, final Event p1);
+	void runScript(EnumScriptType p0, Event p1);
 
-	void setEnabled(final boolean p0);
+	void setEnabled(boolean p0);
 
-	void setLanguage(final String p0);
+	void setLanguage(String p0);
 }

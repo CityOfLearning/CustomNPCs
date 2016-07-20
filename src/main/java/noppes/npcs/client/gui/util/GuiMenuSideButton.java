@@ -10,40 +10,40 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMenuSideButton extends GuiNpcButton {
-	public static final ResourceLocation resource;
+	public static ResourceLocation resource;
 	static {
 		resource = new ResourceLocation("customnpcs", "textures/gui/menusidebutton.png");
 	}
 
 	public boolean active;
 
-	public GuiMenuSideButton(final int id, final int x, final int y, final int width, final int height, final String s) {
+	public GuiMenuSideButton(int id, int x, int y, int width, int height, String s) {
 		super(id, x, y, width, height, s);
 		active = false;
 	}
 
-	public GuiMenuSideButton(final int id, final int x, final int y, final String s) {
+	public GuiMenuSideButton(int id, int x, int y, String s) {
 		this(id, x, y, 200, 20, s);
 	}
 
 	@Override
-	public void drawButton(final Minecraft minecraft, final int x, final int y) {
+	public void drawButton(Minecraft minecraft, int x, int y) {
 		if (!visible) {
 			return;
 		}
-		final FontRenderer fontrenderer = minecraft.fontRendererObj;
+		FontRenderer fontrenderer = minecraft.fontRendererObj;
 		minecraft.renderEngine.bindTexture(GuiMenuSideButton.resource);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		final int width = this.width + (active ? 2 : 0);
+		int width = this.width + (active ? 2 : 0);
 		hovered = ((x >= xPosition) && (y >= yPosition) && (x < (xPosition + width)) && (y < (yPosition + height)));
-		final int k = getHoverState(hovered);
+		int k = getHoverState(hovered);
 		this.drawTexturedModalRect(xPosition, yPosition, 0, k * 22, width, height);
 		mouseDragged(minecraft, x, y);
 		String text = "";
-		final float maxWidth = width * 0.75f;
+		float maxWidth = width * 0.75f;
 		if (fontrenderer.getStringWidth(displayString) > maxWidth) {
 			for (int h = 0; h < displayString.length(); ++h) {
-				final char c = displayString.charAt(h);
+				char c = displayString.charAt(h);
 				if (fontrenderer.getStringWidth(text + c) > maxWidth) {
 					break;
 				}
@@ -63,7 +63,7 @@ public class GuiMenuSideButton extends GuiNpcButton {
 	}
 
 	@Override
-	public int getHoverState(final boolean flag) {
+	public int getHoverState(boolean flag) {
 		if (active) {
 			return 0;
 		}
@@ -71,15 +71,15 @@ public class GuiMenuSideButton extends GuiNpcButton {
 	}
 
 	@Override
-	protected void mouseDragged(final Minecraft minecraft, final int mouseX, final int mouseY) {
+	protected void mouseDragged(Minecraft minecraft, int mouseX, int mouseY) {
 	}
 
 	@Override
-	public boolean mousePressed(final Minecraft minecraft, final int mouseX, final int mouseY) {
+	public boolean mousePressed(Minecraft minecraft, int mouseX, int mouseY) {
 		return !active && visible && hovered;
 	}
 
 	@Override
-	public void mouseReleased(final int mouseX, final int mouseY) {
+	public void mouseReleased(int mouseX, int mouseY) {
 	}
 }

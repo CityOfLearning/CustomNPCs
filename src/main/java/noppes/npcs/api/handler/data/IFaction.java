@@ -16,7 +16,7 @@ public interface IFaction {
 
 	String getName();
 
-	boolean hostileToNpc(final ICustomNpc p0);
+	boolean hostileToNpc(ICustomNpc p0);
 
-	int playerStatus(final IPlayer p0);
+	int playerStatus(IPlayer p0);
 }

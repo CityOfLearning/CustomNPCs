@@ -16,14 +16,14 @@ import net.minecraftforge.fml.common.Loader;
 
 public class CustomNpcsPermissions {
 	public static class Permission {
-		private static final List<String> permissions;
+		private static List<String> permissions;
 		static {
 			permissions = new ArrayList<String>();
 		}
 
 		public String name;
 
-		public Permission(final String name) {
+		public Permission(String name) {
 			this.name = name;
 			if (!Permission.permissions.contains(name)) {
 				Permission.permissions.add(name);
@@ -31,35 +31,35 @@ public class CustomNpcsPermissions {
 		}
 	}
 
-	public static final Permission NPC_DELETE;
-	public static final Permission NPC_CREATE;
-	public static final Permission NPC_GUI;
-	public static final Permission NPC_FREEZE;
-	public static final Permission NPC_RESET;
-	public static final Permission NPC_AI;
-	public static final Permission NPC_ADVANCED;
-	public static final Permission NPC_DISPLAY;
-	public static final Permission NPC_INVENTORY;
-	public static final Permission NPC_STATS;
-	public static final Permission NPC_CLONE;
-	public static final Permission GLOBAL_LINKED;
-	public static final Permission GLOBAL_PLAYERDATA;
-	public static final Permission GLOBAL_BANK;
-	public static final Permission GLOBAL_DIALOG;
-	public static final Permission GLOBAL_QUEST;
-	public static final Permission GLOBAL_FACTION;
-	public static final Permission GLOBAL_TRANSPORT;
-	public static final Permission GLOBAL_RECIPE;
-	public static final Permission GLOBAL_NATURALSPAWN;
-	public static final Permission SPAWNER_MOB;
-	public static final Permission SPAWNER_CREATE;
-	public static final Permission TOOL_MOUNTER;
-	public static final Permission TOOL_PATHER;
-	public static final Permission TOOL_SCRIPTER;
-	public static final Permission EDIT_VILLAGER;
-	public static final Permission EDIT_BLOCKS;
-	public static final Permission SOULSTONE_ALL;
-	public static final Permission SCENES;
+	public static Permission NPC_DELETE;
+	public static Permission NPC_CREATE;
+	public static Permission NPC_GUI;
+	public static Permission NPC_FREEZE;
+	public static Permission NPC_RESET;
+	public static Permission NPC_AI;
+	public static Permission NPC_ADVANCED;
+	public static Permission NPC_DISPLAY;
+	public static Permission NPC_INVENTORY;
+	public static Permission NPC_STATS;
+	public static Permission NPC_CLONE;
+	public static Permission GLOBAL_LINKED;
+	public static Permission GLOBAL_PLAYERDATA;
+	public static Permission GLOBAL_BANK;
+	public static Permission GLOBAL_DIALOG;
+	public static Permission GLOBAL_QUEST;
+	public static Permission GLOBAL_FACTION;
+	public static Permission GLOBAL_TRANSPORT;
+	public static Permission GLOBAL_RECIPE;
+	public static Permission GLOBAL_NATURALSPAWN;
+	public static Permission SPAWNER_MOB;
+	public static Permission SPAWNER_CREATE;
+	public static Permission TOOL_MOUNTER;
+	public static Permission TOOL_PATHER;
+	public static Permission TOOL_SCRIPTER;
+	public static Permission EDIT_VILLAGER;
+	public static Permission EDIT_BLOCKS;
+	public static Permission SOULSTONE_ALL;
+	public static Permission SCENES;
 	public static CustomNpcsPermissions Instance;
 
 	private static boolean SpongeLoaded;
@@ -102,11 +102,11 @@ public class CustomNpcsPermissions {
 		return CustomNpcsPermissions.SpongeLoaded;
 	}
 
-	public static boolean hasPermission(final EntityPlayer player, final Permission permission) {
+	public static boolean hasPermission(EntityPlayer player, Permission permission) {
 		return !CustomNpcsPermissions.SpongeLoaded || player.canCommandSenderUseCommand(4, permission.name);
 	}
 
-	public static boolean hasPermissionString(final EntityPlayerMP player, final String permission) {
+	public static boolean hasPermissionString(EntityPlayerMP player, String permission) {
 		return !CustomNpcsPermissions.SpongeLoaded || player.canCommandSenderUseCommand(4, permission);
 	}
 
@@ -120,7 +120,7 @@ public class CustomNpcsPermissions {
 			LogManager.getLogger(CustomNpcs.class).info("Sponge permissions enabled");
 			LogManager.getLogger(CustomNpcs.class).info("Permissions available:");
 			Collections.sort(Permission.permissions, String.CASE_INSENSITIVE_ORDER);
-			for (final String p : Permission.permissions) {
+			for (String p : Permission.permissions) {
 				LogManager.getLogger(CustomNpcs.class).info(p);
 			}
 		}

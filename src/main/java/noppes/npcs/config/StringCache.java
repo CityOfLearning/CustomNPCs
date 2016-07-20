@@ -32,7 +32,7 @@ public class StringCache {
 		public byte renderStyle;
 
 		@Override
-		public int compareTo(final Integer i) {
+		public int compareTo(Integer i) {
 			return (stringIndex == i) ? 0 : ((stringIndex < i) ? -1 : 1);
 		}
 	}
@@ -53,7 +53,7 @@ public class StringCache {
 		public int advance;
 
 		@Override
-		public int compareTo(final Glyph o) {
+		public int compareTo(Glyph o) {
 			return (stringIndex == o.stringIndex) ? 0 : ((stringIndex < o.stringIndex) ? -1 : 1);
 		}
 	}
@@ -62,19 +62,19 @@ public class StringCache {
 		public String str;
 
 		@Override
-		public boolean equals(final Object o) {
+		public boolean equals(Object o) {
 			if (o == null) {
 				return false;
 			}
-			final String other = o.toString();
-			final int length = str.length();
+			String other = o.toString();
+			int length = str.length();
 			if (length != other.length()) {
 				return false;
 			}
 			boolean colorCode = false;
 			for (int index = 0; index < length; ++index) {
-				final char c1 = str.charAt(index);
-				final char c2 = other.charAt(index);
+				char c1 = str.charAt(index);
+				char c2 = other.charAt(index);
 				if ((c1 != c2) && ((c1 < '0') || (c1 > '9') || (c2 < '0') || (c2 > '9') || colorCode)) {
 					return false;
 				}
@@ -86,7 +86,7 @@ public class StringCache {
 		@Override
 		public int hashCode() {
 			int code = 0;
-			final int length = str.length();
+			int length = str.length();
 			boolean colorCode = false;
 			for (int index = 0; index < length; ++index) {
 				char c = str.charAt(index);
@@ -111,7 +111,7 @@ public class StringCache {
 		int b;
 		int a;
 
-		public RGBA(final int color) {
+		public RGBA(int color) {
 			r = ((color >> 16) & 0xFF);
 			g = ((color >> 8) & 0xFF);
 			b = (color & 0xFF);
@@ -149,7 +149,7 @@ public class StringCache {
 		glyphCache = new GlyphCache();
 		colorTable = new int[32];
 		for (int i = 0; i < 32; ++i) {
-			final int j = ((i >> 3) & 0x1) * 85;
+			int j = ((i >> 3) & 0x1) * 85;
 			int k = (((i >> 2) & 0x1) * 170) + j;
 			int l = (((i >> 1) & 0x1) * 170) + j;
 			int i2 = (((i >> 0) & 0x1) * 170) + j;
@@ -157,9 +157,9 @@ public class StringCache {
 				k += 85;
 			}
 			if (Minecraft.getMinecraft().gameSettings.anaglyph) {
-				final int j2 = ((k * 30) + (l * 59) + (i2 * 11)) / 100;
-				final int k2 = ((k * 30) + (l * 70)) / 100;
-				final int l2 = ((k * 30) + (i2 * 70)) / 100;
+				int j2 = ((k * 30) + (l * 59) + (i2 * 11)) / 100;
+				int k2 = ((k * 30) + (l * 70)) / 100;
+				int l2 = ((k * 30) + (i2 * 70)) / 100;
 				k = j2;
 				l = k2;
 				i2 = l2;
@@ -183,17 +183,17 @@ public class StringCache {
 		digitGlyphsReady = true;
 	}
 
-	private Entry cacheString(final String str) {
+	private Entry cacheString(String str) {
 		Entry entry = null;
 		if (mainThread == Thread.currentThread()) {
 			lookupKey.str = str;
 			entry = stringCache.get(lookupKey);
 		}
 		if (entry == null) {
-			final char[] text = str.toCharArray();
+			char[] text = str.toCharArray();
 			entry = new Entry();
-			final int length = stripColorCodes(entry, str, text);
-			final List<Glyph> glyphList = new ArrayList<Glyph>();
+			int length = stripColorCodes(entry, str, text);
+			List<Glyph> glyphList = new ArrayList<Glyph>();
 			entry.advance = layoutBidiString(glyphList, text, 0, length, entry.colors);
 			entry.glyphs = new Glyph[glyphList.size()];
 			Arrays.sort(entry.glyphs = glyphList.toArray(entry.glyphs));
@@ -204,18 +204,18 @@ public class StringCache {
 				for (glyph = entry.glyphs[glyphIndex]; (colorIndex < entry.colors.length) && ((glyph.stringIndex
 						+ shift) >= entry.colors[colorIndex].stringIndex); shift += 2, ++colorIndex) {
 				}
-				final Glyph glyph2 = glyph;
+				Glyph glyph2 = glyph;
 				glyph2.stringIndex += shift;
 			}
 			if (mainThread == Thread.currentThread()) {
-				final Key key = new Key();
+				Key key = new Key();
 				key.str = new String(str);
 				entry.keyRef = new WeakReference<Key>(key);
 				stringCache.put(key, entry);
 			}
 		}
 		if (mainThread == Thread.currentThread()) {
-			final Key oldKey = entry.keyRef.get();
+			Key oldKey = entry.keyRef.get();
 			if (oldKey != null) {
 				weakRefCache.put(str, oldKey);
 			}
@@ -224,7 +224,7 @@ public class StringCache {
 		return entry;
 	}
 
-	private RGBA getColorCode(int colorCode, int color, final boolean shadowFlag) {
+	private RGBA getColorCode(int colorCode, int color, boolean shadowFlag) {
 		if (colorCode != -1) {
 			colorCode = (shadowFlag ? (colorCode + 16) : colorCode);
 			color = ((colorTable[colorCode] & 0xFFFFFF) | (color & 0xFF000000));
@@ -232,50 +232,49 @@ public class StringCache {
 		return new RGBA(color);
 	}
 
-	public int getStringWidth(final String str) {
+	public int getStringWidth(String str) {
 		if ((str == null) || str.isEmpty()) {
 			return 0;
 		}
-		final Entry entry = cacheString(str);
+		Entry entry = cacheString(str);
 		return entry.advance / 2;
 	}
 
-	private int layoutBidiString(final List<Glyph> glyphList, final char[] text, final int start, final int limit,
-			final ColorCode[] colors) {
+	private int layoutBidiString(List<Glyph> glyphList, char[] text, int start, int limit, ColorCode[] colors) {
 		int advance = 0;
 		if (!Bidi.requiresBidi(text, start, limit)) {
 			return layoutStyle(glyphList, text, start, limit, 0, advance, colors);
 		}
-		final Bidi bidi = new Bidi(text, start, null, 0, limit - start, -2);
+		Bidi bidi = new Bidi(text, start, null, 0, limit - start, -2);
 		if (bidi.isRightToLeft()) {
 			return layoutStyle(glyphList, text, start, limit, 1, advance, colors);
 		}
-		final int runCount = bidi.getRunCount();
-		final byte[] levels = new byte[runCount];
-		final Integer[] ranges = new Integer[runCount];
+		int runCount = bidi.getRunCount();
+		byte[] levels = new byte[runCount];
+		Integer[] ranges = new Integer[runCount];
 		for (int index = 0; index < runCount; ++index) {
 			levels[index] = (byte) bidi.getRunLevel(index);
 			ranges[index] = new Integer(index);
 		}
 		Bidi.reorderVisually(levels, 0, ranges, 0, runCount);
-		for (final int logicalIndex : ranges) {
-			final int layoutFlag = ((bidi.getRunLevel(logicalIndex) & 0x1) == 0x1) ? 1 : 0;
+		for (int logicalIndex : ranges) {
+			int layoutFlag = ((bidi.getRunLevel(logicalIndex) & 0x1) == 0x1) ? 1 : 0;
 			advance = layoutStyle(glyphList, text, start + bidi.getRunStart(logicalIndex),
 					start + bidi.getRunLimit(logicalIndex), layoutFlag, advance, colors);
 		}
 		return advance;
 	}
 
-	private int layoutFont(final List<Glyph> glyphList, final char[] text, final int start, final int limit,
-			final int layoutFlags, int advance, final Font font) {
+	private int layoutFont(List<Glyph> glyphList, char[] text, int start, int limit, int layoutFlags, int advance,
+			Font font) {
 		if (mainThread == Thread.currentThread()) {
 			glyphCache.cacheGlyphs(font, text, start, limit, layoutFlags);
 		}
-		final GlyphVector vector = glyphCache.layoutGlyphVector(font, text, start, limit, layoutFlags);
+		GlyphVector vector = glyphCache.layoutGlyphVector(font, text, start, limit, layoutFlags);
 		Glyph glyph = null;
-		final int numGlyphs = vector.getNumGlyphs();
+		int numGlyphs = vector.getNumGlyphs();
 		for (int index = 0; index < numGlyphs; ++index) {
-			final Point position = vector.getGlyphPixelBounds(index, null, advance, 0.0f).getLocation();
+			Point position = vector.getGlyphPixelBounds(index, null, advance, 0.0f).getLocation();
 			if (glyph != null) {
 				glyph.advance = position.x - glyph.x;
 			}
@@ -293,8 +292,8 @@ public class StringCache {
 		return advance;
 	}
 
-	private int layoutString(final List<Glyph> glyphList, final char[] text, int start, final int limit,
-			final int layoutFlags, int advance, final int style) {
+	private int layoutString(List<Glyph> glyphList, char[] text, int start, int limit, int layoutFlags, int advance,
+			int style) {
 		if (digitGlyphsReady) {
 			for (int index = start; index < limit; ++index) {
 				if ((text[index] >= '0') && (text[index] <= '9')) {
@@ -303,7 +302,7 @@ public class StringCache {
 			}
 		}
 		while (start < limit) {
-			final Font font = glyphCache.lookupFont(text, start, limit, style);
+			Font font = glyphCache.lookupFont(text, start, limit, style);
 			int next = font.canDisplayUpTo(text, start, limit);
 			if (next == -1) {
 				next = limit;
@@ -317,8 +316,8 @@ public class StringCache {
 		return advance;
 	}
 
-	private int layoutStyle(final List<Glyph> glyphList, final char[] text, int start, final int limit,
-			final int layoutFlags, int advance, final ColorCode[] colors) {
+	private int layoutStyle(List<Glyph> glyphList, char[] text, int start, int limit, int layoutFlags, int advance,
+			ColorCode[] colors) {
 		int currentFontStyle = 0;
 		int colorIndex = Arrays.binarySearch(colors, start);
 		if (colorIndex < 0) {
@@ -345,12 +344,11 @@ public class StringCache {
 		return advance;
 	}
 
-	public int renderString(final String str, final int startX, int startY, final int initialColor,
-			final boolean shadowFlag) {
+	public int renderString(String str, int startX, int startY, int initialColor, boolean shadowFlag) {
 		if ((str == null) || str.isEmpty()) {
 			return 0;
 		}
-		final Entry entry = cacheString(str);
+		Entry entry = cacheString(str);
 		startY += 7;
 		RGBA color = new RGBA(initialColor);
 		int boundTextureName = 0;
@@ -360,8 +358,8 @@ public class StringCache {
 			GlStateManager.enableBlend();
 			GlStateManager.blendFunc(770, 771);
 		}
-		final Tessellator tessellator = Tessellator.getInstance();
-		final WorldRenderer worldRenderer = tessellator.getWorldRenderer();
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer worldRenderer = tessellator.getWorldRenderer();
 		worldRenderer.begin(7, DefaultVertexFormats.OLDMODEL_POSITION_TEX_NORMAL);
 		int fontStyle = 0;
 		int glyphIndex = 0;
@@ -373,14 +371,14 @@ public class StringCache {
 				fontStyle = entry.colors[colorIndex].fontStyle;
 				++colorIndex;
 			}
-			final Glyph glyph = entry.glyphs[glyphIndex];
+			Glyph glyph = entry.glyphs[glyphIndex];
 			GlyphCache.Entry texture = glyph.texture;
 			int glyphX = glyph.x;
-			final char c = str.charAt(glyph.stringIndex);
+			char c = str.charAt(glyph.stringIndex);
 			if ((c >= '0') && (c <= '9')) {
-				final int oldWidth = texture.width;
+				int oldWidth = texture.width;
 				texture = digitGlyphs[fontStyle][c - '0'].texture;
-				final int newWidth = texture.width;
+				int newWidth = texture.width;
 				glyphX += (oldWidth - newWidth) >> 1;
 			}
 			if (boundTextureName != texture.textureName) {
@@ -389,10 +387,10 @@ public class StringCache {
 				GlStateManager.bindTexture(texture.textureName);
 				boundTextureName = texture.textureName;
 			}
-			final float x1 = startX + (glyphX / 2.0f);
-			final float x2 = startX + ((glyphX + texture.width) / 2.0f);
-			final float y1 = startY + (glyph.y / 2.0f);
-			final float y2 = startY + ((glyph.y + texture.height) / 2.0f);
+			float x1 = startX + (glyphX / 2.0f);
+			float x2 = startX + ((glyphX + texture.width) / 2.0f);
+			float y1 = startY + (glyph.y / 2.0f);
+			float y2 = startY + ((glyph.y + texture.height) / 2.0f);
 			worldRenderer.pos(x1, y1, 0.0).tex(texture.u1, texture.v1).color(color.r, color.g, color.b, color.a)
 					.endVertex();
 			worldRenderer.pos(x1, y2, 0.0).tex(texture.u1, texture.v2).color(color.r, color.g, color.b, color.a)
@@ -418,23 +416,23 @@ public class StringCache {
 					renderStyle = entry.colors[colorIndex2].renderStyle;
 					++colorIndex2;
 				}
-				final Glyph glyph2 = entry.glyphs[glyphIndex2];
-				final int glyphSpace = glyph2.advance - glyph2.texture.width;
+				Glyph glyph2 = entry.glyphs[glyphIndex2];
+				int glyphSpace = glyph2.advance - glyph2.texture.width;
 				if ((renderStyle & 0x1) != 0x0) {
-					final float x3 = startX + ((glyph2.x - glyphSpace) / 2.0f);
-					final float x4 = startX + ((glyph2.x + glyph2.advance) / 2.0f);
-					final float y3 = startY + 0.5f;
-					final float y4 = startY + 1.5f;
+					float x3 = startX + ((glyph2.x - glyphSpace) / 2.0f);
+					float x4 = startX + ((glyph2.x + glyph2.advance) / 2.0f);
+					float y3 = startY + 0.5f;
+					float y4 = startY + 1.5f;
 					worldRenderer.pos(x3, y3, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 					worldRenderer.pos(x3, y4, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 					worldRenderer.pos(x4, y4, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 					worldRenderer.pos(x4, y3, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 				}
 				if ((renderStyle & 0x2) != 0x0) {
-					final float x3 = startX + ((glyph2.x - glyphSpace) / 2.0f);
-					final float x4 = startX + ((glyph2.x + glyph2.advance) / 2.0f);
-					final float y3 = startY - 3.0f;
-					final float y4 = startY - 2.0f;
+					float x3 = startX + ((glyph2.x - glyphSpace) / 2.0f);
+					float x4 = startX + ((glyph2.x + glyph2.advance) / 2.0f);
+					float y3 = startY - 3.0f;
+					float y4 = startY - 2.0f;
 					worldRenderer.pos(x3, y3, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 					worldRenderer.pos(x3, y4, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
 					worldRenderer.pos(x4, y4, 0.0).color(color.r, color.g, color.b, color.a).endVertex();
@@ -448,8 +446,7 @@ public class StringCache {
 		return entry.advance / 2;
 	}
 
-	public void setCustomFont(final ResourceLocation resource, final int fontSize, final boolean antiAlias)
-			throws Exception {
+	public void setCustomFont(ResourceLocation resource, int fontSize, boolean antiAlias) throws Exception {
 		glyphCache.setCustomFont(resource, fontSize, antiAlias);
 		antiAliasEnabled = antiAlias;
 		weakRefCache.clear();
@@ -458,7 +455,7 @@ public class StringCache {
 		updateHeight();
 	}
 
-	public void setDefaultFont(final String fontName, final int fontSize, final boolean antiAlias) {
+	public void setDefaultFont(String fontName, int fontSize, boolean antiAlias) {
 		glyphCache.setDefaultFont(fontName, fontSize, antiAlias);
 		antiAliasEnabled = antiAlias;
 		weakRefCache.clear();
@@ -467,19 +464,19 @@ public class StringCache {
 		updateHeight();
 	}
 
-	private int sizeString(final String str, int width, final boolean breakAtSpaces) {
+	private int sizeString(String str, int width, boolean breakAtSpaces) {
 		if ((str == null) || str.isEmpty()) {
 			return 0;
 		}
 		width += width;
-		final Glyph[] glyphs = cacheString(str).glyphs;
+		Glyph[] glyphs = cacheString(str).glyphs;
 		int wsIndex = -1;
 		int advance;
 		int index;
 		for (advance = 0, index = 0; (index < glyphs.length)
 				&& (advance <= width); advance += glyphs[index].advance, ++index) {
 			if (breakAtSpaces) {
-				final char c = str.charAt(glyphs[index].stringIndex);
+				char c = str.charAt(glyphs[index].stringIndex);
 				if (c == ' ') {
 					wsIndex = index;
 				} else if (c == '\n') {
@@ -494,12 +491,12 @@ public class StringCache {
 		return (index < glyphs.length) ? glyphs[index].stringIndex : str.length();
 	}
 
-	public int sizeStringToWidth(final String str, final int width) {
+	public int sizeStringToWidth(String str, int width) {
 		return sizeString(str, width, true);
 	}
 
-	private int stripColorCodes(final Entry cacheEntry, final String str, final char[] text) {
-		final List<ColorCode> colorList = new ArrayList<ColorCode>();
+	private int stripColorCodes(Entry cacheEntry, String str, char[] text) {
+		List<ColorCode> colorList = new ArrayList<ColorCode>();
 		int start = 0;
 		int shift = 0;
 		byte fontStyle = 0;
@@ -508,7 +505,7 @@ public class StringCache {
 		int next;
 		while (((next = str.indexOf(167, start)) != -1) && ((next + 1) < str.length())) {
 			System.arraycopy(text, (next - shift) + 2, text, next - shift, text.length - next - 2);
-			final int code = "0123456789abcdefklmnor".indexOf(Character.toLowerCase(str.charAt(next + 1)));
+			int code = "0123456789abcdefklmnor".indexOf(Character.toLowerCase(str.charAt(next + 1)));
 			switch (code) {
 			case 16: {
 				break;
@@ -547,7 +544,7 @@ public class StringCache {
 				break;
 			}
 			}
-			final ColorCode entry = new ColorCode();
+			ColorCode entry = new ColorCode();
 			entry.stringIndex = next;
 			entry.stripIndex = next - shift;
 			entry.colorCode = colorCode;
@@ -562,8 +559,8 @@ public class StringCache {
 		return text.length - shift;
 	}
 
-	public String trimStringToWidth(String str, final int width, final boolean reverse) {
-		final int length = sizeString(str, width, false);
+	public String trimStringToWidth(String str, int width, boolean reverse) {
+		int length = sizeString(str, width, false);
 		str = str.substring(0, length);
 		if (reverse) {
 			str = new StringBuilder(str).reverse().toString();
@@ -575,7 +572,7 @@ public class StringCache {
 		int height = 0;
 		int minY = Integer.MAX_VALUE;
 		int maxY = Integer.MIN_VALUE;
-		for (final Glyph g : cacheString("AaBbCcDdEeHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz").glyphs) {
+		for (Glyph g : cacheString("AaBbCcDdEeHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz").glyphs) {
 			if (g.texture.height > height) {
 				height = g.texture.height;
 			}

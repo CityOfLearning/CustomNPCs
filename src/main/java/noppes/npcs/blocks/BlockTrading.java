@@ -33,12 +33,12 @@ public class BlockTrading extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileTrading();
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(final World world, final BlockPos pos, final IBlockState state) {
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
 		return null;
 	}
 
@@ -66,17 +66,17 @@ public class BlockTrading extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public boolean isSideSolid(final IBlockAccess world, final BlockPos pos, final EnumFacing side) {
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return false;
 	}
 
 	@Override
-	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		}
-		final TileTrading tile = (TileTrading) world.getTileEntity(pos);
+		TileTrading tile = (TileTrading) world.getTileEntity(pos);
 		if (tile.isFull()) {
 			player.addChatComponentMessage(new ChatComponentTranslation("trader.busy", new Object[0]));
 			return false;
@@ -88,11 +88,11 @@ public class BlockTrading extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase placer, final ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack) {
 		int l = MathHelper.floor_double(((placer.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
 		l %= 4;
-		final TileColorable tile = (TileColorable) world.getTileEntity(pos);
+		TileColorable tile = (TileColorable) world.getTileEntity(pos);
 		tile.rotation = l;
 	}
 }

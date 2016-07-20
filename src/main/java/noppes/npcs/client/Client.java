@@ -16,11 +16,11 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.CustomNPCsScheduler;
 
 public class Client {
-	public static void sendData(final EnumPacketServer enu, final Object... obs) {
+	public static void sendData(EnumPacketServer enu, Object... obs) {
 		CustomNPCsScheduler.runTack(new Runnable() {
 			@Override
 			public void run() {
-				final PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+				PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
 				try {
 					if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
 						return;

@@ -24,7 +24,7 @@ public class RoleTransporter extends RoleInterface {
 	public String name;
 	private int ticks;
 
-	public RoleTransporter(final EntityNPCInterface npc) {
+	public RoleTransporter(EntityNPCInterface npc) {
 		super(npc);
 		transportId = -1;
 		ticks = 10;
@@ -40,13 +40,13 @@ public class RoleTransporter extends RoleInterface {
 		if (!hasTransport()) {
 			return false;
 		}
-		final TransportLocation loc = getLocation();
+		TransportLocation loc = getLocation();
 		if (loc.type != 0) {
 			return false;
 		}
-		final List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		List<EntityPlayer> inRange = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(6.0, 6.0, 6.0));
-		for (final EntityPlayer player : inRange) {
+		for (EntityPlayer player : inRange) {
 			if (!npc.canSee(player)) {
 				continue;
 			}
@@ -63,14 +63,14 @@ public class RoleTransporter extends RoleInterface {
 	}
 
 	public boolean hasTransport() {
-		final TransportLocation loc = getLocation();
+		TransportLocation loc = getLocation();
 		return (loc != null) && (loc.id == transportId);
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		if (hasTransport()) {
-			final TransportLocation loc = getLocation();
+			TransportLocation loc = getLocation();
 			if (loc.type == 2) {
 				unlock(player, loc);
 			}
@@ -79,25 +79,25 @@ public class RoleTransporter extends RoleInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		transportId = nbttagcompound.getInteger("TransporterId");
-		final TransportLocation loc = getLocation();
+		TransportLocation loc = getLocation();
 		if (loc != null) {
 			name = loc.name;
 		}
 	}
 
-	public void setTransport(final TransportLocation location) {
+	public void setTransport(TransportLocation location) {
 		transportId = location.id;
 		name = location.name;
 	}
 
-	private void unlock(final EntityPlayer player, final TransportLocation loc) {
-		final PlayerTransportData data = PlayerDataController.instance.getPlayerData(player).transportData;
+	private void unlock(EntityPlayer player, TransportLocation loc) {
+		PlayerTransportData data = PlayerDataController.instance.getPlayerData(player).transportData;
 		if (data.transports.contains(transportId)) {
 			return;
 		}
-		final RoleEvent.TransporterUnlockedEvent event = new RoleEvent.TransporterUnlockedEvent(player, npc.wrappedNPC);
+		RoleEvent.TransporterUnlockedEvent event = new RoleEvent.TransporterUnlockedEvent(player, npc.wrappedNPC);
 		if (EventHooks.onNPCRole(npc, event)) {
 			return;
 		}
@@ -106,7 +106,7 @@ public class RoleTransporter extends RoleInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("TransporterId", transportId);
 		return nbttagcompound;
 	}

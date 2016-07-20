@@ -52,7 +52,7 @@ public class DataAI implements INPCAi {
 	public int movingPattern;
 	public boolean movingPause;
 
-	public DataAI(final EntityNPCInterface npc) {
+	public DataAI(EntityNPCInterface npc) {
 		onAttack = 0;
 		doorInteract = 2;
 		findShelter = 2;
@@ -90,7 +90,7 @@ public class DataAI implements INPCAi {
 	}
 
 	public void decreaseMovingPath() {
-		final List<int[]> list = getMovingPath();
+		List<int[]> list = getMovingPath();
 		if (list.size() == 1) {
 			movingPos = 0;
 		} else if (movingPattern == 0) {
@@ -101,7 +101,7 @@ public class DataAI implements INPCAi {
 		} else if (movingPattern == 1) {
 			--movingPos;
 			if (movingPos < 0) {
-				final int size = (list.size() * 2) - 2;
+				int size = (list.size() * 2) - 2;
 				movingPos += size;
 			}
 		}
@@ -138,14 +138,14 @@ public class DataAI implements INPCAi {
 	}
 
 	public int[] getCurrentMovingPath() {
-		final List<int[]> list = getMovingPath();
+		List<int[]> list = getMovingPath();
 		if (list.size() == 1) {
 			movingPos = 0;
 		} else if (movingPos >= list.size()) {
 			if (movingPattern == 0) {
 				movingPos = 0;
 			} else {
-				final int size = (list.size() * 2) - 2;
+				int size = (list.size() * 2) - 2;
 				if (movingPos >= size) {
 					movingPos = 0;
 				} else if (movingPos >= list.size()) {
@@ -157,7 +157,7 @@ public class DataAI implements INPCAi {
 	}
 
 	public double getDistanceSqToPathPoint() {
-		final int[] pos = getCurrentMovingPath();
+		int[] pos = getCurrentMovingPath();
 		return npc.getDistanceSq(pos[0] + 0.5, pos[1], pos[2] + 0.5);
 	}
 
@@ -219,7 +219,7 @@ public class DataAI implements INPCAi {
 	}
 
 	private int[] getStartArray() {
-		final BlockPos pos = startPos();
+		BlockPos pos = startPos();
 		return new int[] { pos.getX(), pos.getY(), pos.getZ() };
 	}
 
@@ -249,7 +249,7 @@ public class DataAI implements INPCAi {
 	}
 
 	public void incrementMovingPath() {
-		final List<int[]> list = getMovingPath();
+		List<int[]> list = getMovingPath();
 		if (list.size() == 1) {
 			movingPos = 0;
 		} else if (movingPattern == 0) {
@@ -257,12 +257,12 @@ public class DataAI implements INPCAi {
 			movingPos %= list.size();
 		} else if (movingPattern == 1) {
 			++movingPos;
-			final int size = (list.size() * 2) - 2;
+			int size = (list.size() * 2) - 2;
 			movingPos %= size;
 		}
 	}
 
-	public void readToNBT(final NBTTagCompound compound) {
+	public void readToNBT(NBTTagCompound compound) {
 		canSwim = compound.getBoolean("CanSwim");
 		reactsToFire = compound.getBoolean("ReactsToFire");
 		setAvoidsWater(compound.getBoolean("AvoidsWater"));
@@ -296,29 +296,29 @@ public class DataAI implements INPCAi {
 		movingPattern = compound.getInteger("MovingPatern");
 		attackInvisible = compound.getBoolean("AttackInvisible");
 		if (compound.hasKey("StartPosNew")) {
-			final int[] startPos = compound.getIntArray("StartPosNew");
+			int[] startPos = compound.getIntArray("StartPosNew");
 			this.startPos = new BlockPos(startPos[0], startPos[1], startPos[2]);
 		}
 	}
 
 	@Override
-	public void setAnimation(final int type) {
+	public void setAnimation(int type) {
 		animationType = type;
 	}
 
 	@Override
-	public void setAttackInvisible(final boolean attack) {
+	public void setAttackInvisible(boolean attack) {
 		attackInvisible = attack;
 	}
 
 	@Override
-	public void setAttackLOS(final boolean enabled) {
+	public void setAttackLOS(boolean enabled) {
 		directLOS = enabled;
 		npc.updateAI = true;
 	}
 
 	@Override
-	public void setAvoidsWater(final boolean enabled) {
+	public void setAvoidsWater(boolean enabled) {
 		if (npc.getNavigator() instanceof PathNavigateGround) {
 			((PathNavigateGround) npc.getNavigator()).setAvoidsWater(enabled);
 		}
@@ -326,37 +326,37 @@ public class DataAI implements INPCAi {
 	}
 
 	@Override
-	public void setCanSwim(final boolean canSwim) {
+	public void setCanSwim(boolean canSwim) {
 		this.canSwim = canSwim;
 	}
 
 	@Override
-	public void setDoorInteract(final int type) {
+	public void setDoorInteract(int type) {
 		doorInteract = type;
 		npc.updateAI = true;
 	}
 
 	@Override
-	public void setInteractWithNPCs(final boolean interact) {
+	public void setInteractWithNPCs(boolean interact) {
 		npcInteracting = interact;
 	}
 
 	@Override
-	public void setLeapAtTarget(final boolean leap) {
+	public void setLeapAtTarget(boolean leap) {
 		canLeap = leap;
 		npc.updateAI = true;
 	}
 
-	public void setMovingPath(final List<int[]> list) {
+	public void setMovingPath(List<int[]> list) {
 		movingPath = list;
 		if (!movingPath.isEmpty()) {
-			final int[] startPos = movingPath.get(0);
+			int[] startPos = movingPath.get(0);
 			this.startPos = new BlockPos(startPos[0], startPos[1], startPos[2]);
 		}
 	}
 
 	@Override
-	public void setMovingPathType(final int type, final boolean pauses) {
+	public void setMovingPathType(int type, boolean pauses) {
 		if ((type < 0) && (type > 1)) {
 			throw new CustomNPCsException("Moving path type: " + type, new Object[0]);
 		}
@@ -365,7 +365,7 @@ public class DataAI implements INPCAi {
 	}
 
 	@Override
-	public void setMovingType(final int type) {
+	public void setMovingType(int type) {
 		if ((type < 0) || (type > 2)) {
 			throw new CustomNPCsException("Unknown moving type: " + type, new Object[0]);
 		}
@@ -374,7 +374,7 @@ public class DataAI implements INPCAi {
 	}
 
 	@Override
-	public void setRetaliateType(final int type) {
+	public void setRetaliateType(int type) {
 		if ((type < 0) || (type > 3)) {
 			throw new CustomNPCsException("Unknown retaliation type: " + type, new Object[0]);
 		}
@@ -383,18 +383,18 @@ public class DataAI implements INPCAi {
 	}
 
 	@Override
-	public void setReturnsHome(final boolean bo) {
+	public void setReturnsHome(boolean bo) {
 		returnToStart = bo;
 	}
 
 	@Override
-	public void setSheltersFrom(final int type) {
+	public void setSheltersFrom(int type) {
 		findShelter = type;
 		npc.updateAI = true;
 	}
 
 	@Override
-	public void setStandingType(final int type) {
+	public void setStandingType(int type) {
 		if ((type < 0) || (type > 3)) {
 			throw new CustomNPCsException("Unknown standing type: " + type, new Object[0]);
 		}
@@ -402,28 +402,28 @@ public class DataAI implements INPCAi {
 		npc.updateAI = true;
 	}
 
-	public void setStartPos(final BlockPos pos) {
+	public void setStartPos(BlockPos pos) {
 		startPos = pos;
 	}
 
 	@Override
-	public void setStopOnInteract(final boolean stopOnInteract) {
+	public void setStopOnInteract(boolean stopOnInteract) {
 		stopAndInteract = stopOnInteract;
 	}
 
 	@Override
-	public void setTacticalRange(final int range) {
+	public void setTacticalRange(int range) {
 		tacticalRadius = range;
 	}
 
 	@Override
-	public void setTacticalType(final int type) {
+	public void setTacticalType(int type) {
 		tacticalVariant = type;
 		npc.updateAI = true;
 	}
 
 	@Override
-	public void setWalkingSpeed(final int speed) {
+	public void setWalkingSpeed(int speed) {
 		if ((speed < 0) || (speed > 10)) {
 			throw new CustomNPCsException("Wrong speed: " + speed, new Object[0]);
 		}
@@ -432,7 +432,7 @@ public class DataAI implements INPCAi {
 	}
 
 	@Override
-	public void setWanderingRange(final int range) {
+	public void setWanderingRange(int range) {
 		if ((range < 1) || (range > 50)) {
 			throw new CustomNPCsException("Bad wandering range: " + range, new Object[0]);
 		}
@@ -446,7 +446,7 @@ public class DataAI implements INPCAi {
 		return startPos;
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setBoolean("CanSwim", canSwim);
 		compound.setBoolean("ReactsToFire", reactsToFire);
 		compound.setBoolean("AvoidsWater", avoidsWater);

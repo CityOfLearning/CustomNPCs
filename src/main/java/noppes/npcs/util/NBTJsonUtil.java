@@ -31,7 +31,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 
 public class NBTJsonUtil {
 	public static class JsonException extends Exception {
-		public JsonException(final String message, final JsonFile json) {
+		public JsonException(String message, JsonFile json) {
 			super(message + ": " + json.getCurrentPos());
 		}
 	}
@@ -40,33 +40,33 @@ public class NBTJsonUtil {
 		private String original;
 		private String text;
 
-		public JsonFile(final String text) {
+		public JsonFile(String text) {
 			this.text = text;
 			original = text;
 		}
 
-		public String cut(final int i) {
-			final String s = text.substring(0, i);
+		public String cut(int i) {
+			String s = text.substring(0, i);
 			text = text.substring(i).trim();
 			return s;
 		}
 
-		public String cutDirty(final int i) {
-			final String s = text.substring(0, i);
+		public String cutDirty(int i) {
+			String s = text.substring(0, i);
 			text = text.substring(i);
 			return s;
 		}
 
-		public boolean endsWith(final String s) {
+		public boolean endsWith(String s) {
 			return text.endsWith(s);
 		}
 
 		public String getCurrentPos() {
-			final int lengthOr = original.length();
-			final int lengthCur = text.length();
-			final int currentPos = lengthOr - lengthCur;
-			final String done = original.substring(0, currentPos);
-			final String[] lines = done.split("\r\n|\r|\n");
+			int lengthOr = original.length();
+			int lengthCur = text.length();
+			int currentPos = lengthOr - lengthCur;
+			String done = original.substring(0, currentPos);
+			String[] lines = done.split("\r\n|\r|\n");
 			int pos = 0;
 			String line = "";
 			if (lines.length > 0) {
@@ -76,12 +76,12 @@ public class NBTJsonUtil {
 			return "Line: " + lines.length + ", Pos: " + pos + ", Text: " + line;
 		}
 
-		public int indexOf(final String s) {
+		public int indexOf(String s) {
 			return text.indexOf(s);
 		}
 
-		public boolean startsWith(final String... ss) {
-			for (final String s : ss) {
+		public boolean startsWith(String... ss) {
+			for (String s : ss) {
 				if (text.startsWith(s)) {
 					return true;
 				}
@@ -89,7 +89,7 @@ public class NBTJsonUtil {
 			return false;
 		}
 
-		public String substring(final int beginIndex, final int endIndex) {
+		public String substring(int beginIndex, int endIndex) {
 			return text.substring(beginIndex, endIndex);
 		}
 	}
@@ -97,7 +97,7 @@ public class NBTJsonUtil {
 	static class JsonLine {
 		private String line;
 
-		public JsonLine(final String line) {
+		public JsonLine(String line) {
 			this.line = line;
 		}
 
@@ -106,7 +106,7 @@ public class NBTJsonUtil {
 		}
 
 		public boolean reduceTab() {
-			final int length = line.length();
+			int length = line.length();
 			return ((length == 1) && (line.endsWith("}") || line.endsWith("]")))
 					|| ((length == 2) && (line.endsWith("},") || line.endsWith("],")));
 		}
@@ -123,28 +123,28 @@ public class NBTJsonUtil {
 		}
 	}
 
-	public static String Convert(final NBTTagCompound compound) {
-		final List<JsonLine> list = new ArrayList<JsonLine>();
-		final JsonLine line = ReadTag("", compound, list);
+	public static String Convert(NBTTagCompound compound) {
+		List<JsonLine> list = new ArrayList<JsonLine>();
+		JsonLine line = ReadTag("", compound, list);
 		line.removeComma();
 		return ConvertList(list);
 	}
 
 	public static NBTTagCompound Convert(String json) throws JsonException {
 		json = json.trim();
-		final JsonFile file = new JsonFile(json);
+		JsonFile file = new JsonFile(json);
 		if (!json.startsWith("{") || !json.endsWith("}")) {
 			throw new JsonException("Not properly incapsulated between { }", file);
 		}
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		FillCompound(compound, file);
 		return compound;
 	}
 
-	private static String ConvertList(final List<JsonLine> list) {
+	private static String ConvertList(List<JsonLine> list) {
 		String json = "";
 		int tab = 0;
-		for (final JsonLine tag : list) {
+		for (JsonLine tag : list) {
 			if (tag.reduceTab()) {
 				--tab;
 			}
@@ -159,14 +159,14 @@ public class NBTJsonUtil {
 		return json;
 	}
 
-	public static void FillCompound(final NBTTagCompound compound, final JsonFile json) throws JsonException {
+	public static void FillCompound(NBTTagCompound compound, JsonFile json) throws JsonException {
 		if (json.startsWith("{") || json.startsWith(",")) {
 			json.cut(1);
 		}
 		if (json.startsWith("}")) {
 			return;
 		}
-		final int index = json.indexOf(":");
+		int index = json.indexOf(":");
 		if (index < 1) {
 			throw new JsonException("Expected key after ,", json);
 		}
@@ -188,24 +188,24 @@ public class NBTJsonUtil {
 		}
 	}
 
-	private static List<NBTBase> getListData(final NBTTagList list) {
+	private static List<NBTBase> getListData(NBTTagList list) {
 		return (List<NBTBase>) ObfuscationReflectionHelper.getPrivateValue((Class) NBTTagList.class, list, 1);
 	}
 
-	public static NBTTagCompound LoadFile(final File file) throws IOException, JsonException {
+	public static NBTTagCompound LoadFile(File file) throws IOException, JsonException {
 		return Convert(Files.toString(file, Charsets.UTF_8));
 	}
 
-	private static JsonLine ReadTag(String name, final NBTBase base, final List<JsonLine> list) {
+	private static JsonLine ReadTag(String name, NBTBase base, List<JsonLine> list) {
 		if (!name.isEmpty()) {
 			name = "\"" + name + "\": ";
 		}
 		if (base.getId() == 9) {
 			list.add(new JsonLine(name + "["));
-			final NBTTagList tags = (NBTTagList) base;
+			NBTTagList tags = (NBTTagList) base;
 			JsonLine line = null;
-			final List<NBTBase> data = getListData(tags);
-			for (final NBTBase b : data) {
+			List<NBTBase> data = getListData(tags);
+			for (NBTBase b : data) {
 				line = ReadTag("", b, list);
 			}
 			if (line != null) {
@@ -214,9 +214,9 @@ public class NBTJsonUtil {
 			list.add(new JsonLine("]"));
 		} else if (base.getId() == 10) {
 			list.add(new JsonLine(name + "{"));
-			final NBTTagCompound compound = (NBTTagCompound) base;
+			NBTTagCompound compound = (NBTTagCompound) base;
 			JsonLine line = null;
-			for (final Object key : compound.getKeySet()) {
+			for (Object key : compound.getKeySet()) {
 				line = ReadTag(key.toString(), compound.getTag(key.toString()), list);
 			}
 			if (line != null) {
@@ -228,15 +228,15 @@ public class NBTJsonUtil {
 		} else {
 			list.add(new JsonLine(name + base));
 		}
-		final JsonLine jsonLine;
-		final JsonLine line2 = jsonLine = list.get(list.size() - 1);
+		JsonLine jsonLine;
+		JsonLine line2 = jsonLine = list.get(list.size() - 1);
 		jsonLine.line += ",";
 		return line2;
 	}
 
-	public static NBTBase ReadValue(final JsonFile json) throws JsonException {
+	public static NBTBase ReadValue(JsonFile json) throws JsonException {
 		if (json.startsWith("{")) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			FillCompound(compound, json);
 			if (!json.startsWith("}")) {
 				throw new JsonException("Expected }", json);
@@ -245,7 +245,7 @@ public class NBTJsonUtil {
 			return compound;
 		} else if (json.startsWith("[")) {
 			json.cut(1);
-			final NBTTagList list = new NBTTagList();
+			NBTTagList list = new NBTTagList();
 			for (NBTBase value = ReadValue(json); value != null; value = ReadValue(json)) {
 				list.appendTag(value);
 				if (!json.startsWith(",")) {
@@ -258,7 +258,7 @@ public class NBTJsonUtil {
 			}
 			json.cut(1);
 			if (list.getTagType() == 3) {
-				final int[] arr = new int[list.tagCount()];
+				int[] arr = new int[list.tagCount()];
 				int i = 0;
 				while (list.tagCount() > 0) {
 					arr[i] = ((NBTTagInt) list.removeTag(0)).getInt();
@@ -267,7 +267,7 @@ public class NBTJsonUtil {
 				return new NBTTagIntArray(arr);
 			}
 			if (list.getTagType() == 1) {
-				final byte[] arr2 = new byte[list.tagCount()];
+				byte[] arr2 = new byte[list.tagCount()];
 				int i = 0;
 				while (list.tagCount() > 0) {
 					arr2[i] = ((NBTTagByte) list.removeTag(0)).getByte();
@@ -321,8 +321,8 @@ public class NBTJsonUtil {
 		}
 	}
 
-	public static void SaveFile(final File file, final NBTTagCompound compound) throws IOException, JsonException {
-		final String json = Convert(compound);
+	public static void SaveFile(File file, NBTTagCompound compound) throws IOException, JsonException {
+		String json = Convert(compound);
 		OutputStreamWriter writer = null;
 		try {
 			writer = new OutputStreamWriter(new FileOutputStream(file), Charsets.UTF_8);

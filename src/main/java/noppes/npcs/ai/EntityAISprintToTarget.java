@@ -12,7 +12,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class EntityAISprintToTarget extends EntityAIBase {
 	private EntityNPCInterface npc;
 
-	public EntityAISprintToTarget(final EntityNPCInterface par1EntityLiving) {
+	public EntityAISprintToTarget(EntityNPCInterface par1EntityLiving) {
 		npc = par1EntityLiving;
 		setMutexBits(AiMutex.PASSIVE);
 	}
@@ -30,7 +30,7 @@ public class EntityAISprintToTarget extends EntityAIBase {
 
 	@Override
 	public boolean shouldExecute() {
-		final EntityLivingBase runTarget = npc.getAttackTarget();
+		EntityLivingBase runTarget = npc.getAttackTarget();
 		if ((runTarget == null) || npc.getNavigator().noPath()) {
 			return false;
 		}

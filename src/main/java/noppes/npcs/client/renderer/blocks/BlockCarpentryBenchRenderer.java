@@ -13,15 +13,15 @@ import noppes.npcs.client.model.blocks.ModelAnvil;
 import noppes.npcs.client.model.blocks.ModelCarpentryBench;
 
 public class BlockCarpentryBenchRenderer extends TileEntitySpecialRenderer {
-	private static final ResourceLocation resource3;
-	private static final ResourceLocation field_110631_g;
+	private static ResourceLocation resource3;
+	private static ResourceLocation field_110631_g;
 	static {
 		resource3 = new ResourceLocation("customnpcs", "textures/models/Steel.png");
 		field_110631_g = new ResourceLocation("customnpcs", "textures/models/CarpentryBench.png");
 	}
-	private final ModelCarpentryBench model;
+	private ModelCarpentryBench model;
 
-	private final ModelAnvil anvil;
+	private ModelAnvil anvil;
 
 	public BlockCarpentryBenchRenderer() {
 		model = new ModelCarpentryBench();
@@ -29,8 +29,8 @@ public class BlockCarpentryBenchRenderer extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double var2, final double var4, final double var6,
-			final float var8, final int blockDamage) {
+	public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8,
+			int blockDamage) {
 		int rotation = 0;
 		boolean anvilModel = var1.getBlockMetadata() == 1;
 		if (var1.getPos() != BlockPos.ORIGIN) {

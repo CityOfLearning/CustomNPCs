@@ -26,7 +26,7 @@ public class TransportLocation {
 		return type == 1;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		if (compound == null) {
 			return;
 		}
@@ -38,7 +38,7 @@ public class TransportLocation {
 	}
 
 	public NBTTagCompound writeNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("Id", id);
 		compound.setDouble("PosX", pos.getX());
 		compound.setDouble("PosY", pos.getY());

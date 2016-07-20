@@ -13,7 +13,7 @@ public class EntityAIClearTarget extends EntityAITarget {
 	private EntityNPCInterface npc;
 	private EntityLivingBase target;
 
-	public EntityAIClearTarget(final EntityNPCInterface npc) {
+	public EntityAIClearTarget(EntityNPCInterface npc) {
 		super(npc, false);
 		this.npc = npc;
 	}

@@ -9,8 +9,8 @@ import net.minecraft.entity.Entity;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class AniNo {
-	public static void setRotationAngles(final float par1, final float par2, final float par3, final float par4,
-			final float par5, final float par6, final Entity entity, final ModelBiped model) {
+	public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6,
+			Entity entity, ModelBiped model) {
 		float ticks = (entity.ticksExisted - ((EntityNPCInterface) entity).animationStart) / 8.0f;
 		ticks %= 2.0f;
 		float ani = ticks - 0.5f;

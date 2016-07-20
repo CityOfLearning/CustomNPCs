@@ -14,7 +14,7 @@ import noppes.npcs.roles.RoleFollower;
 public class ContainerNPCFollowerSetup extends Container {
 	private RoleFollower role;
 
-	public ContainerNPCFollowerSetup(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCFollowerSetup(EntityNPCInterface npc, EntityPlayer player) {
 		role = (RoleFollower) npc.roleInterface;
 		for (int i1 = 0; i1 < 3; ++i1) {
 			addSlotToContainer(new Slot(role.inventory, i1, 44, 39 + (i1 * 25)));
@@ -30,16 +30,16 @@ public class ContainerNPCFollowerSetup extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		ItemStack itemstack = null;
-		final Slot slot = inventorySlots.get(i);
+		Slot slot = inventorySlots.get(i);
 		if ((slot != null) && slot.getHasStack()) {
-			final ItemStack itemstack2 = slot.getStack();
+			ItemStack itemstack2 = slot.getStack();
 			itemstack = itemstack2.copy();
 			if ((i >= 0) && (i < 3)) {
 				if (!mergeItemStack(itemstack2, 3, 38, true)) {

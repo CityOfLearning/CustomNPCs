@@ -27,7 +27,7 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
 
 public class BlockNpcRedstone extends BlockContainer implements IPermission {
-	public static final PropertyBool ACTIVE;
+	public static PropertyBool ACTIVE;
 
 	static {
 		ACTIVE = PropertyBool.create("active");
@@ -48,12 +48,12 @@ public class BlockNpcRedstone extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileRedstoneBlock();
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return (state.getValue(BlockNpcRedstone.ACTIVE)) ? 1 : 0;
 	}
 
@@ -63,38 +63,36 @@ public class BlockNpcRedstone extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, false);
 	}
 
 	@Override
-	public int getStrongPower(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state,
-			final EnumFacing side) {
+	public int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
 		return isActivated(state);
 	}
 
 	@Override
-	public int getWeakPower(final IBlockAccess worldIn, final BlockPos pos, final IBlockState state,
-			final EnumFacing side) {
+	public int getWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
 		return isActivated(state);
 	}
 
-	public int isActivated(final IBlockState state) {
+	public int isActivated(IBlockState state) {
 		return state.getValue(BlockNpcRedstone.ACTIVE) ? 15 : 0;
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return e == EnumPacketServer.SaveTileEntity;
 	}
 
 	@Override
-	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
+			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (par1World.isRemote) {
 			return false;
 		}
-		final ItemStack currentItem = player.inventory.getCurrentItem();
+		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
 				&& CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.RedstoneBlock, null, pos.getX(), pos.getY(), pos.getZ());
@@ -104,7 +102,7 @@ public class BlockNpcRedstone extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void onBlockAdded(final World par1World, final BlockPos pos, final IBlockState state) {
+	public void onBlockAdded(World par1World, BlockPos pos, IBlockState state) {
 		par1World.notifyNeighborsOfStateChange(pos, this);
 		par1World.notifyNeighborsOfStateChange(pos.down(), this);
 		par1World.notifyNeighborsOfStateChange(pos.up(), this);
@@ -115,13 +113,13 @@ public class BlockNpcRedstone extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void onBlockDestroyedByPlayer(final World par1World, final BlockPos pos, final IBlockState state) {
+	public void onBlockDestroyedByPlayer(World par1World, BlockPos pos, IBlockState state) {
 		onBlockAdded(par1World, pos, state);
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entityliving, final ItemStack item) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entityliving,
+			ItemStack item) {
 		if ((entityliving instanceof EntityPlayer) && !world.isRemote) {
 			NoppesUtilServer.sendOpenGui((EntityPlayer) entityliving, EnumGuiType.RedstoneBlock, null, pos.getX(),
 					pos.getY(), pos.getZ());

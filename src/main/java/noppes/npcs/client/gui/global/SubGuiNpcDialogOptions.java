@@ -15,7 +15,7 @@ import noppes.npcs.controllers.dialog.DialogOption;
 public class SubGuiNpcDialogOptions extends SubGuiInterface {
 	private Dialog dialog;
 
-	public SubGuiNpcDialogOptions(final Dialog dialog) {
+	public SubGuiNpcDialogOptions(Dialog dialog) {
 		this.dialog = dialog;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -24,8 +24,8 @@ public class SubGuiNpcDialogOptions extends SubGuiInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id < 6) {
 			DialogOption option = dialog.options.get(id);
 			if (option == null) {
@@ -46,7 +46,7 @@ public class SubGuiNpcDialogOptions extends SubGuiInterface {
 		getLabel(66).center(xSize);
 		for (int i = 0; i < 6; ++i) {
 			String optionString = "";
-			final DialogOption option = dialog.options.get(i);
+			DialogOption option = dialog.options.get(i);
 			if ((option != null) && (option.optionType != EnumOptionType.DISABLED)) {
 				optionString += option.title;
 			}

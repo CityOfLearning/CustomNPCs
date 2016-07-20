@@ -11,7 +11,7 @@ import com.mojang.authlib.GameProfile;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GameProfileAlt extends GameProfile {
-	private static final UUID id;
+	private static UUID id;
 	static {
 		id = UUID.randomUUID();
 	}

@@ -14,8 +14,8 @@ public class ModelWrapper extends ModelBase {
 	public ResourceLocation texture;
 
 	@Override
-	public void render(final Entity p_78088_1_, final float p_78088_2_, final float p_78088_3_, final float p_78088_4_,
-			final float p_78088_5_, final float p_78088_6_, final float p_78088_7_) {
+	public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_,
+			float p_78088_6_, float p_78088_7_) {
 		Minecraft.getMinecraft().getRenderManager().renderEngine.bindTexture(texture);
 		wrapped.render(p_78088_1_, p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_);
 	}

@@ -24,26 +24,26 @@ public abstract class BlockNpcDoorInterface extends BlockDoor implements ITileEn
 	}
 
 	@Override
-	public void breakBlock(final World worldIn, final BlockPos pos, final IBlockState state) {
+	public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
 		super.breakBlock(worldIn, pos, state);
 		worldIn.removeTileEntity(pos);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileDoor();
 	}
 
 	@Override
-	public IBlockState getActualState(IBlockState state, final IBlockAccess worldIn, final BlockPos pos) {
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
 		if (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) {
-			final IBlockState iblockstate1 = worldIn.getBlockState(pos.up());
+			IBlockState iblockstate1 = worldIn.getBlockState(pos.up());
 			if (iblockstate1.getBlock() == this) {
 				state = state.withProperty(BlockDoor.HINGE, iblockstate1.getValue(BlockDoor.HINGE))
 						.withProperty(BlockDoor.POWERED, iblockstate1.getValue(BlockDoor.POWERED));
 			}
 		} else {
-			final IBlockState iblockstate1 = worldIn.getBlockState(pos.down());
+			IBlockState iblockstate1 = worldIn.getBlockState(pos.down());
 			if (iblockstate1.getBlock() == this) {
 				state = state.withProperty(BlockDoor.FACING, iblockstate1.getValue(BlockDoor.FACING))
 						.withProperty(BlockDoor.OPEN, iblockstate1.getValue(BlockDoor.OPEN));
@@ -53,7 +53,7 @@ public abstract class BlockNpcDoorInterface extends BlockDoor implements ITileEn
 	}
 
 	@Override
-	public Item getItemDropped(final IBlockState state, final Random rand, final int fortune) {
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
 		return null;
 	}
 
@@ -63,7 +63,7 @@ public abstract class BlockNpcDoorInterface extends BlockDoor implements ITileEn
 	}
 
 	@Override
-	public boolean hasTileEntity(final IBlockState state) {
+	public boolean hasTileEntity(IBlockState state) {
 		return true;
 	}
 }

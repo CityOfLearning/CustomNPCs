@@ -13,7 +13,7 @@ import noppes.npcs.api.block.IBlockFluidContainer;
 public class BlockFluidContainerWrapper extends BlockWrapper implements IBlockFluidContainer {
 	private BlockFluidBase block;
 
-	public BlockFluidContainerWrapper(final World world, final Block block, final BlockPos pos) {
+	public BlockFluidContainerWrapper(World world, Block block, BlockPos pos) {
 		super(world, block, pos);
 		this.block = (BlockFluidBase) block;
 	}

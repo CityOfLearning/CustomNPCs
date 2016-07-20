@@ -28,7 +28,7 @@ public class JobBuilder extends JobInterface {
 	private int tryTicks;
 	private int ticks;
 
-	public JobBuilder(final EntityNPCInterface npc) {
+	public JobBuilder(EntityNPCInterface npc) {
 		super(npc);
 		build = null;
 		possibleBuildPos = null;
@@ -42,7 +42,7 @@ public class JobBuilder extends JobInterface {
 	@Override
 	public boolean aiShouldExecute() {
 		if (possibleBuildPos != null) {
-			final TileEntity tile = npc.worldObj.getTileEntity(possibleBuildPos);
+			TileEntity tile = npc.worldObj.getTileEntity(possibleBuildPos);
 			if (tile instanceof TileBuilder) {
 				build = (TileBuilder) tile;
 			} else {
@@ -90,11 +90,11 @@ public class JobBuilder extends JobInterface {
 		}
 	}
 
-	private String blockToString(final BlockData data) {
+	private String blockToString(BlockData data) {
 		if (data.state.getBlock() == Blocks.air) {
 			return "minecraft:iron_pickaxe";
 		}
-		final String name = itemToString(data.getStack());
+		String name = itemToString(data.getStack());
 		if (name == null) {
 			return "";
 		}
@@ -103,8 +103,8 @@ public class JobBuilder extends JobInterface {
 
 	@Override
 	public IItemStack getMainhand() {
-		final String name = npc.getDataWatcher().getWatchableObjectString(17);
-		final ItemStack item = stringToItem(name);
+		String name = npc.getDataWatcher().getWatchableObjectString(17);
+		ItemStack item = stringToItem(name);
 		if (item == null) {
 			return npc.inventory.weapons.get(0);
 		}
@@ -119,7 +119,7 @@ public class JobBuilder extends JobInterface {
 		npc.swingItem();
 		npc.worldObj.setBlockState(placing.pos, placing.state, 2);
 		if ((placing.state.getBlock() instanceof ITileEntityProvider) && (placing.tile != null)) {
-			final TileEntity tile = npc.worldObj.getTileEntity(placing.pos);
+			TileEntity tile = npc.worldObj.getTileEntity(placing.pos);
 			if (tile != null) {
 				tile.readFromNBT(placing.tile);
 			}
@@ -128,16 +128,16 @@ public class JobBuilder extends JobInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		if (compound.hasKey("BuildX")) {
 			possibleBuildPos = new BlockPos(compound.getInteger("BuildX"), compound.getInteger("BuildY"),
 					compound.getInteger("BuildZ"));
 		}
 		if ((possibleBuildPos != null) && compound.hasKey("Placing")) {
-			final Stack<BlockData> placing = new Stack<BlockData>();
-			final NBTTagList list = compound.getTagList("Placing", 10);
+			Stack<BlockData> placing = new Stack<BlockData>();
+			NBTTagList list = compound.getTagList("Placing", 10);
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final BlockData data = BlockData.getData(list.getCompoundTagAt(i));
+				BlockData data = BlockData.getData(list.getCompoundTagAt(i));
 				if (data != null) {
 					placing.add(data);
 				}
@@ -160,14 +160,14 @@ public class JobBuilder extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		if (build != null) {
 			compound.setInteger("BuildX", build.getPos().getX());
 			compound.setInteger("BuildY", build.getPos().getY());
 			compound.setInteger("BuildZ", build.getPos().getZ());
 			if ((placingList != null) && !placingList.isEmpty()) {
-				final NBTTagList list = new NBTTagList();
-				for (final BlockData data : placingList) {
+				NBTTagList list = new NBTTagList();
+				for (BlockData data : placingList) {
 					list.appendTag(data.getNBT());
 				}
 				if (placing != null) {

@@ -18,7 +18,7 @@ import noppes.npcs.Schematic;
 import noppes.npcs.blocks.tiles.TileCopy;
 
 public class BlockCopyRenderer extends BlockRendererInterface {
-	private static final ItemStack item;
+	private static ItemStack item;
 	public static Schematic schematic;
 	public static BlockPos pos;
 
@@ -28,12 +28,12 @@ public class BlockCopyRenderer extends BlockRendererInterface {
 		BlockCopyRenderer.pos = null;
 	}
 
-	public void drawSelectionBox(final BlockPos pos) {
+	public void drawSelectionBox(BlockPos pos) {
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.disableBlend();
-		final AxisAlignedBB bb = new AxisAlignedBB(BlockPos.ORIGIN, pos);
+		AxisAlignedBB bb = new AxisAlignedBB(BlockPos.ORIGIN, pos);
 		GlStateManager.translate(0.001f, 0.001f, 0.001f);
 		RenderGlobal.drawOutlinedBoundingBox(bb, 255, 0, 0, 255);
 		GlStateManager.enableTexture2D();
@@ -43,9 +43,8 @@ public class BlockCopyRenderer extends BlockRendererInterface {
 	}
 
 	@Override
-	public void renderTileEntityAt(final TileEntity var1, final double x, final double y, final double z,
-			final float var8, final int blockDamage) {
-		final TileCopy tile = (TileCopy) var1;
+	public void renderTileEntityAt(TileEntity var1, double x, double y, double z, float var8, int blockDamage) {
+		TileCopy tile = (TileCopy) var1;
 		GlStateManager.pushMatrix();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		RenderHelper.enableStandardItemLighting();

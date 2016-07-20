@@ -48,11 +48,11 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (!(guibutton instanceof GuiButtonNextPage)) {
 			return;
 		}
-		final int id = guibutton.id;
+		int id = guibutton.id;
 		if (id == 1) {
 			++page;
 		}
@@ -62,18 +62,18 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 		updateButtons();
 	}
 
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		drawDefaultBackground();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(indicator);
 		this.drawTexturedModalRect(guiLeft, guiTop + 8, 0, 0, xSize, ySize);
 		this.drawTexturedModalRect(guiLeft + 4, guiTop + 8, 56, 0, 200, ySize);
 		if (playerFactions.isEmpty()) {
-			final String noFaction = StatCollector.translateToLocal("faction.nostanding");
+			String noFaction = StatCollector.translateToLocal("faction.nostanding");
 			fontRendererObj.drawString(noFaction, guiLeft + ((xSize - fontRendererObj.getStringWidth(noFaction)) / 2),
 					guiTop + 80, CustomNpcResourceListener.DefaultTextColor);
 		} else {
@@ -95,7 +95,7 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
@@ -112,8 +112,8 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 		for (int id = 0; id < size; ++id) {
 			drawHorizontalLine(guiLeft + 2, guiLeft + xSize, guiTop + 14 + (id * 30),
 					-16777216 + CustomNpcResourceListener.DefaultTextColor);
-			final Faction faction = playerFactions.get(((page - 1) * 5) + id);
-			final String name = faction.name;
+			Faction faction = playerFactions.get(((page - 1) * 5) + id);
+			String name = faction.name;
 			String points = " : " + faction.defaultPoints;
 			String standing = StatCollector.translateToLocal("faction.friendly");
 			int color = 65280;
@@ -138,7 +138,7 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 		drawHorizontalLine(guiLeft + 2, guiLeft + xSize, guiTop + 14 + (size * 30),
 				-16777216 + CustomNpcResourceListener.DefaultTextColor);
 		if (pages > 1) {
-			final String s = page + "/" + pages;
+			String s = page + "/" + pages;
 			fontRendererObj.drawString(s, guiLeft + ((xSize - fontRendererObj.getStringWidth(s)) / 2), guiTop + 203,
 					CustomNpcResourceListener.DefaultTextColor);
 		}
@@ -149,19 +149,19 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		playerFactions = new ArrayList<Faction>();
-		final NBTTagList list = compound.getTagList("FactionList", 10);
+		NBTTagList list = compound.getTagList("FactionList", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final Faction faction = new Faction();
+			Faction faction = new Faction();
 			faction.readNBT(list.getCompoundTagAt(i));
 			playerFactions.add(faction);
 		}
-		final PlayerFactionData data = new PlayerFactionData();
+		PlayerFactionData data = new PlayerFactionData();
 		data.loadNBTData(compound);
-		for (final int id : data.factionData.keySet()) {
-			final int points = data.factionData.get(id);
-			for (final Faction faction2 : playerFactions) {
+		for (int id : data.factionData.keySet()) {
+			int points = data.factionData.get(id);
+			for (Faction faction2 : playerFactions) {
 				if (faction2.id == id) {
 					faction2.defaultPoints = points;
 				}

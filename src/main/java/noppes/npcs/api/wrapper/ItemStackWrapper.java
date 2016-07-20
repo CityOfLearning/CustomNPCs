@@ -16,7 +16,7 @@ import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.entity.IEntityLiving;
 
 public class ItemStackWrapper implements IItemStack {
-	public static ItemStack MCItem(final IItemStack item) {
+	public static ItemStack MCItem(IItemStack item) {
 		if (item == null) {
 			return null;
 		}
@@ -25,12 +25,12 @@ public class ItemStackWrapper implements IItemStack {
 
 	public ItemStack item;
 
-	public ItemStackWrapper(final ItemStack item) {
+	public ItemStackWrapper(ItemStack item) {
 		this.item = item;
 	}
 
 	@Override
-	public void damageItem(final int damage, final IEntityLiving living) {
+	public void damageItem(int damage, IEntityLiving living) {
 		item.damageItem(damage, (living == null) ? null : living.getMCEntity());
 	}
 
@@ -72,8 +72,8 @@ public class ItemStackWrapper implements IItemStack {
 	}
 
 	@Override
-	public Object getTag(final String key) {
-		final NBTBase tag = this.getTag().getTag(key);
+	public Object getTag(String key) {
+		NBTBase tag = this.getTag().getTag(key);
 		if (tag == null) {
 			return null;
 		}
@@ -92,13 +92,13 @@ public class ItemStackWrapper implements IItemStack {
 	}
 
 	@Override
-	public boolean hasEnchant(final int id) {
+	public boolean hasEnchant(int id) {
 		if (!isEnchanted()) {
 			return false;
 		}
-		final NBTTagList list = item.getEnchantmentTagList();
+		NBTTagList list = item.getEnchantmentTagList();
 		for (int i = 0; i < list.tagCount(); ++i) {
-			final NBTTagCompound compound = list.getCompoundTagAt(i);
+			NBTTagCompound compound = list.getCompoundTagAt(i);
 			if (compound.getShort("id") == id) {
 				return true;
 			}
@@ -107,13 +107,13 @@ public class ItemStackWrapper implements IItemStack {
 	}
 
 	@Override
-	public boolean hasTag(final String key) {
+	public boolean hasTag(String key) {
 		return this.getTag().hasKey(key);
 	}
 
 	@Override
 	public boolean isBlock() {
-		final Block block = Block.getBlockFromItem(item.getItem());
+		Block block = Block.getBlockFromItem(item.getItem());
 		return (block != null) && (block != Blocks.air);
 	}
 
@@ -123,12 +123,12 @@ public class ItemStackWrapper implements IItemStack {
 	}
 
 	@Override
-	public void setCustomName(final String name) {
+	public void setCustomName(String name) {
 		item.setStackDisplayName(name);
 	}
 
 	@Override
-	public void setItemDamage(final int value) {
+	public void setItemDamage(int value) {
 		item.setItemDamage(value);
 	}
 
@@ -143,7 +143,7 @@ public class ItemStackWrapper implements IItemStack {
 	}
 
 	@Override
-	public void setTag(final String key, final Object value) {
+	public void setTag(String key, Object value) {
 		if (value instanceof Number) {
 			this.getTag().setDouble(key, ((Number) value).doubleValue());
 		} else if (value instanceof String) {

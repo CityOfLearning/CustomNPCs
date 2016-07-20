@@ -22,8 +22,8 @@ public class TransportCategory {
 	}
 
 	public Vector<TransportLocation> getDefaultLocations() {
-		final Vector<TransportLocation> list = new Vector<TransportLocation>();
-		for (final TransportLocation loc : locations.values()) {
+		Vector<TransportLocation> list = new Vector<TransportLocation>();
+		for (TransportLocation loc : locations.values()) {
 			if (loc.isDefault()) {
 				list.add(loc);
 			}
@@ -31,26 +31,26 @@ public class TransportCategory {
 		return list;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		id = compound.getInteger("CategoryId");
 		title = compound.getString("CategoryTitle");
-		final NBTTagList locs = compound.getTagList("CategoryLocations", 10);
+		NBTTagList locs = compound.getTagList("CategoryLocations", 10);
 		if ((locs == null) || (locs.tagCount() == 0)) {
 			return;
 		}
 		for (int ii = 0; ii < locs.tagCount(); ++ii) {
-			final TransportLocation location = new TransportLocation();
+			TransportLocation location = new TransportLocation();
 			location.readNBT(locs.getCompoundTagAt(ii));
 			location.category = this;
 			locations.put(location.id, location);
 		}
 	}
 
-	public void writeNBT(final NBTTagCompound compound) {
+	public void writeNBT(NBTTagCompound compound) {
 		compound.setInteger("CategoryId", id);
 		compound.setString("CategoryTitle", title);
-		final NBTTagList locs = new NBTTagList();
-		for (final TransportLocation location : locations.values()) {
+		NBTTagList locs = new NBTTagList();
+		for (TransportLocation location : locations.values()) {
 			locs.appendTag(location.writeNBT());
 		}
 		compound.setTag("CategoryLocations", locs);

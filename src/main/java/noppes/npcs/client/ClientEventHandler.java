@@ -33,12 +33,12 @@ public class ClientEventHandler {
 		displayList = -1;
 	}
 
-	public void drawSelectionBox(final BlockPos pos) {
+	public void drawSelectionBox(BlockPos pos) {
 		GlStateManager.disableTexture2D();
 		GlStateManager.disableLighting();
 		GlStateManager.disableCull();
 		GlStateManager.disableBlend();
-		final AxisAlignedBB bb = new AxisAlignedBB(BlockPos.ORIGIN, pos);
+		AxisAlignedBB bb = new AxisAlignedBB(BlockPos.ORIGIN, pos);
 		RenderGlobal.drawOutlinedBoundingBox(bb, 255, 0, 0, 255);
 		GlStateManager.enableTexture2D();
 		GlStateManager.enableLighting();
@@ -47,17 +47,17 @@ public class ClientEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onRenderTick(final RenderWorldLastEvent event) {
-		final EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+	public void onRenderTick(RenderWorldLastEvent event) {
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		if ((TileBuilder.DrawPos == null) || (TileBuilder.DrawPos.distanceSq(player.getPosition()) > 1000000.0)) {
 			return;
 		}
-		final TileEntity te = player.worldObj.getTileEntity(TileBuilder.DrawPos);
+		TileEntity te = player.worldObj.getTileEntity(TileBuilder.DrawPos);
 		if ((te == null) || !(te instanceof TileBuilder)) {
 			return;
 		}
-		final TileBuilder tile = (TileBuilder) te;
-		final Schematic schem = tile.getSchematic();
+		TileBuilder tile = (TileBuilder) te;
+		Schematic schem = tile.getSchematic();
 		if (schem == null) {
 			return;
 		}
@@ -76,21 +76,21 @@ public class ClientEventHandler {
 			if (TileBuilder.Compiled) {
 				GlStateManager.callList(displayList);
 			} else {
-				final BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
+				BlockRendererDispatcher dispatcher = Minecraft.getMinecraft().getBlockRendererDispatcher();
 				if (displayList >= 0) {
 					GLAllocation.deleteDisplayLists(displayList);
 				}
 				GL11.glNewList(displayList = GLAllocation.generateDisplayLists(1), 4864);
 				try {
 					for (int i = 0; i < schem.size; ++i) {
-						final Block b = Block.getBlockById(schem.blockArray[i]);
+						Block b = Block.getBlockById(schem.blockArray[i]);
 						if (b != null) {
 							if (b.getRenderType() == 3) {
 								IBlockState state = b.getStateFromMeta(schem.blockDataArray[i]);
-								final int posX = i % schem.width;
-								final int posZ = ((i - posX) / schem.width) % schem.length;
-								final int posY = (((i - posX) / schem.width) - posZ) / schem.length;
-								final BlockPos pos = schem.rotatePos(posX, posY, posZ, tile.rotation);
+								int posX = i % schem.width;
+								int posZ = ((i - posX) / schem.width) % schem.length;
+								int posY = (((i - posX) / schem.width) - posZ) / schem.length;
+								BlockPos pos = schem.rotatePos(posX, posY, posZ, tile.rotation);
 								GlStateManager.pushMatrix();
 								GlStateManager.pushAttrib();
 								GlStateManager.enableRescaleNormal();

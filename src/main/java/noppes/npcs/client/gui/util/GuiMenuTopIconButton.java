@@ -18,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiMenuTopIconButton extends GuiMenuTopButton {
-	private static final ResourceLocation resource;
+	private static ResourceLocation resource;
 	protected static RenderItem itemRender;
 	static {
 		resource = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
@@ -26,23 +26,21 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 
 	private ItemStack item;
 
-	public GuiMenuTopIconButton(final int i, final GuiButton parent, final String s, final IButtonListener listener,
-			final ItemStack item) {
+	public GuiMenuTopIconButton(int i, GuiButton parent, String s, IButtonListener listener, ItemStack item) {
 		super(i, parent, s, listener);
 		width = 28;
 		height = 28;
 		this.item = item;
 	}
 
-	public GuiMenuTopIconButton(final int i, final GuiButton parent, final String s, final ItemStack item) {
+	public GuiMenuTopIconButton(int i, GuiButton parent, String s, ItemStack item) {
 		super(i, parent, s);
 		width = 28;
 		height = 28;
 		this.item = item;
 	}
 
-	public GuiMenuTopIconButton(final int i, final int x, final int y, final String s, final IButtonListener listener,
-			final ItemStack item) {
+	public GuiMenuTopIconButton(int i, int x, int y, String s, IButtonListener listener, ItemStack item) {
 		super(i, x, y, s);
 		width = 28;
 		height = 28;
@@ -50,7 +48,7 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 		this.listener = listener;
 	}
 
-	public GuiMenuTopIconButton(final int i, final int x, final int y, final String s, final ItemStack item) {
+	public GuiMenuTopIconButton(int i, int x, int y, String s, ItemStack item) {
 		super(i, x, y, s);
 		width = 28;
 		height = 28;
@@ -59,7 +57,7 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 	}
 
 	@Override
-	public void drawButton(final Minecraft minecraft, final int i, final int j) {
+	public void drawButton(Minecraft minecraft, int i, int j) {
 		if (!getVisible()) {
 			return;
 		}
@@ -67,9 +65,9 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 			item = new ItemStack(Blocks.dirt);
 		}
 		hover = ((i >= xPosition) && (j >= yPosition) && (i < (xPosition + getWidth())) && (j < (yPosition + height)));
-		final Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
 		if (hover && !active) {
-			final int x = i + mc.fontRendererObj.getStringWidth(displayString);
+			int x = i + mc.fontRendererObj.getStringWidth(displayString);
 			GlStateManager.translate(x, yPosition + 2, 0.0f);
 			drawHoveringText(Arrays.asList(displayString), 0, 0, mc.fontRendererObj);
 			GlStateManager.translate((-x), (-(yPosition + 2)), 0.0f);
@@ -94,16 +92,15 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 		GlStateManager.popMatrix();
 	}
 
-	protected void drawHoveringText(final List<String> p_146283_1_, final int p_146283_2_, final int p_146283_3_,
-			final FontRenderer font) {
+	protected void drawHoveringText(List<String> p_146283_1_, int p_146283_2_, int p_146283_3_, FontRenderer font) {
 		if (!p_146283_1_.isEmpty()) {
 			GlStateManager.disableRescaleNormal();
 			RenderHelper.disableStandardItemLighting();
 			GlStateManager.disableLighting();
 			GlStateManager.disableDepth();
 			int k = 0;
-			for (final String s : p_146283_1_) {
-				final int l = font.getStringWidth(s);
+			for (String s : p_146283_1_) {
+				int l = font.getStringWidth(s);
 				if (l > k) {
 					k = l;
 				}
@@ -122,20 +119,20 @@ public class GuiMenuTopIconButton extends GuiMenuTopButton {
 			}
 			zLevel = 300.0f;
 			GuiMenuTopIconButton.itemRender.zLevel = 300.0f;
-			final int j3 = -267386864;
+			int j3 = -267386864;
 			drawGradientRect(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j3, j3);
 			drawGradientRect(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j3, j3);
 			drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j3, j3);
 			drawGradientRect(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j3, j3);
 			drawGradientRect(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j3, j3);
-			final int k3 = 1347420415;
-			final int l2 = ((k3 & 0xFEFEFE) >> 1) | (k3 & 0xFF000000);
+			int k3 = 1347420415;
+			int l2 = ((k3 & 0xFEFEFE) >> 1) | (k3 & 0xFF000000);
 			drawGradientRect(j2 - 3, (k2 - 3) + 1, (j2 - 3) + 1, (k2 + i1 + 3) - 1, k3, l2);
 			drawGradientRect(j2 + k + 2, (k2 - 3) + 1, j2 + k + 3, (k2 + i1 + 3) - 1, k3, l2);
 			drawGradientRect(j2 - 3, k2 - 3, j2 + k + 3, (k2 - 3) + 1, k3, k3);
 			drawGradientRect(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l2, l2);
 			for (int i2 = 0; i2 < p_146283_1_.size(); ++i2) {
-				final String s2 = p_146283_1_.get(i2);
+				String s2 = p_146283_1_.get(i2);
 				font.drawStringWithShadow(s2, j2, k2, -1);
 				if (i2 == 0) {
 					k2 += 2;

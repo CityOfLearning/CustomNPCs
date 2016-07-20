@@ -21,7 +21,7 @@ public class SubGuiNpcQuestAdvanced extends SubGuiInterface implements ITextfiel
 	private Quest quest;
 	private GuiNPCManageQuest parent;
 
-	public SubGuiNpcQuestAdvanced(final Quest quest, final GuiNPCManageQuest parent) {
+	public SubGuiNpcQuestAdvanced(Quest quest, GuiNPCManageQuest parent) {
 		this.quest = quest;
 		this.parent = parent;
 		setBackground("menubg.png");
@@ -31,8 +31,8 @@ public class SubGuiNpcQuestAdvanced extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 9) {
 			parent.setSubGui(new SubGuiNpcCommand(quest.command));
 		}
@@ -79,6 +79,6 @@ public class SubGuiNpcQuestAdvanced extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 	}
 }

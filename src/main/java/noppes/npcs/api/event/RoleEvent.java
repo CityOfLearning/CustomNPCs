@@ -16,25 +16,25 @@ import noppes.npcs.api.entity.data.IPlayerMail;
 
 public class RoleEvent extends Event {
 	public static class BankUnlockedEvent extends RoleEvent {
-		public final int slot;
+		public int slot;
 
-		public BankUnlockedEvent(final EntityPlayer player, final ICustomNpc npc, final int slot) {
+		public BankUnlockedEvent(EntityPlayer player, ICustomNpc npc, int slot) {
 			super(player, npc);
 			this.slot = slot;
 		}
 	}
 
 	public static class BankUpgradedEvent extends RoleEvent {
-		public final int slot;
+		public int slot;
 
-		public BankUpgradedEvent(final EntityPlayer player, final ICustomNpc npc, final int slot) {
+		public BankUpgradedEvent(EntityPlayer player, ICustomNpc npc, int slot) {
 			super(player, npc);
 			this.slot = slot;
 		}
 	}
 
 	public static class FollowerFinishedEvent extends RoleEvent {
-		public FollowerFinishedEvent(final EntityPlayer player, final ICustomNpc npc) {
+		public FollowerFinishedEvent(EntityPlayer player, ICustomNpc npc) {
 			super(player, npc);
 		}
 	}
@@ -43,7 +43,7 @@ public class RoleEvent extends Event {
 	public static class FollowerHireEvent extends RoleEvent {
 		public int days;
 
-		public FollowerHireEvent(final EntityPlayer player, final ICustomNpc npc, final int days) {
+		public FollowerHireEvent(EntityPlayer player, ICustomNpc npc, int days) {
 			super(player, npc);
 			this.days = days;
 		}
@@ -51,9 +51,9 @@ public class RoleEvent extends Event {
 
 	@Cancelable
 	public static class MailmanEvent extends RoleEvent {
-		public final IPlayerMail mail;
+		public IPlayerMail mail;
 
-		public MailmanEvent(final EntityPlayer player, final ICustomNpc npc, final IPlayerMail mail) {
+		public MailmanEvent(EntityPlayer player, ICustomNpc npc, IPlayerMail mail) {
 			super(player, npc);
 			this.mail = mail;
 		}
@@ -65,8 +65,8 @@ public class RoleEvent extends Event {
 		public IItemStack currency1;
 		public IItemStack currency2;
 
-		public TraderEvent(final EntityPlayer player, final ICustomNpc npc, final ItemStack sold,
-				final ItemStack currency1, final ItemStack currency2) {
+		public TraderEvent(EntityPlayer player, ICustomNpc npc, ItemStack sold, ItemStack currency1,
+				ItemStack currency2) {
 			super(player, npc);
 			this.currency1 = ((currency1 == null) ? null : NpcAPI.Instance().getIItemStack(currency1.copy()));
 			this.currency2 = ((currency2 == null) ? null : NpcAPI.Instance().getIItemStack(currency2.copy()));
@@ -76,23 +76,23 @@ public class RoleEvent extends Event {
 
 	@Cancelable
 	public static class TransporterUnlockedEvent extends RoleEvent {
-		public TransporterUnlockedEvent(final EntityPlayer player, final ICustomNpc npc) {
+		public TransporterUnlockedEvent(EntityPlayer player, ICustomNpc npc) {
 			super(player, npc);
 		}
 	}
 
 	@Cancelable
 	public static class TransporterUseEvent extends RoleEvent {
-		public TransporterUseEvent(final EntityPlayer player, final ICustomNpc npc) {
+		public TransporterUseEvent(EntityPlayer player, ICustomNpc npc) {
 			super(player, npc);
 		}
 	}
 
-	public final ICustomNpc npc;
+	public ICustomNpc npc;
 
-	public final IPlayer player;
+	public IPlayer player;
 
-	public RoleEvent(final EntityPlayer player, final ICustomNpc npc) {
+	public RoleEvent(EntityPlayer player, ICustomNpc npc) {
 		this.npc = npc;
 		this.player = (IPlayer) NpcAPI.Instance().getIEntity(player);
 	}

@@ -20,7 +20,7 @@ public class GuiScriptList extends SubGuiInterface {
 	private ScriptContainer container;
 	private List<String> scripts;
 
-	public GuiScriptList(List<String> scripts, final ScriptContainer container) {
+	public GuiScriptList(List<String> scripts, ScriptContainer container) {
 		this.container = container;
 		setBackground("menubg.png");
 		xSize = 346;
@@ -32,8 +32,8 @@ public class GuiScriptList extends SubGuiInterface {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if ((button.id == 1) && scroll1.hasSelected()) {
 			container.scripts.add(scroll1.getSelected());
 			scroll1.selected = -1;
@@ -47,7 +47,7 @@ public class GuiScriptList extends SubGuiInterface {
 		}
 		if (button.id == 3) {
 			container.scripts.clear();
-			for (final String script : scripts) {
+			for (String script : scripts) {
 				container.scripts.add(script);
 			}
 			scroll1.selected = -1;
@@ -82,7 +82,7 @@ public class GuiScriptList extends SubGuiInterface {
 		scroll2.guiTop = guiTop + 14;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(2, "script.loadedScripts", guiLeft + 200, guiTop + 4));
-		final List<String> temp = new ArrayList<String>(scripts);
+		List<String> temp = new ArrayList<String>(scripts);
 		temp.removeAll(container.scripts);
 		scroll1.setList(temp);
 		scroll2.setList(container.scripts);

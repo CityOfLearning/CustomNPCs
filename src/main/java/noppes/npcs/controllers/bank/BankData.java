@@ -39,34 +39,34 @@ public class BankData {
 		}
 	}
 
-	private ContainerNPCBankInterface getContainer(final EntityPlayer player) {
-		final Container con = player.openContainer;
+	private ContainerNPCBankInterface getContainer(EntityPlayer player) {
+		Container con = player.openContainer;
 		if ((con == null) || !(con instanceof ContainerNPCBankInterface)) {
 			return null;
 		}
 		return (ContainerNPCBankInterface) con;
 	}
 
-	private HashMap<Integer, NpcMiscInventory> getItemSlots(final NBTTagList tagList) {
-		final HashMap<Integer, NpcMiscInventory> list = new HashMap<Integer, NpcMiscInventory>();
+	private HashMap<Integer, NpcMiscInventory> getItemSlots(NBTTagList tagList) {
+		HashMap<Integer, NpcMiscInventory> list = new HashMap<Integer, NpcMiscInventory>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
-			final int slot = nbttagcompound.getInteger("Slot");
-			final NpcMiscInventory inv = new NpcMiscInventory(54);
+			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+			int slot = nbttagcompound.getInteger("Slot");
+			NpcMiscInventory inv = new NpcMiscInventory(54);
 			inv.setFromNBT(nbttagcompound.getCompoundTag("BankItems"));
 			list.put(slot, inv);
 		}
 		return list;
 	}
 
-	public boolean isUpgraded(final Bank bank, final int slot) {
+	public boolean isUpgraded(Bank bank, int slot) {
 		return bank.isUpgraded(slot) || (bank.canBeUpgraded(slot) && upgradedSlots.get(slot));
 	}
 
-	private NBTTagList nbtItemSlots(final HashMap<Integer, NpcMiscInventory> items) {
-		final NBTTagList list = new NBTTagList();
-		for (final int slot : items.keySet()) {
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+	private NBTTagList nbtItemSlots(HashMap<Integer, NpcMiscInventory> items) {
+		NBTTagList list = new NBTTagList();
+		for (int slot : items.keySet()) {
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("Slot", slot);
 			nbttagcompound.setTag("BankItems", items.get(slot).getToNBT());
 			list.appendTag(nbttagcompound);
@@ -74,8 +74,8 @@ public class BankData {
 		return list;
 	}
 
-	public void openBankGui(final EntityPlayer player, final EntityNPCInterface npc, final int bankId, final int slot) {
-		final Bank bank = BankController.getInstance().getBank(bankId);
+	public void openBankGui(EntityPlayer player, EntityNPCInterface npc, int bankId, int slot) {
+		Bank bank = BankController.getInstance().getBank(bankId);
 		if (bank.getMaxSlots() <= slot) {
 			return;
 		}
@@ -94,16 +94,16 @@ public class BankData {
 		} else {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerBankSmall, npc, slot, bank.id, 0);
 		}
-		final ItemStack item = currency;
+		ItemStack item = currency;
 		CustomNPCsScheduler.runTack(new Runnable() {
 			@Override
 			public void run() {
-				final NBTTagCompound compound = new NBTTagCompound();
+				NBTTagCompound compound = new NBTTagCompound();
 				compound.setInteger("MaxSlots", bank.getMaxSlots());
 				compound.setInteger("UnlockedSlots", unlockedSlots);
 				if (item != null) {
 					compound.setTag("Currency", item.writeToNBT(new NBTTagCompound()));
-					final ContainerNPCBankInterface container = BankData.this.getContainer(player);
+					ContainerNPCBankInterface container = BankData.this.getContainer(player);
 					if (container != null) {
 						container.setCurrency(item);
 					}
@@ -113,14 +113,14 @@ public class BankData {
 		}, 100);
 	}
 
-	public void readNBT(final NBTTagCompound nbttagcompound) {
+	public void readNBT(NBTTagCompound nbttagcompound) {
 		bankId = nbttagcompound.getInteger("DataBankId");
 		unlockedSlots = nbttagcompound.getInteger("UnlockedSlots");
 		itemSlots = getItemSlots(nbttagcompound.getTagList("BankInv", 10));
 		upgradedSlots = NBTTags.getBooleanList(nbttagcompound.getTagList("UpdatedSlots", 10));
 	}
 
-	public void writeNBT(final NBTTagCompound nbttagcompound) {
+	public void writeNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("DataBankId", bankId);
 		nbttagcompound.setInteger("UnlockedSlots", unlockedSlots);
 		nbttagcompound.setTag("UpdatedSlots", NBTTags.nbtBooleanList(upgradedSlots));

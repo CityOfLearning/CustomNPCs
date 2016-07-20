@@ -21,15 +21,15 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
 	private Quest quest;
 	private ResourceLocation resource;
 
-	public GuiNpcQuestReward(final EntityNPCInterface npc, final ContainerNpcQuestReward container) {
+	public GuiNpcQuestReward(EntityNPCInterface npc, ContainerNpcQuestReward container) {
 		super(npc, container);
 		quest = GuiNPCManageQuest.quest;
 		resource = getResource("questreward.png");
 	}
 
 	@Override
-	public void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 5) {
 			NoppesUtil.openGUI(player, GuiNPCManageQuest.Instance);
 		}
@@ -39,11 +39,11 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int i, final int j) {
+	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
-		final int l = (width - xSize) / 2;
-		final int i2 = (height - ySize) / 2;
+		int l = (width - xSize) / 2;
+		int i2 = (height - ySize) / 2;
 		this.drawTexturedModalRect(l, i2, 0, 0, xSize, ySize);
 		super.drawGuiContainerBackgroundLayer(f, i, j);
 	}
@@ -71,7 +71,7 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		quest.rewardExp = textfield.getInteger();
 	}
 }

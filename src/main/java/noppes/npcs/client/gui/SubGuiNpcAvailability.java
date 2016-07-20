@@ -26,7 +26,7 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 	private Availability availabitily;
 	private int slot;
 
-	public SubGuiNpcAvailability(final Availability availabitily) {
+	public SubGuiNpcAvailability(Availability availabitily) {
 		slot = 0;
 		this.availabitily = availabitily;
 		setBackground("menubg.png");
@@ -36,8 +36,8 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			setSubGui(new SubGuiNpcAvailabilityDialog(availabitily));
 		}
@@ -60,13 +60,13 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 		}
 		if (button.id == 21) {
 			slot = 1;
-			final GuiNPCFactionSelection gui = new GuiNPCFactionSelection(npc, getParent(), availabitily.factionId);
+			GuiNPCFactionSelection gui = new GuiNPCFactionSelection(npc, getParent(), availabitily.factionId);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
 		if (button.id == 25) {
 			slot = 2;
-			final GuiNPCFactionSelection gui = new GuiNPCFactionSelection(npc, getParent(), availabitily.faction2Id);
+			GuiNPCFactionSelection gui = new GuiNPCFactionSelection(npc, getParent(), availabitily.faction2Id);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
@@ -133,7 +133,7 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 	}
 
 	@Override
-	public void selected(final int id, final String name) {
+	public void selected(int id, String name) {
 		if (slot == 1) {
 			availabitily.factionId = id;
 		}
@@ -143,9 +143,9 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("Slot")) {
-			final Faction faction = new Faction();
+			Faction faction = new Faction();
 			faction.readNBT(compound);
 			if (availabitily.factionId == faction.id) {
 				getButton(21).setDisplayText(faction.name);
@@ -157,7 +157,7 @@ public class SubGuiNpcAvailability extends SubGuiInterface
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 51) {
 			availabitily.minPlayerLevel = textfield.getInteger();
 		}

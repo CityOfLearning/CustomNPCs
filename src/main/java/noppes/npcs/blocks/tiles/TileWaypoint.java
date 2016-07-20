@@ -33,13 +33,13 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 		range = 10;
 	}
 
-	private List<EntityPlayer> getPlayerList(final int x, final int y, final int z) {
+	private List<EntityPlayer> getPlayerList(int x, int y, int z) {
 		return worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(x, y, z));
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		name = compound.getString("LocationName");
 		range = compound.getInteger("LocationRange");
@@ -59,19 +59,19 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 		}
 		ticks = 10;
 		(toCheck = getPlayerList(range, range, range)).removeAll(recentlyChecked);
-		final List<EntityPlayer> listMax = getPlayerList(range + 10, range + 10, range + 10);
+		List<EntityPlayer> listMax = getPlayerList(range + 10, range + 10, range + 10);
 		recentlyChecked.retainAll(listMax);
 		recentlyChecked.addAll(toCheck);
 		if (toCheck.isEmpty()) {
 			return;
 		}
-		for (final EntityPlayer player : toCheck) {
-			final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-			for (final QuestData data : playerdata.activeQuests.values()) {
+		for (EntityPlayer player : toCheck) {
+			PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+			for (QuestData data : playerdata.activeQuests.values()) {
 				if (data.quest.type != EnumQuestType.LOCATION) {
 					continue;
 				}
-				final QuestLocation quest = (QuestLocation) data.quest.questInterface;
+				QuestLocation quest = (QuestLocation) data.quest.questInterface;
 				if (!quest.setFound(data, name)) {
 					continue;
 				}
@@ -83,7 +83,7 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		if (!name.isEmpty()) {
 			compound.setString("LocationName", name);

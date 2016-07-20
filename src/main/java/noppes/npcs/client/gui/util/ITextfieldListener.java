@@ -5,5 +5,5 @@
 package noppes.npcs.client.gui.util;
 
 public interface ITextfieldListener {
-	void unFocused(final GuiNpcTextField p0);
+	void unFocused(GuiNpcTextField p0);
 }

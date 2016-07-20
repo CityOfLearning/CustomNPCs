@@ -53,7 +53,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 
 	private boolean questlogTA;
 
-	public GuiNPCManageQuest(final EntityNPCInterface npc) {
+	public GuiNPCManageQuest(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		category = new QuestCategory();
@@ -64,8 +64,8 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	public void buttonEvent(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			save();
 			if (categorySelection) {
@@ -90,11 +90,11 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
 			if (categorySelection) {
-				final QuestCategory category = new QuestCategory();
+				QuestCategory category = new QuestCategory();
 				category.title = name;
 				Client.sendData(EnumPacketServer.QuestCategorySave, category.writeNBT(new NBTTagCompound()));
 			} else {
-				final Quest quest = new Quest();
+				Quest quest = new Quest();
 				quest.title = name;
 				Client.sendData(EnumPacketServer.QuestSave, category.id, quest.writeToNBT(new NBTTagCompound()));
 			}
@@ -165,10 +165,10 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			save();
-			final String selected = scroll.getSelected();
+			String selected = scroll.getSelected();
 			if (categorySelection) {
 				category = new QuestCategory();
 				Client.sendData(EnumPacketServer.QuestCategoryGet, data.get(selected));
@@ -246,15 +246,15 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void selected(final int id, final String name) {
+	public void selected(int id, String name) {
 		GuiNPCManageQuest.quest.nextQuestid = id;
 		GuiNPCManageQuest.quest.nextQuestTitle = name;
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		getButton(0).setEnabled(true);
-		final String name = scroll.getSelected();
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		if (name != null) {
@@ -264,7 +264,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (categorySelection) {
 			category.readNBT(compound);
 			setSelected(category.title);
@@ -277,13 +277,13 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		if (subgui instanceof SubGuiNpcTextArea) {
-			final SubGuiNpcTextArea gui = (SubGuiNpcTextArea) subgui;
+			SubGuiNpcTextArea gui = (SubGuiNpcTextArea) subgui;
 			if (questlogTA) {
 				GuiNPCManageQuest.quest.logText = gui.text;
 			} else {
@@ -292,7 +292,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 		} else if ((subgui instanceof SubGuiNpcFactionOptions) || (subgui instanceof SubGuiMailmanSendSetup)) {
 			setSubGui(new SubGuiNpcQuestAdvanced(GuiNPCManageQuest.quest, this));
 		} else if (subgui instanceof SubGuiNpcCommand) {
-			final SubGuiNpcCommand sub = (SubGuiNpcCommand) subgui;
+			SubGuiNpcCommand sub = (SubGuiNpcCommand) subgui;
 			GuiNPCManageQuest.quest.command = sub.command;
 			setSubGui(new SubGuiNpcQuestAdvanced(GuiNPCManageQuest.quest, this));
 		} else {
@@ -301,16 +301,16 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
 		if (guiNpcTextField.id == 0) {
 			if (category.id < 0) {
 				guiNpcTextField.setText("");
 			} else {
-				final String name = guiNpcTextField.getText();
+				String name = guiNpcTextField.getText();
 				if (name.isEmpty() || data.containsKey(name)) {
 					guiNpcTextField.setText(category.title);
 				} else if (categorySelection && (category.id >= 0)) {
-					final String old = category.title;
+					String old = category.title;
 					data.remove(category.title);
 					category.title = name;
 					data.put(category.title, category.id);
@@ -322,11 +322,11 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 			if (GuiNPCManageQuest.quest.id < 0) {
 				guiNpcTextField.setText("");
 			} else {
-				final String name = guiNpcTextField.getText();
+				String name = guiNpcTextField.getText();
 				if (name.isEmpty() || data.containsKey(name)) {
 					guiNpcTextField.setText(GuiNPCManageQuest.quest.title);
 				} else if (!categorySelection && (GuiNPCManageQuest.quest.id >= 0)) {
-					final String old = GuiNPCManageQuest.quest.title;
+					String old = GuiNPCManageQuest.quest.title;
 					data.remove(old);
 					GuiNPCManageQuest.quest.title = name;
 					data.put(GuiNPCManageQuest.quest.title, GuiNPCManageQuest.quest.id);

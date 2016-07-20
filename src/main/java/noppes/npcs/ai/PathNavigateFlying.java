@@ -10,7 +10,7 @@ import net.minecraft.pathfinding.PathNavigateSwimmer;
 import net.minecraft.world.World;
 
 public class PathNavigateFlying extends PathNavigateSwimmer {
-	public PathNavigateFlying(final EntityLiving p_i45873_1_, final World worldIn) {
+	public PathNavigateFlying(EntityLiving p_i45873_1_, World worldIn) {
 		super(p_i45873_1_, worldIn);
 	}
 

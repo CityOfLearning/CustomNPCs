@@ -12,7 +12,7 @@ public class ContainerNpcInterface extends Container {
 	private int posX;
 	private int posZ;
 
-	public ContainerNpcInterface(final EntityPlayer player) {
+	public ContainerNpcInterface(EntityPlayer player) {
 		posX = MathHelper.floor_double(player.posX);
 		posZ = MathHelper.floor_double(player.posZ);
 		player.motionX = 0.0;
@@ -20,7 +20,7 @@ public class ContainerNpcInterface extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer player) {
+	public boolean canInteractWith(EntityPlayer player) {
 		return !player.isDead && (posX == MathHelper.floor_double(player.posX))
 				&& (posZ == MathHelper.floor_double(player.posZ));
 	}

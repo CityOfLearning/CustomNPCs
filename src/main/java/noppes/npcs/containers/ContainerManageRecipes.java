@@ -22,7 +22,7 @@ public class ContainerManageRecipes extends Container {
 	public int size;
 	public int width;
 
-	public ContainerManageRecipes(final EntityPlayer player, final int size) {
+	public ContainerManageRecipes(EntityPlayer player, int size) {
 		this.size = size * size;
 		width = size;
 		craftingMatrix = new InventoryBasic("crafting", false, this.size + 1);
@@ -44,14 +44,14 @@ public class ContainerManageRecipes extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	public void saveRecipe() {
 		int nextChar = 0;
-		final char[] chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P' };
-		final Map<ItemStack, Character> nameMapping = new HashMap<ItemStack, Character>();
+		char[] chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P' };
+		Map<ItemStack, Character> nameMapping = new HashMap<ItemStack, Character>();
 		int firstRow = width;
 		int lastRow = 0;
 		int firstColumn = width;
@@ -60,7 +60,7 @@ public class ContainerManageRecipes extends Container {
 		for (int i = 0; i < width; ++i) {
 			boolean seenColumn = false;
 			for (int j = 0; j < width; ++j) {
-				final ItemStack item = craftingMatrix.getStackInSlot((i * width) + j + 1);
+				ItemStack item = craftingMatrix.getStackInSlot((i * width) + j + 1);
 				if (item != null) {
 					if (!seenColumn && (j < firstColumn)) {
 						firstColumn = j;
@@ -70,7 +70,7 @@ public class ContainerManageRecipes extends Container {
 					}
 					seenColumn = true;
 					Character letter = null;
-					for (final ItemStack mapped : nameMapping.keySet()) {
+					for (ItemStack mapped : nameMapping.keySet()) {
 						if (NoppesUtilPlayer.compareItems(mapped, item, recipe.ignoreDamage, recipe.ignoreNBT)) {
 							letter = nameMapping.get(mapped);
 						}
@@ -92,7 +92,7 @@ public class ContainerManageRecipes extends Container {
 				}
 			}
 		}
-		final ArrayList<Object> recipe = new ArrayList<Object>();
+		ArrayList<Object> recipe = new ArrayList<Object>();
 		for (int k = 0; k < width; ++k) {
 			if (k >= firstRow) {
 				if (k <= lastRow) {
@@ -100,11 +100,11 @@ public class ContainerManageRecipes extends Container {
 					for (int l = 0; l < width; ++l) {
 						if (l >= firstColumn) {
 							if (l <= lastColumn) {
-								final ItemStack item2 = craftingMatrix.getStackInSlot((k * width) + l + 1);
+								ItemStack item2 = craftingMatrix.getStackInSlot((k * width) + l + 1);
 								if (item2 == null) {
 									row += " ";
 								} else {
-									for (final ItemStack mapped : nameMapping.keySet()) {
+									for (ItemStack mapped : nameMapping.keySet()) {
 										if (NoppesUtilPlayer.compareItems(mapped, item2, false, false)) {
 											row += nameMapping.get(mapped);
 										}
@@ -118,20 +118,20 @@ public class ContainerManageRecipes extends Container {
 			}
 		}
 		if (nameMapping.isEmpty()) {
-			final RecipeCarpentry r = new RecipeCarpentry(this.recipe.name);
+			RecipeCarpentry r = new RecipeCarpentry(this.recipe.name);
 			r.copy(this.recipe);
 			this.recipe = r;
 			return;
 		}
-		for (final ItemStack mapped2 : nameMapping.keySet()) {
-			final Character letter2 = nameMapping.get(mapped2);
+		for (ItemStack mapped2 : nameMapping.keySet()) {
+			Character letter2 = nameMapping.get(mapped2);
 			recipe.add(letter2);
 			recipe.add(mapped2);
 		}
 		this.recipe = RecipeCarpentry.createRecipe(this.recipe, craftingMatrix.getStackInSlot(0), recipe.toArray());
 	}
 
-	public void setRecipe(final RecipeCarpentry recipe) {
+	public void setRecipe(RecipeCarpentry recipe) {
 		craftingMatrix.setInventorySlotContents(0, recipe.getRecipeOutput());
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < width; ++j) {
@@ -147,7 +147,7 @@ public class ContainerManageRecipes extends Container {
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

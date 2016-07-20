@@ -16,22 +16,22 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 public class GuiPresetSave extends SubGuiInterface {
 	private ModelData data;
 
-	public GuiPresetSave(final GuiScreen parent, final ModelData data) {
+	public GuiPresetSave(GuiScreen parent, ModelData data) {
 		this.data = data;
 		xSize = 200;
 		drawDefaultBackground = true;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
-		final GuiNpcButton button = (GuiNpcButton) btn;
+		GuiNpcButton button = (GuiNpcButton) btn;
 		if (button.id == 0) {
-			final String name = getTextField(0).getText().trim();
+			String name = getTextField(0).getText().trim();
 			if (name.isEmpty()) {
 				return;
 			}
-			final Preset preset = new Preset();
+			Preset preset = new Preset();
 			preset.name = name;
 			preset.data = data.copy();
 			PresetController.instance.addPreset(preset);

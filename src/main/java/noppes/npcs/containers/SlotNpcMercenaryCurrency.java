@@ -13,8 +13,7 @@ import noppes.npcs.roles.RoleFollower;
 class SlotNpcMercenaryCurrency extends Slot {
 	RoleFollower role;
 
-	public SlotNpcMercenaryCurrency(final RoleFollower role, final IInventory inv, final int i, final int j,
-			final int k) {
+	public SlotNpcMercenaryCurrency(RoleFollower role, IInventory inv, int i, int j, int k) {
 		super(inv, i, j, k);
 		this.role = role;
 	}
@@ -25,9 +24,9 @@ class SlotNpcMercenaryCurrency extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
-		final Item item = itemstack.getItem();
-		for (final ItemStack is : role.inventory.items.values()) {
+	public boolean isItemValid(ItemStack itemstack) {
+		Item item = itemstack.getItem();
+		for (ItemStack is : role.inventory.items.values()) {
 			if (item == is.getItem()) {
 				if (itemstack.getHasSubtypes() && (itemstack.getItemDamage() != is.getItemDamage())) {
 					continue;

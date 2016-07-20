@@ -21,46 +21,46 @@ public class QuestKill extends QuestInterface {
 		targets = new HashMap<String, Integer>();
 	}
 
-	public HashMap<String, Integer> getKilled(final QuestData data) {
+	public HashMap<String, Integer> getKilled(QuestData data) {
 		return NBTTags.getStringIntegerMap(data.extraData.getTagList("Killed", 10));
 	}
 
 	@Override
-	public Vector<String> getQuestLogStatus(final EntityPlayer player) {
-		final Vector<String> vec = new Vector<String>();
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-		final QuestData data = playerdata.activeQuests.get(questId);
+	public Vector<String> getQuestLogStatus(EntityPlayer player) {
+		Vector<String> vec = new Vector<String>();
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+		QuestData data = playerdata.activeQuests.get(questId);
 		if (data == null) {
 			return vec;
 		}
-		final HashMap<String, Integer> killed = getKilled(data);
-		for (final String entityName : targets.keySet()) {
+		HashMap<String, Integer> killed = getKilled(data);
+		for (String entityName : targets.keySet()) {
 			int amount = 0;
 			if (killed.containsKey(entityName)) {
 				amount = killed.get(entityName);
 			}
-			final String state = amount + "/" + targets.get(entityName);
+			String state = amount + "/" + targets.get(entityName);
 			vec.add(entityName + ": " + state);
 		}
 		return vec;
 	}
 
 	@Override
-	public void handleComplete(final EntityPlayer player) {
+	public void handleComplete(EntityPlayer player) {
 	}
 
 	@Override
-	public boolean isCompleted(final EntityPlayer player) {
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-		final QuestData data = playerdata.activeQuests.get(questId);
+	public boolean isCompleted(EntityPlayer player) {
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+		QuestData data = playerdata.activeQuests.get(questId);
 		if (data == null) {
 			return false;
 		}
-		final HashMap<String, Integer> killed = getKilled(data);
+		HashMap<String, Integer> killed = getKilled(data);
 		if (killed.size() != targets.size()) {
 			return false;
 		}
-		for (final String entity : killed.keySet()) {
+		for (String entity : killed.keySet()) {
 			if (!targets.containsKey(entity) || (targets.get(entity) > killed.get(entity))) {
 				return false;
 			}
@@ -69,16 +69,16 @@ public class QuestKill extends QuestInterface {
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		targets = NBTTags.getStringIntegerMap(compound.getTagList("QuestDialogs", 10));
 	}
 
-	public void setKilled(final QuestData data, final HashMap<String, Integer> killed) {
+	public void setKilled(QuestData data, HashMap<String, Integer> killed) {
 		data.extraData.setTag("Killed", NBTTags.nbtStringIntegerMap(killed));
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound compound) {
+	public void writeEntityToNBT(NBTTagCompound compound) {
 		compound.setTag("QuestDialogs", NBTTags.nbtStringIntegerMap(targets));
 	}
 }

@@ -19,7 +19,7 @@ public class ModelNpcSlime extends ModelBase {
 	ModelRenderer slimeLeftEye;
 	ModelRenderer slimeMouth;
 
-	public ModelNpcSlime(final int par1) {
+	public ModelNpcSlime(int par1) {
 		textureHeight = 64;
 		textureWidth = 64;
 		outerBody = new ModelRenderer(this, 0, 0);
@@ -33,8 +33,7 @@ public class ModelNpcSlime extends ModelBase {
 	}
 
 	@Override
-	public void render(final Entity par1Entity, final float par2, final float par3, final float par4, final float par5,
-			final float par6, final float par7) {
+	public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
 		setRotationAngles(par2, par3, par4, par5, par6, par7, par1Entity);
 		if (innerBody != null) {
 			innerBody.render(par7);

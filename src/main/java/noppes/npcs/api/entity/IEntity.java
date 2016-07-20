@@ -12,7 +12,7 @@ import noppes.npcs.api.entity.data.IData;
 public interface IEntity<T extends Entity> {
 	void despawn();
 
-	void dropItem(final IItemStack p0);
+	void dropItem(IItemStack p0);
 
 	void extinguish();
 
@@ -64,23 +64,23 @@ public interface IEntity<T extends Entity> {
 
 	boolean isSprinting();
 
-	void knockback(final int p0, final float p1);
+	void knockback(int p0, float p1);
 
-	void setBurning(final int p0);
+	void setBurning(int p0);
 
-	void setMount(final IEntity p0);
+	void setMount(IEntity p0);
 
-	void setPosition(final double p0, final double p1, final double p2);
+	void setPosition(double p0, double p1, double p2);
 
-	void setRider(final IEntity p0);
+	void setRider(IEntity p0);
 
-	void setRotation(final float p0);
+	void setRotation(float p0);
 
-	void setX(final double p0);
+	void setX(double p0);
 
-	void setY(final double p0);
+	void setY(double p0);
 
-	void setZ(final double p0);
+	void setZ(double p0);
 
-	boolean typeOf(final int p0);
+	boolean typeOf(int p0);
 }

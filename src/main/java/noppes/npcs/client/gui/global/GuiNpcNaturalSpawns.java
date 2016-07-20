@@ -35,7 +35,7 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	private HashMap<String, Integer> data;
 	private SpawnData spawn;
 
-	public GuiNpcNaturalSpawns(final EntityNPCInterface npc) {
+	public GuiNpcNaturalSpawns(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		spawn = new SpawnData();
@@ -43,14 +43,14 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void buttonEvent(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 1) {
 			save();
 			String name;
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
-			final SpawnData spawn = new SpawnData();
+			SpawnData spawn = new SpawnData();
 			spawn.name = name;
 			Client.sendData(EnumPacketServer.NaturalSpawnSave, spawn.writeNBT(new NBTTagCompound()));
 		}
@@ -75,11 +75,11 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		super.closeSubGui(gui);
 		if (gui instanceof GuiNpcMobSpawnerSelector) {
-			final GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector) gui;
-			final NBTTagCompound compound = selector.getCompound();
+			GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector) gui;
+			NBTTagCompound compound = selector.getCompound();
 			if (compound != null) {
 				spawn.compound1 = compound;
 			}
@@ -88,16 +88,16 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			save();
-			final String selected = scroll.getSelected();
+			String selected = scroll.getSelected();
 			spawn = new SpawnData();
 			Client.sendData(EnumPacketServer.NaturalSpawnGet, data.get(selected));
 		}
 	}
 
-	private String getTitle(final NBTTagCompound compound) {
+	private String getTitle(NBTTagCompound compound) {
 		if ((compound != null) && compound.hasKey("ClonedName")) {
 			return compound.getString("ClonedName");
 		}
@@ -121,17 +121,17 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void mouseDragged(final GuiNpcSlider guiNpcSlider) {
+	public void mouseDragged(GuiNpcSlider guiNpcSlider) {
 		guiNpcSlider.displayString = StatCollector.translateToLocal("spawning.weightedChance") + ": "
 				+ (int) (guiNpcSlider.sliderValue * 100.0f);
 	}
 
 	@Override
-	public void mousePressed(final GuiNpcSlider guiNpcSlider) {
+	public void mousePressed(GuiNpcSlider guiNpcSlider) {
 	}
 
 	@Override
-	public void mouseReleased(final GuiNpcSlider guiNpcSlider) {
+	public void mouseReleased(GuiNpcSlider guiNpcSlider) {
 		spawn.itemWeight = (int) (guiNpcSlider.sliderValue * 100.0f);
 	}
 
@@ -144,8 +144,8 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final String name = scroll.getSelected();
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		if (name != null) {
@@ -155,14 +155,14 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		spawn.readNBT(compound);
 		setSelected(spawn.name);
 		initGui();
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 
 	private void showSpawn() {
@@ -171,7 +171,7 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 		addLabel(new GuiNpcLabel(3, "spawning.biomes", guiLeft + 4, guiTop + 30));
 		addButton(new GuiNpcButton(3, guiLeft + 120, guiTop + 25, 50, 20, "selectServer.edit"));
 		addSlider(new GuiNpcSlider(this, 4, guiLeft + 4, guiTop + 47, 180, 20, spawn.itemWeight / 100.0f));
-		final int y = guiTop + 70;
+		int y = guiTop + 70;
 		addButton(new GuiNpcButton(25, guiLeft + 14, y, 20, 20, "X"));
 		addLabel(new GuiNpcLabel(5, "1:", guiLeft + 4, y + 5));
 		addButton(new GuiNpcButton(5, guiLeft + 36, y, 170, 20, getTitle(spawn.compound1)));
@@ -181,12 +181,12 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
-		final String name = guiNpcTextField.getText();
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
+		String name = guiNpcTextField.getText();
 		if (name.isEmpty() || data.containsKey(name)) {
 			guiNpcTextField.setText(spawn.name);
 		} else {
-			final String old = spawn.name;
+			String old = spawn.name;
 			data.remove(old);
 			spawn.name = name;
 			data.put(spawn.name, spawn.id);

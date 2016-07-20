@@ -14,7 +14,7 @@ public class EntityAIMovingPath extends EntityAIBase {
 	private EntityNPCInterface npc;
 	private int[] pos;
 
-	public EntityAIMovingPath(final EntityNPCInterface par1EntityNPCInterface) {
+	public EntityAIMovingPath(EntityNPCInterface par1EntityNPCInterface) {
 		npc = par1EntityNPCInterface;
 		setMutexBits(AiMutex.PASSIVE);
 	}
@@ -34,7 +34,7 @@ public class EntityAIMovingPath extends EntityAIBase {
 				|| !npc.getNavigator().noPath() || npc.isInteracting()) {
 			return false;
 		}
-		final List<int[]> list = npc.ai.getMovingPath();
+		List<int[]> list = npc.ai.getMovingPath();
 		if (list.size() < 2) {
 			return false;
 		}

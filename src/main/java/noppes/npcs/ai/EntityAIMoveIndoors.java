@@ -20,7 +20,7 @@ public class EntityAIMoveIndoors extends EntityAIBase {
 	private double shelterZ;
 	private World theWorld;
 
-	public EntityAIMoveIndoors(final EntityCreature par1EntityCreature) {
+	public EntityAIMoveIndoors(EntityCreature par1EntityCreature) {
 		theCreature = par1EntityCreature;
 		theWorld = par1EntityCreature.worldObj;
 		setMutexBits(AiMutex.PASSIVE);
@@ -32,12 +32,10 @@ public class EntityAIMoveIndoors extends EntityAIBase {
 	}
 
 	private Vec3 findPossibleShelter() {
-		final Random random = theCreature.getRNG();
-		final BlockPos blockpos = new BlockPos(theCreature.posX, theCreature.getEntityBoundingBox().minY,
-				theCreature.posZ);
+		Random random = theCreature.getRNG();
+		BlockPos blockpos = new BlockPos(theCreature.posX, theCreature.getEntityBoundingBox().minY, theCreature.posZ);
 		for (int i = 0; i < 10; ++i) {
-			final BlockPos blockpos2 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3,
-					random.nextInt(20) - 10);
+			BlockPos blockpos2 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
 			if (!theWorld.canSeeSky(blockpos2) && (theCreature.getBlockPathWeight(blockpos2) < 0.0f)) {
 				return new Vec3(blockpos2.getX(), blockpos2.getY(), blockpos2.getZ());
 			}
@@ -51,11 +49,11 @@ public class EntityAIMoveIndoors extends EntityAIBase {
 				|| theCreature.worldObj.provider.getHasNoSky()) {
 			return false;
 		}
-		final BlockPos pos = new BlockPos(theCreature.posX, theCreature.getEntityBoundingBox().minY, theCreature.posZ);
+		BlockPos pos = new BlockPos(theCreature.posX, theCreature.getEntityBoundingBox().minY, theCreature.posZ);
 		if (!theWorld.canSeeSky(pos) && (theWorld.getLight(pos) > 8)) {
 			return false;
 		}
-		final Vec3 var1 = findPossibleShelter();
+		Vec3 var1 = findPossibleShelter();
 		if (var1 == null) {
 			return false;
 		}

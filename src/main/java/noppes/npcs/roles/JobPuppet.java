@@ -22,7 +22,7 @@ public class JobPuppet extends JobInterface {
 			disabled = false;
 		}
 
-		public void readNBT(final NBTTagCompound compound) {
+		public void readNBT(NBTTagCompound compound) {
 			rotationX = ValueUtil.correctFloat(compound.getFloat("RotationX"), -0.5f, 0.5f);
 			rotationY = ValueUtil.correctFloat(compound.getFloat("RotationY"), -0.5f, 0.5f);
 			rotationZ = ValueUtil.correctFloat(compound.getFloat("RotationZ"), -0.5f, 0.5f);
@@ -30,7 +30,7 @@ public class JobPuppet extends JobInterface {
 		}
 
 		public NBTTagCompound writeNBT() {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			compound.setFloat("RotationX", rotationX);
 			compound.setFloat("RotationY", rotationY);
 			compound.setFloat("RotationZ", rotationZ);
@@ -50,7 +50,7 @@ public class JobPuppet extends JobInterface {
 
 	public boolean whileMoving;
 
-	public JobPuppet(final EntityNPCInterface npc) {
+	public JobPuppet(EntityNPCInterface npc) {
 		super(npc);
 		head = new PartConfig();
 		larm = new PartConfig();
@@ -78,7 +78,7 @@ public class JobPuppet extends JobInterface {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		head.readNBT(compound.getCompoundTag("PuppetHead"));
 		larm.readNBT(compound.getCompoundTag("PuppetLArm"));
 		rarm.readNBT(compound.getCompoundTag("PuppetRArm"));
@@ -95,7 +95,7 @@ public class JobPuppet extends JobInterface {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setTag("PuppetHead", head.writeNBT());
 		compound.setTag("PuppetLArm", larm.writeNBT());
 		compound.setTag("PuppetRArm", rarm.writeNBT());

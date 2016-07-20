@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 
 public class Lines {
-	private static final Random random;
+	private static Random random;
 	static {
 		random = new Random();
 	}
@@ -26,14 +26,14 @@ public class Lines {
 		lines = new HashMap<Integer, Line>();
 	}
 
-	public Line getLine(final boolean isRandom) {
+	public Line getLine(boolean isRandom) {
 		if (lines.isEmpty()) {
 			return null;
 		}
 		if (isRandom) {
-			final List<Line> lines = new ArrayList<Line>(this.lines.values());
+			List<Line> lines = new ArrayList<Line>(this.lines.values());
 			Line line;
-			while (true) { //dont get random empty lines...
+			while (true) { // dont get random empty lines...
 				line = lines.get(Lines.random.nextInt(lines.size()));
 				if (line != null) {
 					break;
@@ -58,12 +58,12 @@ public class Lines {
 		return lines.isEmpty();
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
-		final NBTTagList nbttaglist = compound.getTagList("Lines", 10);
-		final HashMap<Integer, Line> map = new HashMap<Integer, Line>();
+	public void readNBT(NBTTagCompound compound) {
+		NBTTagList nbttaglist = compound.getTagList("Lines", 10);
+		HashMap<Integer, Line> map = new HashMap<Integer, Line>();
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
-			final NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
-			final Line line = new Line();
+			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
+			Line line = new Line();
 			line.text = nbttagcompound.getString("Line");
 			line.sound = nbttagcompound.getString("Song");
 			map.put(nbttagcompound.getInteger("Slot"), line);
@@ -72,11 +72,11 @@ public class Lines {
 	}
 
 	public NBTTagCompound writeToNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
-		final NBTTagList nbttaglist = new NBTTagList();
-		for (final int slot : lines.keySet()) {
-			final Line line = lines.get(slot);
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList nbttaglist = new NBTTagList();
+		for (int slot : lines.keySet()) {
+			Line line = lines.get(slot);
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("Slot", slot);
 			nbttagcompound.setString("Line", line.text);
 			nbttagcompound.setString("Song", line.sound);

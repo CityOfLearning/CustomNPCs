@@ -5,9 +5,9 @@
 package noppes.npcs.client.gui.util;
 
 public interface ISliderListener {
-	void mouseDragged(final GuiNpcSlider p0);
+	void mouseDragged(GuiNpcSlider p0);
 
-	void mousePressed(final GuiNpcSlider p0);
+	void mousePressed(GuiNpcSlider p0);
 
-	void mouseReleased(final GuiNpcSlider p0);
+	void mouseReleased(GuiNpcSlider p0);
 }

@@ -10,7 +10,7 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCHumanMale extends EntityNPCInterface {
-	public EntityNPCHumanMale(final World world) {
+	public EntityNPCHumanMale(World world) {
 		super(world);
 	}
 
@@ -18,9 +18,9 @@ public class EntityNPCHumanMale extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
 			worldObj.spawnEntityInWorld(npc);
 		}

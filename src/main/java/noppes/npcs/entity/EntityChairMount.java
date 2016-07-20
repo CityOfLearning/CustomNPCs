@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityChairMount extends Entity {
-	public EntityChairMount(final World world) {
+	public EntityChairMount(World world) {
 		super(world);
 		setSize(0.0f, 0.0f);
 	}
@@ -32,7 +32,7 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	public void fall(final float p_70069_1_, final float mod) {
+	public void fall(float p_70069_1_, float mod) {
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	public boolean isEntityInvulnerable(final DamageSource source) {
+	public boolean isEntityInvulnerable(DamageSource source) {
 		return true;
 	}
 
@@ -51,7 +51,7 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	public void moveEntity(final double p_70091_1_, final double p_70091_3_, final double p_70091_5_) {
+	public void moveEntity(double p_70091_1_, double p_70091_3_, double p_70091_5_) {
 	}
 
 	@Override
@@ -63,18 +63,18 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	protected void readEntityFromNBT(final NBTTagCompound p_70037_1_) {
+	protected void readEntityFromNBT(NBTTagCompound p_70037_1_) {
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void setPositionAndRotation2(final double p_70056_1_, final double p_70056_3_, final double p_70056_5_,
-			final float p_70056_7_, final float p_70056_8_, final int p_70056_9_, final boolean bo) {
+	public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_,
+			float p_70056_8_, int p_70056_9_, boolean bo) {
 		setPosition(p_70056_1_, p_70056_3_, p_70056_5_);
 		setRotation(p_70056_7_, p_70056_8_);
 	}
 
 	@Override
-	protected void writeEntityToNBT(final NBTTagCompound p_70014_1_) {
+	protected void writeEntityToNBT(NBTTagCompound p_70014_1_) {
 	}
 }

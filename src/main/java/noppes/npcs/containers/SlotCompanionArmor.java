@@ -14,11 +14,10 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.roles.RoleCompanion;
 
 class SlotCompanionArmor extends Slot {
-	final int armorType;
-	final RoleCompanion role;
+	int armorType;
+	RoleCompanion role;
 
-	public SlotCompanionArmor(final RoleCompanion role, final IInventory iinventory, final int id, final int x,
-			final int y, final int type) {
+	public SlotCompanionArmor(RoleCompanion role, IInventory iinventory, int id, int x, int y, int type) {
 		super(iinventory, id, x, y);
 		armorType = type;
 		this.role = role;
@@ -36,7 +35,7 @@ class SlotCompanionArmor extends Slot {
 	}
 
 	@Override
-	public boolean isItemValid(final ItemStack itemstack) {
+	public boolean isItemValid(ItemStack itemstack) {
 		if ((itemstack.getItem() instanceof ItemArmor) && role.canWearArmor(itemstack)) {
 			return ((ItemArmor) itemstack.getItem()).armorType == armorType;
 		}

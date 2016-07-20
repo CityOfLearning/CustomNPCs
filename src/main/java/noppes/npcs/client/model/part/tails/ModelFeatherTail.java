@@ -14,10 +14,10 @@ public class ModelFeatherTail extends ModelRenderer {
 	ModelRenderer feather4;
 	ModelRenderer feather5;
 
-	public ModelFeatherTail(final ModelBiped base) {
+	public ModelFeatherTail(ModelBiped base) {
 		super(base);
-		final int x = 56;
-		final int y = 16;
+		int x = 56;
+		int y = 16;
 		(feather1 = new ModelRenderer(base, x, y)).addBox(-1.5f, 0.0f, 0.0f, 3, 8, 0);
 		feather1.setRotationPoint(1.0f, -0.5f, 2.0f);
 		setRotation(feather1, 1.482807f, 0.2602503f, 0.1487144f);
@@ -44,7 +44,7 @@ public class ModelFeatherTail extends ModelRenderer {
 		addChild(feather5);
 	}
 
-	private void setRotation(final ModelRenderer model, final float x, final float y, final float z) {
+	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;

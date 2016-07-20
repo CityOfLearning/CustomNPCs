@@ -17,23 +17,23 @@ public class NpcMiscInventory implements IInventory {
 	public int stackLimit;
 	private int size;
 
-	public NpcMiscInventory(final int size) {
+	public NpcMiscInventory(int size) {
 		items = new HashMap<Integer, ItemStack>();
 		stackLimit = 64;
 		this.size = size;
 	}
 
-	public boolean addItemStack(final ItemStack item) {
+	public boolean addItemStack(ItemStack item) {
 		boolean merged = false;
 		ItemStack mergable;
 		while (((mergable = getMergableItem(item)) != null) && (mergable.stackSize > 0)) {
-			final int size = mergable.getMaxStackSize() - mergable.stackSize;
+			int size = mergable.getMaxStackSize() - mergable.stackSize;
 			if (size > item.stackSize) {
 				mergable.stackSize = mergable.getMaxStackSize();
 				item.stackSize -= size;
 				merged = true;
 			} else {
-				final ItemStack itemStack = mergable;
+				ItemStack itemStack = mergable;
 				itemStack.stackSize += item.stackSize;
 				item.stackSize = 0;
 			}
@@ -41,7 +41,7 @@ public class NpcMiscInventory implements IInventory {
 		if (item.stackSize <= 0) {
 			return true;
 		}
-		final int slot = firstFreeSlot();
+		int slot = firstFreeSlot();
 		if (slot >= 0) {
 			items.put(slot, item.copy());
 			item.stackSize = 0;
@@ -55,11 +55,11 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public void closeInventory(final EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack decrStackSize(final int par1, final int par2) {
+	public ItemStack decrStackSize(int par1, int par2) {
 		if (items.get(par1) == null) {
 			return null;
 		}
@@ -76,9 +76,9 @@ public class NpcMiscInventory implements IInventory {
 		return var4;
 	}
 
-	public boolean decrStackSize(final ItemStack eating, final int decrease) {
-		for (final int slot : items.keySet()) {
-			final ItemStack item = items.get(slot);
+	public boolean decrStackSize(ItemStack eating, int decrease) {
+		for (int slot : items.keySet()) {
+			ItemStack item = items.get(slot);
 			if ((items != null) && (eating == item) && (item.stackSize >= decrease)) {
 				item.splitStack(decrease);
 				if (item.stackSize <= 0) {
@@ -105,7 +105,7 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public int getField(final int id) {
+	public int getField(int id) {
 		return 0;
 	}
 
@@ -119,8 +119,8 @@ public class NpcMiscInventory implements IInventory {
 		return stackLimit;
 	}
 
-	public ItemStack getMergableItem(final ItemStack item) {
-		for (final ItemStack is : items.values()) {
+	public ItemStack getMergableItem(ItemStack item) {
+		for (ItemStack is : items.values()) {
 			if (NoppesUtilPlayer.compareItems(item, is, false, false) && (is.stackSize < is.getMaxStackSize())) {
 				return is;
 			}
@@ -139,12 +139,12 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(final int var1) {
+	public ItemStack getStackInSlot(int var1) {
 		return items.get(var1);
 	}
 
 	public NBTTagCompound getToNBT() {
-		final NBTTagCompound nbttagcompound = new NBTTagCompound();
+		NBTTagCompound nbttagcompound = new NBTTagCompound();
 		nbttagcompound.setTag("NpcMiscInv", NBTTags.nbtItemStackList(items));
 		return nbttagcompound;
 	}
@@ -155,12 +155,12 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(final EntityPlayer var1) {
+	public boolean isUseableByPlayer(EntityPlayer var1) {
 		return true;
 	}
 
@@ -169,13 +169,13 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public void openInventory(final EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(final int var1) {
+	public ItemStack removeStackFromSlot(int var1) {
 		if (items.get(var1) != null) {
-			final ItemStack var2 = items.get(var1);
+			ItemStack var2 = items.get(var1);
 			items.put(var1, null);
 			return var2;
 		}
@@ -183,22 +183,22 @@ public class NpcMiscInventory implements IInventory {
 	}
 
 	@Override
-	public void setField(final int id, final int value) {
+	public void setField(int id, int value) {
 	}
 
-	public void setFromNBT(final NBTTagCompound nbttagcompound) {
+	public void setFromNBT(NBTTagCompound nbttagcompound) {
 		items = NBTTags.getItemStackList(nbttagcompound.getTagList("NpcMiscInv", 10));
 	}
 
 	@Override
-	public void setInventorySlotContents(final int var1, final ItemStack var2) {
+	public void setInventorySlotContents(int var1, ItemStack var2) {
 		if (var1 >= getSizeInventory()) {
 			return;
 		}
 		items.put(var1, var2);
 	}
 
-	public void setSize(final int i) {
+	public void setSize(int i) {
 		size = i;
 	}
 }

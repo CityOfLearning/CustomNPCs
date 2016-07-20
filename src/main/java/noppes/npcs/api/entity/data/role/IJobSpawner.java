@@ -9,5 +9,5 @@ import noppes.npcs.api.entity.IEntityLivingBase;
 public interface IJobSpawner {
 	void removeAllSpawned();
 
-	IEntityLivingBase spawnEntity(final int p0);
+	IEntityLivingBase spawnEntity(int p0);
 }

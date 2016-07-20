@@ -13,29 +13,29 @@ import noppes.npcs.api.handler.data.IQuest;
 
 public class QuestEvent extends Event {
 	public static class QuestCompletedEvent extends QuestEvent {
-		public QuestCompletedEvent(final EntityPlayer player, final IQuest quest) {
+		public QuestCompletedEvent(EntityPlayer player, IQuest quest) {
 			super(player, quest);
 		}
 	}
 
 	@Cancelable
 	public static class QuestStartEvent extends QuestEvent {
-		public QuestStartEvent(final EntityPlayer player, final IQuest quest) {
+		public QuestStartEvent(EntityPlayer player, IQuest quest) {
 			super(player, quest);
 		}
 	}
 
 	public static class QuestTurnedInEvent extends QuestEvent {
-		public QuestTurnedInEvent(final EntityPlayer player, final IQuest quest) {
+		public QuestTurnedInEvent(EntityPlayer player, IQuest quest) {
 			super(player, quest);
 		}
 	}
 
-	public final IQuest quest;
+	public IQuest quest;
 
-	public final IPlayer player;
+	public IPlayer player;
 
-	public QuestEvent(final EntityPlayer player, final IQuest quest) {
+	public QuestEvent(EntityPlayer player, IQuest quest) {
 		this.quest = quest;
 		this.player = (IPlayer) NpcAPI.Instance().getIEntity(player);
 	}

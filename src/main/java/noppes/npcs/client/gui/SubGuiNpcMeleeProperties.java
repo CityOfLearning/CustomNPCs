@@ -16,7 +16,7 @@ public class SubGuiNpcMeleeProperties extends SubGuiInterface implements ITextfi
 	private DataMelee stats;
 	private String[] potionNames;
 
-	public SubGuiNpcMeleeProperties(final DataMelee stats) {
+	public SubGuiNpcMeleeProperties(DataMelee stats) {
 		potionNames = new String[] { "gui.none", "tile.fire.name", "potion.poison", "potion.hunger", "potion.weakness",
 				"potion.moveSlowdown", "potion.confusion", "potion.blindness", "potion.wither" };
 		this.stats = stats;
@@ -27,8 +27,8 @@ public class SubGuiNpcMeleeProperties extends SubGuiInterface implements ITextfi
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 5) {
 			stats.setEffect(button.getValue(), stats.getEffectStrength(), stats.getEffectTime());
 			initGui();
@@ -82,7 +82,7 @@ public class SubGuiNpcMeleeProperties extends SubGuiInterface implements ITextfi
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 1) {
 			stats.setStrength(textfield.getInteger());
 		} else if (textfield.id == 2) {

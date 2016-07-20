@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import noppes.npcs.ModelData;
 
 public class EntityNpcCrystal extends EntityNPCInterface {
-	public EntityNpcCrystal(final World world) {
+	public EntityNpcCrystal(World world) {
 		super(world);
 		scaleX = 0.7f;
 		scaleY = 0.7f;
@@ -21,11 +21,11 @@ public class EntityNpcCrystal extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.setEntityClass(EntityNpcCrystal.class);
 			worldObj.spawnEntityInWorld(npc);
 		}

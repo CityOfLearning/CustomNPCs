@@ -19,7 +19,7 @@ public class DataMelee implements INPCMelee {
 	private int potionDuration;
 	private int potionAmp;
 
-	public DataMelee(final EntityNPCInterface npc) {
+	public DataMelee(EntityNPCInterface npc) {
 		attackStrength = 5;
 		attackSpeed = 20;
 		attackRange = 2;
@@ -65,7 +65,7 @@ public class DataMelee implements INPCMelee {
 		return attackStrength;
 	}
 
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		attackSpeed = compound.getInteger("AttackSpeed");
 		setStrength(compound.getInteger("AttackStrenght"));
 		attackRange = compound.getInteger("AttackRange");
@@ -76,34 +76,34 @@ public class DataMelee implements INPCMelee {
 	}
 
 	@Override
-	public void setDelay(final int speed) {
+	public void setDelay(int speed) {
 		attackSpeed = speed;
 	}
 
 	@Override
-	public void setEffect(final int type, final int strength, final int time) {
+	public void setEffect(int type, int strength, int time) {
 		potionType = type;
 		potionDuration = time;
 		potionAmp = strength;
 	}
 
 	@Override
-	public void setKnockback(final int knockback) {
+	public void setKnockback(int knockback) {
 		this.knockback = knockback;
 	}
 
 	@Override
-	public void setRange(final int range) {
+	public void setRange(int range) {
 		attackRange = range;
 	}
 
 	@Override
-	public void setStrength(final int strength) {
+	public void setStrength(int strength) {
 		attackStrength = strength;
 		npc.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(attackStrength);
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound compound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound compound) {
 		compound.setInteger("AttackStrenght", attackStrength);
 		compound.setInteger("AttackSpeed", attackSpeed);
 		compound.setInteger("AttackRange", attackRange);

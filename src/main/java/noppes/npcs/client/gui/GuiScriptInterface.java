@@ -49,7 +49,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if ((guibutton.id >= 0) && (guibutton.id < 12)) {
 			setScript();
 			activeTab = guibutton.id;
@@ -82,10 +82,10 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 		}
 		if (guibutton.id == 102) {
 			if (activeTab > 0) {
-				final ScriptContainer container = handler.getScripts().get(activeTab - 1);
+				ScriptContainer container = handler.getScripts().get(activeTab - 1);
 				container.script = "";
 			} else {
-				for (final ScriptContainer script : handler.getScripts()) {
+				for (ScriptContainer script : handler.getScripts()) {
 					script.console.clear();
 				}
 			}
@@ -98,7 +98,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 			handler.setEnabled(((GuiNpcButton) guibutton).getValue() == 1);
 		}
 		if (guibutton.id == 105) {
-			final GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 10);
+			GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 10);
 			displayGuiScreen(guiyesno);
 		}
 		if (guibutton.id == 106) {
@@ -112,7 +112,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 			setSubGui(new GuiScriptList(languages.get(handler.getLanguage()), container));
 		}
 		if (guibutton.id == 108) {
-			final ScriptContainer container = handler.getScripts().get(activeTab - 1);
+			ScriptContainer container = handler.getScripts().get(activeTab - 1);
 			if (container != null) {
 				setScript();
 				GuiNPCInterface.AWTWindow = new GuiJTextArea(container.script).setListener(this);
@@ -121,7 +121,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	@Override
-	public void confirmClicked(final boolean flag, final int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (flag) {
 			if (i == 0) {
 				openLink("http://www.kodevelopment.nl/minecraft/customnpcs/scripting");
@@ -144,16 +144,16 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	private String getConsoleText() {
-		final Map<Long, String> map = new TreeMap<Long, String>();
+		Map<Long, String> map = new TreeMap<Long, String>();
 		int tab = 0;
-		for (final ScriptContainer script : handler.getScripts()) {
+		for (ScriptContainer script : handler.getScripts()) {
 			++tab;
-			for (final Map.Entry<Long, String> entry : script.console.entrySet()) {
+			for (Map.Entry<Long, String> entry : script.console.entrySet()) {
 				map.put(entry.getKey(), " tab " + tab + ":\n" + entry.getValue());
 			}
 		}
 		String console = "";
-		for (final Map.Entry<Long, String> entry2 : map.entrySet()) {
+		for (Map.Entry<Long, String> entry2 : map.entrySet()) {
 			console = new Date(entry2.getKey()) + entry2.getValue() + "\n" + console;
 		}
 		return console;
@@ -161,7 +161,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 
 	private int getScriptIndex() {
 		int i = 0;
-		for (final String language : languages.keySet()) {
+		for (String language : languages.keySet()) {
 			if (language.equalsIgnoreCase(handler.getLanguage())) {
 				return i;
 			}
@@ -177,7 +177,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 		bgScale = xSize / 400.0f;
 		super.initGui();
 		guiTop += 10;
-		final int yoffset = (int) (ySize * 0.02);
+		int yoffset = (int) (ySize * 0.02);
 		GuiMenuTopButton top;
 		addTopButton(top = new GuiMenuTopButton(0, guiLeft + 4, guiTop - 17, "gui.settings"));
 		for (int i = 0; i < handler.getScripts().size(); ++i) {
@@ -194,17 +194,17 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 		}
 		top.active = true;
 		if (activeTab > 0) {
-			final ScriptContainer container = handler.getScripts().get(activeTab - 1);
+			ScriptContainer container = handler.getScripts().get(activeTab - 1);
 			addTextField(new GuiNpcTextArea(2, this, guiLeft + 1 + yoffset, guiTop + yoffset, xSize - 108 - yoffset,
 					(int) (ySize * 0.96) - (yoffset * 2), (container == null) ? "" : container.script));
-			final int left = (guiLeft + xSize) - 104;
+			int left = (guiLeft + xSize) - 104;
 			addButton(new GuiNpcButton(102, left, guiTop + yoffset, 60, 20, "gui.clear"));
 			addButton(new GuiNpcButton(101, left + 61, guiTop + yoffset, 60, 20, "gui.paste"));
 			addButton(new GuiNpcButton(100, left, guiTop + 21 + yoffset, 60, 20, "gui.copy"));
 			addButton(new GuiNpcButton(105, left + 61, guiTop + 21 + yoffset, 60, 20, "gui.remove"));
 			addButton(new GuiNpcButton(108, left, guiTop + 43 + yoffset, 80, 20, "gui.editor"));
 			addButton(new GuiNpcButton(107, left, guiTop + 66 + yoffset, 80, 20, "script.loadscript"));
-			final GuiCustomScroll scroll = new GuiCustomScroll(this, 0).setUnselectable();
+			GuiCustomScroll scroll = new GuiCustomScroll(this, 0).setUnselectable();
 			scroll.setSize(100, (int) (ySize * 0.54) - (yoffset * 2));
 			scroll.guiLeft = left;
 			scroll.guiTop = guiTop + 88 + yoffset;
@@ -216,7 +216,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 			addTextField(new GuiNpcTextArea(2, this, guiLeft + 4 + yoffset, guiTop + 6 + yoffset, xSize - 160 - yoffset,
 					(int) (ySize * 0.92f) - (yoffset * 2), getConsoleText()));
 			getTextField(2).canEdit = false;
-			final int left2 = (guiLeft + xSize) - 150;
+			int left2 = (guiLeft + xSize) - 150;
 			addButton(new GuiNpcButton(100, left2, guiTop + 125, 60, 20, "gui.copy"));
 			addButton(new GuiNpcButton(102, left2, guiTop + 146, 60, 20, "gui.clear"));
 			addLabel(new GuiNpcLabel(1, "script.language", left2, guiTop + 15));
@@ -244,8 +244,8 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	@Override
-	public void saveText(final String text) {
-		final ScriptContainer container = handler.getScripts().get(activeTab - 1);
+	public void saveText(String text) {
+		ScriptContainer container = handler.getScripts().get(activeTab - 1);
 		if (container != null) {
 			container.script = text;
 		}
@@ -253,13 +253,13 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final NBTTagList data = compound.getTagList("Languages", 10);
-		final Map<String, List<String>> languages = new HashMap<String, List<String>>();
+	public void setGuiData(NBTTagCompound compound) {
+		NBTTagList data = compound.getTagList("Languages", 10);
+		Map<String, List<String>> languages = new HashMap<String, List<String>>();
 		for (int i = 0; i < data.tagCount(); ++i) {
-			final NBTTagCompound comp = data.getCompoundTagAt(i);
-			final List<String> scripts = new ArrayList<String>();
-			final NBTTagList list = comp.getTagList("Scripts", 8);
+			NBTTagCompound comp = data.getCompoundTagAt(i);
+			List<String> scripts = new ArrayList<String>();
+			NBTTagList list = comp.getTagList("Scripts", 8);
 			for (int j = 0; j < list.tagCount(); ++j) {
 				scripts.add(list.getStringTagAt(j));
 			}

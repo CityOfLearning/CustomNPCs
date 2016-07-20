@@ -18,7 +18,7 @@ public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextf
 	public String sound;
 	private GuiNpcSoundSelection gui;
 
-	public SubGuiNpcConversationLine(final String line, final String sound) {
+	public SubGuiNpcConversationLine(String line, String sound) {
 		this.line = line;
 		this.sound = sound;
 		setBackground("menubg.png");
@@ -28,8 +28,8 @@ public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextf
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 1) {
 			NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(parent, sound));
 		}
@@ -59,7 +59,7 @@ public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextf
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		line = textfield.getText();
 	}
 }

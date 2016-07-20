@@ -27,15 +27,15 @@ public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, 
 	public TransportLocation location;
 	private HashMap<String, Integer> data;
 
-	public GuiNpcTransporter(final EntityNPCInterface npc) {
+	public GuiNpcTransporter(EntityNPCInterface npc) {
 		super(npc);
 		location = new TransportLocation();
 		data = new HashMap<String, Integer>();
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			location.type = button.getValue();
 		}
@@ -44,7 +44,7 @@ public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, 
 	@Override
 	public void initGui() {
 		super.initGui();
-		final Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<String>();
 		list.addAll(data.keySet());
 		if (scroll == null) {
 			(scroll = new GuiCustomScroll(this, 0)).setSize(143, 208);
@@ -70,32 +70,32 @@ public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, 
 		if (!scroll.hasSelected()) {
 			return;
 		}
-		final String name = getTextField(0).getText();
+		String name = getTextField(0).getText();
 		if (!name.isEmpty()) {
 			location.name = name;
 		}
 		location.pos = new BlockPos(player);
 		location.dimension = player.dimension;
-		final int cat = data.get(scroll.getSelected());
+		int cat = data.get(scroll.getSelected());
 		Client.sendData(EnumPacketServer.TransportSave, cat, location.writeNBT());
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data = data;
 		scroll.setList(list);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final TransportLocation loc = new TransportLocation();
+	public void setGuiData(NBTTagCompound compound) {
+		TransportLocation loc = new TransportLocation();
 		loc.readNBT(compound);
 		location = loc;
 		initGui();
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		scroll.setSelected(selected);
 	}
 }

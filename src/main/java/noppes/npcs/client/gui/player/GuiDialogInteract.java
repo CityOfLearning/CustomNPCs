@@ -43,7 +43,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 	private int selectedX;
 	private int selectedY;
 
-	public GuiDialogInteract(final EntityNPCInterface npc, final Dialog dialog) {
+	public GuiDialogInteract(EntityNPCInterface npc, Dialog dialog) {
 		super(npc);
 		selected = 0;
 		lines = new ArrayList<TextBlockClient>();
@@ -63,7 +63,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 				getResource("wheel6.png") };
 	}
 
-	public void appendDialog(final Dialog dialog) {
+	public void appendDialog(Dialog dialog) {
 		closeOnEsc = !dialog.disableEsc;
 		this.dialog = dialog;
 		options = new ArrayList<Integer>();
@@ -72,8 +72,8 @@ public class GuiDialogInteract extends GuiNPCInterface {
 			MusicController.Instance.playSound(dialog.sound, (float) npc.posX, (float) npc.posY, (float) npc.posZ);
 		}
 		lines.add(new TextBlockClient((ICommandSender) npc, dialog.text, 280, 14737632, new Object[] { player, npc }));
-		for (final int slot : dialog.options.keySet()) {
-			final DialogOption option = dialog.options.get(slot);
+		for (int slot : dialog.options.keySet()) {
+			DialogOption option = dialog.options.get(slot);
 			if (option != null) {
 				if (option.optionType == EnumOptionType.DISABLED) {
 					continue;
@@ -95,10 +95,10 @@ public class GuiDialogInteract extends GuiNPCInterface {
 			}
 		}
 		rowTotal = 0;
-		for (final TextBlockClient block : lines) {
+		for (TextBlockClient block : lines) {
 			rowTotal += block.lines.size() + 1;
 		}
-		final int max = dialogHeight / ClientProxy.Font.height();
+		int max = dialogHeight / ClientProxy.Font.height();
 		rowStart = rowTotal - max;
 		if (rowStart < 0) {
 			rowStart = 0;
@@ -109,12 +109,12 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		NoppesUtilPlayer.sendData(EnumPlayerPacket.CheckQuestCompletion, new Object[0]);
 	}
 
-	private void drawLinedOptions(final int j) {
+	private void drawLinedOptions(int j) {
 		drawHorizontalLine(guiLeft - 60, guiLeft + xSize + 120,
 				(guiTop + dialogHeight) - (ClientProxy.Font.height() / 3), -1);
-		final int offset = dialogHeight;
+		int offset = dialogHeight;
 		if (j >= (guiTop + offset)) {
-			final int selected = (j - (guiTop + offset)) / ClientProxy.Font.height();
+			int selected = (j - (guiTop + offset)) / ClientProxy.Font.height();
 			if (selected < options.size()) {
 				this.selected = selected;
 			}
@@ -126,9 +126,9 @@ public class GuiDialogInteract extends GuiNPCInterface {
 			selected = 0;
 		}
 		for (int k = 0; k < options.size(); ++k) {
-			final int id = options.get(k);
-			final DialogOption option = dialog.options.get(id);
-			final int y = guiTop + offset + (k * ClientProxy.Font.height());
+			int id = options.get(k);
+			DialogOption option = dialog.options.get(id);
+			int y = guiTop + offset + (k * ClientProxy.Font.height());
 			if (selected == k) {
 				this.drawString(fontRendererObj, ">", guiLeft - 60, y, 14737632);
 			}
@@ -138,11 +138,11 @@ public class GuiDialogInteract extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		if (!dialog.hideNPC) {
-			final int l = -70;
-			final int i2 = ySize;
+			int l = -70;
+			int i2 = ySize;
 			this.drawNpc(npc, l, i2, 1.4f, 0);
 		}
 		super.drawScreen(i, j, f);
@@ -152,10 +152,10 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(0.0f, 0.5f, 100.065f);
 		int count = 0;
-		for (final TextBlockClient block : new ArrayList<TextBlockClient>(lines)) {
-			final int size = ClientProxy.Font.width(block.getName() + ": ");
+		for (TextBlockClient block : new ArrayList<TextBlockClient>(lines)) {
+			int size = ClientProxy.Font.width(block.getName() + ": ");
 			this.drawString(block.getName() + ": ", -4 - size, block.color, count);
-			for (final IChatComponent line : block.lines) {
+			for (IChatComponent line : block.lines) {
 				this.drawString(line.getFormattedText(), 0, block.color, count);
 				++count;
 			}
@@ -172,24 +172,23 @@ public class GuiDialogInteract extends GuiNPCInterface {
 	}
 
 	@Override
-	public void drawString(final FontRenderer fontRendererIn, final String text, final int x, final int y,
-			final int color) {
+	public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
 		ClientProxy.Font.drawString(text, x, y, color);
 	}
 
-	private void drawString(final String text, final int left, final int color, final int count) {
-		final int height = count - rowStart;
+	private void drawString(String text, int left, int color, int count) {
+		int height = count - rowStart;
 		this.drawString(fontRendererObj, text, guiLeft + left, guiTop + (height * ClientProxy.Font.height()), color);
 	}
 
 	private void drawWheel() {
-		final int yoffset = guiTop + dialogHeight + 14;
+		int yoffset = guiTop + dialogHeight + 14;
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(wheel);
 		this.drawTexturedModalRect((width / 2) - 31, yoffset, 0, 0, 63, 40);
 		selectedX += Mouse.getDX();
 		selectedY += Mouse.getDY();
-		final int limit = 80;
+		int limit = 80;
 		if (selectedX > limit) {
 			selectedX = limit;
 		}
@@ -214,8 +213,8 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		}
 		mc.renderEngine.bindTexture(wheelparts[selected]);
 		this.drawTexturedModalRect((width / 2) - 31, yoffset, 0, 0, 85, 55);
-		for (final int slot : dialog.options.keySet()) {
-			final DialogOption option = dialog.options.get(slot);
+		for (int slot : dialog.options.keySet()) {
+			DialogOption option = dialog.options.get(slot);
 			if (option != null) {
 				if (option.optionType == EnumOptionType.DISABLED) {
 					continue;
@@ -252,7 +251,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		this.drawTexturedModalRect(((width / 2) + (selectedX / 4)) - 2, (yoffset + 16) - (selectedY / 6), 0, 0, 8, 8);
 	}
 
-	public void grabMouse(final boolean grab) {
+	public void grabMouse(boolean grab) {
 		if (grab && !isGrabbed) {
 			Minecraft.getMinecraft().mouseHelper.grabMouseCursor();
 			isGrabbed = true;
@@ -275,7 +274,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 			closed();
 			return;
 		}
-		final DialogOption option = dialog.options.get(optionId);
+		DialogOption option = dialog.options.get(optionId);
 		if ((option == null) || (option.optionType == EnumOptionType.QUIT_OPTION)
 				|| (option.optionType == EnumOptionType.DISABLED)) {
 			close();
@@ -298,7 +297,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == mc.gameSettings.keyBindForward.getKeyCode()) || (i == 200)) {
 			--selected;
 		}
@@ -317,7 +316,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		if (((selected == -1) && options.isEmpty()) || (selected >= 0)) {
 			handleDialogSelection();
 		}

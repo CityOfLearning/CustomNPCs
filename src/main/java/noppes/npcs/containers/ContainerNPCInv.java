@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class ContainerNPCInv extends Container {
-	public ContainerNPCInv(final EntityNPCInterface npc, final EntityPlayer player) {
+	public ContainerNPCInv(EntityNPCInterface npc, EntityPlayer player) {
 		for (int l = 0; l < 4; ++l) {
 			addSlotToContainer(new SlotNPCArmor(npc.inventory, l, 9, 22 + (l * 18), l));
 		}
@@ -32,12 +32,12 @@ public class ContainerNPCInv extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

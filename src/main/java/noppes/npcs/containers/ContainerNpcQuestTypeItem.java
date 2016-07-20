@@ -14,7 +14,7 @@ import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.quests.QuestItem;
 
 public class ContainerNpcQuestTypeItem extends Container {
-	public ContainerNpcQuestTypeItem(final EntityPlayer player) {
+	public ContainerNpcQuestTypeItem(EntityPlayer player) {
 		Quest quest = NoppesUtilServer.getEditingQuest(player);
 		if (player.worldObj.isRemote) {
 			quest = GuiNPCManageQuest.quest;
@@ -33,12 +33,12 @@ public class ContainerNpcQuestTypeItem extends Container {
 	}
 
 	@Override
-	public boolean canInteractWith(final EntityPlayer entityplayer) {
+	public boolean canInteractWith(EntityPlayer entityplayer) {
 		return true;
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(final EntityPlayer par1EntityPlayer, final int i) {
+	public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int i) {
 		return null;
 	}
 }

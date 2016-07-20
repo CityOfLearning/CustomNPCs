@@ -41,7 +41,7 @@ public class DataDisplay implements INPCDisplay {
 	private boolean disableLivingAnimation;
 	private byte showBossBar;
 
-	public DataDisplay(final EntityNPCInterface npc) {
+	public DataDisplay(EntityNPCInterface npc) {
 		title = "";
 		skinType = 0;
 		url = "";
@@ -55,7 +55,7 @@ public class DataDisplay implements INPCDisplay {
 		disableLivingAnimation = false;
 		showBossBar = 0;
 		this.npc = npc;
-		final String[] names = { "Noppes", "Noppes", "Noppes", "Noppes", "Atesson", "Rothcersul", "Achdranys", "Pegato",
+		String[] names = { "Noppes", "Noppes", "Noppes", "Noppes", "Atesson", "Rothcersul", "Achdranys", "Pegato",
 				"Chald", "Gareld", "Nalworche", "Ineald", "Tia'kim", "Torerod", "Turturdar", "Ranler", "Dyntan",
 				"Oldrake", "Gharis", "Elmn", "Tanal", "Waran-ess", "Ach-aldhat", "Athi", "Itageray", "Tasr", "Ightech",
 				"Gakih", "Adkal", "Qua'an", "Sieq", "Urnp", "Rods", "Vorbani", "Smaik", "Fian", "Hir", "Ristai",
@@ -90,8 +90,8 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public float[] getModelScale(final int part) {
-		final ModelData modeldata = ((EntityCustomNpc) npc).modelData;
+	public float[] getModelScale(int part) {
+		ModelData modeldata = ((EntityCustomNpc) npc).modelData;
 		ModelPartConfig model = null;
 		if (part == 0) {
 			model = modeldata.getPartConfig(EnumParts.HEAD);
@@ -169,7 +169,7 @@ public class DataDisplay implements INPCDisplay {
 			GameProfile gameprofile = MinecraftServer.getServer().getPlayerProfileCache()
 					.getGameProfileForUsername(playerProfile.getName());
 			if (gameprofile != null) {
-				final Property property = (Property) Iterables
+				Property property = (Property) Iterables
 						.getFirst((Iterable) gameprofile.getProperties().get("textures"), null);
 				if (property == null) {
 					gameprofile = MinecraftServer.getServer().getMinecraftSessionService()
@@ -180,12 +180,12 @@ public class DataDisplay implements INPCDisplay {
 		}
 	}
 
-	public void readToNBT(final NBTTagCompound nbttagcompound) {
+	public void readToNBT(NBTTagCompound nbttagcompound) {
 		name = nbttagcompound.getString("Name");
 		title = nbttagcompound.getString("Title");
 		url = nbttagcompound.getString("SkinUrl");
-		final int prevSkinType = skinType;
-		final String prevTexture = texture;
+		int prevSkinType = skinType;
+		String prevTexture = texture;
 		skinType = nbttagcompound.getByte("UsingSkinUrl");
 		texture = nbttagcompound.getString("Texture");
 		cloakTexture = nbttagcompound.getString("CloakTexture");
@@ -217,7 +217,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setBossbar(final int type) {
+	public void setBossbar(int type) {
 		if (type == showBossBar) {
 			return;
 		}
@@ -226,7 +226,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setCapeTexture(final String texture) {
+	public void setCapeTexture(String texture) {
 		if (cloakTexture.equals(texture)) {
 			return;
 		}
@@ -236,14 +236,14 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setHashLivingAnimation(final boolean enabled) {
+	public void setHashLivingAnimation(boolean enabled) {
 		disableLivingAnimation = !enabled;
 		npc.updateClient = true;
 	}
 
 	@Override
-	public void setModelScale(final int part, final float x, final float y, final float z) {
-		final ModelData modeldata = ((EntityCustomNpc) npc).modelData;
+	public void setModelScale(int part, float x, float y, float z) {
+		ModelData modeldata = ((EntityCustomNpc) npc).modelData;
 		ModelPartConfig model = null;
 		if (part == 0) {
 			model = modeldata.getPartConfig(EnumParts.HEAD);
@@ -266,7 +266,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setName(final String name) {
+	public void setName(String name) {
 		if (this.name.equals(name)) {
 			return;
 		}
@@ -275,7 +275,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setOverlayTexture(final String texture) {
+	public void setOverlayTexture(String texture) {
 		if (glowTexture.equals(texture)) {
 			return;
 		}
@@ -285,7 +285,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setShowName(final int type) {
+	public void setShowName(int type) {
 		if (type == showName) {
 			return;
 		}
@@ -294,7 +294,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setSize(final int size) {
+	public void setSize(int size) {
 		if (modelSize == size) {
 			return;
 		}
@@ -303,7 +303,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setSkinPlayer(final String name) {
+	public void setSkinPlayer(String name) {
 		if ((name == null) || name.isEmpty()) {
 			playerProfile = null;
 			skinType = 0;
@@ -315,7 +315,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setSkinTexture(final String texture) {
+	public void setSkinTexture(String texture) {
 		if (this.texture.equals(texture)) {
 			return;
 		}
@@ -326,7 +326,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setSkinUrl(final String url) {
+	public void setSkinUrl(String url) {
 		if (this.url.equals(url)) {
 			return;
 		}
@@ -340,7 +340,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setTint(final int color) {
+	public void setTint(int color) {
 		if (color == skinColor) {
 			return;
 		}
@@ -349,7 +349,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setTitle(final String title) {
+	public void setTitle(String title) {
 		if (this.title.equals(title)) {
 			return;
 		}
@@ -358,7 +358,7 @@ public class DataDisplay implements INPCDisplay {
 	}
 
 	@Override
-	public void setVisible(final int type) {
+	public void setVisible(int type) {
 		if (type == visible) {
 			return;
 		}
@@ -370,7 +370,7 @@ public class DataDisplay implements INPCDisplay {
 		return !npc.isKilled() && ((showName == 0) || ((showName == 2) && npc.isAttacking()));
 	}
 
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setString("Name", name);
 		nbttagcompound.setString("Title", title);
 		nbttagcompound.setString("SkinUrl", url);
@@ -379,7 +379,7 @@ public class DataDisplay implements INPCDisplay {
 		nbttagcompound.setString("GlowTexture", glowTexture);
 		nbttagcompound.setByte("UsingSkinUrl", skinType);
 		if (playerProfile != null) {
-			final NBTTagCompound nbttagcompound2 = new NBTTagCompound();
+			NBTTagCompound nbttagcompound2 = new NBTTagCompound();
 			NBTUtil.writeGameProfile(nbttagcompound2, playerProfile);
 			nbttagcompound.setTag("SkinUsername", nbttagcompound2);
 		}

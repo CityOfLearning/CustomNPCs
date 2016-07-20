@@ -27,18 +27,18 @@ public class ServerTickHandler {
 	}
 
 	@SubscribeEvent
-	public void onServerTick(final TickEvent.ServerTickEvent event) {
+	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if ((event.phase == TickEvent.Phase.START) && (ticks++ >= 20)) {
 			SchematicController.Instance.updateBuilding();
 			MassBlockController.Update();
 			ticks = 0;
-			for (final DataScenes.SceneState state : DataScenes.StartedScenes.values()) {
+			for (DataScenes.SceneState state : DataScenes.StartedScenes.values()) {
 				if (!state.paused) {
-					final DataScenes.SceneState sceneState = state;
+					DataScenes.SceneState sceneState = state;
 					++sceneState.ticks;
 				}
 			}
-			for (final DataScenes.SceneContainer entry : DataScenes.ScenesToRun) {
+			for (DataScenes.SceneContainer entry : DataScenes.ScenesToRun) {
 				entry.update();
 			}
 			DataScenes.ScenesToRun = new ArrayList<DataScenes.SceneContainer>();
@@ -46,7 +46,7 @@ public class ServerTickHandler {
 	}
 
 	@SubscribeEvent
-	public void onServerTick(final TickEvent.WorldTickEvent event) {
+	public void onServerTick(TickEvent.WorldTickEvent event) {
 		if (event.phase == TickEvent.Phase.START) {
 			NPCSpawning.findChunksForSpawning((WorldServer) event.world);
 		}

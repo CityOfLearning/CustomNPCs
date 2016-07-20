@@ -7,7 +7,7 @@ package noppes.npcs.containers;
 import net.minecraft.entity.player.EntityPlayer;
 
 public class ContainerNPCBankUpgrade extends ContainerNPCBankInterface {
-	public ContainerNPCBankUpgrade(final EntityPlayer player, final int slot, final int bankid) {
+	public ContainerNPCBankUpgrade(EntityPlayer player, int slot, int bankid) {
 		super(player, slot, bankid);
 	}
 

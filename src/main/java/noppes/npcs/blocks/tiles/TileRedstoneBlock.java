@@ -51,14 +51,14 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 		return true;
 	}
 
-	private List<EntityPlayer> getPlayerList(final int x, final int y, final int z) {
+	private List<EntityPlayer> getPlayerList(int x, int y, int z) {
 		return worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)
 						.expand(x, y, z));
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		onRange = compound.getInteger("BlockOnRange");
 		offRange = compound.getInteger("BlockOffRange");
@@ -81,17 +81,16 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 		}
 	}
 
-	private void setActive(final Block block, final boolean bo) {
+	private void setActive(Block block, boolean bo) {
 		isActivated = bo;
-		final IBlockState state = block.getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, isActivated);
+		IBlockState state = block.getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, isActivated);
 		worldObj.setBlockState(pos, state, 2);
 		worldObj.markBlockForUpdate(pos);
 		block.onBlockAdded(worldObj, pos, state);
 	}
 
 	@Override
-	public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState,
-			final IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -105,7 +104,7 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 			return;
 		}
 		ticks = 20;
-		final Block block = getBlockType();
+		Block block = getBlockType();
 		if ((block == null) || !(block instanceof BlockNpcRedstone)) {
 			return;
 		}
@@ -116,24 +115,24 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 			return;
 		}
 		if (!isActivated) {
-			final int x = isDetailed ? onRangeX : onRange;
-			final int y = isDetailed ? onRangeY : onRange;
-			final int z = isDetailed ? onRangeZ : onRange;
-			final List<EntityPlayer> list = getPlayerList(x, y, z);
+			int x = isDetailed ? onRangeX : onRange;
+			int y = isDetailed ? onRangeY : onRange;
+			int z = isDetailed ? onRangeZ : onRange;
+			List<EntityPlayer> list = getPlayerList(x, y, z);
 			if (list.isEmpty()) {
 				return;
 			}
-			for (final EntityPlayer player : list) {
+			for (EntityPlayer player : list) {
 				if (availability.isAvailable(player)) {
 					setActive(block, true);
 				}
 			}
 		} else {
-			final int x = isDetailed ? offRangeX : offRange;
-			final int y = isDetailed ? offRangeY : offRange;
-			final int z = isDetailed ? offRangeZ : offRange;
-			final List<EntityPlayer> list = getPlayerList(x, y, z);
-			for (final EntityPlayer player : list) {
+			int x = isDetailed ? offRangeX : offRange;
+			int y = isDetailed ? offRangeY : offRange;
+			int z = isDetailed ? offRangeZ : offRange;
+			List<EntityPlayer> list = getPlayerList(x, y, z);
+			for (EntityPlayer player : list) {
 				if (availability.isAvailable(player)) {
 					return;
 				}
@@ -143,7 +142,7 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("BlockOnRange", onRange);
 		compound.setInteger("BlockOffRange", offRange);

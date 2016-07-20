@@ -23,7 +23,7 @@ import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.client.renderer.ITileRenderer;
 
 public abstract class BlockRotated extends BlockContainer implements ITileRenderer {
-	public static final PropertyInteger DAMAGE;
+	public static PropertyInteger DAMAGE;
 	static {
 		DAMAGE = PropertyInteger.create("damage", 0, 6);
 	}
@@ -31,7 +31,7 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 
 	private TileEntity renderTile;
 
-	protected BlockRotated(final Block block) {
+	protected BlockRotated(Block block) {
 		super(block.getMaterial());
 		renderId = -1;
 	}
@@ -42,18 +42,18 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 	}
 
 	@Override
-	public int damageDropped(final IBlockState state) {
+	public int damageDropped(IBlockState state) {
 		return state.getValue(BlockRotated.DAMAGE);
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(final World world, final BlockPos pos, final IBlockState state) {
+	public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
 		setBlockBoundsBasedOnState(world, pos);
 		return super.getCollisionBoundingBox(world, pos, state);
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return damageDropped(state);
 	}
 
@@ -63,7 +63,7 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockRotated.DAMAGE, meta);
 	}
 
@@ -86,7 +86,7 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 	}
 
 	@Override
-	public boolean isSideSolid(final IBlockAccess world, final BlockPos pos, final EnumFacing side) {
+	public boolean isSideSolid(IBlockAccess world, BlockPos pos, EnumFacing side) {
 		return true;
 	}
 
@@ -95,11 +95,11 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase placer, final ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase placer,
+			ItemStack stack) {
 		int l = MathHelper.floor_double(((placer.rotationYaw * maxRotation()) / 360.0f) + 0.5) & (maxRotation() - 1);
 		l %= maxRotation();
-		final TileColorable tile = (TileColorable) world.getTileEntity(pos);
+		TileColorable tile = (TileColorable) world.getTileEntity(pos);
 		tile.rotation = l;
 	}
 }

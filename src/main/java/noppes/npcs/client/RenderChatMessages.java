@@ -36,15 +36,15 @@ public class RenderChatMessages implements IChatMessages {
 	}
 
 	@Override
-	public void addMessage(final String message, final EntityNPCInterface npc) {
+	public void addMessage(String message, EntityNPCInterface npc) {
 		if (!CustomNpcs.EnableChatBubbles) {
 			return;
 		}
-		final long time = System.currentTimeMillis();
+		long time = System.currentTimeMillis();
 		if (message.equals(lastMessage) && ((lastMessageTime + 5000L) > time)) {
 			return;
 		}
-		final Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>(this.messages);
+		Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>(this.messages);
 		messages.put(time, new TextBlockClient(message, boxLength * 4, true,
 				new Object[] { Minecraft.getMinecraft().thePlayer, npc }));
 		if (messages.size() > 3) {
@@ -55,22 +55,22 @@ public class RenderChatMessages implements IChatMessages {
 		lastMessageTime = time;
 	}
 
-	private void drawRect(int par0, int par1, int par2, int par3, final int par4, final double par5) {
+	private void drawRect(int par0, int par1, int par2, int par3, int par4, double par5) {
 		if (par0 < par2) {
-			final int j1 = par0;
+			int j1 = par0;
 			par0 = par2;
 			par2 = j1;
 		}
 		if (par1 < par3) {
-			final int j1 = par1;
+			int j1 = par1;
 			par1 = par3;
 			par3 = j1;
 		}
-		final float f = ((par4 >> 24) & 0xFF) / 255.0f;
-		final float f2 = ((par4 >> 16) & 0xFF) / 255.0f;
-		final float f3 = ((par4 >> 8) & 0xFF) / 255.0f;
-		final float f4 = (par4 & 0xFF) / 255.0f;
-		final WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
+		float f = ((par4 >> 24) & 0xFF) / 255.0f;
+		float f2 = ((par4 >> 16) & 0xFF) / 255.0f;
+		float f3 = ((par4 >> 8) & 0xFF) / 255.0f;
+		float f4 = (par4 & 0xFF) / 255.0f;
+		WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
 		GlStateManager.color(f2, f3, f4, f);
 		tessellator.begin(7, DefaultVertexFormats.POSITION);
 		tessellator.pos(par0, par3, par5).endVertex();
@@ -81,9 +81,9 @@ public class RenderChatMessages implements IChatMessages {
 	}
 
 	private Map<Long, TextBlockClient> getMessages() {
-		final Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>();
-		final long time = System.currentTimeMillis();
-		for (final Map.Entry<Long, TextBlockClient> entry : this.messages.entrySet()) {
+		Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>();
+		long time = System.currentTimeMillis();
+		for (Map.Entry<Long, TextBlockClient> entry : this.messages.entrySet()) {
 			if (time > (entry.getKey() + 10000L)) {
 				continue;
 			}
@@ -92,18 +92,17 @@ public class RenderChatMessages implements IChatMessages {
 		return this.messages = messages;
 	}
 
-	private void render(final double par3, final double par5, final double par7, final float textscale,
-			final boolean depth) {
-		final FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
-		final float var13 = 1.6f;
-		final float var14 = 0.016666668f * var13;
+	private void render(double par3, double par5, double par7, float textscale, boolean depth) {
+		FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
+		float var13 = 1.6f;
+		float var14 = 0.016666668f * var13;
 		GlStateManager.pushMatrix();
 		int size = 0;
-		for (final TextBlockClient block : messages.values()) {
+		for (TextBlockClient block : messages.values()) {
 			size += block.lines.size();
 		}
-		final Minecraft mc = Minecraft.getMinecraft();
-		final int textYSize = (int) (size * font.FONT_HEIGHT * scale);
+		Minecraft mc = Minecraft.getMinecraft();
+		int textYSize = (int) (size * font.FONT_HEIGHT * scale);
 		GlStateManager.translate((float) par3 + 0.0f, (float) par5 + (textYSize * textscale * var14), (float) par7);
 		GlStateManager.scale(textscale, textscale, textscale);
 		GL11.glNormal3f(0.0f, 1.0f, 0.0f);
@@ -119,8 +118,8 @@ public class RenderChatMessages implements IChatMessages {
 		} else {
 			GlStateManager.disableDepth();
 		}
-		final int black = depth ? -16777216 : 1426063360;
-		final int white = depth ? -1140850689 : 1157627903;
+		int black = depth ? -16777216 : 1426063360;
+		int white = depth ? -1140850689 : 1157627903;
 		GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 		GlStateManager.disableTexture2D();
 		drawRect(-boxLength - 2, -2, boxLength + 2, textYSize + 1, white, 0.11);
@@ -145,9 +144,9 @@ public class RenderChatMessages implements IChatMessages {
 		GlStateManager.depthMask(true);
 		GlStateManager.scale(scale, scale, scale);
 		int index = 0;
-		for (final TextBlockClient block2 : messages.values()) {
-			for (final IChatComponent chat : block2.lines) {
-				final String message = chat.getFormattedText();
+		for (TextBlockClient block2 : messages.values()) {
+			for (IChatComponent chat : block2.lines) {
+				String message = chat.getFormattedText();
 				font.drawString(message, -font.getStringWidth(message) / 2, index * font.FONT_HEIGHT, black);
 				++index;
 			}
@@ -160,9 +159,8 @@ public class RenderChatMessages implements IChatMessages {
 	}
 
 	@Override
-	public void renderMessages(final double par3, final double par5, final double par7, final float textscale,
-			final boolean inRange) {
-		final Map<Long, TextBlockClient> messages = getMessages();
+	public void renderMessages(double par3, double par5, double par7, float textscale, boolean inRange) {
+		Map<Long, TextBlockClient> messages = getMessages();
 		if (messages.isEmpty()) {
 			return;
 		}

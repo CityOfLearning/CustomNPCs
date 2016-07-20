@@ -9,7 +9,7 @@ import net.minecraft.world.World;
 import noppes.npcs.ModelData;
 
 public class EntityNPCGolem extends EntityNPCInterface {
-	public EntityNPCGolem(final World world) {
+	public EntityNPCGolem(World world) {
 		super(world);
 		display.setSkinTexture("customnpcs:textures/entity/golem/Iron Golem.png");
 		width = 1.4f;
@@ -20,11 +20,11 @@ public class EntityNPCGolem extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.setEntityClass(EntityNPCGolem.class);
 			worldObj.spawnEntityInWorld(npc);
 		}
@@ -35,7 +35,7 @@ public class EntityNPCGolem extends EntityNPCInterface {
 	public void updateHitbox() {
 		currentAnimation = dataWatcher.getWatchableObjectInt(14);
 		if (currentAnimation == 2) {
-			final float n = 0.5f;
+			float n = 0.5f;
 			height = n;
 			width = n;
 		} else if (currentAnimation == 1) {

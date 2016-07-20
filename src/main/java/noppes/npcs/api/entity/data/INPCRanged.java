@@ -49,7 +49,7 @@ public interface INPCRanged {
 
 	int getSize();
 
-	String getSound(final int p0);
+	String getSound(int p0);
 
 	int getSpeed();
 
@@ -59,49 +59,49 @@ public interface INPCRanged {
 
 	int getStrength();
 
-	void setAccelerate(final boolean p0);
+	void setAccelerate(boolean p0);
 
-	void setAccuracy(final int p0);
+	void setAccuracy(int p0);
 
-	void setBurst(final int p0);
+	void setBurst(int p0);
 
-	void setBurstDelay(final int p0);
+	void setBurstDelay(int p0);
 
-	void setDelay(final int p0, final int p1);
+	void setDelay(int p0, int p1);
 
-	void setEffect(final int p0, final int p1, final int p2);
+	void setEffect(int p0, int p1, int p2);
 
-	void setExplodeSize(final int p0);
+	void setExplodeSize(int p0);
 
-	void setFireType(final int p0);
+	void setFireType(int p0);
 
-	void setGlows(final boolean p0);
+	void setGlows(boolean p0);
 
-	void setHasAimAnimation(final boolean p0);
+	void setHasAimAnimation(boolean p0);
 
-	void setHasGravity(final boolean p0);
+	void setHasGravity(boolean p0);
 
-	void setKnockback(final int p0);
+	void setKnockback(int p0);
 
-	void setMeleeRange(final int p0);
+	void setMeleeRange(int p0);
 
-	void setParticle(final int p0);
+	void setParticle(int p0);
 
-	void setRange(final int p0);
+	void setRange(int p0);
 
-	void setRender3D(final boolean p0);
+	void setRender3D(boolean p0);
 
-	void setShotCount(final int p0);
+	void setShotCount(int p0);
 
-	void setSize(final int p0);
+	void setSize(int p0);
 
-	void setSound(final int p0, final String p1);
+	void setSound(int p0, String p1);
 
-	void setSpeed(final int p0);
+	void setSpeed(int p0);
 
-	void setSpins(final boolean p0);
+	void setSpins(boolean p0);
 
-	void setSticks(final boolean p0);
+	void setSticks(boolean p0);
 
-	void setStrength(final int p0);
+	void setStrength(int p0);
 }

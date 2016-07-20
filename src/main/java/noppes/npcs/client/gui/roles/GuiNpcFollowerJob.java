@@ -22,13 +22,13 @@ public class GuiNpcFollowerJob extends GuiNPCInterface2 implements ICustomScroll
 	private JobFollower job;
 	private GuiCustomScroll scroll;
 
-	public GuiNpcFollowerJob(final EntityNPCInterface npc) {
+	public GuiNpcFollowerJob(EntityNPCInterface npc) {
 		super(npc);
 		job = (JobFollower) npc.jobInterface;
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		getTextField(1).setText(guiCustomScroll.getSelected());
 	}
 
@@ -41,10 +41,10 @@ public class GuiNpcFollowerJob extends GuiNPCInterface2 implements ICustomScroll
 		scroll.guiLeft = guiLeft + 268;
 		scroll.guiTop = guiTop + 4;
 		addScroll(scroll);
-		final List<String> names = new ArrayList<String>();
-		final List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<String> names = new ArrayList<String>();
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
-		for (final EntityNPCInterface npc : list) {
+		for (EntityNPCInterface npc : list) {
 			if (npc != this.npc) {
 				if (names.contains(npc.display.getName())) {
 					continue;

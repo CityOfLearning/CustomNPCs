@@ -17,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 
 public class GuiCustomScroll extends GuiScreen {
-	public static final ResourceLocation resource;
+	public static ResourceLocation resource;
 	static {
 		resource = new ResourceLocation("customnpcs", "textures/gui/misc.png");
 	}
@@ -42,7 +42,7 @@ public class GuiCustomScroll extends GuiScreen {
 
 	private boolean selectable;
 
-	public GuiCustomScroll(final GuiScreen parent, final int id) {
+	public GuiCustomScroll(GuiScreen parent, int id) {
 		guiLeft = 0;
 		guiTop = 0;
 		multipleSelection = false;
@@ -67,7 +67,7 @@ public class GuiCustomScroll extends GuiScreen {
 		this.id = id;
 	}
 
-	public GuiCustomScroll(final GuiScreen parent, final int id, final boolean multipleSelection) {
+	public GuiCustomScroll(GuiScreen parent, int id, boolean multipleSelection) {
 		this(parent, id);
 		this.multipleSelection = multipleSelection;
 	}
@@ -81,16 +81,16 @@ public class GuiCustomScroll extends GuiScreen {
 
 	protected void drawItems() {
 		for (int i = 0; i < list.size(); ++i) {
-			final int j = 4;
-			final int k = ((14 * i) + 4) - scrollY;
+			int j = 4;
+			int k = ((14 * i) + 4) - scrollY;
 			if ((k >= 4) && ((k + 12) < ySize)) {
-				final int xOffset = (scrollHeight < (ySize - 8)) ? 0 : 10;
-				final String displayString = StatCollector.translateToLocal(list.get(i));
+				int xOffset = (scrollHeight < (ySize - 8)) ? 0 : 10;
+				String displayString = StatCollector.translateToLocal(list.get(i));
 				String text = "";
-				final float maxWidth = ((xSize + xOffset) - 8) * 0.8f;
+				float maxWidth = ((xSize + xOffset) - 8) * 0.8f;
 				if (fontRendererObj.getStringWidth(displayString) > maxWidth) {
 					for (int h = 0; h < displayString.length(); ++h) {
-						final char c = displayString.charAt(h);
+						char c = displayString.charAt(h);
 						text += c;
 						if (fontRendererObj.getStringWidth(text) > maxWidth) {
 							break;
@@ -117,7 +117,7 @@ public class GuiCustomScroll extends GuiScreen {
 		}
 	}
 
-	public void drawScreen(int i, int j, final float f, final int mouseScrolled) {
+	public void drawScreen(int i, int j, float f, int mouseScrolled) {
 		if (!visible) {
 			return;
 		}
@@ -170,9 +170,9 @@ public class GuiCustomScroll extends GuiScreen {
 	}
 
 	private void drawScrollBar() {
-		final int i = (guiLeft + xSize) - 9;
+		int i = (guiLeft + xSize) - 9;
 		int k;
-		final int j = k = guiTop + ((scrollY / listHeight) * (ySize - 8)) + 4;
+		int j = k = guiTop + ((scrollY / listHeight) * (ySize - 8)) + 4;
 		this.drawTexturedModalRect(i, k, xSize, 9, 5, 1);
 		++k;
 		while (k < ((j + scrollHeight) - 1)) {
@@ -214,12 +214,12 @@ public class GuiCustomScroll extends GuiScreen {
 		return selected >= 0;
 	}
 
-	public boolean isMouseOver(final int x, final int y) {
+	public boolean isMouseOver(int x, int y) {
 		return (x >= guiLeft) && (x <= (guiLeft + xSize)) && (y >= guiTop) && (y <= (guiTop + ySize));
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		if ((k != 0) || (hover < 0)) {
 			return;
 		}
@@ -240,13 +240,13 @@ public class GuiCustomScroll extends GuiScreen {
 		}
 	}
 
-	public boolean mouseInOption(final int i, final int j, final int k) {
-		final int l = 4;
-		final int i2 = ((14 * k) + 4) - scrollY;
+	public boolean mouseInOption(int i, int j, int k) {
+		int l = 4;
+		int i2 = ((14 * k) + 4) - scrollY;
 		return (i >= (l - 1)) && (i < ((l + xSize) - 11)) && (j >= (i2 - 1)) && (j < (i2 + 8));
 	}
 
-	public void replace(final String old, final String name) {
+	public void replace(String old, String name) {
 		String select = getSelected();
 		list.remove(old);
 		list.add(name);
@@ -260,8 +260,8 @@ public class GuiCustomScroll extends GuiScreen {
 		setSize(xSize, ySize);
 	}
 
-	public void scrollTo(final String name) {
-		final int i = list.indexOf(name);
+	public void scrollTo(String name) {
+		int i = list.indexOf(name);
 		if ((i < 0) || (scrollHeight >= (ySize - 8))) {
 			return;
 		}
@@ -272,22 +272,22 @@ public class GuiCustomScroll extends GuiScreen {
 		scrollY = pos;
 	}
 
-	public void setList(final List<String> list) {
+	public void setList(List<String> list) {
 		isSorted = true;
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		this.list = list;
 		setSize(xSize, ySize);
 	}
 
-	public void setSelected(final String name) {
+	public void setSelected(String name) {
 		selected = list.indexOf(name);
 	}
 
-	public void setSelectedList(final HashSet<String> selectedList) {
+	public void setSelectedList(HashSet<String> selectedList) {
 		this.selectedList = selectedList;
 	}
 
-	public void setSize(final int x, final int y) {
+	public void setSize(int x, int y) {
 		ySize = y;
 		xSize = x;
 		listHeight = 14 * list.size();
@@ -304,7 +304,7 @@ public class GuiCustomScroll extends GuiScreen {
 		return this;
 	}
 
-	public void setUnsortedList(final List<String> list) {
+	public void setUnsortedList(List<String> list) {
 		isSorted = false;
 		this.list = list;
 		setSize(xSize, ySize);

@@ -28,8 +28,8 @@ import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
 
 public class BlockCarpentryBench extends BlockContainer implements ITileRenderer {
-	public static final PropertyInteger TYPE;
-	public static final PropertyInteger ROTATION;
+	public static PropertyInteger TYPE;
+	public static PropertyInteger ROTATION;
 	static {
 		TYPE = PropertyInteger.create("type", 0, 1);
 		ROTATION = PropertyInteger.create("rotation", 0, 3);
@@ -47,28 +47,28 @@ public class BlockCarpentryBench extends BlockContainer implements ITileRenderer
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileBlockAnvil();
 	}
 
 	@Override
-	public int damageDropped(final IBlockState state) {
+	public int damageDropped(IBlockState state) {
 		return state.getValue(BlockCarpentryBench.TYPE);
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return state.getValue(BlockCarpentryBench.ROTATION) + (state.getValue(BlockCarpentryBench.TYPE) * 4);
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockCarpentryBench.TYPE, (Integer.valueOf(meta) >> 2))
 				.withProperty(BlockCarpentryBench.ROTATION, (meta % 4));
 	}
 
 	@Override
-	public void getSubBlocks(final Item par1, final CreativeTabs par2CreativeTabs, final List par3List) {
+	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
 		par3List.add(new ItemStack(par1, 1, 0));
 		par3List.add(new ItemStack(par1, 1, 1));
 	}
@@ -92,8 +92,8 @@ public class BlockCarpentryBench extends BlockContainer implements ITileRenderer
 	}
 
 	@Override
-	public boolean onBlockActivated(final World par1World, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
+			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!par1World.isRemote) {
 			player.openGui(CustomNpcs.instance, EnumGuiType.PlayerAnvil.ordinal(), par1World, pos.getX(), pos.getY(),
 					pos.getZ());
@@ -102,9 +102,9 @@ public class BlockCarpentryBench extends BlockContainer implements ITileRenderer
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entity, final ItemStack stack) {
-		final int var6 = MathHelper.floor_double((entity.rotationYaw / 90.0f) + 0.5) & 0x3;
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
+			ItemStack stack) {
+		int var6 = MathHelper.floor_double((entity.rotationYaw / 90.0f) + 0.5) & 0x3;
 		world.setBlockState(pos, state.withProperty(BlockCarpentryBench.TYPE, stack.getItemDamage())
 				.withProperty(BlockCarpentryBench.ROTATION, var6), 2);
 	}

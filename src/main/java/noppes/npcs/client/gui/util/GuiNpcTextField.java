@@ -20,7 +20,7 @@ public class GuiNpcTextField extends GuiTextField {
 	}
 
 	public static void unfocus() {
-		final GuiNpcTextField prev = GuiNpcTextField.activeTextfield;
+		GuiNpcTextField prev = GuiNpcTextField.activeTextfield;
 		GuiNpcTextField.activeTextfield = null;
 		if (prev != null) {
 			prev.unFocused();
@@ -39,10 +39,9 @@ public class GuiNpcTextField extends GuiTextField {
 
 	public boolean canEdit;
 
-	private final int[] allowedSpecialChars;
+	private int[] allowedSpecialChars;
 
-	public GuiNpcTextField(final int id, final GuiScreen parent, final FontRenderer fontRenderer, final int i,
-			final int j, final int k, final int l, final String s) {
+	public GuiNpcTextField(int id, GuiScreen parent, FontRenderer fontRenderer, int i, int j, int k, int l, String s) {
 		super(id, fontRenderer, i, j, k, l);
 		enabled = true;
 		inMenu = true;
@@ -60,16 +59,15 @@ public class GuiNpcTextField extends GuiTextField {
 		}
 	}
 
-	public GuiNpcTextField(final int id, final GuiScreen parent, final int i, final int j, final int k, final int l,
-			final String s) {
+	public GuiNpcTextField(int id, GuiScreen parent, int i, int j, int k, int l, String s) {
 		this(id, parent, Minecraft.getMinecraft().fontRendererObj, i, j, k, l, s);
 	}
 
-	private boolean charAllowed(final char c, final int i) {
+	private boolean charAllowed(char c, int i) {
 		if (!numbersOnly || Character.isDigit(c) || ((c == '-') && (getText().length() == 0))) {
 			return true;
 		}
-		for (final int j : allowedSpecialChars) {
+		for (int j : allowedSpecialChars) {
 			if (j == i) {
 				return true;
 			}
@@ -84,7 +82,7 @@ public class GuiNpcTextField extends GuiTextField {
 		}
 	}
 
-	public void drawTextBox(final int mousX, final int mousY) {
+	public void drawTextBox(int mousX, int mousY) {
 		this.drawTextBox();
 	}
 
@@ -106,11 +104,11 @@ public class GuiNpcTextField extends GuiTextField {
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		if (!canEdit) {
 			return;
 		}
-		final boolean wasFocused = isFocused();
+		boolean wasFocused = isFocused();
 		super.mouseClicked(i, j, k);
 		if ((wasFocused != isFocused()) && wasFocused) {
 			unFocused();
@@ -120,7 +118,7 @@ public class GuiNpcTextField extends GuiTextField {
 		}
 	}
 
-	public void setMinMaxDefault(final int i, final int j, final int k) {
+	public void setMinMaxDefault(int i, int j, int k) {
 		min = i;
 		max = j;
 		def = k;
@@ -132,7 +130,7 @@ public class GuiNpcTextField extends GuiTextField {
 	}
 
 	@Override
-	public boolean textboxKeyTyped(final char c, final int i) {
+	public boolean textboxKeyTyped(char c, int i) {
 		return charAllowed(c, i) && canEdit && super.textboxKeyTyped(c, i);
 	}
 

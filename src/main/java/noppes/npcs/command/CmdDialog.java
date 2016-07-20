@@ -32,32 +32,32 @@ public class CmdDialog extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "force read", usage = "<player> <dialog>")
-	public void read(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void read(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int diagid;
 		try {
 			diagid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("DialogID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException("Unknow player '%s'", new Object[] { playername });
 		}
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.dialogData.dialogsRead.add(diagid);
 			playerdata.saveNBTData(null);
 		}
 	}
 
 	@SubCommand(desc = "reload dialogs from disk", permission = 4)
-	public void reload(final ICommandSender sender, final String[] args) {
+	public void reload(ICommandSender sender, String[] args) {
 		new DialogController();
 	}
 
 	@SubCommand(desc = "show dialog", usage = "<player> <dialog> <name>")
-	public void show(final ICommandSender sender, final String[] args) throws CommandException {
-		final EntityPlayer player = CommandBase.getPlayer(sender, args[0]);
+	public void show(ICommandSender sender, String[] args) throws CommandException {
+		EntityPlayer player = CommandBase.getPlayer(sender, args[0]);
 		if (player == null) {
 			throw new CommandException("Unknow player '%s'", new Object[] { args[0] });
 		}
@@ -67,14 +67,14 @@ public class CmdDialog extends CommandNoppesBase {
 		} catch (NumberFormatException ex) {
 			throw new CommandException("DialogID must be an integer: " + args[1], new Object[0]);
 		}
-		final Dialog dialog = DialogController.instance.dialogs.get(diagid);
+		Dialog dialog = DialogController.instance.dialogs.get(diagid);
 		if (dialog == null) {
 			throw new CommandException("Unknown dialog id: " + args[1], new Object[0]);
 		}
-		final EntityDialogNpc npc = new EntityDialogNpc(sender.getEntityWorld());
+		EntityDialogNpc npc = new EntityDialogNpc(sender.getEntityWorld());
 		npc.display.setName(args[2]);
 		EntityUtil.Copy(player, npc);
-		final DialogOption option = new DialogOption();
+		DialogOption option = new DialogOption();
 		option.dialogId = diagid;
 		option.title = dialog.title;
 		npc.dialogs.put(0, option);
@@ -82,19 +82,19 @@ public class CmdDialog extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "force unread dialog", usage = "<player> <dialog>")
-	public void unread(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
+	public void unread(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
 		int diagid;
 		try {
 			diagid = Integer.parseInt(args[1]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("DialogID must be an integer", new Object[0]);
 		}
-		final List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
+		List<PlayerData> data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException("Unknow player '%s'", new Object[] { playername });
 		}
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.dialogData.dialogsRead.remove(diagid);
 			playerdata.saveNBTData(null);
 		}

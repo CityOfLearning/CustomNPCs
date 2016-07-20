@@ -22,13 +22,13 @@ import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiTransportSelection extends GuiNPCInterface implements ITopButtonListener, IScrollData {
-	private final ResourceLocation resource;
+	private ResourceLocation resource;
 	protected int xSize;
 	protected int guiLeft;
 	protected int guiTop;
 	private GuiCustomScroll scroll;
 
-	public GuiTransportSelection(final EntityNPCInterface npc) {
+	public GuiTransportSelection(EntityNPCInterface npc) {
 		super(npc);
 		resource = new ResourceLocation("customnpcs", "textures/gui/smallbg.png");
 		xSize = 176;
@@ -37,9 +37,9 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
-		final String sel = scroll.getSelected();
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
+		String sel = scroll.getSelected();
 		if ((button.id == 0) && (sel != null)) {
 			close();
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.Transport, sel);
@@ -47,7 +47,7 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		drawDefaultBackground();
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(resource);
@@ -60,7 +60,7 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 		super.initGui();
 		guiLeft = (width - xSize) / 2;
 		guiTop = (height - 222) / 2;
-		final String name = "";
+		String name = "";
 		addLabel(new GuiNpcLabel(0, name, guiLeft + ((xSize - fontRendererObj.getStringWidth(name)) / 2), guiTop + 10));
 		addButton(new GuiNpcButton(0, guiLeft + 10, guiTop + 192, 156, 20,
 				StatCollector.translateToLocal("transporter.travel")));
@@ -74,14 +74,14 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.mouseClicked(i, j, k);
 	}
@@ -91,11 +91,11 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		scroll.setList(list);
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

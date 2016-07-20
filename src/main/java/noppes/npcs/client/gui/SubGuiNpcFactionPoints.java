@@ -16,7 +16,7 @@ import noppes.npcs.controllers.faction.Faction;
 public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfieldListener {
 	private Faction faction;
 
-	public SubGuiNpcFactionPoints(final Faction faction) {
+	public SubGuiNpcFactionPoints(Faction faction) {
 		this.faction = faction;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -25,8 +25,8 @@ public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 66) {
 			close();
 		}
@@ -61,7 +61,7 @@ public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 2) {
 			faction.defaultPoints = textfield.getInteger();
 		} else if (textfield.id == 3) {

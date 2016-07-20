@@ -27,13 +27,13 @@ public class PlayerQuestData {
 		finishedQuests = new HashMap<Integer, Long>();
 	}
 
-	public boolean checkQuestCompletion(final EntityPlayer player, final EnumQuestType type) {
+	public boolean checkQuestCompletion(EntityPlayer player, EnumQuestType type) {
 		boolean bo = false;
-		for (final QuestData data : activeQuests.values()) {
+		for (QuestData data : activeQuests.values()) {
 			if ((data.quest.type != type) && (type != null)) {
 				continue;
 			}
-			final QuestInterface inter = data.quest.questInterface;
+			QuestInterface inter = data.quest.questInterface;
 			if (inter.isCompleted(player)) {
 				if (data.isCompleted) {
 					continue;
@@ -54,9 +54,9 @@ public class PlayerQuestData {
 		return bo;
 	}
 
-	public QuestData getQuestCompletion(final EntityPlayer player, final EntityNPCInterface npc) {
-		for (final QuestData data : activeQuests.values()) {
-			final Quest quest = data.quest;
+	public QuestData getQuestCompletion(EntityPlayer player, EntityNPCInterface npc) {
+		for (QuestData data : activeQuests.values()) {
+			Quest quest = data.quest;
 			if ((quest != null) && (quest.completion == EnumQuestCompletion.Npc)
 					&& quest.completerNpc.equals(npc.getName()) && quest.questInterface.isCompleted(player)) {
 				return data;
@@ -65,29 +65,29 @@ public class PlayerQuestData {
 		return null;
 	}
 
-	public void loadNBTData(final NBTTagCompound mainCompound) {
+	public void loadNBTData(NBTTagCompound mainCompound) {
 		if (mainCompound == null) {
 			return;
 		}
-		final NBTTagCompound compound = mainCompound.getCompoundTag("QuestData");
-		final NBTTagList list = compound.getTagList("CompletedQuests", 10);
+		NBTTagCompound compound = mainCompound.getCompoundTag("QuestData");
+		NBTTagList list = compound.getTagList("CompletedQuests", 10);
 		if (list != null) {
-			final HashMap<Integer, Long> finishedQuests = new HashMap<Integer, Long>();
+			HashMap<Integer, Long> finishedQuests = new HashMap<Integer, Long>();
 			for (int i = 0; i < list.tagCount(); ++i) {
-				final NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
+				NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
 				finishedQuests.put(nbttagcompound.getInteger("Quest"), nbttagcompound.getLong("Date"));
 			}
 			this.finishedQuests = finishedQuests;
 		}
-		final NBTTagList list2 = compound.getTagList("ActiveQuests", 10);
+		NBTTagList list2 = compound.getTagList("ActiveQuests", 10);
 		if (list2 != null) {
-			final HashMap<Integer, QuestData> activeQuests = new HashMap<Integer, QuestData>();
+			HashMap<Integer, QuestData> activeQuests = new HashMap<Integer, QuestData>();
 			for (int j = 0; j < list2.tagCount(); ++j) {
-				final NBTTagCompound nbttagcompound2 = list2.getCompoundTagAt(j);
-				final int id = nbttagcompound2.getInteger("Quest");
-				final Quest quest = QuestController.instance.quests.get(id);
+				NBTTagCompound nbttagcompound2 = list2.getCompoundTagAt(j);
+				int id = nbttagcompound2.getInteger("Quest");
+				Quest quest = QuestController.instance.quests.get(id);
 				if (quest != null) {
-					final QuestData data = new QuestData(quest);
+					QuestData data = new QuestData(quest);
 					data.readEntityFromNBT(nbttagcompound2);
 					activeQuests.put(id, data);
 				}
@@ -96,19 +96,19 @@ public class PlayerQuestData {
 		}
 	}
 
-	public void saveNBTData(final NBTTagCompound maincompound) {
-		final NBTTagCompound compound = new NBTTagCompound();
-		final NBTTagList list = new NBTTagList();
-		for (final int quest : finishedQuests.keySet()) {
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+	public void saveNBTData(NBTTagCompound maincompound) {
+		NBTTagCompound compound = new NBTTagCompound();
+		NBTTagList list = new NBTTagList();
+		for (int quest : finishedQuests.keySet()) {
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("Quest", quest);
 			nbttagcompound.setLong("Date", finishedQuests.get(quest));
 			list.appendTag(nbttagcompound);
 		}
 		compound.setTag("CompletedQuests", list);
-		final NBTTagList list2 = new NBTTagList();
-		for (final int quest2 : activeQuests.keySet()) {
-			final NBTTagCompound nbttagcompound2 = new NBTTagCompound();
+		NBTTagList list2 = new NBTTagList();
+		for (int quest2 : activeQuests.keySet()) {
+			NBTTagCompound nbttagcompound2 = new NBTTagCompound();
 			nbttagcompound2.setInteger("Quest", quest2);
 			activeQuests.get(quest2).writeEntityToNBT(nbttagcompound2);
 			list2.appendTag(nbttagcompound2);

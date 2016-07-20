@@ -28,15 +28,15 @@ public class GlobalDataController {
 	}
 
 	private void load() {
-		final File saveDir = CustomNpcs.getWorldSaveDirectory();
+		File saveDir = CustomNpcs.getWorldSaveDirectory();
 		try {
-			final File file = new File(saveDir, "global.dat");
+			File file = new File(saveDir, "global.dat");
 			if (file.exists()) {
 				loadData(file);
 			}
 		} catch (Exception e) {
 			try {
-				final File file2 = new File(saveDir, "global.dat_old");
+				File file2 = new File(saveDir, "global.dat_old");
 				if (file2.exists()) {
 					loadData(file2);
 				}
@@ -46,19 +46,19 @@ public class GlobalDataController {
 		}
 	}
 
-	private void loadData(final File file) throws Exception {
-		final NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
+	private void loadData(File file) throws Exception {
+		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		itemGiverId = nbttagcompound1.getInteger("itemGiverId");
 	}
 
 	public void saveData() {
 		try {
-			final File saveDir = CustomNpcs.getWorldSaveDirectory();
-			final NBTTagCompound nbttagcompound = new NBTTagCompound();
+			File saveDir = CustomNpcs.getWorldSaveDirectory();
+			NBTTagCompound nbttagcompound = new NBTTagCompound();
 			nbttagcompound.setInteger("itemGiverId", itemGiverId);
-			final File file = new File(saveDir, "global.dat_new");
-			final File file2 = new File(saveDir, "global.dat_old");
-			final File file3 = new File(saveDir, "global.dat");
+			File file = new File(saveDir, "global.dat_new");
+			File file2 = new File(saveDir, "global.dat_old");
+			File file3 = new File(saveDir, "global.dat");
 			CompressedStreamTools.writeCompressed(nbttagcompound, new FileOutputStream(file));
 			if (file2.exists()) {
 				file2.delete();

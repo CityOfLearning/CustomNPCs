@@ -23,7 +23,7 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 
 public class Schematic {
-	public static final int buildSize = 10000;
+	public static int buildSize = 10000;
 	public String name;
 	public short width;
 	public short height;
@@ -42,7 +42,7 @@ public class Schematic {
 	public int size;
 	private int rotation;
 
-	public Schematic(final String name) {
+	public Schematic(String name) {
 		offset = BlockPos.ORIGIN;
 		start = BlockPos.ORIGIN;
 		isBuilding = false;
@@ -60,9 +60,9 @@ public class Schematic {
 			endPos = size;
 		}
 		while (buildPos < endPos) {
-			final int x = buildPos % width;
-			final int z = ((buildPos - x) / width) % length;
-			final int y = (((buildPos - x) / width) - z) / length;
+			int x = buildPos % width;
+			int z = ((buildPos - x) / width) % length;
+			int y = (((buildPos - x) / width) - z) / length;
 			if (firstLayer) {
 				place(x, y, z, 1);
 			} else {
@@ -81,10 +81,10 @@ public class Schematic {
 	}
 
 	public byte[][] getBlockBytes() {
-		final byte[] blocks = new byte[blockArray.length];
+		byte[] blocks = new byte[blockArray.length];
 		byte[] addBlocks = null;
 		for (int i = 0; i < blocks.length; ++i) {
-			final short id = blockArray[i];
+			short id = blockArray[i];
 			if (id > 255) {
 				if (addBlocks == null) {
 					addBlocks = new byte[(blocks.length >> 1) + 1];
@@ -104,13 +104,13 @@ public class Schematic {
 	}
 
 	public NBTTagCompound getNBTSmall() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setShort("Width", width);
 		compound.setShort("Height", height);
 		compound.setShort("Length", length);
 		compound.setString("SchematicName", name);
 		if (size < 125000) {
-			final byte[][] arr = getBlockBytes();
+			byte[][] arr = getBlockBytes();
 			compound.setByteArray("Blocks", arr[0]);
 			if (arr.length > 1) {
 				compound.setByteArray("AddBlocks", arr[1]);
@@ -121,11 +121,11 @@ public class Schematic {
 	}
 
 	public int getPercentage() {
-		final double l = buildPos + (firstLayer ? 0 : size);
+		double l = buildPos + (firstLayer ? 0 : size);
 		return (int) ((l / size) * 50.0);
 	}
 
-	public NBTTagCompound getTileEntity(final int x, final int y, final int z, final BlockPos pos) {
+	public NBTTagCompound getTileEntity(int x, int y, int z, BlockPos pos) {
 		if ((y >= tileEntities.length) || (tileEntities[y] == null)) {
 			return null;
 		}
@@ -140,28 +140,28 @@ public class Schematic {
 		return compound;
 	}
 
-	public void init(final BlockPos pos, final World world, final int rotation) {
+	public void init(BlockPos pos, World world, int rotation) {
 		start = pos;
 		this.world = world;
 		this.rotation = rotation;
 	}
 
-	public void load(final NBTTagCompound compound) {
+	public void load(NBTTagCompound compound) {
 		width = compound.getShort("Width");
 		height = compound.getShort("Height");
 		length = compound.getShort("Length");
 		size = width * height * length;
-		final byte[] addId = compound.hasKey("AddBlocks") ? compound.getByteArray("AddBlocks") : new byte[0];
+		byte[] addId = compound.hasKey("AddBlocks") ? compound.getByteArray("AddBlocks") : new byte[0];
 		setBlockBytes(compound.getByteArray("Blocks"), addId);
 		blockDataArray = compound.getByteArray("Data");
 		entityList = compound.getTagList("Entities", 10);
 		tileEntities = new Map[height];
 		tileList = compound.getTagList("TileEntities", 10);
 		for (int i = 0; i < tileList.tagCount(); ++i) {
-			final NBTTagCompound teTag = tileList.getCompoundTagAt(i);
-			final int x = teTag.getInteger("x");
-			final int y = teTag.getInteger("y");
-			final int z = teTag.getInteger("z");
+			NBTTagCompound teTag = tileList.getCompoundTagAt(i);
+			int x = teTag.getInteger("x");
+			int y = teTag.getInteger("y");
+			int z = teTag.getInteger("z");
 			Map<ChunkCoordIntPair, NBTTagCompound> map = tileEntities[y];
 			if (map == null) {
 				map = (tileEntities[y] = new HashMap<ChunkCoordIntPair, NBTTagCompound>());
@@ -170,26 +170,26 @@ public class Schematic {
 		}
 	}
 
-	public void offset(final int x, final int y, final int z) {
+	public void offset(int x, int y, int z) {
 		offset = new BlockPos(x, y, z);
 	}
 
-	public void place(final int x, final int y, final int z, final int flag) {
-		final int i = xyzToIndex(x, y, z);
-		final Block b = Block.getBlockById(blockArray[i]);
+	public void place(int x, int y, int z, int flag) {
+		int i = xyzToIndex(x, y, z);
+		Block b = Block.getBlockById(blockArray[i]);
 		if ((b == null) || ((flag == 1) && !b.isFullBlock() && (b != Blocks.air))
 				|| ((flag == 2) && (b.isFullBlock() || (b == Blocks.air)))) {
 			return;
 		}
-		final int rotation = this.rotation / 90;
-		final BlockPos pos = start.add(rotatePos(x, y, z, rotation));
+		int rotation = this.rotation / 90;
+		BlockPos pos = start.add(rotatePos(x, y, z, rotation));
 		IBlockState state = b.getStateFromMeta(blockDataArray[i]);
 		state = rotationState(state, rotation);
 		world.setBlockState(pos, state, 2);
 		if (state.getBlock() instanceof ITileEntityProvider) {
-			final TileEntity tile = world.getTileEntity(pos);
+			TileEntity tile = world.getTileEntity(pos);
 			if (tile != null) {
-				final NBTTagCompound comp = getTileEntity(x, y, z, pos);
+				NBTTagCompound comp = getTileEntity(x, y, z, pos);
 				if (comp != null) {
 					tile.readFromNBT(comp);
 				}
@@ -197,7 +197,7 @@ public class Schematic {
 		}
 	}
 
-	public BlockPos rotatePos(final int x, final int y, final int z, final int rotation) {
+	public BlockPos rotatePos(int x, int y, int z, int rotation) {
 		if (rotation == 1) {
 			return new BlockPos(length - z - 1, y, x);
 		}
@@ -210,12 +210,12 @@ public class Schematic {
 		return new BlockPos(x, y, z);
 	}
 
-	public IBlockState rotationState(final IBlockState state, final int rotation) {
+	public IBlockState rotationState(IBlockState state, int rotation) {
 		if (rotation == 0) {
 			return state;
 		}
-		final Set<IProperty> set = state.getProperties().keySet();
-		for (final IProperty prop : set) {
+		Set<IProperty> set = state.getProperties().keySet();
+		for (IProperty prop : set) {
 			if (!(prop instanceof PropertyDirection)) {
 				continue;
 			}
@@ -235,11 +235,11 @@ public class Schematic {
 	}
 
 	public NBTTagCompound save() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setShort("Width", width);
 		compound.setShort("Height", height);
 		compound.setShort("Length", length);
-		final byte[][] arr = getBlockBytes();
+		byte[][] arr = getBlockBytes();
 		compound.setByteArray("Blocks", arr[0]);
 		if (arr.length > 1) {
 			compound.setByteArray("AddBlocks", arr[1]);
@@ -249,7 +249,7 @@ public class Schematic {
 		return compound;
 	}
 
-	public void setBlockBytes(final byte[] blockId, final byte[] addId) {
+	public void setBlockBytes(byte[] blockId, byte[] addId) {
 		blockArray = new short[blockId.length];
 		for (int index = 0; index < blockId.length; ++index) {
 			short id = (short) (blockId[index] & 0xFF);
@@ -264,7 +264,7 @@ public class Schematic {
 		}
 	}
 
-	public int xyzToIndex(final int x, final int y, final int z) {
+	public int xyzToIndex(int x, int y, int z) {
 		return (((y * length) + z) * width) + x;
 	}
 }

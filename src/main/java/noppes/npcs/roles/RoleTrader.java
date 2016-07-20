@@ -24,19 +24,19 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class RoleTrader extends RoleInterface implements IRoleTrader {
-	private static File getFile(final String name) {
-		final File dir = new File(CustomNpcs.getWorldSaveDirectory(), "markets");
+	private static File getFile(String name) {
+		File dir = new File(CustomNpcs.getWorldSaveDirectory(), "markets");
 		if (!dir.exists()) {
 			dir.mkdir();
 		}
 		return new File(dir, name.toLowerCase() + ".json");
 	}
 
-	public static void load(final RoleTrader role, final String name) {
+	public static void load(RoleTrader role, String name) {
 		if (role.npc.worldObj.isRemote) {
 			return;
 		}
-		final File file = getFile(name);
+		File file = getFile(name);
 		if (!file.exists()) {
 			return;
 		}
@@ -46,12 +46,12 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 		}
 	}
 
-	public static void save(final RoleTrader r, final String name) {
+	public static void save(RoleTrader r, String name) {
 		if (name.isEmpty()) {
 			return;
 		}
-		final File file = getFile(name + "_new");
-		final File file2 = getFile(name);
+		File file = getFile(name + "_new");
+		File file2 = getFile(name);
 		try {
 			NBTJsonUtil.SaveFile(file, r.writeNBT(new NBTTagCompound()));
 			if (file2.exists()) {
@@ -62,7 +62,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 		}
 	}
 
-	public static void setMarket(final EntityNPCInterface npc, final String marketName) {
+	public static void setMarket(EntityNPCInterface npc, String marketName) {
 		if (marketName.isEmpty()) {
 			return;
 		}
@@ -83,7 +83,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 
 	public boolean toSave;
 
-	public RoleTrader(final EntityNPCInterface npc) {
+	public RoleTrader(EntityNPCInterface npc) {
 		super(npc);
 		marketName = "";
 		ignoreDamage = false;
@@ -94,8 +94,8 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public IItemStack getCurrency1(final int slot) {
-		final ItemStack item = inventoryCurrency.getStackInSlot(slot);
+	public IItemStack getCurrency1(int slot) {
+		ItemStack item = inventoryCurrency.getStackInSlot(slot);
 		if (item == null) {
 			return null;
 		}
@@ -103,8 +103,8 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public IItemStack getCurrency2(final int slot) {
-		final ItemStack item = inventoryCurrency.getStackInSlot(slot + 18);
+	public IItemStack getCurrency2(int slot) {
+		ItemStack item = inventoryCurrency.getStackInSlot(slot + 18);
 		if (item == null) {
 			return null;
 		}
@@ -117,19 +117,19 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public IItemStack getSold(final int slot) {
-		final ItemStack item = inventorySold.getStackInSlot(slot);
+	public IItemStack getSold(int slot) {
+		ItemStack item = inventorySold.getStackInSlot(slot);
 		if (item == null) {
 			return null;
 		}
 		return new ItemStackWrapper(item);
 	}
 
-	public boolean hasCurrency(final ItemStack itemstack) {
+	public boolean hasCurrency(ItemStack itemstack) {
 		if (itemstack == null) {
 			return false;
 		}
-		for (final ItemStack item : inventoryCurrency.items.values()) {
+		for (ItemStack item : inventoryCurrency.items.values()) {
 			if ((item != null) && NoppesUtilPlayer.compareItems(item, itemstack, ignoreDamage, ignoreNBT)) {
 				return true;
 			}
@@ -138,7 +138,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public void interact(final EntityPlayer player) {
+	public void interact(EntityPlayer player) {
 		npc.say(player, npc.advanced.getInteractLine());
 		try {
 			load(this, marketName);
@@ -149,12 +149,12 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readFromNBT(NBTTagCompound nbttagcompound) {
 		marketName = nbttagcompound.getString("TraderMarket");
 		readNBT(nbttagcompound);
 	}
 
-	public void readNBT(final NBTTagCompound nbttagcompound) {
+	public void readNBT(NBTTagCompound nbttagcompound) {
 		inventoryCurrency.setFromNBT(nbttagcompound.getCompoundTag("TraderCurrency"));
 		inventorySold.setFromNBT(nbttagcompound.getCompoundTag("TraderSold"));
 		ignoreDamage = nbttagcompound.getBoolean("TraderIgnoreDamage");
@@ -162,7 +162,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public void remove(final int slot) {
+	public void remove(int slot) {
 		if ((slot >= 18) || (slot < 0)) {
 			throw new CustomNPCsException("Invalid slot: " + slot, new Object[0]);
 		}
@@ -172,7 +172,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public void set(final int slot, IItemStack currency, IItemStack currency2, final IItemStack sold) {
+	public void set(int slot, IItemStack currency, IItemStack currency2, IItemStack sold) {
 		if (sold == null) {
 			throw new CustomNPCsException("Sold item was null", new Object[0]);
 		}
@@ -197,11 +197,11 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public void setMarket(final String name) {
+	public void setMarket(String name) {
 		load(this, marketName = name);
 	}
 
-	public NBTTagCompound writeNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setTag("TraderCurrency", inventoryCurrency.getToNBT());
 		nbttagcompound.setTag("TraderSold", inventorySold.getToNBT());
 		nbttagcompound.setBoolean("TraderIgnoreDamage", ignoreDamage);
@@ -210,7 +210,7 @@ public class RoleTrader extends RoleInterface implements IRoleTrader {
 	}
 
 	@Override
-	public NBTTagCompound writeToNBT(final NBTTagCompound nbttagcompound) {
+	public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setString("TraderMarket", marketName);
 		writeNBT(nbttagcompound);
 		if (toSave && !npc.isRemote()) {

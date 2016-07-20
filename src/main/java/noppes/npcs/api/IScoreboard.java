@@ -5,31 +5,31 @@
 package noppes.npcs.api;
 
 public interface IScoreboard {
-	IScoreboardObjective addObjective(final String p0, final String p1);
+	IScoreboardObjective addObjective(String p0, String p1);
 
-	IScoreboardTeam addTeam(final String p0);
+	IScoreboardTeam addTeam(String p0);
 
-	void deletePlayerScore(final String p0, final String p1, final String p2);
+	void deletePlayerScore(String p0, String p1, String p2);
 
-	IScoreboardObjective getObjective(final String p0);
+	IScoreboardObjective getObjective(String p0);
 
 	IScoreboardObjective[] getObjectives();
 
-	int getPlayerScore(final String p0, final String p1, final String p2);
+	int getPlayerScore(String p0, String p1, String p2);
 
-	IScoreboardTeam getTeam(final String p0);
+	IScoreboardTeam getTeam(String p0);
 
 	IScoreboardTeam[] getTeams();
 
-	boolean hasObjective(final String p0);
+	boolean hasObjective(String p0);
 
-	boolean hasPlayerObjective(final String p0, final String p1, final String p2);
+	boolean hasPlayerObjective(String p0, String p1, String p2);
 
-	boolean hasTeam(final String p0);
+	boolean hasTeam(String p0);
 
-	void removeObjective(final String p0);
+	void removeObjective(String p0);
 
-	void removeTeam(final String p0);
+	void removeTeam(String p0);
 
-	void setPlayerScore(final String p0, final String p1, final int p2, final String p3);
+	void setPlayerScore(String p0, String p1, int p2, String p3);
 }

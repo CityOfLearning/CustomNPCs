@@ -14,7 +14,7 @@ public class SubGuiNpcTextArea extends SubGuiInterface {
 	public String text;
 	private GuiNpcTextArea textarea;
 
-	public SubGuiNpcTextArea(final String text) {
+	public SubGuiNpcTextArea(String text) {
 		this.text = text;
 		setBackground("bgfilled.png");
 		xSize = 256;
@@ -23,8 +23,8 @@ public class SubGuiNpcTextArea extends SubGuiInterface {
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void buttonEvent(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 100) {
 			NoppesStringUtils.setClipboardContents(getTextField(2).getText());
 		}
@@ -54,7 +54,7 @@ public class SubGuiNpcTextArea extends SubGuiInterface {
 		if (textarea != null) {
 			text = textarea.getText();
 		}
-		final int yoffset = (int) (ySize * 0.02);
+		int yoffset = (int) (ySize * 0.02);
 		addTextField(textarea = new GuiNpcTextArea(2, this, guiLeft + yoffset, guiTop + yoffset,
 				xSize - 100 - (yoffset * 2), ySize - (yoffset * 2), text));
 		buttonList.add(new GuiNpcButton(102, (guiLeft + xSize) - 90 - yoffset, guiTop + 20, 56, 20, "gui.clear"));

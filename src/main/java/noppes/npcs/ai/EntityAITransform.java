@@ -11,7 +11,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class EntityAITransform extends EntityAIBase {
 	private EntityNPCInterface npc;
 
-	public EntityAITransform(final EntityNPCInterface npc) {
+	public EntityAITransform(EntityNPCInterface npc) {
 		this.npc = npc;
 		setMutexBits(AiMutex.PASSIVE);
 	}

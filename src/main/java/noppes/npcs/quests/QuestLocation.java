@@ -24,7 +24,7 @@ public class QuestLocation extends QuestInterface {
 		location3 = "";
 	}
 
-	public boolean getFound(final QuestData data, final int i) {
+	public boolean getFound(QuestData data, int i) {
 		if (i == 1) {
 			return data.extraData.getBoolean("LocationFound");
 		}
@@ -40,15 +40,15 @@ public class QuestLocation extends QuestInterface {
 	}
 
 	@Override
-	public Vector<String> getQuestLogStatus(final EntityPlayer player) {
-		final Vector<String> vec = new Vector<String>();
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-		final QuestData data = playerdata.activeQuests.get(questId);
+	public Vector<String> getQuestLogStatus(EntityPlayer player) {
+		Vector<String> vec = new Vector<String>();
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+		QuestData data = playerdata.activeQuests.get(questId);
 		if (data == null) {
 			return vec;
 		}
-		final String found = StatCollector.translateToLocal("quest.found");
-		final String notfound = StatCollector.translateToLocal("quest.notfound");
+		String found = StatCollector.translateToLocal("quest.found");
+		String notfound = StatCollector.translateToLocal("quest.notfound");
 		if (!location.isEmpty()) {
 			vec.add(location + ": " + (getFound(data, 1) ? found : notfound));
 		}
@@ -62,24 +62,24 @@ public class QuestLocation extends QuestInterface {
 	}
 
 	@Override
-	public void handleComplete(final EntityPlayer player) {
+	public void handleComplete(EntityPlayer player) {
 	}
 
 	@Override
-	public boolean isCompleted(final EntityPlayer player) {
-		final PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-		final QuestData data = playerdata.activeQuests.get(questId);
+	public boolean isCompleted(EntityPlayer player) {
+		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
+		QuestData data = playerdata.activeQuests.get(questId);
 		return (data != null) && getFound(data, 0);
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		location = compound.getString("QuestLocation");
 		location2 = compound.getString("QuestLocation2");
 		location3 = compound.getString("QuestLocation3");
 	}
 
-	public boolean setFound(final QuestData data, final String location) {
+	public boolean setFound(QuestData data, String location) {
 		if (location.equalsIgnoreCase(this.location) && !data.extraData.getBoolean("LocationFound")) {
 			data.extraData.setBoolean("LocationFound", true);
 			return true;
@@ -96,7 +96,7 @@ public class QuestLocation extends QuestInterface {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound compound) {
+	public void writeEntityToNBT(NBTTagCompound compound) {
 		compound.setString("QuestLocation", location);
 		compound.setString("QuestLocation2", location2);
 		compound.setString("QuestLocation3", location3);

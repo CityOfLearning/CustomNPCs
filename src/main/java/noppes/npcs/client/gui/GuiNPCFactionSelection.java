@@ -27,7 +27,7 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	private int factionId;
 	public GuiSelectionListener listener;
 
-	public GuiNPCFactionSelection(final EntityNPCInterface npc, final GuiScreen parent, final int dialog) {
+	public GuiNPCFactionSelection(EntityNPCInterface npc, GuiScreen parent, int dialog) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 		drawDefaultBackground = false;
@@ -40,8 +40,8 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 2) {
 			close();
 			NoppesUtil.openGUI(player, parent);
@@ -62,7 +62,7 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		slot.drawScreen(i, j, f);
 		super.drawScreen(i, j, f);
 	}
@@ -76,7 +76,7 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	@Override
 	public void initGui() {
 		super.initGui();
-		final Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<String>();
 		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);
 		addButton(new GuiNpcButton(2, (width / 2) - 100, height - 41, 98, 20, "gui.back"));
 		addButton(new GuiNpcButton(4, (width / 2) + 2, height - 41, 98, 20, "mco.template.button.select"));
@@ -95,11 +95,11 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data = data;
 		slot.setList(list);
 		if (factionId >= 0) {
-			for (final String name : data.keySet()) {
+			for (String name : data.keySet()) {
 				if (data.get(name) == factionId) {
 					slot.selected = name;
 				}
@@ -108,6 +108,6 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

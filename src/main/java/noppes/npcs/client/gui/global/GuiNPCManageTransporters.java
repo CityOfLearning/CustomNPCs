@@ -25,7 +25,7 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	private HashMap<String, Integer> data;
 	private boolean selectCategory;
 
-	public GuiNPCManageTransporters(final EntityNPCInterface npc) {
+	public GuiNPCManageTransporters(EntityNPCInterface npc) {
 		super(npc);
 		selectCategory = true;
 		Client.sendData(EnumPacketServer.TransportCategoriesGet, new Object[0]);
@@ -35,8 +35,8 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if ((id == 0) && selectCategory) {
 			NoppesUtil.openGUI(player, new GuiNPCTransportCategoryEdit(npc, this, "", -1));
 		}
@@ -91,7 +91,7 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(int i, int j, float f) {
 		slot.drawScreen(i, j, f);
 		super.drawScreen(i, j, f);
 	}
@@ -105,7 +105,7 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	@Override
 	public void initGui() {
 		super.initGui();
-		final Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<String>();
 		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);
 		addButton(new GuiNpcButton(0, (width / 2) - 100, height - 52, 65, 20, "gui.add"));
 		addButton(new GuiNpcButton(1, (width / 2) - 33, height - 52, 65, 20, "selectServer.edit"));
@@ -122,12 +122,12 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data = data;
 		slot.setList(list);
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 }

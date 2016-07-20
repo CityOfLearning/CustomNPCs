@@ -10,7 +10,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 public abstract class EntityNPCFlying extends EntityNPCInterface {
-	public EntityNPCFlying(final World world) {
+	public EntityNPCFlying(World world) {
 		super(world);
 	}
 
@@ -20,7 +20,7 @@ public abstract class EntityNPCFlying extends EntityNPCInterface {
 	}
 
 	@Override
-	public void fall(final float distance, final float damageMultiplier) {
+	public void fall(float distance, float damageMultiplier) {
 		if (!canFly()) {
 			super.fall(distance, damageMultiplier);
 		}
@@ -32,7 +32,7 @@ public abstract class EntityNPCFlying extends EntityNPCInterface {
 	}
 
 	@Override
-	public void moveEntityWithHeading(final float p_70612_1_, final float p_70612_2_) {
+	public void moveEntityWithHeading(float p_70612_1_, float p_70612_2_) {
 		if (!canFly()) {
 			super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
 			return;
@@ -55,7 +55,7 @@ public abstract class EntityNPCFlying extends EntityNPCInterface {
 				f2 = worldObj.getBlockState(new BlockPos(posX, getEntityBoundingBox().minY - 1.0, posZ))
 						.getBlock().slipperiness * 0.91f;
 			}
-			final float f3 = 0.16277136f / (f2 * f2 * f2);
+			float f3 = 0.16277136f / (f2 * f2 * f2);
 			moveFlying(p_70612_1_, p_70612_2_, onGround ? (0.1f * f3) : 0.02f);
 			f2 = 0.91f;
 			if (onGround) {
@@ -68,8 +68,8 @@ public abstract class EntityNPCFlying extends EntityNPCInterface {
 			motionZ *= f2;
 		}
 		prevLimbSwingAmount = limbSwingAmount;
-		final double d1 = posX - prevPosX;
-		final double d2 = posZ - prevPosZ;
+		double d1 = posX - prevPosX;
+		double d2 = posZ - prevPosZ;
 		float f4 = MathHelper.sqrt_double((d1 * d1) + (d2 * d2)) * 4.0f;
 		if (f4 > 1.0f) {
 			f4 = 1.0f;
@@ -79,8 +79,7 @@ public abstract class EntityNPCFlying extends EntityNPCInterface {
 	}
 
 	@Override
-	protected void updateFallState(final double p_180433_1_, final boolean p_180433_3_, final Block block,
-			final BlockPos pos) {
+	protected void updateFallState(double p_180433_1_, boolean p_180433_3_, Block block, BlockPos pos) {
 		if (!canFly()) {
 			super.updateFallState(p_180433_1_, p_180433_3_, block, pos);
 		}

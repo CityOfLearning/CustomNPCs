@@ -13,7 +13,7 @@ import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAILook extends EntityAIBase {
-	private final EntityNPCInterface npc;
+	private EntityNPCInterface npc;
 	private int idle;
 	private double lookX;
 	private double lookZ;
@@ -21,7 +21,7 @@ public class EntityAILook extends EntityAIBase {
 	private boolean forced;
 	private Entity forcedEntity;
 
-	public EntityAILook(final EntityNPCInterface npc) {
+	public EntityAILook(EntityNPCInterface npc) {
 		idle = 0;
 		forced = false;
 		forcedEntity = null;
@@ -36,17 +36,17 @@ public class EntityAILook extends EntityAIBase {
 		forcedEntity = null;
 	}
 
-	public void rotate(final Entity entity) {
+	public void rotate(Entity entity) {
 		forced = true;
 		forcedEntity = entity;
 	}
 
-	public void rotate(final int degrees) {
+	public void rotate(int degrees) {
 		forced = true;
-		final EntityNPCInterface npc = this.npc;
-		final EntityNPCInterface npc2 = this.npc;
-		final EntityNPCInterface npc3 = this.npc;
-		final float rotationYawHead = degrees;
+		EntityNPCInterface npc = this.npc;
+		EntityNPCInterface npc2 = this.npc;
+		EntityNPCInterface npc3 = this.npc;
+		float rotationYawHead = degrees;
 		npc3.renderYawOffset = rotationYawHead;
 		npc2.rotationYaw = rotationYawHead;
 		npc.rotationYawHead = rotationYawHead;
@@ -68,11 +68,11 @@ public class EntityAILook extends EntityAIBase {
 		if (forced && (forcedEntity != null)) {
 			lookat = forcedEntity;
 		} else if (npc.isInteracting()) {
-			final Iterator<EntityLivingBase> ita = npc.interactingEntities.iterator();
+			Iterator<EntityLivingBase> ita = npc.interactingEntities.iterator();
 			double closestDistance = 12.0;
 			while (ita.hasNext()) {
-				final EntityLivingBase entity = ita.next();
-				final double distance = entity.getDistanceSqToEntity(npc);
+				EntityLivingBase entity = ita.next();
+				double distance = entity.getDistanceSqToEntity(npc);
 				if (distance < closestDistance) {
 					closestDistance = entity.getDistanceSqToEntity(npc);
 					lookat = entity;
@@ -108,10 +108,10 @@ public class EntityAILook extends EntityAIBase {
 			}
 		}
 		if ((npc.ai.getStandingType() == 1) && !forced) {
-			final EntityNPCInterface npc = this.npc;
-			final EntityNPCInterface npc2 = this.npc;
-			final EntityNPCInterface npc3 = this.npc;
-			final float rotationYawHead = this.npc.ai.orientation;
+			EntityNPCInterface npc = this.npc;
+			EntityNPCInterface npc2 = this.npc;
+			EntityNPCInterface npc3 = this.npc;
+			float rotationYawHead = this.npc.ai.orientation;
 			npc3.renderYawOffset = rotationYawHead;
 			npc2.rotationYaw = rotationYawHead;
 			npc.rotationYawHead = rotationYawHead;

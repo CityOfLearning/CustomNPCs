@@ -24,38 +24,38 @@ import noppes.npcs.util.IPermission;
 
 public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermission {
 	@Override
-	public void breakBlock(final World world, final BlockPos pos, final IBlockState state) {
-		final BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
-		final IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
+		IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
 		if ((iblockstate1.getBlock() != this) || world.isRemote) {
 			return;
 		}
-		final TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(pos);
+		TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(pos);
 		EventHooks.onScriptBlockBreak(tile);
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World worldIn, final int meta) {
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
 		return new TileScriptedDoor();
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return e == EnumPacketServer.ScriptDoorDataSave;
 	}
 
 	@Override
-	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
 		if (world.isRemote) {
 			return true;
 		}
-		final BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
-		final IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
+		BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
+		IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
 		if (iblockstate1.getBlock() != this) {
 			return false;
 		}
-		final ItemStack currentItem = player.inventory.getCurrentItem();
+		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null)
 				&& ((currentItem.getItem() == CustomItems.wand) || (currentItem.getItem() == CustomItems.scripter)
 						|| (currentItem.getItem() == CustomItems.scriptedDoorTool))) {
@@ -63,7 +63,7 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 					blockpos1.getZ());
 			return true;
 		}
-		final TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
+		TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
 		if (EventHooks.onScriptBlockInteract(tile, player, side.getIndex(), hitX, hitY, hitZ)) {
 			return false;
 		}
@@ -72,29 +72,28 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 	}
 
 	@Override
-	public void onBlockClicked(final World world, final BlockPos pos, final EntityPlayer playerIn) {
+	public void onBlockClicked(World world, BlockPos pos, EntityPlayer playerIn) {
 		if (world.isRemote) {
 			return;
 		}
-		final IBlockState state = world.getBlockState(pos);
-		final BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
-		final IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
+		IBlockState state = world.getBlockState(pos);
+		BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
+		IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
 		if (iblockstate1.getBlock() != this) {
 			return;
 		}
-		final TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
+		TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
 		EventHooks.onScriptBlockClicked(tile, playerIn);
 	}
 
 	@Override
-	public void onBlockHarvested(final World world, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player) {
-		final BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
-		final IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
+	public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+		BlockPos blockpos1 = (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER) ? pos : pos.down();
+		IBlockState iblockstate1 = pos.equals(blockpos1) ? state : world.getBlockState(blockpos1);
 		if (player.capabilities.isCreativeMode
 				&& (iblockstate1.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.LOWER)
 				&& (iblockstate1.getBlock() == this)) {
-			final TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
+			TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(blockpos1);
 			if (!world.isRemote) {
 				EventHooks.onScriptBlockHarvest(tile, player);
 			}
@@ -103,21 +102,19 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(final World world, final BlockPos pos, final IBlockState state,
-			final Entity entityIn) {
+	public void onEntityCollidedWithBlock(World world, BlockPos pos, IBlockState state, Entity entityIn) {
 		if (world.isRemote) {
 			return;
 		}
-		final TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(pos);
+		TileScriptedDoor tile = (TileScriptedDoor) world.getTileEntity(pos);
 		EventHooks.onScriptBlockCollide(tile, entityIn);
 	}
 
 	@Override
-	public void onNeighborBlockChange(final World worldIn, final BlockPos pos, final IBlockState state,
-			final Block neighborBlock) {
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
 		if (state.getValue(BlockDoor.HALF) == BlockDoor.EnumDoorHalf.UPPER) {
-			final BlockPos blockpos1 = pos.down();
-			final IBlockState iblockstate1 = worldIn.getBlockState(blockpos1);
+			BlockPos blockpos1 = pos.down();
+			IBlockState iblockstate1 = worldIn.getBlockState(blockpos1);
 			if (iblockstate1.getBlock() != this) {
 				worldIn.setBlockToAir(pos);
 			} else if (neighborBlock != this) {
@@ -125,8 +122,8 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 			}
 		} else {
 			boolean flag1 = false;
-			final BlockPos blockpos2 = pos.up();
-			final IBlockState iblockstate2 = worldIn.getBlockState(blockpos2);
+			BlockPos blockpos2 = pos.up();
+			IBlockState iblockstate2 = worldIn.getBlockState(blockpos2);
 			if (iblockstate2.getBlock() != this) {
 				worldIn.setBlockToAir(pos);
 				flag1 = true;
@@ -143,11 +140,11 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 					dropBlockAsItem(worldIn, pos, state, 0);
 				}
 			} else {
-				final TileScriptedDoor tile = (TileScriptedDoor) worldIn.getTileEntity(pos);
+				TileScriptedDoor tile = (TileScriptedDoor) worldIn.getTileEntity(pos);
 				if (!worldIn.isRemote) {
 					EventHooks.onScriptBlockNeighborChanged(tile);
 				}
-				final boolean flag2 = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(blockpos2);
+				boolean flag2 = worldIn.isBlockPowered(pos) || worldIn.isBlockPowered(blockpos2);
 				if ((flag2 || neighborBlock.canProvidePower()) && (neighborBlock != this)
 						&& (flag2 != iblockstate2.getValue(BlockDoor.POWERED))) {
 					worldIn.setBlockState(blockpos2, iblockstate2.withProperty(BlockDoor.POWERED, flag2), 2);
@@ -156,8 +153,8 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 					}
 				}
 				int power = 0;
-				for (final EnumFacing enumfacing : EnumFacing.values()) {
-					final int p = worldIn.getRedstonePower(pos.offset(enumfacing), enumfacing);
+				for (EnumFacing enumfacing : EnumFacing.values()) {
+					int p = worldIn.getRedstonePower(pos.offset(enumfacing), enumfacing);
 					if (p > power) {
 						power = p;
 					}
@@ -168,8 +165,8 @@ public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermiss
 	}
 
 	@Override
-	public void toggleDoor(final World worldIn, final BlockPos pos, final boolean open) {
-		final TileScriptedDoor tile = (TileScriptedDoor) worldIn.getTileEntity(pos);
+	public void toggleDoor(World worldIn, BlockPos pos, boolean open) {
+		TileScriptedDoor tile = (TileScriptedDoor) worldIn.getTileEntity(pos);
 		if (EventHooks.onScriptBlockDoorToggle(tile)) {
 			return;
 		}

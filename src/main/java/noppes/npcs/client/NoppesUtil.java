@@ -47,11 +47,11 @@ public class NoppesUtil {
 		NoppesUtil.data = new HashMap<String, Integer>();
 	}
 
-	public static void addScrollData(final ByteBuf buffer) {
+	public static void addScrollData(ByteBuf buffer) {
 		try {
 			for (int size = buffer.readInt(), i = 0; i < size; ++i) {
-				final int id = buffer.readInt();
-				final String name = Server.readString(buffer);
+				int id = buffer.readInt();
+				String name = Server.readString(buffer);
 				NoppesUtil.data.put(name, id);
 			}
 		} catch (Exception ex) {
@@ -67,8 +67,8 @@ public class NoppesUtil {
 		return NoppesUtil.lastNpc;
 	}
 
-	public static void guiQuestCompletion(final EntityPlayer player, final NBTTagCompound read) {
-		final Quest quest = new Quest();
+	public static void guiQuestCompletion(EntityPlayer player, NBTTagCompound read) {
+		Quest quest = new Quest();
 		quest.readNBT(read);
 		if (!quest.completeText.equals("")) {
 			openGUI(player, new GuiQuestCompletion(quest));
@@ -77,24 +77,23 @@ public class NoppesUtil {
 		}
 	}
 
-	public static void openDialog(final NBTTagCompound compound, final EntityNPCInterface npc,
-			final EntityPlayer player) {
+	public static void openDialog(NBTTagCompound compound, EntityNPCInterface npc, EntityPlayer player) {
 		if (DialogController.instance == null) {
 			DialogController.instance = new DialogController();
 		}
-		final Dialog dialog = new Dialog();
+		Dialog dialog = new Dialog();
 		dialog.readNBT(compound);
-		final GuiScreen gui = Minecraft.getMinecraft().currentScreen;
+		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 		if ((gui == null) || !(gui instanceof GuiDialogInteract)) {
 			CustomNpcs.proxy.openGui(player, new GuiDialogInteract(npc, dialog));
 		} else {
-			final GuiDialogInteract dia = (GuiDialogInteract) gui;
+			GuiDialogInteract dia = (GuiDialogInteract) gui;
 			dia.appendDialog(dialog);
 		}
 	}
 
-	public static void openFolder(final File dir) {
-		final String s = dir.getAbsolutePath();
+	public static void openFolder(File dir) {
+		String s = dir.getAbsolutePath();
 		Label_0072: {
 			if (Util.getOSType() == Util.EnumOS.OSX) {
 				try {
@@ -105,7 +104,7 @@ public class NoppesUtil {
 				}
 			}
 			if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-				final String s2 = String.format("cmd.exe /C start \"Open file\" \"%s\"", s);
+				String s2 = String.format("cmd.exe /C start \"Open file\" \"%s\"", s);
 				try {
 					Runtime.getRuntime().exec(s2);
 					return;
@@ -115,8 +114,8 @@ public class NoppesUtil {
 		}
 		boolean flag = false;
 		try {
-			final Class oclass = Class.forName("java.awt.Desktop");
-			final Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+			Class oclass = Class.forName("java.awt.Desktop");
+			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
 			oclass.getMethod("browse", URI.class).invoke(object, dir.toURI());
 		} catch (Throwable throwable) {
 			flag = true;
@@ -126,31 +125,31 @@ public class NoppesUtil {
 		}
 	}
 
-	public static void openGUI(final EntityPlayer player, final Object guiscreen) {
+	public static void openGUI(EntityPlayer player, Object guiscreen) {
 		CustomNpcs.proxy.openGui(player, guiscreen);
 	}
 
-	public static void requestOpenGUI(final EnumGuiType gui) {
+	public static void requestOpenGUI(EnumGuiType gui) {
 		requestOpenGUI(gui, 0, 0, 0);
 	}
 
-	public static void requestOpenGUI(final EnumGuiType gui, final int i, final int j, final int k) {
+	public static void requestOpenGUI(EnumGuiType gui, int i, int j, int k) {
 		Client.sendData(EnumPacketServer.Gui, gui.ordinal(), i, j, k);
 	}
 
-	public static void setLastNpc(final EntityNPCInterface npc) {
+	public static void setLastNpc(EntityNPCInterface npc) {
 		NoppesUtil.lastNpc = npc;
 	}
 
-	public static void setScrollData(final ByteBuf buffer) {
+	public static void setScrollData(ByteBuf buffer) {
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 		if (gui == null) {
 			return;
 		}
 		try {
 			for (int size = buffer.readInt(), i = 0; i < size; ++i) {
-				final int id = buffer.readInt();
-				final String name = Server.readString(buffer);
+				int id = buffer.readInt();
+				String name = Server.readString(buffer);
 				NoppesUtil.data.put(name, id);
 			}
 		} catch (Exception ex) {
@@ -167,7 +166,7 @@ public class NoppesUtil {
 		NoppesUtil.data = new HashMap<String, Integer>();
 	}
 
-	public static void setScrollList(final ByteBuf buffer) {
+	public static void setScrollList(ByteBuf buffer) {
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
 		if ((gui instanceof GuiNPCInterface) && ((GuiNPCInterface) gui).hasSubGui()) {
 			gui = ((GuiNPCInterface) gui).getSubGui();
@@ -175,7 +174,7 @@ public class NoppesUtil {
 		if ((gui == null) || !(gui instanceof IScrollData)) {
 			return;
 		}
-		final Vector<String> data = new Vector<String>();
+		Vector<String> data = new Vector<String>();
 		try {
 			for (int size = buffer.readInt(), i = 0; i < size; ++i) {
 				data.add(Server.readString(buffer));
@@ -185,15 +184,15 @@ public class NoppesUtil {
 		((IScrollData) gui).setData(data, null);
 	}
 
-	public static void spawnParticle(final ByteBuf buffer) throws IOException {
-		final double posX = buffer.readDouble();
-		final double posY = buffer.readDouble();
-		final double posZ = buffer.readDouble();
-		final float height = buffer.readFloat();
-		final float width = buffer.readFloat();
-		final String particle = Server.readString(buffer);
-		final World worldObj = Minecraft.getMinecraft().theWorld;
-		final Random rand = worldObj.rand;
+	public static void spawnParticle(ByteBuf buffer) throws IOException {
+		double posX = buffer.readDouble();
+		double posY = buffer.readDouble();
+		double posZ = buffer.readDouble();
+		float height = buffer.readFloat();
+		float width = buffer.readFloat();
+		String particle = Server.readString(buffer);
+		World worldObj = Minecraft.getMinecraft().theWorld;
+		Random rand = worldObj.rand;
 		if (particle.equals("heal")) {
 			for (int k = 0; k < 6; ++k) {
 				worldObj.spawnParticle(EnumParticleTypes.SPELL_INSTANT, posX + ((rand.nextDouble() - 0.5) * width),

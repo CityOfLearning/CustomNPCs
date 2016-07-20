@@ -29,7 +29,7 @@ public class CmdNPC extends CommandNoppesBase {
 	public EntityNPCInterface selectedNpc;
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender par1, final String[] args, final BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender par1, String[] args, BlockPos pos) {
 		if (args.length == 2) {
 			return CommandBase.getListOfStringsMatchingLastWord(args,
 					new String[] { "create", "home", "visible", "delete", "owner", "name" });
@@ -41,13 +41,13 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Creates an NPC", usage = "[name]")
-	public void create(final ICommandSender sender, final String[] args) {
-		final World pw = sender.getEntityWorld();
-		final EntityCustomNpc npc = new EntityCustomNpc(pw);
+	public void create(ICommandSender sender, String[] args) {
+		World pw = sender.getEntityWorld();
+		EntityCustomNpc npc = new EntityCustomNpc(pw);
 		if (args.length > 0) {
 			npc.display.setName(args[0]);
 		}
-		final BlockPos pos = sender.getPosition();
+		BlockPos pos = sender.getPosition();
 		npc.setPositionAndRotation(pos.getX(), pos.getY(), pos.getZ(), 0.0f, 0.0f);
 		selectedNpc.ai.setStartPos(pos);
 		pw.spawnEntityInWorld(npc);
@@ -55,7 +55,7 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Delete an NPC")
-	public void delete(final ICommandSender sender, final String[] args) {
+	public void delete(ICommandSender sender, String[] args) {
 		selectedNpc.delete();
 	}
 
@@ -69,8 +69,7 @@ public class CmdNPC extends CommandNoppesBase {
 		return "NPC operation";
 	}
 
-	public <T extends Entity> List<T> getEntities(final Class<? extends T> cls, final World world, final BlockPos pos,
-			final int range) {
+	public <T extends Entity> List<T> getEntities(Class<? extends T> cls, World world, BlockPos pos, int range) {
 		return world.getEntitiesWithinAABB((Class) cls,
 				new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(range, range, range));
 	}
@@ -86,7 +85,7 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Set Home (respawn place)", usage = "[x] [y] [z]")
-	public void home(final ICommandSender sender, final String[] args) {
+	public void home(ICommandSender sender, String[] args) {
 		BlockPos pos = sender.getPosition();
 		if (args.length == 3) {
 			try {
@@ -98,7 +97,7 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Set NPC name", usage = "[name]")
-	public void name(final ICommandSender sender, final String[] args) {
+	public void name(ICommandSender sender, String[] args) {
 		if (args.length < 1) {
 			return;
 		}
@@ -113,7 +112,7 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Sets the owner of an follower/companion", usage = "[player]")
-	public void owner(final ICommandSender sender, final String[] args) {
+	public void owner(ICommandSender sender, String[] args) {
 		if (args.length < 1) {
 			EntityPlayer player = null;
 			if (selectedNpc.roleInterface instanceof RoleFollower) {
@@ -143,18 +142,18 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, String[] args) throws CommandException {
-		final String npcname = args[0].replace("%", " ");
-		final String command = args[1];
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+		String npcname = args[0].replace("%", " ");
+		String command = args[1];
 		args = Arrays.copyOfRange(args, 2, args.length);
 		if (command.equalsIgnoreCase("create")) {
 			processSubCommand(sender, command, new String[] { args[0], npcname });
 			return;
 		}
-		final List<EntityNPCInterface> list = this.getEntities(EntityNPCInterface.class, sender.getEntityWorld(),
+		List<EntityNPCInterface> list = this.getEntities(EntityNPCInterface.class, sender.getEntityWorld(),
 				sender.getPosition(), 80);
-		for (final EntityNPCInterface npc : list) {
-			final String name = npc.display.getName().replace(" ", "_");
+		for (EntityNPCInterface npc : list) {
+			String name = npc.display.getName().replace(" ", "_");
 			if (name.equalsIgnoreCase(npcname) && ((selectedNpc == null)
 					|| (selectedNpc.getDistanceSq(sender.getPosition()) > npc.getDistanceSq(sender.getPosition())))) {
 				selectedNpc = npc;
@@ -173,12 +172,12 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Set NPC visibility", usage = "[true/false/semi]")
-	public void visible(final ICommandSender sender, final String[] args) {
+	public void visible(ICommandSender sender, String[] args) {
 		if (args.length < 1) {
 			return;
 		}
-		final boolean bo = args[0].equalsIgnoreCase("true");
-		final boolean semi = args[0].equalsIgnoreCase("semi");
+		boolean bo = args[0].equalsIgnoreCase("true");
+		boolean semi = args[0].equalsIgnoreCase("semi");
 		selectedNpc.display.getVisible();
 		if (semi) {
 			selectedNpc.display.setVisible(2);

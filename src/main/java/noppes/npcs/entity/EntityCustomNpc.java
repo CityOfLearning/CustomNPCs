@@ -17,13 +17,13 @@ import noppes.npcs.constants.EnumParts;
 public class EntityCustomNpc extends EntityNPCFlying {
 	public ModelData modelData;
 
-	public EntityCustomNpc(final World world) {
+	public EntityCustomNpc(World world) {
 		super(world);
 		modelData = new ModelData();
 	}
 
 	@Override
-	public void mountEntity(final Entity par1Entity) {
+	public void mountEntity(Entity par1Entity) {
 		super.mountEntity(par1Entity);
 		updateHitbox();
 	}
@@ -32,11 +32,11 @@ public class EntityCustomNpc extends EntityNPCFlying {
 	public void onUpdate() {
 		super.onUpdate();
 		if (isRemote()) {
-			final ModelPartData particles = modelData.getPartData(EnumParts.PARTICLES);
+			ModelPartData particles = modelData.getPartData(EnumParts.PARTICLES);
 			if ((particles != null) && !isKilled()) {
 				CustomNpcs.proxy.spawnParticle(this, "ModelData", modelData, particles);
 			}
-			final EntityLivingBase entity = modelData.getEntity(this);
+			EntityLivingBase entity = modelData.getEntity(this);
 			if (entity != null) {
 				try {
 					entity.onUpdate();
@@ -48,7 +48,7 @@ public class EntityCustomNpc extends EntityNPCFlying {
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		if (compound.hasKey("NpcModelData")) {
 			modelData.readFromNBT(compound.getCompoundTag("NpcModelData"));
 		}
@@ -57,7 +57,7 @@ public class EntityCustomNpc extends EntityNPCFlying {
 
 	@Override
 	public void updateHitbox() {
-		final Entity entity = modelData.getEntity(this);
+		Entity entity = modelData.getEntity(this);
 		if ((modelData == null) || (entity == null)) {
 			baseHeight = (1.9f - modelData.getBodyY())
 					+ ((modelData.getPartConfig(EnumParts.HEAD).scaleY - 1.0f) / 2.0f);
@@ -79,7 +79,7 @@ public class EntityCustomNpc extends EntityNPCFlying {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound compound) {
+	public void writeEntityToNBT(NBTTagCompound compound) {
 		super.writeEntityToNBT(compound);
 		compound.setTag("NpcModelData", modelData.writeToNBT());
 	}

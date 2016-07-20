@@ -23,22 +23,22 @@ public class CmdFaction extends CommandNoppesBase {
 	public List<PlayerData> data;
 
 	@SubCommand(desc = "Add points", usage = "<points>")
-	public void add(final ICommandSender sender, final String[] args) throws CommandException {
+	public void add(ICommandSender sender, String[] args) throws CommandException {
 		int points;
 		try {
 			points = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("Must be an integer", new Object[0]);
 		}
-		final int factionid = selectedFaction.id;
-		for (final PlayerData playerdata : data) {
-			final PlayerFactionData playerfactiondata = playerdata.factionData;
+		int factionid = selectedFaction.id;
+		for (PlayerData playerdata : data) {
+			PlayerFactionData playerfactiondata = playerdata.factionData;
 			playerfactiondata.increasePoints(factionid, points);
 		}
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender par1, final String[] args, final BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender par1, String[] args, BlockPos pos) {
 		if (args.length == 3) {
 			return CommandBase.getListOfStringsMatchingLastWord(args,
 					new String[] { "add", "subtract", "set", "reset", "drop", "create" });
@@ -47,8 +47,8 @@ public class CmdFaction extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Drop relationship")
-	public void drop(final ICommandSender sender, final String[] args) {
-		for (final PlayerData playerdata : data) {
+	public void drop(ICommandSender sender, String[] args) {
+		for (PlayerData playerdata : data) {
 			playerdata.factionData.factionData.remove(selectedFaction.id);
 		}
 	}
@@ -69,9 +69,9 @@ public class CmdFaction extends CommandNoppesBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
-		final String playername = args[0];
-		final String factionname = args[1];
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+		String playername = args[0];
+		String factionname = args[1];
 		data = PlayerDataController.instance.getPlayersData(sender, playername);
 		if (data.isEmpty()) {
 			throw new CommandException("Unknow player '%s'", new Object[] { playername });
@@ -85,14 +85,14 @@ public class CmdFaction extends CommandNoppesBase {
 			throw new CommandException("Unknow facion '%s", new Object[] { factionname });
 		}
 		processSubCommand(sender, args[2], Arrays.copyOfRange(args, 3, args.length));
-		for (final PlayerData playerdata : data) {
+		for (PlayerData playerdata : data) {
 			playerdata.saveNBTData(null);
 		}
 	}
 
 	@SubCommand(desc = "Reset points to default")
-	public void reset(final ICommandSender sender, final String[] args) {
-		for (final PlayerData playerdata : data) {
+	public void reset(ICommandSender sender, String[] args) {
+		for (PlayerData playerdata : data) {
 			playerdata.factionData.factionData.put(selectedFaction.id, selectedFaction.defaultPoints);
 		}
 	}
@@ -103,30 +103,30 @@ public class CmdFaction extends CommandNoppesBase {
 	}
 
 	@SubCommand(desc = "Set points", usage = "<points>")
-	public void set(final ICommandSender sender, final String[] args) throws CommandException {
+	public void set(ICommandSender sender, String[] args) throws CommandException {
 		int points;
 		try {
 			points = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("Must be an integer", new Object[0]);
 		}
-		for (final PlayerData playerdata : data) {
-			final PlayerFactionData playerfactiondata = playerdata.factionData;
+		for (PlayerData playerdata : data) {
+			PlayerFactionData playerfactiondata = playerdata.factionData;
 			playerfactiondata.factionData.put(selectedFaction.id, points);
 		}
 	}
 
 	@SubCommand(desc = "Substract points", usage = "<points>")
-	public void subtract(final ICommandSender sender, final String[] args) throws CommandException {
+	public void subtract(ICommandSender sender, String[] args) throws CommandException {
 		int points;
 		try {
 			points = Integer.parseInt(args[0]);
 		} catch (NumberFormatException ex) {
 			throw new CommandException("Must be an integer", new Object[0]);
 		}
-		final int factionid = selectedFaction.id;
-		for (final PlayerData playerdata : data) {
-			final PlayerFactionData playerfactiondata = playerdata.factionData;
+		int factionid = selectedFaction.id;
+		for (PlayerData playerdata : data) {
+			PlayerFactionData playerfactiondata = playerdata.factionData;
 			playerfactiondata.increasePoints(factionid, -points);
 		}
 	}

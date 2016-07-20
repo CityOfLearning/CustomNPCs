@@ -13,19 +13,19 @@ import noppes.npcs.api.entity.IEntity;
 public class WrapperEntityData implements IExtendedEntityProperties {
 	public IEntity base;
 
-	public WrapperEntityData(final IEntity base) {
+	public WrapperEntityData(IEntity base) {
 		this.base = base;
 	}
 
 	@Override
-	public void init(final Entity entity, final World world) {
+	public void init(Entity entity, World world) {
 	}
 
 	@Override
-	public void loadNBTData(final NBTTagCompound compound) {
+	public void loadNBTData(NBTTagCompound compound) {
 	}
 
 	@Override
-	public void saveNBTData(final NBTTagCompound compound) {
+	public void saveNBTData(NBTTagCompound compound) {
 	}
 }

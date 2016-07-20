@@ -25,7 +25,7 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
 	private PlayerMail mail;
 	private GuiNPCQuestSelection questSelection;
 
-	public SubGuiMailmanSendSetup(final PlayerMail mail, final GuiScreen parent) {
+	public SubGuiMailmanSendSetup(PlayerMail mail, GuiScreen parent) {
 		this.parent = parent;
 		xSize = 256;
 		setBackground("menubg.png");
@@ -33,8 +33,8 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	public void buttonEvent(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (id == 0) {
 			close();
 		}
@@ -78,7 +78,7 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
 		addButton(new GuiNpcButton(0, guiLeft + 26, guiTop + 190, 100, 20, "gui.done"));
 		addButton(new GuiNpcButton(1, guiLeft + 130, guiTop + 190, 100, 20, "gui.cancel"));
 		if (player.openContainer instanceof ContainerMail) {
-			final ContainerMail container = (ContainerMail) player.openContainer;
+			ContainerMail container = (ContainerMail) player.openContainer;
 			mail.items = container.mail.items;
 		}
 	}
@@ -88,14 +88,14 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
 	}
 
 	@Override
-	public void selected(final int ob, final String name) {
+	public void selected(int ob, String name) {
 		mail.questId = ob;
 		mail.questTitle = questSelection.getSelected();
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textField) {
+	public void unFocused(GuiNpcTextField textField) {
 		if (textField.id == 0) {
 			mail.sender = textField.getText();
 		}

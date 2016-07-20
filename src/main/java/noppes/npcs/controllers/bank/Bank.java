@@ -32,7 +32,7 @@ public class Bank {
 		}
 	}
 
-	public boolean canBeUpgraded(final int slot) {
+	public boolean canBeUpgraded(int slot) {
 		return (upgradeInventory.getStackInSlot(slot) != null)
 				&& ((slotTypes.get(slot) == null) || (slotTypes.get(slot) == 0));
 	}
@@ -46,11 +46,11 @@ public class Bank {
 		return maxSlots;
 	}
 
-	public boolean isUpgraded(final int slot) {
+	public boolean isUpgraded(int slot) {
 		return (slotTypes.get(slot) != null) && (slotTypes.get(slot) == 2);
 	}
 
-	public void readEntityFromNBT(final NBTTagCompound nbttagcompound) {
+	public void readEntityFromNBT(NBTTagCompound nbttagcompound) {
 		id = nbttagcompound.getInteger("BankID");
 		name = nbttagcompound.getString("Username");
 		startSlots = nbttagcompound.getInteger("StartSlots");
@@ -60,7 +60,7 @@ public class Bank {
 		upgradeInventory.setFromNBT(nbttagcompound.getCompoundTag("BankUpgrade"));
 	}
 
-	public void writeEntityToNBT(final NBTTagCompound nbttagcompound) {
+	public void writeEntityToNBT(NBTTagCompound nbttagcompound) {
 		nbttagcompound.setInteger("BankID", id);
 		nbttagcompound.setTag("BankCurrency", currencyInventory.getToNBT());
 		nbttagcompound.setTag("BankUpgrade", upgradeInventory.getToNBT());

@@ -26,18 +26,18 @@ public class GuiNpcConversation extends GuiNPCInterface2 implements ITextfieldLi
 	private int slot;
 	private GuiNPCQuestSelection questSelection;
 
-	public GuiNpcConversation(final EntityNPCInterface npc) {
+	public GuiNpcConversation(EntityNPCInterface npc) {
 		super(npc);
 		slot = -1;
 		job = (JobConversation) npc.jobInterface;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if ((button.id >= 0) && (button.id < 14)) {
 			slot = button.id;
-			final JobConversation.ConversationLine line = job.getLine(slot);
+			JobConversation.ConversationLine line = job.getLine(slot);
 			setSubGui(new SubGuiNpcConversationLine(line.text, line.sound));
 		}
 		if (button.id == 51) {
@@ -57,11 +57,11 @@ public class GuiNpcConversation extends GuiNPCInterface2 implements ITextfieldLi
 	}
 
 	@Override
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		super.closeSubGui(gui);
 		if (gui instanceof SubGuiNpcConversationLine) {
-			final SubGuiNpcConversationLine sub = (SubGuiNpcConversationLine) gui;
-			final JobConversation.ConversationLine line = job.getLine(slot);
+			SubGuiNpcConversationLine sub = (SubGuiNpcConversationLine) gui;
+			JobConversation.ConversationLine line = job.getLine(slot);
 			line.text = sub.line;
 			line.sound = sub.sound;
 		}
@@ -75,8 +75,8 @@ public class GuiNpcConversation extends GuiNPCInterface2 implements ITextfieldLi
 		addLabel(new GuiNpcLabel(42, "conversation.delay", guiLeft + 164, guiTop + 4));
 		addLabel(new GuiNpcLabel(43, "conversation.delay", guiLeft + 364, guiTop + 4));
 		for (int i = 0; i < 14; ++i) {
-			final JobConversation.ConversationLine line = job.getLine(i);
-			final int offset = (i >= 7) ? 200 : 0;
+			JobConversation.ConversationLine line = job.getLine(i);
+			int offset = (i >= 7) ? 200 : 0;
 			addLabel(new GuiNpcLabel(i, "" + (i + 1), (guiLeft + 5 + offset) - ((i > 8) ? 6 : 0),
 					guiTop + 18 + ((i % 7) * 22)));
 			addTextField(new GuiNpcTextField(i, this, fontRendererObj, guiLeft + 13 + offset,
@@ -119,20 +119,20 @@ public class GuiNpcConversation extends GuiNPCInterface2 implements ITextfieldLi
 	}
 
 	@Override
-	public void selected(final int ob, final String name) {
+	public void selected(int ob, String name) {
 		job.quest = ob;
 		job.questTitle = questSelection.getSelected();
 		initGui();
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if ((textfield.id >= 0) && (textfield.id < 14)) {
-			final JobConversation.ConversationLine line = job.getLine(textfield.id);
+			JobConversation.ConversationLine line = job.getLine(textfield.id);
 			line.npc = textfield.getText();
 		}
 		if ((textfield.id >= 14) && (textfield.id < 28)) {
-			final JobConversation.ConversationLine line = job.getLine(textfield.id - 14);
+			JobConversation.ConversationLine line = job.getLine(textfield.id - 14);
 			line.delay = textfield.getInteger();
 		}
 		if (textfield.id == 50) {

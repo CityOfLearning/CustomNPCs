@@ -22,14 +22,14 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleFollower;
 
 public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
-	private static final ResourceLocation field_110422_t;
+	private static ResourceLocation field_110422_t;
 	static {
 		field_110422_t = new ResourceLocation("textures/gui/followersetup.png");
 	}
 
 	private RoleFollower role;
 
-	public GuiNpcFollowerSetup(final EntityNPCInterface npc, final ContainerNPCFollowerSetup container) {
+	public GuiNpcFollowerSetup(EntityNPCInterface npc, ContainerNPCFollowerSetup container) {
 		super(npc, container);
 		ySize = 200;
 		role = (RoleFollower) npc.roleInterface;
@@ -37,7 +37,7 @@ public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
+	protected void actionPerformed(GuiButton guibutton) {
 		if (guibutton.id == 7) {
 			role.infiniteDays = ((GuiNpcButtonYesNo) guibutton).getBoolean();
 		}
@@ -53,23 +53,23 @@ public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
 	}
 
 	@Override
-	protected void drawGuiContainerForegroundLayer(final int par1, final int par2) {
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
 		for (int i = 0; i < 3; ++i) {
-			final int x = guiLeft + 66;
+			int x = guiLeft + 66;
 			int y = guiTop + 37;
 			y += i * 25;
-			final GuiNpcTextField tf = new GuiNpcTextField(i, this, fontRendererObj, x, y, 24, 20, "1");
+			GuiNpcTextField tf = new GuiNpcTextField(i, this, fontRendererObj, x, y, 24, 20, "1");
 			tf.numbersOnly = true;
 			tf.setMinMaxDefault(1, Integer.MAX_VALUE, 1);
 			addTextField(tf);
 		}
 		int i = 0;
-		for (final int day : role.rates.values()) {
+		for (int day : role.rates.values()) {
 			getTextField(i).setText(day + "");
 			++i;
 		}
@@ -88,9 +88,9 @@ public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
 
 	@Override
 	public void save() {
-		final HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 		for (int i = 0; i < role.inventory.getSizeInventory(); ++i) {
-			final ItemStack item = role.inventory.getStackInSlot(i);
+			ItemStack item = role.inventory.getStackInSlot(i);
 			if (item != null) {
 				int days = 1;
 				if (!getTextField(i).isEmpty() && getTextField(i).isInteger()) {

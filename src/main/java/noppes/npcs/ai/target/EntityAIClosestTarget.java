@@ -17,24 +17,23 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.util.MathHelper;
 
 public class EntityAIClosestTarget extends EntityAITarget {
-	private final Class targetClass;
-	private final int targetChance;
-	private final EntityAINearestAttackableTarget.Sorter theNearestAttackableTargetSorter;
-	private final Predicate targetEntitySelector;
+	private Class targetClass;
+	private int targetChance;
+	private EntityAINearestAttackableTarget.Sorter theNearestAttackableTargetSorter;
+	private Predicate targetEntitySelector;
 	private EntityLivingBase targetEntity;
 
-	public EntityAIClosestTarget(final EntityCreature par1EntityCreature, final Class par2Class, final int par3,
-			final boolean par4) {
+	public EntityAIClosestTarget(EntityCreature par1EntityCreature, Class par2Class, int par3, boolean par4) {
 		this(par1EntityCreature, par2Class, par3, par4, false);
 	}
 
-	public EntityAIClosestTarget(final EntityCreature par1EntityCreature, final Class par2Class, final int par3,
-			final boolean par4, final boolean par5) {
+	public EntityAIClosestTarget(EntityCreature par1EntityCreature, Class par2Class, int par3, boolean par4,
+			boolean par5) {
 		this(par1EntityCreature, par2Class, par3, par4, par5, null);
 	}
 
-	public EntityAIClosestTarget(final EntityCreature par1EntityCreature, final Class par2Class, final int par3,
-			final boolean par4, final boolean par5, final Predicate par6IEntitySelector) {
+	public EntityAIClosestTarget(EntityCreature par1EntityCreature, Class par2Class, int par3, boolean par4,
+			boolean par5, Predicate par6IEntitySelector) {
 		super(par1EntityCreature, par4, par5);
 		targetClass = par2Class;
 		targetChance = par3;
@@ -48,8 +47,8 @@ public class EntityAIClosestTarget extends EntityAITarget {
 		if ((targetChance > 0) && (taskOwner.getRNG().nextInt(targetChance) != 0)) {
 			return false;
 		}
-		final double d0 = getTargetDistance();
-		final List list = taskOwner.worldObj.getEntitiesWithinAABB(targetClass,
+		double d0 = getTargetDistance();
+		List list = taskOwner.worldObj.getEntitiesWithinAABB(targetClass,
 				taskOwner.getEntityBoundingBox().expand(d0, MathHelper.ceiling_double_int(d0 / 2.0), d0),
 				targetEntitySelector);
 		Collections.sort(list, theNearestAttackableTargetSorter);

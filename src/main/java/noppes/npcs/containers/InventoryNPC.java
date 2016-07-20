@@ -17,7 +17,7 @@ public class InventoryNPC implements IInventory {
 	private ItemStack[] inventoryContents;
 	private Container con;
 
-	public InventoryNPC(final String s, final int i, final Container con) {
+	public InventoryNPC(String s, int i, Container con) {
 		this.con = con;
 		inventoryTitle = s;
 		slotsCount = i;
@@ -29,20 +29,20 @@ public class InventoryNPC implements IInventory {
 	}
 
 	@Override
-	public void closeInventory(final EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack decrStackSize(final int i, final int j) {
+	public ItemStack decrStackSize(int i, int j) {
 		if (inventoryContents[i] == null) {
 			return null;
 		}
 		if (inventoryContents[i].stackSize <= j) {
-			final ItemStack itemstack = inventoryContents[i];
+			ItemStack itemstack = inventoryContents[i];
 			inventoryContents[i] = null;
 			return itemstack;
 		}
-		final ItemStack itemstack2 = inventoryContents[i].splitStack(j);
+		ItemStack itemstack2 = inventoryContents[i].splitStack(j);
 		if (inventoryContents[i].stackSize == 0) {
 			inventoryContents[i] = null;
 		}
@@ -55,7 +55,7 @@ public class InventoryNPC implements IInventory {
 	}
 
 	@Override
-	public int getField(final int id) {
+	public int getField(int id) {
 		return 0;
 	}
 
@@ -80,7 +80,7 @@ public class InventoryNPC implements IInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(final int i) {
+	public ItemStack getStackInSlot(int i) {
 		return inventoryContents[i];
 	}
 
@@ -90,12 +90,12 @@ public class InventoryNPC implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return false;
 	}
 
@@ -105,20 +105,20 @@ public class InventoryNPC implements IInventory {
 	}
 
 	@Override
-	public void openInventory(final EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(final int i) {
+	public ItemStack removeStackFromSlot(int i) {
 		return null;
 	}
 
 	@Override
-	public void setField(final int id, final int value) {
+	public void setField(int id, int value) {
 	}
 
 	@Override
-	public void setInventorySlotContents(final int i, final ItemStack itemstack) {
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		inventoryContents[i] = itemstack;
 		if ((itemstack != null) && (itemstack.stackSize > getInventoryStackLimit())) {
 			itemstack.stackSize = getInventoryStackLimit();

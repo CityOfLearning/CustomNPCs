@@ -26,7 +26,7 @@ public class EntityAIZigZagTarget extends EntityAIBase {
 	private double speed;
 	private int ticks;
 
-	public EntityAIZigZagTarget(final EntityNPCInterface par1EntityCreature, final double par2) {
+	public EntityAIZigZagTarget(EntityNPCInterface par1EntityCreature, double par2) {
 		npc = par1EntityCreature;
 		speed = par2;
 		ticks = 0;
@@ -50,15 +50,15 @@ public class EntityAIZigZagTarget extends EntityAIBase {
 	public void updateTask() {
 		npc.getLookHelper().setLookPositionWithEntity(targetEntity, 30.0f, 30.0f);
 		if (ticks-- <= 0) {
-			final PathEntity pathentity = npc.getNavigator().getPathToEntityLiving(targetEntity);
+			PathEntity pathentity = npc.getNavigator().getPathToEntityLiving(targetEntity);
 			if ((pathentity != null) && (pathentity.getCurrentPathLength() >= npc.ai.getTacticalRange())) {
-				final PathPoint pathpoint = pathentity
+				PathPoint pathpoint = pathentity
 						.getPathPointFromIndex(MathHelper.floor_double(npc.ai.getTacticalRange() / 2.0));
 				entityPosX = pathpoint.xCoord;
 				entityPosY = pathpoint.yCoord;
 				entityPosZ = pathpoint.zCoord;
-				final Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(npc, npc.ai.getTacticalRange(),
-						3, new Vec3(entityPosX, entityPosY, entityPosZ));
+				Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(npc, npc.ai.getTacticalRange(), 3,
+						new Vec3(entityPosX, entityPosY, entityPosZ));
 				if (vec3 != null) {
 					if (targetEntity.getDistanceSq(vec3.xCoord, vec3.yCoord, vec3.zCoord) < targetEntity
 							.getDistanceSq(entityPosX, entityPosY, entityPosZ)) {

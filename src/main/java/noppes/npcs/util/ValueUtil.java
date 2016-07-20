@@ -5,7 +5,7 @@
 package noppes.npcs.util;
 
 public class ValueUtil {
-	public static float correctFloat(final float given, final float min, final float max) {
+	public static float correctFloat(float given, float min, float max) {
 		if (given < min) {
 			return min;
 		}
@@ -15,7 +15,7 @@ public class ValueUtil {
 		return given;
 	}
 
-	public static int CorrectInt(final int given, final int min, final int max) {
+	public static int CorrectInt(int given, int min, int max) {
 		if (given < min) {
 			return min;
 		}

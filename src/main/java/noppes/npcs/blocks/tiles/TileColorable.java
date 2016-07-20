@@ -24,11 +24,11 @@ public class TileColorable extends TileNpcEntity {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		writeToNBT(compound);
 		compound.removeTag("Items");
 		compound.removeTag("ExtraData");
-		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
 	}
 
@@ -38,8 +38,8 @@ public class TileColorable extends TileNpcEntity {
 	}
 
 	@Override
-	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
-		final NBTTagCompound compound = pkt.getNbtCompound();
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+		NBTTagCompound compound = pkt.getNbtCompound();
 		readFromNBT(compound);
 	}
 
@@ -48,14 +48,14 @@ public class TileColorable extends TileNpcEntity {
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		color = compound.getInteger("BannerColor");
 		rotation = compound.getInteger("BannerRotation");
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		compound.setInteger("BannerColor", color);
 		compound.setInteger("BannerRotation", rotation);

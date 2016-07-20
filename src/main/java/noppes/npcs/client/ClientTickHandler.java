@@ -28,11 +28,11 @@ public class ClientTickHandler {
 	}
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onClientTick(final TickEvent.ClientTickEvent event) {
+	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (event.phase == TickEvent.Phase.END) {
 			return;
 		}
-		final Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
 		if ((mc.thePlayer != null) && (mc.thePlayer.openContainer instanceof ContainerPlayer)) {
 			if (otherContainer) {
 				NoppesUtilPlayer.sendData(EnumPlayerPacket.CheckQuestCompletion, new Object[0]);
@@ -50,7 +50,7 @@ public class ClientTickHandler {
 	}
 
 	@SubscribeEvent
-	public void onKey(final InputEvent.KeyInputEvent event) {
+	public void onKey(InputEvent.KeyInputEvent event) {
 		if (CustomNpcs.SceneButtonsEnabled) {
 			if (ClientProxy.Scene1.isPressed()) {
 				Client.sendData(EnumPacketServer.SceneStart, 1);
@@ -66,7 +66,7 @@ public class ClientTickHandler {
 			}
 		}
 		if (ClientProxy.QuestLog.isPressed()) {
-			final Minecraft mc = Minecraft.getMinecraft();
+			Minecraft mc = Minecraft.getMinecraft();
 			if (mc.currentScreen == null) {
 				NoppesUtil.openGUI(mc.thePlayer, new GuiQuestLog(mc.thePlayer));
 			} else if (mc.currentScreen instanceof GuiQuestLog) {

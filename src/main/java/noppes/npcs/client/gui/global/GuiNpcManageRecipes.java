@@ -37,7 +37,7 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	private String selected;
 	private ResourceLocation slot;
 
-	public GuiNpcManageRecipes(final EntityNPCInterface npc, final ContainerManageRecipes container) {
+	public GuiNpcManageRecipes(EntityNPCInterface npc, ContainerManageRecipes container) {
 		super(npc, container);
 		data = new HashMap<String, Integer>();
 		selected = null;
@@ -50,8 +50,8 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			save();
 			NoppesUtil.requestOpenGUI(EnumGuiType.ManageRecipes, 3, 0, 0);
@@ -66,7 +66,7 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 			String name;
 			for (name = "New"; data.containsKey(name); name += "_") {
 			}
-			final RecipeCarpentry recipe = new RecipeCarpentry(name);
+			RecipeCarpentry recipe = new RecipeCarpentry(name);
 			recipe.isGlobal = (container.width == 3);
 			Client.sendData(EnumPacketServer.RecipeSave, recipe.writeNBT());
 		}
@@ -83,14 +83,14 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		save();
 		selected = scroll.getSelected();
 		Client.sendData(EnumPacketServer.RecipeGet, data.get(selected));
 	}
 
 	@Override
-	protected void drawGuiContainerBackgroundLayer(final float f, final int x, final int y) {
+	protected void drawGuiContainerBackgroundLayer(float f, int x, int y) {
 		super.drawGuiContainerBackgroundLayer(f, x, y);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.renderEngine.bindTexture(slot);
@@ -139,8 +139,8 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final String name = scroll.getSelected();
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		String name = scroll.getSelected();
 		this.data = data;
 		scroll.setList(list);
 		getTextField(0).enabled = (name != null);
@@ -151,8 +151,8 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final RecipeCarpentry recipe = RecipeCarpentry.read(compound);
+	public void setGuiData(NBTTagCompound compound) {
+		RecipeCarpentry recipe = RecipeCarpentry.read(compound);
 		getTextField(0).setText(recipe.name);
 		container.setRecipe(recipe);
 		getTextField(0).enabled = true;
@@ -164,16 +164,16 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		this.selected = selected;
 		scroll.setSelected(selected);
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField guiNpcTextField) {
-		final String name = guiNpcTextField.getText();
+	public void unFocused(GuiNpcTextField guiNpcTextField) {
+		String name = guiNpcTextField.getText();
 		if (!name.isEmpty() && !data.containsKey(name)) {
-			final String old = container.recipe.name;
+			String old = container.recipe.name;
 			data.remove(container.recipe.name);
 			container.recipe.name = name;
 			data.put(container.recipe.name, container.recipe.id);

@@ -19,11 +19,11 @@ public class TileEntityItemStackRendererAlt extends TileEntityItemStackRenderer 
 	}
 
 	@Override
-	public void renderByItem(final ItemStack stack) {
-		final Block block = Block.getBlockFromItem(stack.getItem());
+	public void renderByItem(ItemStack stack) {
+		Block block = Block.getBlockFromItem(stack.getItem());
 		if (block instanceof ITileRenderer) {
 			GlStateManager.enableRescaleNormal();
-			final TileEntity entity = ((ITileRenderer) block).getTile();
+			TileEntity entity = ((ITileRenderer) block).getTile();
 			if (entity instanceof TileColorable) {
 				((TileColorable) entity).color = 15 - stack.getItemDamage();
 			}
@@ -35,7 +35,7 @@ public class TileEntityItemStackRendererAlt extends TileEntityItemStackRenderer 
 		}
 	}
 
-	public void setRenderBlockMeta(final TileEntity entity, final Block block, final int meta) {
+	public void setRenderBlockMeta(TileEntity entity, Block block, int meta) {
 		ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, entity, meta, 6);
 		ObfuscationReflectionHelper.setPrivateValue(TileEntity.class, entity, block, 7);
 	}

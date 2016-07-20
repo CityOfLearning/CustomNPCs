@@ -11,7 +11,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class EntityAIWaterNav extends EntityAIBase {
 	private EntityNPCInterface theEntity;
 
-	public EntityAIWaterNav(final EntityNPCInterface par1EntityNPCInterface) {
+	public EntityAIWaterNav(EntityNPCInterface par1EntityNPCInterface) {
 		theEntity = par1EntityNPCInterface;
 		((PathNavigateGround) par1EntityNPCInterface.getNavigator()).setCanSwim(true);
 	}

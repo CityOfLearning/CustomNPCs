@@ -28,18 +28,18 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 	private GuiCustomScroll scroll1;
 	private GuiCustomScroll scroll2;
 
-	public GuiNpcGuard(final EntityNPCInterface npc) {
+	public GuiNpcGuard(EntityNPCInterface npc) {
 		super(npc);
 		role = (JobGuard) npc.jobInterface;
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityAnimal.class.isAssignableFrom(cl) && !role.targets.contains(name)) {
 					role.targets.add(name);
 				}
@@ -49,9 +49,9 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 			initGui();
 		}
 		if (button.id == 1) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityMob.class.isAssignableFrom(cl) && !EntityCreeper.class.isAssignableFrom(cl)
 						&& !role.targets.contains(name)) {
 					role.targets.add(name);
@@ -62,9 +62,9 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 			initGui();
 		}
 		if (button.id == 2) {
-			for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-				final String name = "entity." + entity + ".name";
-				final Class cl = EntityList.stringToClassMapping.get(entity);
+			for (Object entity : EntityList.stringToClassMapping.keySet()) {
+				String name = "entity." + entity + ".name";
+				Class cl = EntityList.stringToClassMapping.get(entity);
 				if (EntityCreeper.class.isAssignableFrom(cl) && !role.targets.contains(name)) {
 					role.targets.add(name);
 				}
@@ -86,10 +86,10 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 		}
 		if (button.id == 13) {
 			role.targets.clear();
-			final List<String> all = new ArrayList<String>();
-			for (final Object entity2 : EntityList.stringToClassMapping.keySet()) {
-				final String name2 = "entity." + entity2 + ".name";
-				final Class cl2 = EntityList.stringToClassMapping.get(entity2);
+			List<String> all = new ArrayList<String>();
+			for (Object entity2 : EntityList.stringToClassMapping.keySet()) {
+				String name2 = "entity." + entity2 + ".name";
+				Class cl2 = EntityList.stringToClassMapping.get(entity2);
 				if (EntityLivingBase.class.isAssignableFrom(cl2) && !EntityNPCInterface.class.isAssignableFrom(cl2)) {
 					all.add(name2);
 				}
@@ -127,10 +127,10 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 		scroll2.guiTop = guiTop + 58;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(12, "guard.currentTargets", guiLeft + 235, guiTop + 48));
-		final List<String> all = new ArrayList<String>();
-		for (final Object entity : EntityList.stringToClassMapping.keySet()) {
-			final String name = "entity." + entity + ".name";
-			final Class cl = EntityList.stringToClassMapping.get(entity);
+		List<String> all = new ArrayList<String>();
+		for (Object entity : EntityList.stringToClassMapping.keySet()) {
+			String name = "entity." + entity + ".name";
+			Class cl = EntityList.stringToClassMapping.get(entity);
 			if (!role.targets.contains(name)) {
 				if (EntityNPCInterface.class.isAssignableFrom(cl)) {
 					continue;

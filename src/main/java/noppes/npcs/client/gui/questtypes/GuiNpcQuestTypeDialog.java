@@ -27,7 +27,7 @@ public class GuiNpcQuestTypeDialog extends SubGuiInterface implements GuiSelecti
 	private HashMap<Integer, String> data;
 	private int selectedSlot;
 
-	public GuiNpcQuestTypeDialog(final EntityNPCInterface npc, final Quest q, final GuiScreen parent) {
+	public GuiNpcQuestTypeDialog(EntityNPCInterface npc, Quest q, GuiScreen parent) {
 		data = new HashMap<Integer, String>();
 		this.npc = npc;
 		this.parent = parent;
@@ -43,8 +43,8 @@ public class GuiNpcQuestTypeDialog extends SubGuiInterface implements GuiSelecti
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			close();
 		}
@@ -54,12 +54,12 @@ public class GuiNpcQuestTypeDialog extends SubGuiInterface implements GuiSelecti
 			if (quest.dialogs.containsKey(selectedSlot)) {
 				id = quest.dialogs.get(selectedSlot);
 			}
-			final GuiNPCDialogSelection gui = new GuiNPCDialogSelection(npc, parent, id);
+			GuiNPCDialogSelection gui = new GuiNPCDialogSelection(npc, parent, id);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
 		if ((button.id >= 9) && (button.id < 15)) {
-			final int slot = button.id - 9;
+			int slot = button.id - 9;
 			quest.dialogs.remove(slot);
 			data.remove(slot);
 			save();
@@ -86,13 +86,13 @@ public class GuiNpcQuestTypeDialog extends SubGuiInterface implements GuiSelecti
 	}
 
 	@Override
-	public void selected(final int id, final String name) {
+	public void selected(int id, String name) {
 		quest.dialogs.put(selectedSlot, id);
 		data.put(selectedSlot, name);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		data.clear();
 		if (compound.hasKey("1")) {
 			data.put(0, compound.getString("1"));

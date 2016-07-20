@@ -15,7 +15,7 @@ import noppes.npcs.api.CommandNoppesBase;
 public class CmdHelp extends CommandNoppesBase {
 	private CommandNoppes parent;
 
-	public CmdHelp(final CommandNoppes parent) {
+	public CmdHelp(CommandNoppes parent) {
 		this.parent = parent;
 	}
 
@@ -30,15 +30,15 @@ public class CmdHelp extends CommandNoppesBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		if (args.length == 0) {
 			sendMessage(sender, "------Noppes Commands------", new Object[0]);
-			for (final Map.Entry<String, CommandNoppesBase> entry : parent.map.entrySet()) {
+			for (Map.Entry<String, CommandNoppesBase> entry : parent.map.entrySet()) {
 				sendMessage(sender, entry.getKey() + ": " + entry.getValue().getCommandUsage(sender), new Object[0]);
 			}
 			return;
 		}
-		final CommandNoppesBase command = parent.getCommand(args);
+		CommandNoppesBase command = parent.getCommand(args);
 		if (command == null) {
 			throw new CommandException("Unknown command " + args[0], new Object[0]);
 		}
@@ -52,7 +52,7 @@ public class CmdHelp extends CommandNoppesBase {
 		}
 		if (m == null) {
 			sendMessage(sender, "------" + command.getCommandName() + " SubCommands------", new Object[0]);
-			for (final Map.Entry<String, Method> entry2 : command.subcommands.entrySet()) {
+			for (Map.Entry<String, Method> entry2 : command.subcommands.entrySet()) {
 				sender.addChatMessage(new ChatComponentTranslation(
 						entry2.getKey() + ": " + entry2.getValue().getAnnotation(SubCommand.class).desc(),
 						new Object[0]));
@@ -60,7 +60,7 @@ public class CmdHelp extends CommandNoppesBase {
 		} else {
 			sendMessage(sender, "------" + command.getCommandName() + "." + args[1].toLowerCase() + " Command------",
 					new Object[0]);
-			final SubCommand sc = m.getAnnotation(SubCommand.class);
+			SubCommand sc = m.getAnnotation(SubCommand.class);
 			sender.addChatMessage(new ChatComponentTranslation(sc.desc(), new Object[0]));
 			if (!sc.usage().isEmpty()) {
 				sender.addChatMessage(new ChatComponentTranslation("Usage: " + sc.usage(), new Object[0]));

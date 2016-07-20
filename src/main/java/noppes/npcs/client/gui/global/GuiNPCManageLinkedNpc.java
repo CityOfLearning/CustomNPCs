@@ -27,7 +27,7 @@ public class GuiNPCManageLinkedNpc extends GuiNPCInterface2 implements IScrollDa
 	private GuiCustomScroll scroll;
 	private List<String> data;
 
-	public GuiNPCManageLinkedNpc(final EntityNPCInterface npc) {
+	public GuiNPCManageLinkedNpc(EntityNPCInterface npc) {
 		super(npc);
 		data = new ArrayList<String>();
 		GuiNPCManageLinkedNpc.Instance = this;
@@ -35,7 +35,7 @@ public class GuiNPCManageLinkedNpc extends GuiNPCInterface2 implements IScrollDa
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton button) {
+	public void buttonEvent(GuiButton button) {
 		if (button.id == 1) {
 			save();
 			setSubGui(new SubGuiEditText("New"));
@@ -64,17 +64,17 @@ public class GuiNPCManageLinkedNpc extends GuiNPCInterface2 implements IScrollDa
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		this.data = new ArrayList<String>(list);
 		initGui();
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 	}
 
 	@Override
-	public void subGuiClosed(final SubGuiInterface subgui) {
+	public void subGuiClosed(SubGuiInterface subgui) {
 		if (!((SubGuiEditText) subgui).cancelled) {
 			Client.sendData(EnumPacketServer.LinkedAdd, ((SubGuiEditText) subgui).text);
 		}

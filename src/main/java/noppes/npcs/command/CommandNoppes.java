@@ -35,11 +35,11 @@ public class CommandNoppes extends CommandBase {
 	}
 
 	@Override
-	public List addTabCompletionOptions(final ICommandSender sender, final String[] args, final BlockPos pos) {
+	public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
 		if (args.length == 1) {
 			return new ArrayList(map.keySet());
 		}
-		final CommandNoppesBase command = getCommand(args);
+		CommandNoppesBase command = getCommand(args);
 		if (command == null) {
 			return null;
 		}
@@ -49,7 +49,7 @@ public class CommandNoppes extends CommandBase {
 		return command.addTabCompletionOptions(sender, Arrays.copyOfRange(args, 1, args.length), pos);
 	}
 
-	public CommandNoppesBase getCommand(final String[] args) {
+	public CommandNoppesBase getCommand(String[] args) {
 		if (args.length == 0) {
 			return null;
 		}
@@ -62,7 +62,7 @@ public class CommandNoppes extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return "Use as /noppes subcommand";
 	}
 
@@ -72,12 +72,12 @@ public class CommandNoppes extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		if (args.length == 0) {
 			help.processCommand(sender, args);
 			return;
 		}
-		final CommandNoppesBase command = getCommand(args);
+		CommandNoppesBase command = getCommand(args);
 		if (command == null) {
 			throw new CommandException("Unknown command " + args[0], new Object[0]);
 		}
@@ -98,8 +98,8 @@ public class CommandNoppes extends CommandBase {
 		}
 	}
 
-	public void registerCommand(final CommandNoppesBase command) {
-		final String name = command.getCommandName().toLowerCase();
+	public void registerCommand(CommandNoppesBase command) {
+		String name = command.getCommandName().toLowerCase();
 		if (map.containsKey(name)) {
 			throw new CustomNPCsException("Already a subcommand with the name: " + name, new Object[0]);
 		}

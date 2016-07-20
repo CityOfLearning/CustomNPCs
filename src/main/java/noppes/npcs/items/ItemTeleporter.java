@@ -33,52 +33,52 @@ public class ItemTeleporter extends Item implements IPermission {
 	}
 
 	@Override
-	public int getColorFromItemStack(final ItemStack par1ItemStack, final int par2) {
+	public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
 		return 9127187;
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return (e == EnumPacketServer.DimensionsGet) || (e == EnumPacketServer.DimensionTeleport);
 	}
 
 	@Override
-	public boolean onEntitySwing(final EntityLivingBase par3EntityPlayer, final ItemStack stack) {
+	public boolean onEntitySwing(EntityLivingBase par3EntityPlayer, ItemStack stack) {
 		if (par3EntityPlayer.worldObj.isRemote) {
 			return false;
 		}
-		final float f = 1.0f;
-		final float f2 = par3EntityPlayer.prevRotationPitch
+		float f = 1.0f;
+		float f2 = par3EntityPlayer.prevRotationPitch
 				+ ((par3EntityPlayer.rotationPitch - par3EntityPlayer.prevRotationPitch) * f);
-		final float f3 = par3EntityPlayer.prevRotationYaw
+		float f3 = par3EntityPlayer.prevRotationYaw
 				+ ((par3EntityPlayer.rotationYaw - par3EntityPlayer.prevRotationYaw) * f);
-		final double d0 = par3EntityPlayer.prevPosX + ((par3EntityPlayer.posX - par3EntityPlayer.prevPosX) * f);
-		final double d2 = par3EntityPlayer.prevPosY + ((par3EntityPlayer.posY - par3EntityPlayer.prevPosY) * f) + 1.62;
-		final double d3 = par3EntityPlayer.prevPosZ + ((par3EntityPlayer.posZ - par3EntityPlayer.prevPosZ) * f);
-		final Vec3 vec3 = new Vec3(d0, d2, d3);
-		final float f4 = MathHelper.cos((-f3 * 0.017453292f) - 3.1415927f);
-		final float f5 = MathHelper.sin((-f3 * 0.017453292f) - 3.1415927f);
-		final float f6 = -MathHelper.cos(-f2 * 0.017453292f);
-		final float f7 = MathHelper.sin(-f2 * 0.017453292f);
-		final float f8 = f5 * f6;
-		final float f9 = f4 * f6;
-		final double d4 = 80.0;
-		final Vec3 vec4 = vec3.addVector(f8 * d4, f7 * d4, f9 * d4);
-		final MovingObjectPosition movingobjectposition = par3EntityPlayer.worldObj.rayTraceBlocks(vec3, vec4, true);
+		double d0 = par3EntityPlayer.prevPosX + ((par3EntityPlayer.posX - par3EntityPlayer.prevPosX) * f);
+		double d2 = par3EntityPlayer.prevPosY + ((par3EntityPlayer.posY - par3EntityPlayer.prevPosY) * f) + 1.62;
+		double d3 = par3EntityPlayer.prevPosZ + ((par3EntityPlayer.posZ - par3EntityPlayer.prevPosZ) * f);
+		Vec3 vec3 = new Vec3(d0, d2, d3);
+		float f4 = MathHelper.cos((-f3 * 0.017453292f) - 3.1415927f);
+		float f5 = MathHelper.sin((-f3 * 0.017453292f) - 3.1415927f);
+		float f6 = -MathHelper.cos(-f2 * 0.017453292f);
+		float f7 = MathHelper.sin(-f2 * 0.017453292f);
+		float f8 = f5 * f6;
+		float f9 = f4 * f6;
+		double d4 = 80.0;
+		Vec3 vec4 = vec3.addVector(f8 * d4, f7 * d4, f9 * d4);
+		MovingObjectPosition movingobjectposition = par3EntityPlayer.worldObj.rayTraceBlocks(vec3, vec4, true);
 		if (movingobjectposition == null) {
 			return false;
 		}
-		final Vec3 vec5 = par3EntityPlayer.getLook(f);
+		Vec3 vec5 = par3EntityPlayer.getLook(f);
 		boolean flag = false;
-		final float f10 = 1.0f;
-		final List list = par3EntityPlayer.worldObj.getEntitiesWithinAABBExcludingEntity(par3EntityPlayer,
+		float f10 = 1.0f;
+		List list = par3EntityPlayer.worldObj.getEntitiesWithinAABBExcludingEntity(par3EntityPlayer,
 				par3EntityPlayer.getEntityBoundingBox().addCoord(vec5.xCoord * d4, vec5.yCoord * d4, vec5.zCoord * d4)
 						.expand(f10, f10, f10));
 		for (int i = 0; i < list.size(); ++i) {
-			final Entity entity = (Entity) list.get(i);
+			Entity entity = (Entity) list.get(i);
 			if (entity.canBeCollidedWith()) {
-				final float f11 = entity.getCollisionBorderSize();
-				final AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(f11, f11, f11);
+				float f11 = entity.getCollisionBorderSize();
+				AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(f11, f11, f11);
 				if (axisalignedbb.isVecInside(vec3)) {
 					flag = true;
 				}
@@ -98,8 +98,7 @@ public class ItemTeleporter extends Item implements IPermission {
 	}
 
 	@Override
-	public ItemStack onItemRightClick(final ItemStack par1ItemStack, final World par2World,
-			final EntityPlayer par3EntityPlayer) {
+	public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		if (!par2World.isRemote) {
 			return par1ItemStack;
 		}
@@ -108,7 +107,7 @@ public class ItemTeleporter extends Item implements IPermission {
 	}
 
 	@Override
-	public Item setUnlocalizedName(final String name) {
+	public Item setUnlocalizedName(String name) {
 		GameRegistry.registerItem(this, name);
 		CustomNpcs.proxy.registerItem(this, name, 0);
 		return super.setUnlocalizedName(name);

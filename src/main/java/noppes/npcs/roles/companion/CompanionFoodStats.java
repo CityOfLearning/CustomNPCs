@@ -26,11 +26,11 @@ public class CompanionFoodStats {
 		prevFoodLevel = 20;
 	}
 
-	public void addExhaustion(final float p_75113_1_) {
+	public void addExhaustion(float p_75113_1_) {
 		foodExhaustionLevel = Math.min(foodExhaustionLevel + p_75113_1_, 40.0f);
 	}
 
-	private void addStats(final int p_75122_1_, final float p_75122_2_) {
+	private void addStats(int p_75122_1_, float p_75122_2_) {
 		foodLevel = Math.min(p_75122_1_ + foodLevel, 20);
 		foodSaturationLevel = Math.min(foodSaturationLevel + (p_75122_1_ * p_75122_2_ * 2.0f), foodLevel);
 	}
@@ -52,12 +52,12 @@ public class CompanionFoodStats {
 		return foodLevel < 20;
 	}
 
-	public void onFoodEaten(final ItemFood food, final ItemStack itemstack) {
+	public void onFoodEaten(ItemFood food, ItemStack itemstack) {
 		addStats(food.getHealAmount(itemstack), food.getSaturationModifier(itemstack));
 	}
 
-	public void onUpdate(final EntityNPCInterface npc) {
-		final EnumDifficulty enumdifficulty = npc.worldObj.getDifficulty();
+	public void onUpdate(EntityNPCInterface npc) {
+		EnumDifficulty enumdifficulty = npc.worldObj.getDifficulty();
 		prevFoodLevel = foodLevel;
 		if (foodExhaustionLevel > 4.0f) {
 			foodExhaustionLevel -= 4.0f;
@@ -89,7 +89,7 @@ public class CompanionFoodStats {
 		}
 	}
 
-	public void readNBT(final NBTTagCompound p_75112_1_) {
+	public void readNBT(NBTTagCompound p_75112_1_) {
 		if (p_75112_1_.hasKey("foodLevel", 99)) {
 			foodLevel = p_75112_1_.getInteger("foodLevel");
 			foodTimer = p_75112_1_.getInteger("foodTickTimer");
@@ -99,16 +99,16 @@ public class CompanionFoodStats {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setFoodLevel(final int p_75114_1_) {
+	public void setFoodLevel(int p_75114_1_) {
 		foodLevel = p_75114_1_;
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setFoodSaturationLevel(final float p_75119_1_) {
+	public void setFoodSaturationLevel(float p_75119_1_) {
 		foodSaturationLevel = p_75119_1_;
 	}
 
-	public void writeNBT(final NBTTagCompound p_75117_1_) {
+	public void writeNBT(NBTTagCompound p_75117_1_) {
 		p_75117_1_.setInteger("foodLevel", foodLevel);
 		p_75117_1_.setInteger("foodTickTimer", foodTimer);
 		p_75117_1_.setFloat("foodSaturationLevel", foodSaturationLevel);

@@ -19,16 +19,16 @@ import noppes.npcs.roles.companion.CompanionGuard;
 public class NPCAttackSelector implements Predicate {
 	private EntityNPCInterface npc;
 
-	public NPCAttackSelector(final EntityNPCInterface npc) {
+	public NPCAttackSelector(EntityNPCInterface npc) {
 		this.npc = npc;
 	}
 
 	@Override
-	public boolean apply(final Object ob) {
+	public boolean apply(Object ob) {
 		return (ob instanceof EntityLivingBase) && isEntityApplicable((EntityLivingBase) ob);
 	}
 
-	public boolean isEntityApplicable(final EntityLivingBase entity) {
+	public boolean isEntityApplicable(EntityLivingBase entity) {
 		if (!entity.isEntityAlive() || (entity == npc) || !npc.isInRange(entity, npc.stats.aggroRange)
 				|| (entity.getHealth() < 1.0f)) {
 			return false;
@@ -46,7 +46,7 @@ public class NPCAttackSelector implements Predicate {
 			}
 			double distance = entity.getDistanceSq(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos());
 			if (npc.ai.getMovingType() == 2) {
-				final int[] arr = npc.ai.getCurrentMovingPath();
+				int[] arr = npc.ai.getCurrentMovingPath();
 				distance = entity.getDistanceSq(arr[0], arr[1], arr[2]);
 			}
 			if (distance > (allowedDistance * allowedDistance)) {
@@ -57,7 +57,7 @@ public class NPCAttackSelector implements Predicate {
 			return true;
 		}
 		if (npc.advanced.role == 6) {
-			final RoleCompanion role = (RoleCompanion) npc.roleInterface;
+			RoleCompanion role = (RoleCompanion) npc.roleInterface;
 			if ((role.job == EnumCompanionJobs.GUARD)
 					&& ((CompanionGuard) role.jobInterface).isEntityApplicable(entity)) {
 				return true;
@@ -74,7 +74,7 @@ public class NPCAttackSelector implements Predicate {
 			}
 			return false;
 		}
-		final EntityPlayerMP player = (EntityPlayerMP) entity;
+		EntityPlayerMP player = (EntityPlayerMP) entity;
 		if (!npc.faction.isAggressiveToPlayer(player) || player.capabilities.disableDamage) {
 			return false;
 		}

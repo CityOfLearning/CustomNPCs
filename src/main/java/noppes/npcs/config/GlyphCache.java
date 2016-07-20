@@ -103,7 +103,7 @@ public class GlyphCache {
 		GL11.glTexParameteri(3553, 10240, 9728);
 	}
 
-	private void allocateStringImage(final int width, final int height) {
+	private void allocateStringImage(int width, int height) {
 		stringImage = new BufferedImage(width, height, 2);
 		stringGraphics = stringImage.createGraphics();
 		setRenderingHints();
@@ -111,34 +111,34 @@ public class GlyphCache {
 		stringGraphics.setPaint(Color.WHITE);
 	}
 
-	void cacheGlyphs(final Font font, final char[] text, final int start, final int limit, final int layoutFlags) {
-		final GlyphVector vector = layoutGlyphVector(font, text, start, limit, layoutFlags);
+	void cacheGlyphs(Font font, char[] text, int start, int limit, int layoutFlags) {
+		GlyphVector vector = layoutGlyphVector(font, text, start, limit, layoutFlags);
 		Rectangle vectorBounds = null;
-		final long fontKey = fontCache.get(font) << 32;
-		final int numGlyphs = vector.getNumGlyphs();
+		long fontKey = fontCache.get(font) << 32;
+		int numGlyphs = vector.getNumGlyphs();
 		Rectangle dirty = null;
 		boolean vectorRendered = false;
 		for (int index = 0; index < numGlyphs; ++index) {
-			final int glyphCode = vector.getGlyphCode(index);
+			int glyphCode = vector.getGlyphCode(index);
 			if (!glyphCache.containsKey(fontKey | glyphCode)) {
 				if (!vectorRendered) {
 					vectorRendered = true;
 					for (int i = 0; i < numGlyphs; ++i) {
-						final Point2D pos = vector.getGlyphPosition(i);
+						Point2D pos = vector.getGlyphPosition(i);
 						pos.setLocation(pos.getX() + (2 * i), pos.getY());
 						vector.setGlyphPosition(i, pos);
 					}
 					vectorBounds = vector.getPixelBounds(fontRenderContext, 0.0f, 0.0f);
 					if ((stringImage == null) || (vectorBounds.width > stringImage.getWidth())
 							|| (vectorBounds.height > stringImage.getHeight())) {
-						final int width = Math.max(vectorBounds.width, stringImage.getWidth());
-						final int height = Math.max(vectorBounds.height, stringImage.getHeight());
+						int width = Math.max(vectorBounds.width, stringImage.getWidth());
+						int height = Math.max(vectorBounds.height, stringImage.getHeight());
 						allocateStringImage(width, height);
 					}
 					stringGraphics.clearRect(0, 0, vectorBounds.width, vectorBounds.height);
 					stringGraphics.drawGlyphVector(vector, -vectorBounds.x, -vectorBounds.y);
 				}
-				final Rectangle rect = vector.getGlyphPixelBounds(index, null, -vectorBounds.x, -vectorBounds.y);
+				Rectangle rect = vector.getGlyphPixelBounds(index, null, -vectorBounds.x, -vectorBounds.y);
 				if ((cachePosX + rect.width + 1) > 256) {
 					cachePosX = 1;
 					cachePosY += cacheLineHeight + 1;
@@ -148,7 +148,7 @@ public class GlyphCache {
 					updateTexture(dirty);
 					dirty = null;
 					allocateGlyphCacheTexture();
-					final boolean b = true;
+					boolean b = true;
 					cachePosX = (b ? 1 : 0);
 					cachePosY = (b ? 1 : 0);
 					cacheLineHeight = 0;
@@ -159,7 +159,7 @@ public class GlyphCache {
 				glyphCacheGraphics.drawImage(stringImage, cachePosX, cachePosY, cachePosX + rect.width,
 						cachePosY + rect.height, rect.x, rect.y, rect.x + rect.width, rect.y + rect.height, null);
 				rect.setLocation(cachePosX, cachePosY);
-				final Entry entry = new Entry();
+				Entry entry = new Entry();
 				entry.textureName = textureName;
 				entry.width = rect.width;
 				entry.height = rect.height;
@@ -179,26 +179,25 @@ public class GlyphCache {
 		updateTexture(dirty);
 	}
 
-	int fontHeight(final String s) {
-		final Font font = lookupFont(s.toCharArray(), 0, s.length(), 0);
+	int fontHeight(String s) {
+		Font font = lookupFont(s.toCharArray(), 0, s.length(), 0);
 		return (int) font.getLineMetrics(s, fontRenderContext).getHeight();
 	}
 
-	GlyphVector layoutGlyphVector(final Font font, final char[] text, final int start, final int limit,
-			final int layoutFlags) {
+	GlyphVector layoutGlyphVector(Font font, char[] text, int start, int limit, int layoutFlags) {
 		if (!fontCache.containsKey(font)) {
 			fontCache.put(font, fontCache.size());
 		}
 		return font.layoutGlyphVector(fontRenderContext, text, start, limit, layoutFlags);
 	}
 
-	Font lookupFont(final char[] text, final int start, final int limit, final int style) {
-		for (final Font font : usedFonts) {
+	Font lookupFont(char[] text, int start, int limit, int style) {
+		for (Font font : usedFonts) {
 			if (font.canDisplayUpTo(text, start, limit) != start) {
 				return font.deriveFont(style, fontSize);
 			}
 		}
-		for (final Font font : allFonts) {
+		for (Font font : allFonts) {
 			if (font.canDisplayUpTo(text, start, limit) != start) {
 				usedFonts.add(font);
 				return font.deriveFont(style, fontSize);
@@ -208,14 +207,14 @@ public class GlyphCache {
 		return font.deriveFont(style, fontSize);
 	}
 
-	Entry lookupGlyph(final Font font, final int glyphCode) {
-		final long fontKey = fontCache.get(font) << 32;
+	Entry lookupGlyph(Font font, int glyphCode) {
+		long fontKey = fontCache.get(font) << 32;
 		return glyphCache.get(fontKey | glyphCode);
 	}
 
-	void setCustomFont(final ResourceLocation location, final int size, final boolean antiAlias) throws Exception {
-		final InputStream stream = Minecraft.getMinecraft().getResourceManager().getResource(location).getInputStream();
-		final GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+	void setCustomFont(ResourceLocation location, int size, boolean antiAlias) throws Exception {
+		InputStream stream = Minecraft.getMinecraft().getResourceManager().getResource(location).getInputStream();
+		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		Font font = Font.createFont(0, stream);
 		ge.registerFont(font);
 		font = font.deriveFont(0, 72.0f);
@@ -226,7 +225,7 @@ public class GlyphCache {
 		setRenderingHints();
 	}
 
-	void setDefaultFont(final String name, final int size, final boolean antiAlias) {
+	void setDefaultFont(String name, int size, boolean antiAlias) {
 		usedFonts.clear();
 		usedFonts.add(new Font(name, 0, 72));
 		fontSize = size;
@@ -243,10 +242,10 @@ public class GlyphCache {
 				RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
 	}
 
-	private void updateImageBuffer(final int x, final int y, final int width, final int height) {
+	private void updateImageBuffer(int x, int y, int width, int height) {
 		glyphCacheImage.getRGB(x, y, width, height, imageData, 0, width);
 		for (int i = 0; i < (width * height); ++i) {
-			final int color = imageData[i];
+			int color = imageData[i];
 			imageData[i] = ((color << 8) | (color >>> 24));
 		}
 		imageBuffer.clear();
@@ -254,7 +253,7 @@ public class GlyphCache {
 		imageBuffer.flip();
 	}
 
-	private void updateTexture(final Rectangle dirty) {
+	private void updateTexture(Rectangle dirty) {
 		if (dirty != null) {
 			updateImageBuffer(dirty.x, dirty.y, dirty.width, dirty.height);
 			GlStateManager.bindTexture(textureName);

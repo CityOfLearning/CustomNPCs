@@ -14,5 +14,5 @@ public interface IJobFollower extends INPCJob {
 
 	boolean isFollowing();
 
-	void setFollowing(final String p0);
+	void setFollowing(String p0);
 }

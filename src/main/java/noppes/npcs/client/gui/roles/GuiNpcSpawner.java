@@ -30,7 +30,7 @@ public class GuiNpcSpawner extends GuiNPCInterface2 implements ITextfieldListene
 	public String title5;
 	public String title6;
 
-	public GuiNpcSpawner(final EntityNPCInterface npc) {
+	public GuiNpcSpawner(EntityNPCInterface npc) {
 		super(npc);
 		slot = -1;
 		title1 = "gui.selectnpc";
@@ -43,8 +43,8 @@ public class GuiNpcSpawner extends GuiNPCInterface2 implements ITextfieldListene
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if ((button.id >= 0) && (button.id < 6)) {
 			slot = button.id + 1;
 			setSubGui(new GuiNpcMobSpawnerSelector());
@@ -65,16 +65,16 @@ public class GuiNpcSpawner extends GuiNPCInterface2 implements ITextfieldListene
 	}
 
 	@Override
-	public void closeSubGui(final SubGuiInterface gui) {
+	public void closeSubGui(SubGuiInterface gui) {
 		super.closeSubGui(gui);
-		final GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector) gui;
+		GuiNpcMobSpawnerSelector selector = (GuiNpcMobSpawnerSelector) gui;
 		if (selector.isServer) {
-			final String selected = selector.getSelected();
+			String selected = selector.getSelected();
 			if (selected != null) {
 				Client.sendData(EnumPacketServer.JobSpawnerAdd, selector.isServer, selected, selector.activeTab, slot);
 			}
 		} else {
-			final NBTTagCompound compound = selector.getCompound();
+			NBTTagCompound compound = selector.getCompound();
 			if (compound != null) {
 				job.setJobCompound(slot, compound);
 				Client.sendData(EnumPacketServer.JobSpawnerAdd, selector.isServer, slot, compound);
@@ -142,13 +142,13 @@ public class GuiNpcSpawner extends GuiNPCInterface2 implements ITextfieldListene
 
 	@Override
 	public void save() {
-		final NBTTagCompound compound = job.writeToNBT(new NBTTagCompound());
+		NBTTagCompound compound = job.writeToNBT(new NBTTagCompound());
 		job.cleanCompound(compound);
 		Client.sendData(EnumPacketServer.JobSave, compound);
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		title1 = compound.getString("Title1");
 		title2 = compound.getString("Title2");
 		title3 = compound.getString("Title3");
@@ -159,7 +159,7 @@ public class GuiNpcSpawner extends GuiNPCInterface2 implements ITextfieldListene
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 7) {
 			job.xOffset = textfield.getInteger();
 		}

@@ -50,13 +50,11 @@ public class CommonProxy implements IGuiHandler {
 	}
 
 	@Override
-	public Object getClientGuiElement(final int ID, final EntityPlayer player, final World world, final int x,
-			final int y, final int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return null;
 	}
 
-	public Container getContainer(final EnumGuiType gui, final EntityPlayer player, final int x, final int y,
-			final int z, final EntityNPCInterface npc) {
+	public Container getContainer(EnumGuiType gui, EntityPlayer player, int x, int y, int z, EntityNPCInterface npc) {
 		if (gui == EnumGuiType.MainMenuInv) {
 			return new ContainerNPCInv(npc, player);
 		}
@@ -125,13 +123,12 @@ public class CommonProxy implements IGuiHandler {
 	}
 
 	@Override
-	public Object getServerGuiElement(final int ID, final EntityPlayer player, final World world, final int x,
-			final int y, final int z) {
+	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID > EnumGuiType.values().length) {
 			return null;
 		}
-		final EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-		final EnumGuiType gui = EnumGuiType.values()[ID];
+		EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+		EnumGuiType gui = EnumGuiType.values()[ID];
 		return getContainer(gui, player, x, y, z, npc);
 	}
 
@@ -148,38 +145,37 @@ public class CommonProxy implements IGuiHandler {
 		CustomNpcs.ChannelPlayer.register(new PacketHandlerPlayer());
 	}
 
-	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui) {
+	public void openGui(EntityNPCInterface npc, EnumGuiType gui) {
 	}
 
-	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui, final int x, final int y, final int z) {
+	public void openGui(EntityNPCInterface npc, EnumGuiType gui, int x, int y, int z) {
 	}
 
-	public void openGui(final EntityPlayer player, final Object guiscreen) {
+	public void openGui(EntityPlayer player, Object guiscreen) {
 	}
 
-	public void openGui(final int i, final int j, final int k, final EnumGuiType gui, final EntityPlayer player) {
+	public void openGui(int i, int j, int k, EnumGuiType gui, EntityPlayer player) {
 	}
 
 	public void postload() {
 	}
 
-	public void registerBlock(final Block block, final String name, final int meta,
-			final Class<? extends ItemBlock> itemclass) {
+	public void registerBlock(Block block, String name, int meta, Class<? extends ItemBlock> itemclass) {
 		this.registerBlock(block, name, meta, itemclass, false);
 	}
 
-	public void registerBlock(final Block block, final String name, final int meta,
-			final Class<? extends ItemBlock> itemclass, final boolean seperateMetadata) {
+	public void registerBlock(Block block, String name, int meta, Class<? extends ItemBlock> itemclass,
+			boolean seperateMetadata) {
 		GameRegistry.registerBlock(block, itemclass, name);
 	}
 
-	public void registerItem(final Item item, final String name, final int meta) {
+	public void registerItem(Item item, String name, int meta) {
 	}
 
-	public void spawnParticle(final EntityLivingBase player, final String string, final Object... ob) {
+	public void spawnParticle(EntityLivingBase player, String string, Object... ob) {
 	}
 
-	public void spawnParticle(final EnumParticleTypes type, final double x, final double y, final double z,
-			final double motionX, final double motionY, final double motionZ, final float scale) {
+	public void spawnParticle(EnumParticleTypes type, double x, double y, double z, double motionX, double motionY,
+			double motionZ, float scale) {
 	}
 }

@@ -25,7 +25,7 @@ public class EntityAIAmbushTarget extends EntityAIBase {
 	private int delay;
 	private World theWorld;
 
-	public EntityAIAmbushTarget(final EntityNPCInterface par1EntityCreature, final double par2) {
+	public EntityAIAmbushTarget(EntityNPCInterface par1EntityCreature, double par2) {
 		delay = 0;
 		npc = par1EntityCreature;
 		movementSpeed = par2;
@@ -35,8 +35,8 @@ public class EntityAIAmbushTarget extends EntityAIBase {
 
 	@Override
 	public boolean continueExecuting() {
-		final boolean shouldHide = !npc.isInRange(targetEntity, distance);
-		final boolean isSeen = npc.canSee(targetEntity);
+		boolean shouldHide = !npc.isInRange(targetEntity, distance);
+		boolean isSeen = npc.canSee(targetEntity);
 		return (!npc.getNavigator().noPath() && shouldHide) || (!isSeen && (shouldHide || npc.ai.directLOS));
 	}
 
@@ -45,17 +45,17 @@ public class EntityAIAmbushTarget extends EntityAIBase {
 		Vec3 idealPos = null;
 		for (int i = 1; i <= 8; ++i) {
 			for (int y = -2; y <= 2; ++y) {
-				final double k = MathHelper.floor_double(npc.getEntityBoundingBox().minY + y);
+				double k = MathHelper.floor_double(npc.getEntityBoundingBox().minY + y);
 				for (int x = -i; x <= i; ++x) {
-					final double j = MathHelper.floor_double(npc.posX + x) + 0.5;
+					double j = MathHelper.floor_double(npc.posX + x) + 0.5;
 					for (int z = -i; z <= i; ++z) {
-						final double l = MathHelper.floor_double(npc.posZ + z) + 0.5;
+						double l = MathHelper.floor_double(npc.posZ + z) + 0.5;
 						if (isOpaque((int) j, (int) k, (int) l) && !isOpaque((int) j, (int) k + 1, (int) l)
 								&& isOpaque((int) j, (int) k + 2, (int) l)) {
-							final Vec3 vec1 = new Vec3(targetEntity.posX,
-									targetEntity.posY + targetEntity.getEyeHeight(), targetEntity.posZ);
-							final Vec3 vec2 = new Vec3(j, k + npc.getEyeHeight(), l);
-							final MovingObjectPosition movingobjectposition = theWorld.rayTraceBlocks(vec1, vec2);
+							Vec3 vec1 = new Vec3(targetEntity.posX, targetEntity.posY + targetEntity.getEyeHeight(),
+									targetEntity.posZ);
+							Vec3 vec2 = new Vec3(j, k + npc.getEyeHeight(), l);
+							MovingObjectPosition movingobjectposition = theWorld.rayTraceBlocks(vec1, vec2);
 							if ((movingobjectposition != null) && (shelterX != j) && (shelterY != k)
 									&& (shelterZ != l)) {
 								idealPos = new Vec3(j, k, l);
@@ -72,7 +72,7 @@ public class EntityAIAmbushTarget extends EntityAIBase {
 		return null;
 	}
 
-	private boolean isOpaque(final int x, final int y, final int z) {
+	private boolean isOpaque(int x, int y, int z) {
 		return theWorld.getBlockState(new BlockPos(x, y, z)).getBlock().isOpaqueCube();
 	}
 
@@ -95,7 +95,7 @@ public class EntityAIAmbushTarget extends EntityAIBase {
 				|| (delay-- > 0)) {
 			return false;
 		}
-		final Vec3 vec3 = findHidingSpot();
+		Vec3 vec3 = findHidingSpot();
 		if (vec3 == null) {
 			delay = 10;
 			return false;

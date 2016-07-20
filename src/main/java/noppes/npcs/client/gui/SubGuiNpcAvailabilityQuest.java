@@ -23,7 +23,7 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 	private Availability availabitily;
 	private int slot;
 
-	public SubGuiNpcAvailabilityQuest(final Availability availabitily) {
+	public SubGuiNpcAvailabilityQuest(Availability availabitily) {
 		slot = 0;
 		this.availabitily = availabitily;
 		setBackground("menubg.png");
@@ -33,8 +33,8 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			availabitily.questAvailable = EnumAvailabilityQuest.values()[button.getValue()];
 			if (availabitily.questAvailable == EnumAvailabilityQuest.Always) {
@@ -65,25 +65,25 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 		}
 		if (button.id == 10) {
 			slot = 1;
-			final GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.questId);
+			GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.questId);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
 		if (button.id == 11) {
 			slot = 2;
-			final GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest2Id);
+			GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest2Id);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
 		if (button.id == 12) {
 			slot = 3;
-			final GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest3Id);
+			GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest3Id);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
 		if (button.id == 13) {
 			slot = 4;
-			final GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest4Id);
+			GuiNPCQuestSelection gui = new GuiNPCQuestSelection(npc, getParent(), availabitily.quest4Id);
 			gui.listener = this;
 			NoppesUtil.openGUI(player, gui);
 		}
@@ -150,7 +150,7 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 	}
 
 	@Override
-	public void selected(final int id, final String name) {
+	public void selected(int id, String name) {
 		if (slot == 1) {
 			availabitily.questId = id;
 		}
@@ -166,8 +166,8 @@ public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSe
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final Quest quest = new Quest();
+	public void setGuiData(NBTTagCompound compound) {
+		Quest quest = new Quest();
 		quest.readNBT(compound);
 		if (availabitily.questId == quest.id) {
 			getButton(10).setDisplayText(quest.title);

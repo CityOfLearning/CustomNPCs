@@ -36,29 +36,29 @@ public class TileDoor extends TileNpcEntity implements ITickable {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		getDoorNBT(compound);
-		final S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
+		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
 	}
 
-	public NBTTagCompound getDoorNBT(final NBTTagCompound compound) {
+	public NBTTagCompound getDoorNBT(NBTTagCompound compound) {
 		compound.setString("ScriptDoorBlockModel", Block.blockRegistry.getNameForObject(blockModel) + "");
 		return compound;
 	}
 
 	@Override
-	public void onDataPacket(final NetworkManager net, final S35PacketUpdateTileEntity pkt) {
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		setDoorNBT(pkt.getNbtCompound());
 	}
 
 	@Override
-	public void readFromNBT(final NBTTagCompound compound) {
+	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		setDoorNBT(compound);
 	}
 
-	public void setDoorNBT(final NBTTagCompound compound) {
+	public void setDoorNBT(NBTTagCompound compound) {
 		blockModel = Block.blockRegistry.getObject(new ResourceLocation(compound.getString("ScriptDoorBlockModel")));
 		if ((blockModel == null) || !(blockModel instanceof BlockDoor)) {
 			blockModel = CustomItems.scriptedDoor;
@@ -80,8 +80,7 @@ public class TileDoor extends TileNpcEntity implements ITickable {
 	}
 
 	@Override
-	public boolean shouldRefresh(final World world, final BlockPos pos, final IBlockState oldState,
-			final IBlockState newState) {
+	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -105,7 +104,7 @@ public class TileDoor extends TileNpcEntity implements ITickable {
 	}
 
 	@Override
-	public void writeToNBT(final NBTTagCompound compound) {
+	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		getDoorNBT(compound);
 	}

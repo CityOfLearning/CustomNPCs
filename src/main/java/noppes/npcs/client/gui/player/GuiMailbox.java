@@ -6,7 +6,6 @@ package noppes.npcs.client.gui.player;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
@@ -38,8 +37,8 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
 		if (scroll.selected < 0) {
 			return;
 		}
@@ -51,13 +50,13 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 			scroll.selected = -1;
 		}
 		if (id == 1) {
-			final GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
+			GuiYesNo guiyesno = new GuiYesNo(this, "Confirm", StatCollector.translateToLocal("gui.delete"), 0);
 			displayGuiScreen(guiyesno);
 		}
 	}
 
 	@Override
-	public void confirmClicked(final boolean flag, final int i) {
+	public void confirmClicked(boolean flag, int i) {
 		if (flag && (selected != null)) {
 			NoppesUtilPlayer.sendData(EnumPlayerPacket.MailDelete, selected.time, selected.sender);
 			selected = null;
@@ -66,7 +65,7 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		selected = data.playermail.get(guiCustomScroll.selected);
 		initGui();
 		if ((selected != null) && !selected.beenRead) {
@@ -77,19 +76,19 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 
 	private String getTimePast() {
 		if (selected.timePast > 86400000L) {
-			final int days = (int) (selected.timePast / 86400000L);
+			int days = (int) (selected.timePast / 86400000L);
 			if (days == 1) {
 				return days + " " + StatCollector.translateToLocal("mailbox.day");
 			}
 			return days + " " + StatCollector.translateToLocal("mailbox.days");
 		} else if (selected.timePast > 3600000L) {
-			final int hours = (int) (selected.timePast / 3600000L);
+			int hours = (int) (selected.timePast / 3600000L);
 			if (hours == 1) {
 				return hours + " " + StatCollector.translateToLocal("mailbox.hour");
 			}
 			return hours + " " + StatCollector.translateToLocal("mailbox.hours");
 		} else {
-			final int minutes = (int) (selected.timePast / 60000L);
+			int minutes = (int) (selected.timePast / 60000L);
 			if (minutes == 1) {
 				return minutes + " " + StatCollector.translateToLocal("mailbox.minutes");
 			}
@@ -106,8 +105,8 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 		scroll.guiLeft = guiLeft + 4;
 		scroll.guiTop = guiTop + 4;
 		addScroll(scroll);
-		final String title = StatCollector.translateToLocal("mailbox.name");
-		final int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
+		String title = StatCollector.translateToLocal("mailbox.name");
+		int x = (xSize - fontRendererObj.getStringWidth(title)) / 2;
 		addLabel(new GuiNpcLabel(0, title, guiLeft + x, guiTop - 8));
 		if (selected != null) {
 			addLabel(new GuiNpcLabel(3, StatCollector.translateToLocal("mailbox.sender") + ":", guiLeft + 170,
@@ -123,14 +122,14 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 	}
 
 	@Override
-	public void keyTyped(final char c, final int i) {
+	public void keyTyped(char c, int i) {
 		if ((i == 1) || isInventoryKey(i)) {
 			close();
 		}
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		scroll.mouseClicked(i, j, k);
 	}
@@ -140,20 +139,17 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
-		final PlayerMailData data = new PlayerMailData();
+	public void setGuiData(NBTTagCompound compound) {
+		PlayerMailData data = new PlayerMailData();
 		data.loadNBTData(compound);
-		final List<String> list = new ArrayList<String>();
-		Collections.sort(data.playermail, new Comparator<PlayerMail>() {
-			@Override
-			public int compare(final PlayerMail o1, final PlayerMail o2) {
-				if (o1.time == o2.time) {
-					return 0;
-				}
-				return (o1.time > o2.time) ? -1 : 1;
+		List<String> list = new ArrayList<String>();
+		Collections.sort(data.playermail, (o1, o2) -> {
+			if (o1.time == o2.time) {
+				return 0;
 			}
+			return (o1.time > o2.time) ? -1 : 1;
 		});
-		for (final PlayerMail mail : data.playermail) {
+		for (PlayerMail mail : data.playermail) {
 			list.add(mail.subject);
 		}
 		this.data = data;

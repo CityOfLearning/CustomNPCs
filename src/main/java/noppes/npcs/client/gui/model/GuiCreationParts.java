@@ -31,7 +31,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 		protected boolean noPlayerTypes;
 		protected boolean canBeDeleted;
 
-		public GuiPart(final EnumParts part) {
+		public GuiPart(EnumParts part) {
 			types = new String[] { "gui.none" };
 			hasPlayerOption = true;
 			noPlayerTypes = false;
@@ -40,9 +40,9 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 			data = GuiCreationParts.this.playerdata.getPartData(part);
 		}
 
-		protected void actionPerformed(final GuiButton btn) {
+		protected void actionPerformed(GuiButton btn) {
 			if (btn.id == 20) {
-				final int i = ((GuiNpcButton) btn).getValue();
+				int i = ((GuiNpcButton) btn).getValue();
 				if ((i == 0) && canBeDeleted) {
 					GuiCreationParts.this.playerdata.removePart(part);
 				} else {
@@ -96,7 +96,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 			return this;
 		}
 
-		public GuiPart setTypes(final String[] types) {
+		public GuiPart setTypes(String[] types) {
 			this.types = types;
 			return this;
 		}
@@ -118,7 +118,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 
 		@Override
 		public int initGui() {
-			final int y = super.initGui();
+			int y = super.initGui();
 			if (data == null) {
 				return y;
 			}
@@ -145,7 +145,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 
 		@Override
 		public int initGui() {
-			final int y = super.initGui();
+			int y = super.initGui();
 			if ((data != null) && (data.type == 2)) {
 				addLabel(new GuiNpcLabel(22, "gui.pattern", GuiCreationParts.this.guiLeft + 102, y + 5, 16777215));
 				addButton(new GuiButtonBiDirectional(22, GuiCreationParts.this.guiLeft + 145, y, 100, 20,
@@ -164,9 +164,9 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 		}
 
 		@Override
-		protected void actionPerformed(final GuiButton btn) {
+		protected void actionPerformed(GuiButton btn) {
 			if (btn.id == 20) {
-				final int i = ((GuiNpcButton) btn).getValue();
+				int i = ((GuiNpcButton) btn).getValue();
 				if (i <= 1) {
 					data.playerTexture = true;
 				} else {
@@ -216,7 +216,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 
 	private GuiPart[] parts;
 
-	public GuiCreationParts(final EntityNPCInterface npc) {
+	public GuiCreationParts(EntityNPCInterface npc) {
 		super(npc);
 		parts = new GuiPart[] {
 				new GuiPart(EnumParts.EARS).setTypes(new String[] { "gui.none", "gui.normal", "ears.bunny" }),
@@ -233,7 +233,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton btn) {
+	protected void actionPerformed(GuiButton btn) {
 		super.actionPerformed(btn);
 		if (parts[GuiCreationParts.selected] != null) {
 			parts[GuiCreationParts.selected].actionPerformed(btn);
@@ -241,7 +241,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll scroll) {
 		if (scroll.selected >= 0) {
 			GuiCreationParts.selected = scroll.selected;
 			initGui();
@@ -256,8 +256,8 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 			return;
 		}
 		if (scroll == null) {
-			final List<String> list = new ArrayList<String>();
-			for (final GuiPart part : parts) {
+			List<String> list = new ArrayList<String>();
+			for (GuiPart part : parts) {
 				list.add(StatCollector.translateToLocal("part." + part.part.name));
 			}
 			(scroll = new GuiCustomScroll(this, 0)).setUnsortedList(list);
@@ -273,7 +273,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 23) {
 		}
 	}

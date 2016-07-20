@@ -46,20 +46,20 @@ public class QuestLogData {
 		return !selectedQuest.isEmpty();
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		categories = NBTTags.getVectorMap(compound.getTagList("Categories", 10));
 		questText = NBTTags.getStringStringMap(compound.getTagList("Logs", 10));
 		questStatus = NBTTags.getVectorMap(compound.getTagList("Status", 10));
 		finish = NBTTags.getStringStringMap(compound.getTagList("QuestFinisher", 10));
 	}
 
-	public void setData(final EntityPlayer player) {
-		for (final Quest quest : PlayerQuestController.getActiveQuests(player)) {
-			final String category = quest.category.title;
+	public void setData(EntityPlayer player) {
+		for (Quest quest : PlayerQuestController.getActiveQuests(player)) {
+			String category = quest.category.title;
 			if (!categories.containsKey(category)) {
 				categories.put(category, new Vector<String>());
 			}
-			final Vector<String> list = categories.get(category);
+			Vector<String> list = categories.get(category);
 			list.add(quest.title);
 			questText.put(category + ":" + quest.title, quest.logText);
 			questStatus.put(category + ":" + quest.title, quest.questInterface.getQuestLogStatus(player));
@@ -70,7 +70,7 @@ public class QuestLogData {
 	}
 
 	public NBTTagCompound writeNBT() {
-		final NBTTagCompound compound = new NBTTagCompound();
+		NBTTagCompound compound = new NBTTagCompound();
 		compound.setTag("Categories", NBTTags.nbtVectorMap(categories));
 		compound.setTag("Logs", NBTTags.nbtStringStringMap(questText));
 		compound.setTag("Status", NBTTags.nbtVectorMap(questStatus));

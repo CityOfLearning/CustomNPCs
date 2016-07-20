@@ -175,7 +175,7 @@ public class ClientProxy extends CommonProxy {
 			useCustomFont = true;
 		}
 
-		public FontContainer(final String fontType, final int fontSize) {
+		public FontContainer(String fontType, int fontSize) {
 			textFont = null;
 			useCustomFont = true;
 			(textFont = new StringCache()).setDefaultFont("Arial", fontSize, true);
@@ -192,13 +192,13 @@ public class ClientProxy extends CommonProxy {
 		}
 
 		public FontContainer copy() {
-			final FontContainer font = new FontContainer();
+			FontContainer font = new FontContainer();
 			font.textFont = textFont;
 			font.useCustomFont = useCustomFont;
 			return font;
 		}
 
-		public void drawString(final String text, final int x, final int y, final int color) {
+		public void drawString(String text, int x, int y, int color) {
 			if (useCustomFont) {
 				textFont.renderString(text, x, y, color, true);
 				textFont.renderString(text, x, y, color, false);
@@ -221,7 +221,7 @@ public class ClientProxy extends CommonProxy {
 			return Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 		}
 
-		public int width(final String text) {
+		public int width(String text) {
 			if (useCustomFont) {
 				return textFont.getStringWidth(text);
 			}
@@ -236,12 +236,12 @@ public class ClientProxy extends CommonProxy {
 	public static KeyBinding Scene3;
 	public static FontContainer Font;
 
-	public static void bindTexture(final ResourceLocation location) {
+	public static void bindTexture(ResourceLocation location) {
 		try {
 			if (location == null) {
 				return;
 			}
-			final TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+			TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 			ITextureObject ob = manager.getTexture(location);
 			if (ob == null) {
 				ob = new SimpleTexture(location);
@@ -253,16 +253,15 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
-
 	public ClientProxy() {
 	}
 
-	private void blockIgnoreBlockstate(final Block block, final IProperty... properties) {
+	private void blockIgnoreBlockstate(Block block, IProperty... properties) {
 		ModelLoader.setCustomStateMapper(block, new StateMap.Builder().ignore(properties).build());
 	}
 
 	private void createFolders() {
-		final File file = new File(CustomNpcs.Dir, "assets/customnpcs");
+		File file = new File(CustomNpcs.Dir, "assets/customnpcs");
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -270,11 +269,11 @@ public class ClientProxy extends CommonProxy {
 		if (!check.exists()) {
 			check.mkdir();
 		}
-		final File json = new File(file, "sounds.json");
+		File json = new File(file, "sounds.json");
 		if (!json.exists()) {
 			try {
 				json.createNewFile();
-				final BufferedWriter writer = new BufferedWriter(new FileWriter(json));
+				BufferedWriter writer = new BufferedWriter(new FileWriter(json));
 				writer.write("{\n\n}");
 				writer.close();
 			} catch (IOException ex) {
@@ -289,19 +288,17 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public Object getClientGuiElement(final int ID, final EntityPlayer player, final World world, final int x,
-			final int y, final int z) {
+	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID > EnumGuiType.values().length) {
 			return null;
 		}
-		final EnumGuiType gui = EnumGuiType.values()[ID];
-		final EntityNPCInterface npc = NoppesUtil.getLastNpc();
-		final Container container = getContainer(gui, player, x, y, z, npc);
+		EnumGuiType gui = EnumGuiType.values()[ID];
+		EntityNPCInterface npc = NoppesUtil.getLastNpc();
+		Container container = getContainer(gui, player, x, y, z, npc);
 		return getGui(npc, gui, container, x, y, z);
 	}
 
-	private GuiScreen getGui(final EntityNPCInterface npc, final EnumGuiType gui, final Container container,
-			final int x, final int y, final int z) {
+	private GuiScreen getGui(EntityNPCInterface npc, EnumGuiType gui, Container container, int x, int y, int z) {
 		if (gui == EnumGuiType.MainMenuDisplay) {
 			if (npc != null) {
 				return new GuiNpcDisplay(npc);
@@ -467,7 +464,7 @@ public class ClientProxy extends CommonProxy {
 		new MusicController();
 		new TileEntityItemStackRendererAlt();
 		MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
-		final Minecraft mc = Minecraft.getMinecraft();
+		Minecraft mc = Minecraft.getMinecraft();
 		ClientProxy.QuestLog = new KeyBinding("Quest Log", 38, "key.categories.gameplay");
 		if (CustomNpcs.SceneButtonsEnabled) {
 			ClientProxy.Scene1 = new KeyBinding("Scene1 start/pause", 79, "key.categories.gameplay");
@@ -489,23 +486,23 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui) {
+	public void openGui(EntityNPCInterface npc, EnumGuiType gui) {
 		this.openGui(npc, gui, 0, 0, 0);
 	}
 
 	@Override
-	public void openGui(final EntityNPCInterface npc, final EnumGuiType gui, final int x, final int y, final int z) {
-		final Minecraft minecraft = Minecraft.getMinecraft();
-		final Container container = getContainer(gui, minecraft.thePlayer, x, y, z, npc);
-		final GuiScreen guiscreen = getGui(npc, gui, container, x, y, z);
+	public void openGui(EntityNPCInterface npc, EnumGuiType gui, int x, int y, int z) {
+		Minecraft minecraft = Minecraft.getMinecraft();
+		Container container = getContainer(gui, minecraft.thePlayer, x, y, z, npc);
+		GuiScreen guiscreen = getGui(npc, gui, container, x, y, z);
 		if (guiscreen != null) {
 			minecraft.displayGuiScreen(guiscreen);
 		}
 	}
 
 	@Override
-	public void openGui(final EntityPlayer player, final Object guiscreen) {
-		final Minecraft minecraft = Minecraft.getMinecraft();
+	public void openGui(EntityPlayer player, Object guiscreen) {
+		Minecraft minecraft = Minecraft.getMinecraft();
 		if (!player.worldObj.isRemote || !(guiscreen instanceof GuiScreen)) {
 			return;
 		}
@@ -515,12 +512,12 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void openGui(final int i, final int j, final int k, final EnumGuiType gui, final EntityPlayer player) {
-		final Minecraft minecraft = Minecraft.getMinecraft();
+	public void openGui(int i, int j, int k, EnumGuiType gui, EntityPlayer player) {
+		Minecraft minecraft = Minecraft.getMinecraft();
 		if (minecraft.thePlayer != player) {
 			return;
 		}
-		final GuiScreen guiscreen = getGui(null, gui, null, i, j, k);
+		GuiScreen guiscreen = getGui(null, gui, null, i, j, k);
 		if (guiscreen != null) {
 			minecraft.displayGuiScreen(guiscreen);
 		}
@@ -560,25 +557,25 @@ public class ClientProxy extends CommonProxy {
 				(TileEntitySpecialRenderer) new BlockDoorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileCopy.class,
 				(TileEntitySpecialRenderer) new BlockCopyRenderer());
-			ClientRegistry.bindTileEntitySpecialRenderer((Class) TileTrading.class,
-					(TileEntitySpecialRenderer) new BlockTradingRenderer());
-		
+		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileTrading.class,
+				(TileEntitySpecialRenderer) new BlockTradingRenderer());
+
 	}
 
 	@Override
-	public void registerBlock(final Block block, final String name, final int meta,
-			final Class<? extends ItemBlock> itemclass, final boolean seperateMetadata) {
+	public void registerBlock(Block block, String name, int meta, Class<? extends ItemBlock> itemclass,
+			boolean seperateMetadata) {
 		super.registerBlock(block, name, meta, itemclass, seperateMetadata);
 		registerItems(GameRegistry.findItem("customnpcs", name), name, meta, seperateMetadata);
 	}
 
 	@Override
-	public void registerItem(final Item item, final String name, final int meta) {
-		final ModelResourceLocation location = new ModelResourceLocation("customnpcs:" + name, "inventory");
+	public void registerItem(Item item, String name, int meta) {
+		ModelResourceLocation location = new ModelResourceLocation("customnpcs:" + name, "inventory");
 		ModelLoader.setCustomModelResourceLocation(item, meta, location);
 	}
 
-	public void registerItems(final Item item, final String name, final int meta, final boolean seperate) {
+	public void registerItems(Item item, String name, int meta, boolean seperate) {
 		if (meta > 0) {
 			item.setHasSubtypes(true);
 			for (int i = 0; i <= meta; ++i) {
@@ -595,34 +592,34 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void spawnParticle(final EntityLivingBase player, final String string, final Object... ob) {
+	public void spawnParticle(EntityLivingBase player, String string, Object... ob) {
 		if (string.equals("Spell")) {
-			final int color = (Integer) ob[0];
+			int color = (Integer) ob[0];
 			for (int number = (Integer) ob[1], i = 0; i < number; ++i) {
-				final Random rand = player.getRNG();
-				final double x = (rand.nextDouble() - 0.5) * player.width;
-				final double y = player.getEyeHeight();
-				final double z = (rand.nextDouble() - 0.5) * player.width;
-				final double f = (rand.nextDouble() - 0.5) * 2.0;
-				final double f2 = -rand.nextDouble();
-				final double f3 = (rand.nextDouble() - 0.5) * 2.0;
+				Random rand = player.getRNG();
+				double x = (rand.nextDouble() - 0.5) * player.width;
+				double y = player.getEyeHeight();
+				double z = (rand.nextDouble() - 0.5) * player.width;
+				double f = (rand.nextDouble() - 0.5) * 2.0;
+				double f2 = -rand.nextDouble();
+				double f3 = (rand.nextDouble() - 0.5) * 2.0;
 			}
 		} else if (string.equals("Block")) {
-			final BlockPos pos = (BlockPos) ob[0];
-			final int id = (Integer) ob[1];
-			final Block block = Block.getBlockById(id & 0xFFF);
+			BlockPos pos = (BlockPos) ob[0];
+			int id = (Integer) ob[1];
+			Block block = Block.getBlockById(id & 0xFFF);
 			Minecraft.getMinecraft().effectRenderer.addBlockDestroyEffects(pos,
 					block.getStateFromMeta((id >> 12) & 0xFF));
 		} else if (string.equals("ModelData")) {
-			final ModelData data = (ModelData) ob[0];
-			final ModelPartData particles = (ModelPartData) ob[1];
-			final EntityCustomNpc npc = (EntityCustomNpc) player;
-			final Minecraft minecraft = Minecraft.getMinecraft();
-			final double height = npc.getYOffset() + data.getBodyY();
-			final Random rand2 = npc.getRNG();
+			ModelData data = (ModelData) ob[0];
+			ModelPartData particles = (ModelPartData) ob[1];
+			EntityCustomNpc npc = (EntityCustomNpc) player;
+			Minecraft minecraft = Minecraft.getMinecraft();
+			double height = npc.getYOffset() + data.getBodyY();
+			Random rand2 = npc.getRNG();
 			if (particles.type == 0) {
 				for (int j = 0; j < 2; ++j) {
-					final EntityEnderFX fx = new EntityEnderFX(npc, (rand2.nextDouble() - 0.5) * player.width,
+					EntityEnderFX fx = new EntityEnderFX(npc, (rand2.nextDouble() - 0.5) * player.width,
 							(rand2.nextDouble() * player.height) - height - 0.25,
 							(rand2.nextDouble() - 0.5) * player.width, (rand2.nextDouble() - 0.5) * 2.0,
 							-rand2.nextDouble(), (rand2.nextDouble() - 0.5) * 2.0, particles);
@@ -630,12 +627,12 @@ public class ClientProxy extends CommonProxy {
 				}
 			} else if (particles.type == 1) {
 				for (int j = 0; j < 2; ++j) {
-					final double x2 = player.posX + ((rand2.nextDouble() - 0.5) * 0.9);
-					final double y2 = (player.posY + (rand2.nextDouble() * 1.9)) - 0.25 - height;
-					final double z2 = player.posZ + ((rand2.nextDouble() - 0.5) * 0.9);
-					final double f4 = (rand2.nextDouble() - 0.5) * 2.0;
-					final double f5 = -rand2.nextDouble();
-					final double f6 = (rand2.nextDouble() - 0.5) * 2.0;
+					double x2 = player.posX + ((rand2.nextDouble() - 0.5) * 0.9);
+					double y2 = (player.posY + (rand2.nextDouble() * 1.9)) - 0.25 - height;
+					double z2 = player.posZ + ((rand2.nextDouble() - 0.5) * 0.9);
+					double f4 = (rand2.nextDouble() - 0.5) * 2.0;
+					double f5 = -rand2.nextDouble();
+					double f6 = (rand2.nextDouble() - 0.5) * 2.0;
 					minecraft.effectRenderer.addEffect(new EntityRainbowFX(player.worldObj, x2, y2, z2, f4, f5, f6));
 				}
 			}
@@ -643,16 +640,16 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void spawnParticle(final EnumParticleTypes particle, final double x, final double y, final double z,
-			final double motionX, final double motionY, final double motionZ, final float scale) {
-		final Minecraft mc = Minecraft.getMinecraft();
-		final double xx = mc.getRenderViewEntity().posX - x;
-		final double yy = mc.getRenderViewEntity().posY - y;
-		final double zz = mc.getRenderViewEntity().posZ - z;
+	public void spawnParticle(EnumParticleTypes particle, double x, double y, double z, double motionX, double motionY,
+			double motionZ, float scale) {
+		Minecraft mc = Minecraft.getMinecraft();
+		double xx = mc.getRenderViewEntity().posX - x;
+		double yy = mc.getRenderViewEntity().posY - y;
+		double zz = mc.getRenderViewEntity().posZ - z;
 		if (((xx * xx) + (yy * yy) + (zz * zz)) > 256.0) {
 			return;
 		}
-		final EntityFX fx = mc.effectRenderer.spawnEffectParticle(particle.getParticleID(), x, y, z, motionX, motionY,
+		EntityFX fx = mc.effectRenderer.spawnEffectParticle(particle.getParticleID(), x, y, z, motionX, motionY,
 				motionZ, new int[0]);
 		if (fx == null) {
 			return;

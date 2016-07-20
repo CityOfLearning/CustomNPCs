@@ -16,7 +16,7 @@ public class InventoryNpcTrader implements IInventory {
 	private ItemStack[] inventoryContents;
 	private ContainerNPCTrader con;
 
-	public InventoryNpcTrader(final String s, final int i, final ContainerNPCTrader con) {
+	public InventoryNpcTrader(String s, int i, ContainerNPCTrader con) {
 		this.con = con;
 		inventoryTitle = s;
 		slotsCount = i;
@@ -28,13 +28,13 @@ public class InventoryNpcTrader implements IInventory {
 	}
 
 	@Override
-	public void closeInventory(final EntityPlayer player) {
+	public void closeInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack decrStackSize(final int i, final int j) {
+	public ItemStack decrStackSize(int i, int j) {
 		if (inventoryContents[i] != null) {
-			final ItemStack itemstack = inventoryContents[i];
+			ItemStack itemstack = inventoryContents[i];
 			return ItemStack.copyItemStack(itemstack);
 		}
 		return null;
@@ -46,7 +46,7 @@ public class InventoryNpcTrader implements IInventory {
 	}
 
 	@Override
-	public int getField(final int id) {
+	public int getField(int id) {
 		return 0;
 	}
 
@@ -71,8 +71,8 @@ public class InventoryNpcTrader implements IInventory {
 	}
 
 	@Override
-	public ItemStack getStackInSlot(final int i) {
-		final ItemStack toBuy = inventoryContents[i];
+	public ItemStack getStackInSlot(int i) {
+		ItemStack toBuy = inventoryContents[i];
 		if (toBuy == null) {
 			return null;
 		}
@@ -85,12 +85,12 @@ public class InventoryNpcTrader implements IInventory {
 	}
 
 	@Override
-	public boolean isItemValidForSlot(final int i, final ItemStack itemstack) {
+	public boolean isItemValidForSlot(int i, ItemStack itemstack) {
 		return true;
 	}
 
 	@Override
-	public boolean isUseableByPlayer(final EntityPlayer entityplayer) {
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
 		return true;
 	}
 
@@ -100,20 +100,20 @@ public class InventoryNpcTrader implements IInventory {
 	}
 
 	@Override
-	public void openInventory(final EntityPlayer player) {
+	public void openInventory(EntityPlayer player) {
 	}
 
 	@Override
-	public ItemStack removeStackFromSlot(final int i) {
+	public ItemStack removeStackFromSlot(int i) {
 		return null;
 	}
 
 	@Override
-	public void setField(final int id, final int value) {
+	public void setField(int id, int value) {
 	}
 
 	@Override
-	public void setInventorySlotContents(final int i, final ItemStack itemstack) {
+	public void setInventorySlotContents(int i, ItemStack itemstack) {
 		if (itemstack != null) {
 			inventoryContents[i] = itemstack.copy();
 		}

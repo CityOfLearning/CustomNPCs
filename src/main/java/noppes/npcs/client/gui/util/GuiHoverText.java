@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiHoverText extends GuiScreen {
-	protected static final ResourceLocation buttonTextures;
+	protected static ResourceLocation buttonTextures;
 	static {
 		buttonTextures = new ResourceLocation("customnpcs:textures/gui/info.png");
 	}
@@ -22,7 +22,7 @@ public class GuiHoverText extends GuiScreen {
 
 	private String text;
 
-	public GuiHoverText(final int id, final String text, final int x, final int y) {
+	public GuiHoverText(int id, String text, int x, int y) {
 		this.text = text;
 		this.id = id;
 		this.x = x;
@@ -30,20 +30,19 @@ public class GuiHoverText extends GuiScreen {
 	}
 
 	@Override
-	public void drawScreen(final int par1, final int par2, final float par3) {
+	public void drawScreen(int par1, int par2, float par3) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		mc.getTextureManager().bindTexture(GuiHoverText.buttonTextures);
 		this.drawTexturedModalRect(x, y, 0, 0, 12, 12);
 		if (inArea(x, y, 12, 12, par1, par2)) {
-			final List<String> lines = new ArrayList<String>();
+			List<String> lines = new ArrayList<String>();
 			lines.add(text);
 			this.drawHoveringText(lines, x + 8, y + 6, fontRendererObj);
 			GlStateManager.disableLighting();
 		}
 	}
 
-	public boolean inArea(final int x, final int y, final int width, final int height, final int mouseX,
-			final int mouseY) {
+	public boolean inArea(int x, int y, int width, int height, int mouseX, int mouseY) {
 		return (mouseX >= x) && (mouseX <= (x + width)) && (mouseY >= y) && (mouseY <= (y + height));
 	}
 }

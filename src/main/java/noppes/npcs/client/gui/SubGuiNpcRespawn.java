@@ -15,7 +15,7 @@ import noppes.npcs.entity.data.DataStats;
 public class SubGuiNpcRespawn extends SubGuiInterface implements ITextfieldListener {
 	private DataStats stats;
 
-	public SubGuiNpcRespawn(final DataStats stats) {
+	public SubGuiNpcRespawn(DataStats stats) {
 		this.stats = stats;
 		setBackground("menubg.png");
 		xSize = 256;
@@ -24,9 +24,9 @@ public class SubGuiNpcRespawn extends SubGuiInterface implements ITextfieldListe
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final int id = guibutton.id;
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		int id = guibutton.id;
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			stats.spawnCycle = button.getValue();
 			if ((stats.spawnCycle == 3) || (stats.spawnCycle == 4)) {
@@ -63,7 +63,7 @@ public class SubGuiNpcRespawn extends SubGuiInterface implements ITextfieldListe
 	}
 
 	@Override
-	public void unFocused(final GuiNpcTextField textfield) {
+	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 2) {
 			stats.respawnTime = textfield.getInteger();
 		}

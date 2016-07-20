@@ -33,7 +33,7 @@ public abstract class NpcAPI {
 			return null;
 		}
 		try {
-			final Class c = Class.forName("noppes.npcs.api.wrapper.WrapperNpcAPI");
+			Class c = Class.forName("noppes.npcs.api.wrapper.WrapperNpcAPI");
 			NpcAPI.instance = (NpcAPI) c.getMethod("Instance", new Class[0]).invoke(null, new Object[0]);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -45,7 +45,7 @@ public abstract class NpcAPI {
 		return Loader.isModLoaded("customnpcs");
 	}
 
-	public abstract ICustomNpc createNPC(final World p0);
+	public abstract ICustomNpc createNPC(World p0);
 
 	public abstract EventBus events();
 
@@ -53,17 +53,17 @@ public abstract class NpcAPI {
 
 	public abstract File getGlobalDir();
 
-	public abstract IBlock getIBlock(final World p0, final BlockPos p1);
+	public abstract IBlock getIBlock(World p0, BlockPos p1);
 
-	public abstract IEntity getIEntity(final Entity p0);
+	public abstract IEntity getIEntity(Entity p0);
 
-	public abstract IItemStack getIItemStack(final ItemStack p0);
+	public abstract IItemStack getIItemStack(ItemStack p0);
 
 	public abstract IRecipeHandler getRecipes();
 
 	public abstract File getWorldDir();
 
-	public abstract void registerCommand(final CommandNoppesBase p0);
+	public abstract void registerCommand(CommandNoppesBase p0);
 
-	public abstract ICustomNpc spawnNPC(final World p0, final int p1, final int p2, final int p3);
+	public abstract ICustomNpc spawnNPC(World p0, int p1, int p2, int p3);
 }

@@ -27,7 +27,7 @@ import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
 
 public class BlockBorder extends BlockContainer implements IPermission {
-	public static final PropertyInteger ROTATION;
+	public static PropertyInteger ROTATION;
 
 	static {
 		ROTATION = PropertyInteger.create("rotation", 0, 3);
@@ -44,12 +44,12 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(final World var1, final int var2) {
+	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileBorder();
 	}
 
 	@Override
-	public int getMetaFromState(final IBlockState state) {
+	public int getMetaFromState(IBlockState state) {
 		return state.getValue(BlockBorder.ROTATION);
 	}
 
@@ -59,12 +59,12 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(final int meta) {
+	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(BlockBorder.ROTATION, meta);
 	}
 
-	private TileBorder getTile(final World world, final BlockPos pos) {
-		final TileEntity tile = world.getTileEntity(pos);
+	private TileBorder getTile(World world, BlockPos pos) {
+		TileEntity tile = world.getTileEntity(pos);
 		if ((tile != null) && (tile instanceof TileBorder)) {
 			return (TileBorder) tile;
 		}
@@ -72,7 +72,7 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public boolean isAllowed(final EnumPacketServer e) {
+	public boolean isAllowed(EnumPacketServer e) {
 		return e == EnumPacketServer.SaveTileEntity;
 	}
 
@@ -87,9 +87,9 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public boolean onBlockActivated(final World world, final BlockPos pos, final IBlockState state,
-			final EntityPlayer player, final EnumFacing side, final float hitX, final float hitY, final float hitZ) {
-		final ItemStack currentItem = player.inventory.getCurrentItem();
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
+		ItemStack currentItem = player.inventory.getCurrentItem();
 		if (!world.isRemote && (currentItem != null) && (currentItem.getItem() == CustomItems.wand)) {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.Border, null, pos.getX(), pos.getY(), pos.getZ());
 			return true;
@@ -98,12 +98,12 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	}
 
 	@Override
-	public void onBlockPlacedBy(final World world, final BlockPos pos, final IBlockState state,
-			final EntityLivingBase entity, final ItemStack stack) {
+	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
+			ItemStack stack) {
 		int l = MathHelper.floor_double(((entity.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
 		l %= 4;
 		world.setBlockState(pos, state.withProperty(BlockBorder.ROTATION, l));
-		final TileBorder tile = (TileBorder) world.getTileEntity(pos);
+		TileBorder tile = (TileBorder) world.getTileEntity(pos);
 		TileBorder adjacent = getTile(world, pos.west());
 		if (adjacent == null) {
 			adjacent = getTile(world, pos.south());
@@ -115,7 +115,7 @@ public class BlockBorder extends BlockContainer implements IPermission {
 			adjacent = getTile(world, pos.east());
 		}
 		if (adjacent != null) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			adjacent.writeExtraNBT(compound);
 			tile.readExtraNBT(compound);
 		}

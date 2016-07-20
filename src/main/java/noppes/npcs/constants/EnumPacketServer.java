@@ -129,19 +129,19 @@ public enum EnumPacketServer {
 		exempt = false;
 	}
 
-	private EnumPacketServer(final boolean npc) {
+	private EnumPacketServer(boolean npc) {
 		needsNpc = false;
 		exempt = false;
 		needsNpc = npc;
 	}
 
-	private EnumPacketServer(final CustomNpcsPermissions.Permission permission) {
+	private EnumPacketServer(CustomNpcsPermissions.Permission permission) {
 		needsNpc = false;
 		exempt = false;
 		this.permission = permission;
 	}
 
-	private EnumPacketServer(final CustomNpcsPermissions.Permission permission, final boolean npc) {
+	private EnumPacketServer(CustomNpcsPermissions.Permission permission, boolean npc) {
 		this(permission);
 	}
 

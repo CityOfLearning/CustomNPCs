@@ -24,14 +24,14 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 	private GuiCustomScroll scrollFactions;
 	private HashMap<String, Integer> data;
 
-	public GuiNPCFactionSetup(final EntityNPCInterface npc) {
+	public GuiNPCFactionSetup(EntityNPCInterface npc) {
 		super(npc);
 		data = new HashMap<String, Integer>();
 	}
 
 	@Override
-	public void buttonEvent(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	public void buttonEvent(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 0) {
 			npc.advanced.attackOtherFactions = (button.getValue() == 1);
 		}
@@ -44,7 +44,7 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 	}
 
 	@Override
-	public void customScrollClicked(final int i, final int j, final int k, final GuiCustomScroll guiCustomScroll) {
+	public void customScrollClicked(int i, int j, int k, GuiCustomScroll guiCustomScroll) {
 		if (guiCustomScroll.id == 0) {
 			Client.sendData(EnumPacketServer.FactionSet, data.get(scrollFactions.getSelected()));
 		}
@@ -71,7 +71,7 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 	}
 
 	@Override
-	public void mouseClicked(final int i, final int j, final int k) {
+	public void mouseClicked(int i, int j, int k) {
 		super.mouseClicked(i, j, k);
 		if ((k == 0) && (scrollFactions != null)) {
 			scrollFactions.mouseClicked(i, j, k);
@@ -84,8 +84,8 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 	}
 
 	@Override
-	public void setData(final Vector<String> list, final HashMap<String, Integer> data) {
-		final String name = npc.getFaction().name;
+	public void setData(Vector<String> list, HashMap<String, Integer> data) {
+		String name = npc.getFaction().name;
 		this.data = data;
 		scrollFactions.setList(list);
 		if (name != null) {
@@ -94,7 +94,7 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 	}
 
 	@Override
-	public void setSelected(final String selected) {
+	public void setSelected(String selected) {
 		scrollFactions.setSelected(selected);
 	}
 }

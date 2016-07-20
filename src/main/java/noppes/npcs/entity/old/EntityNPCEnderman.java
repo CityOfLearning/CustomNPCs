@@ -11,7 +11,7 @@ import noppes.npcs.ModelData;
 import noppes.npcs.entity.EntityCustomNpc;
 
 public class EntityNPCEnderman extends EntityNpcEnderchibi {
-	public EntityNPCEnderman(final World world) {
+	public EntityNPCEnderman(World world) {
 		super(world);
 		display.setSkinTexture("customnpcs:textures/entity/enderman/enderman.png");
 		display.setOverlayTexture("customnpcs:textures/overlays/ender_eyes.png");
@@ -23,11 +23,11 @@ public class EntityNPCEnderman extends EntityNpcEnderchibi {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.setEntityClass(EntityEnderman.class);
 			worldObj.spawnEntityInWorld(npc);
 		}
@@ -37,7 +37,7 @@ public class EntityNPCEnderman extends EntityNpcEnderchibi {
 	@Override
 	public void updateHitbox() {
 		if (currentAnimation == 2) {
-			final float n = 0.2f;
+			float n = 0.2f;
 			height = n;
 			width = n;
 		} else if (currentAnimation == 1) {

@@ -67,7 +67,7 @@ public class EntityProjectile extends EntityThrowable {
 	public int amplify;
 	public IProjectileCallback callback;
 
-	public EntityProjectile(final World par1World) {
+	public EntityProjectile(World par1World) {
 		super(par1World);
 		tilePos = BlockPos.ORIGIN;
 		inGround = false;
@@ -89,8 +89,7 @@ public class EntityProjectile extends EntityThrowable {
 		setSize(0.25f, 0.25f);
 	}
 
-	public EntityProjectile(final World par1World, final EntityLivingBase par2EntityLiving, final ItemStack item,
-			final boolean isNPC) {
+	public EntityProjectile(World par1World, EntityLivingBase par2EntityLiving, ItemStack item, boolean isNPC) {
 		super(par1World);
 		tilePos = BlockPos.ORIGIN;
 		inGround = false;
@@ -148,29 +147,28 @@ public class EntityProjectile extends EntityThrowable {
 		dataWatcher.addObject(31, (byte) 0);
 	}
 
-	public float getAngleForXYZ(final double varX, final double varY, final double varZ, final double horiDist,
-			final boolean arc) {
-		final float g = getGravityVelocity();
-		final float var1 = getSpeed() * getSpeed();
-		final double var2 = g * horiDist;
-		final double var3 = (g * horiDist * horiDist) + (2.0 * varY * var1);
-		final double var4 = (var1 * var1) - (g * var3);
+	public float getAngleForXYZ(double varX, double varY, double varZ, double horiDist, boolean arc) {
+		float g = getGravityVelocity();
+		float var1 = getSpeed() * getSpeed();
+		double var2 = g * horiDist;
+		double var3 = (g * horiDist * horiDist) + (2.0 * varY * var1);
+		double var4 = (var1 * var1) - (g * var3);
 		if (var4 < 0.0) {
 			return 30.0f;
 		}
-		final float var5 = arc ? (var1 + MathHelper.sqrt_double(var4)) : (var1 - MathHelper.sqrt_double(var4));
-		final float var6 = (float) ((Math.atan2(var5, var2) * 180.0) / 3.141592653589793);
+		float var5 = arc ? (var1 + MathHelper.sqrt_double(var4)) : (var1 - MathHelper.sqrt_double(var4));
+		float var6 = (float) ((Math.atan2(var5, var2) * 180.0) / 3.141592653589793);
 		return var6;
 	}
 
 	@Override
-	public float getBrightness(final float par1) {
+	public float getBrightness(float par1) {
 		return (dataWatcher.getWatchableObjectByte(24) == 1) ? 1.0f : super.getBrightness(par1);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public int getBrightnessForRender(final float par1) {
+	public int getBrightnessForRender(float par1) {
 		return (dataWatcher.getWatchableObjectByte(24) == 1) ? 15728880 : super.getBrightnessForRender(par1);
 	}
 
@@ -183,7 +181,7 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	private Item getItem() {
-		final ItemStack item = getItemDisplay();
+		ItemStack item = getItemDisplay();
 		if (item == null) {
 			return null;
 		}
@@ -198,7 +196,7 @@ public class EntityProjectile extends EntityThrowable {
 		return accelerate ? 0.95f : 1.0f;
 	}
 
-	private int getPotionColor(final int p) {
+	private int getPotionColor(int p) {
 		switch (p) {
 		case 2: {
 			return 32660;
@@ -231,7 +229,7 @@ public class EntityProjectile extends EntityThrowable {
 		return dataWatcher.getWatchableObjectInt(25) / 10.0f;
 	}
 
-	public void getStatProperties(final DataRanged stats) {
+	public void getStatProperties(DataRanged stats) {
 		damage = stats.getStrength();
 		punch = stats.getKnockback();
 		accelerate = stats.getAccelerate();
@@ -255,7 +253,7 @@ public class EntityProjectile extends EntityThrowable {
 			return null;
 		}
 		try {
-			final UUID uuid = UUID.fromString(throwerName);
+			UUID uuid = UUID.fromString(throwerName);
 			if ((thrower == null) && (uuid != null)) {
 				thrower = worldObj.getPlayerEntityByUUID(uuid);
 			}
@@ -281,13 +279,13 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	public boolean isBlock() {
-		final ItemStack item = getItemDisplay();
+		ItemStack item = getItemDisplay();
 		return (item != null) && (item.getItem() instanceof ItemBlock);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public boolean isInRangeToRenderDist(final double par1) {
+	public boolean isInRangeToRenderDist(double par1) {
 		double d1 = getEntityBoundingBox().getAverageEdgeLength() * 4.0;
 		d1 *= 64.0;
 		return par1 < (d1 * d1);
@@ -298,7 +296,7 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	@Override
-	public void onCollideWithPlayer(final EntityPlayer par1EntityPlayer) {
+	public void onCollideWithPlayer(EntityPlayer par1EntityPlayer) {
 		if (worldObj.isRemote || !canBePickedUp || !inGround || (arrowShake > 0)) {
 			return;
 		}
@@ -311,7 +309,7 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	@Override
-	protected void onImpact(final MovingObjectPosition movingobjectposition) {
+	protected void onImpact(MovingObjectPosition movingobjectposition) {
 		if (callback != null) {
 			BlockPos pos = null;
 			if (movingobjectposition.entityHit != null) {
@@ -334,7 +332,7 @@ public class EntityProjectile extends EntityThrowable {
 			if (movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, getThrower()),
 					damage)) {
 				if ((movingobjectposition.entityHit instanceof EntityLivingBase) && (isArrow() || sticksToWalls())) {
-					final EntityLivingBase entityliving = (EntityLivingBase) movingobjectposition.entityHit;
+					EntityLivingBase entityliving = (EntityLivingBase) movingobjectposition.entityHit;
 					if (!worldObj.isRemote) {
 						entityliving.setArrowCountInEntity(entityliving.getArrowCountInEntity() + 1);
 					}
@@ -357,7 +355,7 @@ public class EntityProjectile extends EntityThrowable {
 					}
 				}
 				if (punch > 0) {
-					final float f3 = MathHelper.sqrt_double((motionX * motionX) + (motionZ * motionZ));
+					float f3 = MathHelper.sqrt_double((motionX * motionX) + (motionZ * motionZ));
 					if (f3 > 0.0f) {
 						movingobjectposition.entityHit.addVelocity((motionX * punch * 0.6000000238418579) / f3, 0.1,
 								(motionZ * punch * 0.6000000238418579) / f3);
@@ -365,7 +363,7 @@ public class EntityProjectile extends EntityThrowable {
 				}
 				if ((effect != 0) && (movingobjectposition.entityHit instanceof EntityLivingBase)) {
 					if (effect != 1) {
-						final Potion p = PotionEffectType.getMCType(effect);
+						Potion p = PotionEffectType.getMCType(effect);
 						((EntityLivingBase) movingobjectposition.entityHit)
 								.addPotionEffect(new PotionEffect(p.id, duration * 20, amplify));
 					} else {
@@ -382,13 +380,13 @@ public class EntityProjectile extends EntityThrowable {
 			}
 		} else if (isArrow() || sticksToWalls()) {
 			tilePos = movingobjectposition.getBlockPos();
-			final IBlockState state = worldObj.getBlockState(tilePos);
+			IBlockState state = worldObj.getBlockState(tilePos);
 			inTile = state.getBlock();
 			inData = inTile.getMetaFromState(state);
 			motionX = (float) (movingobjectposition.hitVec.xCoord - posX);
 			motionY = (float) (movingobjectposition.hitVec.yCoord - posY);
 			motionZ = (float) (movingobjectposition.hitVec.zCoord - posZ);
-			final float f4 = MathHelper.sqrt_double((motionX * motionX) + (motionY * motionY) + (motionZ * motionZ));
+			float f4 = MathHelper.sqrt_double((motionX * motionX) + (motionY * motionY) + (motionZ * motionZ));
 			posX -= (motionX / f4) * 0.05000000074505806;
 			posY -= (motionY / f4) * 0.05000000074505806;
 			posZ -= (motionZ / f4) * 0.05000000074505806;
@@ -413,17 +411,17 @@ public class EntityProjectile extends EntityThrowable {
 			}
 		}
 		if (explosiveRadius > 0) {
-			final boolean terraindamage = worldObj.getGameRules().getBoolean("mobGriefing") && explosiveDamage;
+			boolean terraindamage = worldObj.getGameRules().getBoolean("mobGriefing") && explosiveDamage;
 			worldObj.newExplosion((getThrower() == null) ? this : getThrower(), posX, posY, posZ, explosiveRadius,
 					effect == 1, terraindamage);
 			if (effect != 0) {
-				final AxisAlignedBB axisalignedbb = getEntityBoundingBox().expand(explosiveRadius * 2,
-						explosiveRadius * 2, explosiveRadius * 2);
-				final List<EntityLivingBase> list1 = worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
+				AxisAlignedBB axisalignedbb = getEntityBoundingBox().expand(explosiveRadius * 2, explosiveRadius * 2,
+						explosiveRadius * 2);
+				List<EntityLivingBase> list1 = worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
 						axisalignedbb);
-				for (final EntityLivingBase entity : list1) {
+				for (EntityLivingBase entity : list1) {
 					if (effect != 1) {
-						final Potion p2 = PotionEffectType.getMCType(effect);
+						Potion p2 = PotionEffectType.getMCType(effect);
 						if (p2 == null) {
 							continue;
 						}
@@ -447,11 +445,11 @@ public class EntityProjectile extends EntityThrowable {
 		if ((effect == 1) && !inGround) {
 			setFire(1);
 		}
-		final IBlockState state = worldObj.getBlockState(tilePos);
-		final Block block = state.getBlock();
+		IBlockState state = worldObj.getBlockState(tilePos);
+		Block block = state.getBlock();
 		if ((isArrow() || sticksToWalls()) && (tilePos != BlockPos.ORIGIN)) {
 			block.setBlockBoundsBasedOnState(worldObj, tilePos);
-			final AxisAlignedBB axisalignedbb = block.getCollisionBoundingBox(worldObj, tilePos, state);
+			AxisAlignedBB axisalignedbb = block.getCollisionBoundingBox(worldObj, tilePos, state);
 			if ((axisalignedbb != null) && axisalignedbb.isVecInside(new Vec3(posX, posY, posZ))) {
 				inGround = true;
 			}
@@ -460,7 +458,7 @@ public class EntityProjectile extends EntityThrowable {
 			--arrowShake;
 		}
 		if (inGround) {
-			final int j = block.getMetaFromState(state);
+			int j = block.getMetaFromState(state);
 			if ((block == inTile) && (j == inData)) {
 				++ticksInGround;
 				if (ticksInGround == 1200) {
@@ -490,19 +488,18 @@ public class EntityProjectile extends EntityThrowable {
 			}
 			if (!worldObj.isRemote) {
 				Entity entity = null;
-				final List list = worldObj.getEntitiesWithinAABBExcludingEntity(this,
+				List list = worldObj.getEntitiesWithinAABBExcludingEntity(this,
 						getEntityBoundingBox().addCoord(motionX, motionY, motionZ).expand(1.0, 1.0, 1.0));
 				double d0 = 0.0;
 				getThrower();
 				for (int k = 0; k < list.size(); ++k) {
-					final Entity entity2 = (Entity) list.get(k);
+					Entity entity2 = (Entity) list.get(k);
 					if (entity2.canBeCollidedWith() && (!entity2.isEntityEqual(thrower) || (ticksInAir >= 25))) {
-						final float f = 0.3f;
-						final AxisAlignedBB axisalignedbb2 = entity2.getEntityBoundingBox().expand(f, f, f);
-						final MovingObjectPosition movingobjectposition2 = axisalignedbb2.calculateIntercept(vec3,
-								vec4);
+						float f = 0.3f;
+						AxisAlignedBB axisalignedbb2 = entity2.getEntityBoundingBox().expand(f, f, f);
+						MovingObjectPosition movingobjectposition2 = axisalignedbb2.calculateIntercept(vec3, vec4);
 						if (movingobjectposition2 != null) {
-							final double d2 = vec3.distanceTo(movingobjectposition2.hitVec);
+							double d2 = vec3.distanceTo(movingobjectposition2.hitVec);
 							if ((d2 < d0) || (d0 == 0.0)) {
 								entity = entity2;
 								d0 = d2;
@@ -518,7 +515,7 @@ public class EntityProjectile extends EntityThrowable {
 							&& npc.isOnSameTeam((EntityLivingBase) movingobjectposition.entityHit)) {
 						movingobjectposition = null;
 					} else if (movingobjectposition.entityHit instanceof EntityPlayer) {
-						final EntityPlayer entityplayer = (EntityPlayer) movingobjectposition.entityHit;
+						EntityPlayer entityplayer = (EntityPlayer) movingobjectposition.entityHit;
 						if (entityplayer.capabilities.disableDamage || ((thrower instanceof EntityPlayer)
 								&& !((EntityPlayer) thrower).canAttackPlayer(entityplayer))) {
 							movingobjectposition = null;
@@ -538,7 +535,7 @@ public class EntityProjectile extends EntityThrowable {
 			posX += motionX;
 			posY += motionY;
 			posZ += motionZ;
-			final float f2 = MathHelper.sqrt_double((motionX * motionX) + (motionZ * motionZ));
+			float f2 = MathHelper.sqrt_double((motionX * motionX) + (motionZ * motionZ));
 			rotationYaw = (float) ((Math.atan2(motionX, motionZ) * 180.0) / 3.141592653589793);
 			rotationPitch = (float) ((Math.atan2(motionY, f2) * 180.0) / 3.141592653589793);
 			while ((rotationPitch - prevRotationPitch) < -180.0f) {
@@ -556,15 +553,15 @@ public class EntityProjectile extends EntityThrowable {
 			rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch);
 			rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw);
 			if (isRotating()) {
-				final int spin = isBlock() ? 10 : 20;
+				int spin = isBlock() ? 10 : 20;
 				rotationPitch -= (ticksInAir % 15) * spin * getSpeed();
 			}
 			float f3 = getMotionFactor();
-			final float f4 = getGravityVelocity();
+			float f4 = getGravityVelocity();
 			if (isInWater()) {
 				if (worldObj.isRemote) {
 					for (int i = 0; i < 4; ++i) {
-						final float f5 = 0.25f;
+						float f5 = 0.25f;
 						worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, posX - (motionX * f5),
 								posY - (motionY * f5), posZ - (motionZ * f5), motionX, motionY, motionZ, new int[0]);
 					}
@@ -592,7 +589,7 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	@Override
-	public void readEntityFromNBT(final NBTTagCompound compound) {
+	public void readEntityFromNBT(NBTTagCompound compound) {
 		tilePos = new BlockPos(compound.getShort("xTile"), compound.getShort("yTile"), compound.getShort("zTile"));
 		inTile = Block.getBlockById(compound.getByte("inTile") & 0xFF);
 		inData = (compound.getByte("inData") & 0xFF);
@@ -619,13 +616,13 @@ public class EntityProjectile extends EntityThrowable {
 			throwerName = null;
 		}
 		if (compound.hasKey("direction")) {
-			final NBTTagList nbttaglist = compound.getTagList("direction", 6);
+			NBTTagList nbttaglist = compound.getTagList("direction", 6);
 			motionX = nbttaglist.getDoubleAt(0);
 			motionY = nbttaglist.getDoubleAt(1);
 			motionZ = nbttaglist.getDoubleAt(2);
 		}
-		final NBTTagCompound var2 = compound.getCompoundTag("Item");
-		final ItemStack item = ItemStack.loadItemStackFromNBT(var2);
+		NBTTagCompound var2 = compound.getCompoundTag("Item");
+		ItemStack item = ItemStack.loadItemStackFromNBT(var2);
 		if (item == null) {
 			setDead();
 		} else {
@@ -633,22 +630,22 @@ public class EntityProjectile extends EntityThrowable {
 		}
 	}
 
-	public void setHasGravity(final boolean bo) {
+	public void setHasGravity(boolean bo) {
 		dataWatcher.updateObject(26, (byte) (bo ? 1 : 0));
 	}
 
-	public void setIs3D(final boolean bo) {
+	public void setIs3D(boolean bo) {
 		dataWatcher.updateObject(28, (byte) (bo ? 1 : 0));
 	}
 
-	public void setParticleEffect(final int type) {
+	public void setParticleEffect(int type) {
 		dataWatcher.updateObject(22, type);
 	}
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void setPositionAndRotation2(final double par1, final double par3, final double par5, final float par7,
-			final float par8, final int par9, final boolean bo) {
+	public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9,
+			boolean bo) {
 		if (worldObj.isRemote && inGround) {
 			return;
 		}
@@ -656,29 +653,28 @@ public class EntityProjectile extends EntityThrowable {
 		setRotation(par7, par8);
 	}
 
-	public void setRotating(final boolean bo) {
+	public void setRotating(boolean bo) {
 		dataWatcher.updateObject(29, (byte) (bo ? 1 : 0));
 	}
 
-	public void setSpeed(final int speed) {
+	public void setSpeed(int speed) {
 		dataWatcher.updateObject(25, speed);
 	}
 
-	public void setStickInWall(final boolean bo) {
+	public void setStickInWall(boolean bo) {
 		dataWatcher.updateObject(30, (byte) (bo ? 1 : 0));
 	}
 
 	@Override
-	public void setThrowableHeading(final double par1, final double par3, final double par5, final float par7,
-			final float par8) {
-		final float f2 = MathHelper.sqrt_double((par1 * par1) + (par3 * par3) + (par5 * par5));
-		final float f3 = MathHelper.sqrt_double((par1 * par1) + (par5 * par5));
-		final float yaw = (float) ((Math.atan2(par1, par5) * 180.0) / 3.141592653589793);
-		final float pitch = hasGravity() ? par7 : ((float) ((Math.atan2(par3, f3) * 180.0) / 3.141592653589793));
-		final float n = yaw;
+	public void setThrowableHeading(double par1, double par3, double par5, float par7, float par8) {
+		float f2 = MathHelper.sqrt_double((par1 * par1) + (par3 * par3) + (par5 * par5));
+		float f3 = MathHelper.sqrt_double((par1 * par1) + (par5 * par5));
+		float yaw = (float) ((Math.atan2(par1, par5) * 180.0) / 3.141592653589793);
+		float pitch = hasGravity() ? par7 : ((float) ((Math.atan2(par3, f3) * 180.0) / 3.141592653589793));
+		float n = yaw;
 		rotationYaw = n;
 		prevRotationYaw = n;
-		final float n2 = pitch;
+		float n2 = pitch;
 		rotationPitch = n2;
 		prevRotationPitch = n2;
 		motionX = MathHelper.sin((yaw / 180.0f) * 3.1415927f) * MathHelper.cos((pitch / 180.0f) * 3.1415927f);
@@ -696,16 +692,16 @@ public class EntityProjectile extends EntityThrowable {
 		ticksInGround = 0;
 	}
 
-	public void setThrownItem(final ItemStack item) {
+	public void setThrownItem(ItemStack item) {
 		dataWatcher.updateObject(21, item);
 	}
 
-	public void shoot(final float speed) {
-		final double varX = -MathHelper.sin((rotationYaw / 180.0f) * 3.1415927f)
+	public void shoot(float speed) {
+		double varX = -MathHelper.sin((rotationYaw / 180.0f) * 3.1415927f)
 				* MathHelper.cos((rotationPitch / 180.0f) * 3.1415927f);
-		final double varZ = MathHelper.cos((rotationYaw / 180.0f) * 3.1415927f)
+		double varZ = MathHelper.cos((rotationYaw / 180.0f) * 3.1415927f)
 				* MathHelper.cos((rotationPitch / 180.0f) * 3.1415927f);
-		final double varY = -MathHelper.sin((rotationPitch / 180.0f) * 3.1415927f);
+		double varY = -MathHelper.sin((rotationPitch / 180.0f) * 3.1415927f);
 		setThrowableHeading(varX, varY, varZ, -rotationPitch, speed);
 	}
 
@@ -714,7 +710,7 @@ public class EntityProjectile extends EntityThrowable {
 	}
 
 	@Override
-	public void writeEntityToNBT(final NBTTagCompound par1NBTTagCompound) {
+	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		par1NBTTagCompound.setShort("xTile", (short) tilePos.getX());
 		par1NBTTagCompound.setShort("yTile", (short) tilePos.getY());
 		par1NBTTagCompound.setShort("zTile", (short) tilePos.getZ());

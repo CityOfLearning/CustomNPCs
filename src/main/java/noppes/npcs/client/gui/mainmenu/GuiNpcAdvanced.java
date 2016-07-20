@@ -39,15 +39,15 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 	private boolean hasChanges;
 
-	public GuiNpcAdvanced(final EntityNPCInterface npc) {
+	public GuiNpcAdvanced(EntityNPCInterface npc) {
 		super(npc, 4);
 		hasChanges = false;
 		Client.sendData(EnumPacketServer.MainmenuAdvancedGet, new Object[0]);
 	}
 
 	@Override
-	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
+	protected void actionPerformed(GuiButton guibutton) {
+		GuiNpcButton button = (GuiNpcButton) guibutton;
 		if (button.id == 3) {
 			save();
 			Client.sendData(EnumPacketServer.RoleGet, new Object[0]);
@@ -106,8 +106,8 @@ public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 						"role.mailman", NoppesStringUtils.translate("role.companion", "(WIP)"), "dialog.dialog" },
 				npc.advanced.role));
 		getButton(3).setEnabled((npc.advanced.role != 0) && (npc.advanced.role != 5));
-		final int i = 4;
-		final int j = guiLeft + 85 + 160;
+		int i = 4;
+		int j = guiLeft + 85 + 160;
 		y += 22;
 		addButton(new GuiNpcButton(i, j, y, 52, 20, "selectServer.edit"));
 		addButton(new GuiButtonBiDirectional(5, guiLeft + 85, y, 155, 20,
@@ -116,32 +116,32 @@ public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 						"job.farmer" },
 				npc.advanced.job));
 		getButton(4).setEnabled((npc.advanced.job != 0) && (npc.advanced.job != 8) && (npc.advanced.job != 10));
-		final int k = 7;
-		final int l = guiLeft + 85;
+		int k = 7;
+		int l = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(k, l, y, 214, 20, "advanced.lines"));
-		final int m = 9;
-		final int j2 = guiLeft + 85;
+		int m = 9;
+		int j2 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(m, j2, y, 214, 20, "menu.factions"));
-		final int i2 = 10;
-		final int j3 = guiLeft + 85;
+		int i2 = 10;
+		int j3 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(i2, j3, y, 214, 20, "dialog.dialogs"));
-		final int i3 = 11;
-		final int j4 = guiLeft + 85;
+		int i3 = 11;
+		int j4 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(i3, j4, y, 214, 20, "advanced.sounds"));
-		final int i4 = 12;
-		final int j5 = guiLeft + 85;
+		int i4 = 12;
+		int j5 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(i4, j5, y, 214, 20, "advanced.night"));
-		final int i5 = 13;
-		final int j6 = guiLeft + 85;
+		int i5 = 13;
+		int j6 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(i5, j6, y, 214, 20, "global.linked"));
-		final int i6 = 14;
-		final int j7 = guiLeft + 85;
+		int i6 = 14;
+		int j7 = guiLeft + 85;
 		y += 22;
 		addButton(new GuiNpcButton(i6, j7, y, 214, 20, "advanced.scenes"));
 	}
@@ -155,7 +155,7 @@ public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 	}
 
 	@Override
-	public void setGuiData(final NBTTagCompound compound) {
+	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("RoleData")) {
 			if (npc.roleInterface != null) {
 				npc.roleInterface.readFromNBT(compound);

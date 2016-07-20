@@ -36,8 +36,8 @@ public abstract class CommandNoppesBase extends CommandBase {
 
 	public CommandNoppesBase() {
 		subcommands = new HashMap<String, Method>();
-		for (final Method m : this.getClass().getDeclaredMethods()) {
-			final SubCommand sc = m.getAnnotation(SubCommand.class);
+		for (Method m : this.getClass().getDeclaredMethods()) {
+			SubCommand sc = m.getAnnotation(SubCommand.class);
 			if (sc != null) {
 				String name = sc.name();
 				if (name.equals("")) {
@@ -48,11 +48,11 @@ public abstract class CommandNoppesBase extends CommandBase {
 		}
 	}
 
-	public void canRun(final ICommandSender sender, final String usage, final String[] args) throws CommandException {
-		final String[] np = usage.split(" ");
-		final List<String> required = new ArrayList<String>();
+	public void canRun(ICommandSender sender, String usage, String[] args) throws CommandException {
+		String[] np = usage.split(" ");
+		List<String> required = new ArrayList<String>();
 		for (int i = 0; i < np.length; ++i) {
-			final String command = np[i];
+			String command = np[i];
 			if (command.startsWith("<")) {
 				required.add(command);
 			}
@@ -66,7 +66,7 @@ public abstract class CommandNoppesBase extends CommandBase {
 	}
 
 	@Override
-	public String getCommandUsage(final ICommandSender sender) {
+	public String getCommandUsage(ICommandSender sender) {
 		return getDescription();
 	}
 
@@ -77,16 +77,15 @@ public abstract class CommandNoppesBase extends CommandBase {
 	}
 
 	@Override
-	public void processCommand(final ICommandSender sender, final String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 	}
 
-	public void processSubCommand(final ICommandSender sender, final String command, final String[] args)
-			throws CommandException {
-		final Method m = subcommands.get(command.toLowerCase());
+	public void processSubCommand(ICommandSender sender, String command, String[] args) throws CommandException {
+		Method m = subcommands.get(command.toLowerCase());
 		if (m == null) {
 			throw new CommandException("Unknown subcommand " + command, new Object[0]);
 		}
-		final SubCommand sc = m.getAnnotation(SubCommand.class);
+		SubCommand sc = m.getAnnotation(SubCommand.class);
 		if (!sender.canCommandSenderUseCommand(sc.permission(),
 				"commands.noppes." + getCommandName().toLowerCase() + "." + command.toLowerCase())) {
 			throw new CommandException("You are not allowed to use this command", new Object[0]);
@@ -103,7 +102,7 @@ public abstract class CommandNoppesBase extends CommandBase {
 		return !subcommands.isEmpty();
 	}
 
-	protected void sendMessage(final ICommandSender sender, final String message, final Object... obs) {
+	protected void sendMessage(ICommandSender sender, String message, Object... obs) {
 		sender.addChatMessage(new ChatComponentTranslation(message, obs));
 	}
 }

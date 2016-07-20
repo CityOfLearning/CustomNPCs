@@ -44,7 +44,7 @@ public class Faction implements IFaction {
 		attackFactions = new HashSet<Integer>();
 	}
 
-	public Faction(final int id, final String name, final int color, final int defaultPoints) {
+	public Faction(int id, String name, int color, int defaultPoints) {
 		this.name = "";
 		this.color = Integer.parseInt("FF00", 16);
 		this.id = -1;
@@ -81,34 +81,34 @@ public class Faction implements IFaction {
 	}
 
 	@Override
-	public boolean hostileToNpc(final ICustomNpc npc) {
+	public boolean hostileToNpc(ICustomNpc npc) {
 		return attackFactions.contains(npc.getFaction().getId());
 	}
 
-	public boolean isAggressiveToNpc(final EntityNPCInterface entity) {
+	public boolean isAggressiveToNpc(EntityNPCInterface entity) {
 		return attackFactions.contains(entity.faction.id);
 	}
 
-	public boolean isAggressiveToPlayer(final EntityPlayer player) {
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
+	public boolean isAggressiveToPlayer(EntityPlayer player) {
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
 		return data.getFactionPoints(id) < neutralPoints;
 	}
 
-	public boolean isFriendlyToPlayer(final EntityPlayer player) {
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
+	public boolean isFriendlyToPlayer(EntityPlayer player) {
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
 		return data.getFactionPoints(id) >= friendlyPoints;
 	}
 
-	public boolean isNeutralToPlayer(final EntityPlayer player) {
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
-		final int points = data.getFactionPoints(id);
+	public boolean isNeutralToPlayer(EntityPlayer player) {
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player).factionData;
+		int points = data.getFactionPoints(id);
 		return (points >= neutralPoints) && (points < friendlyPoints);
 	}
 
 	@Override
-	public int playerStatus(final IPlayer player) {
-		final PlayerFactionData data = PlayerDataController.instance.getPlayerData(player.getMCEntity()).factionData;
-		final int points = data.getFactionPoints(id);
+	public int playerStatus(IPlayer player) {
+		PlayerFactionData data = PlayerDataController.instance.getPlayerData(player.getMCEntity()).factionData;
+		int points = data.getFactionPoints(id);
 		if (points >= friendlyPoints) {
 			return 1;
 		}
@@ -118,7 +118,7 @@ public class Faction implements IFaction {
 		return 0;
 	}
 
-	public void readNBT(final NBTTagCompound compound) {
+	public void readNBT(NBTTagCompound compound) {
 		name = compound.getString("Name");
 		color = compound.getInteger("Color");
 		id = compound.getInteger("Slot");
@@ -130,7 +130,7 @@ public class Faction implements IFaction {
 		attackFactions = NBTTags.getIntegerSet(compound.getTagList("AttackFactions", 10));
 	}
 
-	public void writeNBT(final NBTTagCompound compound) {
+	public void writeNBT(NBTTagCompound compound) {
 		compound.setInteger("Slot", id);
 		compound.setString("Name", name);
 		compound.setInteger("Color", color);

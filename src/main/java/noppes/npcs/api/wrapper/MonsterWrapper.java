@@ -8,7 +8,7 @@ import net.minecraft.entity.monster.EntityMob;
 import noppes.npcs.api.entity.IMonster;
 
 public class MonsterWrapper<T extends EntityMob> extends EntityLivingWrapper<T> implements IMonster {
-	public MonsterWrapper(final T entity) {
+	public MonsterWrapper(T entity) {
 		super(entity);
 	}
 
@@ -18,7 +18,7 @@ public class MonsterWrapper<T extends EntityMob> extends EntityLivingWrapper<T> 
 	}
 
 	@Override
-	public boolean typeOf(final int type) {
+	public boolean typeOf(int type) {
 		return (type == 3) || super.typeOf(type);
 	}
 }

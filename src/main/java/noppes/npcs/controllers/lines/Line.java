@@ -18,7 +18,7 @@ public class Line {
 		hideText = false;
 	}
 
-	public Line(final String text) {
+	public Line(String text) {
 		this.text = "";
 		sound = "";
 		hideText = false;
@@ -26,17 +26,17 @@ public class Line {
 	}
 
 	public Line copy() {
-		final Line line = new Line(text);
+		Line line = new Line(text);
 		line.sound = sound;
 		line.hideText = hideText;
 		return line;
 	}
 
-	public Line formatTarget(final EntityLivingBase entity) {
+	public Line formatTarget(EntityLivingBase entity) {
 		if (entity == null) {
 			return this;
 		}
-		final Line line = copy();
+		Line line = copy();
 		if (entity instanceof EntityPlayer) {
 			line.text = line.text.replace("@target", ((EntityPlayer) entity).getDisplayNameString());
 		} else {

@@ -12,10 +12,10 @@ import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityNPCOrcMale extends EntityNPCInterface {
-	public EntityNPCOrcMale(final World world) {
+	public EntityNPCOrcMale(World world) {
 		super(world);
 		scaleY = 1.0f;
-		final float n = 1.2f;
+		float n = 1.2f;
 		scaleZ = n;
 		scaleX = n;
 		display.setSkinTexture("customnpcs:textures/entity/orcmale/StrandedOrc.png");
@@ -25,11 +25,11 @@ public class EntityNPCOrcMale extends EntityNPCInterface {
 	public void onUpdate() {
 		isDead = true;
 		if (!worldObj.isRemote) {
-			final NBTTagCompound compound = new NBTTagCompound();
+			NBTTagCompound compound = new NBTTagCompound();
 			writeToNBT(compound);
-			final EntityCustomNpc npc = new EntityCustomNpc(worldObj);
+			EntityCustomNpc npc = new EntityCustomNpc(worldObj);
 			npc.readFromNBT(compound);
-			final ModelData data = npc.modelData;
+			ModelData data = npc.modelData;
 			data.getPartConfig(EnumParts.LEG_LEFT).setScale(1.2f, 1.05f);
 			data.getPartConfig(EnumParts.ARM_LEFT).setScale(1.2f, 1.05f);
 			data.getPartConfig(EnumParts.BODY).setScale(1.4f, 1.1f, 1.5f);
