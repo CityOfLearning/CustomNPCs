@@ -71,7 +71,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		sliders = new ConcurrentHashMap<Integer, GuiNpcSlider>();
 		extra = new ConcurrentHashMap<Integer, GuiScreen>();
 		background = null;
-		closeOnEsc = false;
+		closeOnEsc = true;
 		bgScale = 1.0f;
 		player = Minecraft.getMinecraft().thePlayer;
 		this.npc = npc;
@@ -225,7 +225,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 	}
 
 	@Override
-	public void drawScreen(final int i, final int j, final float f) {
+	public void drawScreen(final int mouseX, final int mouseY, final float partialTicks) {
 		if (GuiNPCInterface.AWTWindow != null) {
 			if (!GuiNPCInterface.AWTWindow.isVisible()) {
 				GuiNPCInterface.AWTWindow.dispose();
@@ -235,8 +235,8 @@ public abstract class GuiNPCInterface extends GuiScreen {
 				GuiNPCInterface.AWTWindow.setVisible(true);
 			}
 		}
-		mouseX = i;
-		mouseY = j;
+		this.mouseX = mouseX;
+		this.mouseY = mouseY;
 		if (drawDefaultBackground && (subgui == null)) {
 			drawDefaultBackground();
 		}
@@ -259,17 +259,17 @@ public abstract class GuiNPCInterface extends GuiScreen {
 			label.drawLabel(this, fontRendererObj);
 		}
 		for (final GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
-			tf.drawTextBox(i, j);
+			tf.drawTextBox(mouseX, mouseY);
 		}
 		for (final GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
-			scroll.drawScreen(i, j, f, (!hasSubGui() && scroll.isMouseOver(i, j)) ? Mouse.getDWheel() : 0);
+			scroll.drawScreen(mouseX, mouseY, partialTicks, (!hasSubGui() && scroll.isMouseOver(mouseX, mouseY)) ? Mouse.getDWheel() : 0);
 		}
 		for (final GuiScreen gui : new ArrayList<GuiScreen>(extra.values())) {
-			gui.drawScreen(i, j, f);
+			gui.drawScreen(mouseX, mouseY, partialTicks);
 		}
-		super.drawScreen(i, j, f);
+		super.drawScreen(mouseX, mouseY, partialTicks);
 		if (subgui != null) {
-			subgui.drawScreen(i, j, f);
+			subgui.drawScreen(mouseX, mouseY, partialTicks);
 		}
 	}
 
@@ -279,16 +279,16 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		}
 	}
 
-	public GuiNpcButton getButton(final int i) {
-		return buttons.get(i);
+	public GuiNpcButton getButton(final int id) {
+		return buttons.get(id);
 	}
 
 	public FontRenderer getFontRenderer() {
 		return fontRendererObj;
 	}
 
-	public GuiNpcLabel getLabel(final int i) {
-		return labels.get(i);
+	public GuiNpcLabel getLabel(final int id) {
+		return labels.get(id);
 	}
 
 	public ResourceLocation getResource(final String texture) {
@@ -299,12 +299,12 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		return scrolls.get(id);
 	}
 
-	public GuiMenuSideButton getSideButton(final int i) {
-		return sidebuttons.get(i);
+	public GuiMenuSideButton getSideButton(final int id) {
+		return sidebuttons.get(id);
 	}
 
-	public GuiNpcSlider getSlider(final int i) {
-		return sliders.get(i);
+	public GuiNpcSlider getSlider(final int id) {
+		return sliders.get(id);
 	}
 
 	public SubGuiInterface getSubGui() {
@@ -314,12 +314,12 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		return subgui;
 	}
 
-	public GuiNpcTextField getTextField(final int i) {
-		return textfields.get(i);
+	public GuiNpcTextField getTextField(final int id) {
+		return textfields.get(id);
 	}
 
-	public GuiMenuTopButton getTopButton(final int i) {
-		return topbuttons.get(i);
+	public GuiMenuTopButton getTopButton(final int id) {
+		return topbuttons.get(id);
 	}
 
 	public boolean hasSubGui() {
@@ -350,8 +350,8 @@ public abstract class GuiNPCInterface extends GuiScreen {
 	public void initPacket() {
 	}
 
-	public boolean isInventoryKey(final int i) {
-		return i == mc.gameSettings.keyBindInventory.getKeyCode();
+	public boolean isInventoryKey(final int id) {
+		return id == mc.gameSettings.keyBindInventory.getKeyCode();
 	}
 
 	@Override
@@ -410,7 +410,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		}
 	}
 
-	public void mouseEvent(final int i, final int j, final int k) {
+	public void mouseEvent(final int mouseX, final int mouseY, final int state) {
 	}
 
 	@Override

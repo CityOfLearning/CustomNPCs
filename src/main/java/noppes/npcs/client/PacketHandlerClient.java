@@ -66,14 +66,12 @@ public class PacketHandlerClient extends PacketHandlerServer {
 			while (((str = Server.readString(buffer)) != null) && !str.isEmpty()) {
 				message += StatCollector.translateToLocal(str);
 			}
-			LogWriter.info("Chat: " + message);
 			player.addChatMessage(new ChatComponentTranslation(message, new Object[0]));
 		} else if (type == EnumPacketClient.MESSAGE) {
 			final String description = StatCollector.translateToLocal(Server.readString(buffer));
 			final String message2 = Server.readString(buffer);
 			final Achievement ach = new QuestAchievement(message2, description);
 			Minecraft.getMinecraft().guiAchievement.displayAchievement(ach);
-			LogWriter.info(ach.getDescription());
 			ObfuscationReflectionHelper.setPrivateValue(GuiAchievement.class, Minecraft.getMinecraft().guiAchievement,
 					ach.getDescription(), 4);
 			ObfuscationReflectionHelper.setPrivateValue(GuiAchievement.class, Minecraft.getMinecraft().guiAchievement,

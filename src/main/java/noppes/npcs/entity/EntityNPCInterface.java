@@ -1351,7 +1351,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.PLAY_SOUND, line.sound, (float) posX,
 					(float) posY, (float) posZ);
 		}
-		LogWriter.info("Text: " + line.text);
 		Server.sendData((EntityPlayerMP) player, EnumPacketClient.CHATBUBBLE, getEntityId(), line.text, !line.hideText);
 	}
 
@@ -1359,7 +1358,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		if ((line == null) || (line.text == null)) {
 			return;
 		}
-		LogWriter.info("Text Surround Before: " + line.text);
 		final ServerChatEvent event = new ServerChatEvent(getFakePlayer(), line.text,
 				new ChatComponentTranslation(line.text.replace("%", "%%"), new Object[0]));
 		if (MinecraftForge.EVENT_BUS.post(event) || (event.component == null)) {
@@ -1369,7 +1367,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		//line.text = event.component.getUnformattedText().replace("%%", "%");
 		final List<EntityPlayer> inRange = worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				getEntityBoundingBox().expand(20.0, 20.0, 20.0));
-		LogWriter.info("Text Surround After: " + line.text);
 		for (final EntityPlayer player : inRange) {
 			say(player, line);
 		}

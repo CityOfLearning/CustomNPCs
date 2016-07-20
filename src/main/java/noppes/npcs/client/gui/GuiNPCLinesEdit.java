@@ -29,9 +29,6 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	public GuiNPCLinesEdit(final EntityNPCInterface npc, final Lines lines) {
 		super(npc);
 		this.lines = lines;
-		for(Line line : lines.lines.values()){
-			LogWriter.info("Lines Edited: " + line.text);
-		}
 		Client.sendData(EnumPacketServer.MainmenuAdvancedGet, new Object[0]);
 	}
 
@@ -70,7 +67,7 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 					20, sound));
 			addButton(new GuiNpcButton(i, guiLeft + 358, guiTop + 4 + (i * 24), 60, 20, "mco.template.button.select"));
 		}
-		addButton(new GuiNpcButton(99, guiLeft + 338, guiTop + 4 + (guiLines * 24), 60, 20, "Save Lines"));
+		addButton(new GuiNpcButton(99, guiLeft + 333, guiTop + 10 + (guiLines * 24), 70, 20, "Save Lines"));
 	}
 
 	@Override

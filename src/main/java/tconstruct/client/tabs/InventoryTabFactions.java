@@ -12,6 +12,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
 import noppes.npcs.NoppesStringUtils;
@@ -20,9 +21,8 @@ import noppes.npcs.util.CustomNPCsScheduler;
 
 public class InventoryTabFactions extends AbstractTab {
 	public InventoryTabFactions() {
-		super(0, 0, 0, new ItemStack(Blocks.wall_banner, 1, 1));
+		super(0, 0, 0, new ItemStack(Blocks.standing_banner, 1, 5));
 		displayString = NoppesStringUtils.translate("menu.factions");
-			renderStack = new ItemStack(Blocks.wall_banner);
 	}
 
 	@Override

@@ -25,9 +25,6 @@ public class InventoryTabQuests extends AbstractTab {
 		super(0, 0, 0, new ItemStack(CustomItems.letter));
 		displayString = NoppesStringUtils.translate("quest.quest") + "("
 				+ GameSettings.getKeyDisplayString(ClientProxy.QuestLog.getKeyCode()) + ")";
-		if (CustomItems.letter == null) {
-			renderStack = new ItemStack(Items.book);
-		}
 	}
 
 	@Override
