@@ -102,7 +102,7 @@ import noppes.npcs.ai.FlyingMoveHelper;
 import noppes.npcs.ai.PathNavigateFlying;
 import noppes.npcs.ai.selector.NPCAttackSelector;
 import noppes.npcs.ai.target.EntityAIClearTarget;
-import noppes.npcs.ai.target.EntityAIClosestTarget;
+import noppes.npcs.ai.target.EntityAIClosestTarget;import noppes.npcs.util.IProjectileCallback;
 import noppes.npcs.ai.target.EntityAIOwnerHurtByTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtTarget;
 import noppes.npcs.api.IItemStack;
@@ -114,15 +114,15 @@ import noppes.npcs.api.wrapper.NPCWrapper;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.DataTransform;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogOption;
-import noppes.npcs.controllers.Faction;
-import noppes.npcs.controllers.FactionController;
-import noppes.npcs.controllers.Line;
 import noppes.npcs.controllers.LinkedNpcController;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.PlayerQuestData;
-import noppes.npcs.controllers.QuestData;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogOption;
+import noppes.npcs.controllers.faction.Faction;
+import noppes.npcs.controllers.faction.FactionController;
+import noppes.npcs.controllers.lines.Line;
+import noppes.npcs.controllers.quest.PlayerQuestData;
+import noppes.npcs.controllers.quest.QuestData;
 import noppes.npcs.entity.data.DataAI;
 import noppes.npcs.entity.data.DataAdvanced;
 import noppes.npcs.entity.data.DataDisplay;
@@ -137,7 +137,6 @@ import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.roles.RoleInterface;
 import noppes.npcs.util.GameProfileAlt;
-import noppes.npcs.util.IProjectileCallback;
 
 public abstract class EntityNPCInterface extends EntityCreature
 		implements IEntityAdditionalSpawnData, ICommandSender, IRangedAttackMob, IBossDisplayData {
@@ -430,33 +429,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 				setRevengeTarget((EntityLivingBase) null);
 			}
 		}
-	}
-
-	@Override
-	public void attackEntityWithRangedAttack(final EntityLivingBase entity, final float f) {
-		final ItemStack proj = ItemStackWrapper.MCItem(inventory.getProjectile());
-		if (proj == null) {
-			updateAI = true;
-			return;
-		}
-		final NpcEvent.RangedLaunchedEvent event = new NpcEvent.RangedLaunchedEvent(wrappedNPC, entity,
-				stats.ranged.getStrength());
-		if (EventHooks.onNPCRangedLaunched(this, event)) {
-			return;
-		}
-		for (int i = 0; i < stats.ranged.getShotCount(); ++i) {
-			final EntityProjectile projectile = this.shoot(entity, stats.ranged.getAccuracy(), proj, f == 1.0f);
-			projectile.damage = event.damage;
-			projectile.callback = new IProjectileCallback() {
-				@Override
-				public boolean onImpact(final EntityProjectile projectile, final BlockPos pos, final Entity entity) {
-					projectile.playSound(stats.ranged.getSound((entity != null) ? 1 : 2), 1.0f,
-							1.2f / ((EntityNPCInterface.this.getRNG().nextFloat() * 0.2f) + 0.9f));
-					return false;
-				}
-			};
-		}
-		playSound(stats.ranged.getSound(0), 2.0f, 1.0f);
 	}
 
 	private double calculateStartYPos(BlockPos pos) {
@@ -1622,26 +1594,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		dataWatcher.updateObject(16, s);
 	}
 
-	public EntityProjectile shoot(final double x, final double y, final double z, final int accuracy,
-			final ItemStack proj, final boolean indirect) {
-		final EntityProjectile projectile = new EntityProjectile(worldObj, this, proj.copy(), true);
-		final double varX = x - posX;
-		final double varY = y - (posY + getEyeHeight());
-		final double varZ = z - posZ;
-		final float varF = projectile.hasGravity() ? MathHelper.sqrt_double((varX * varX) + (varZ * varZ)) : 0.0f;
-		final float angle = projectile.getAngleForXYZ(varX, varY, varZ, varF, indirect);
-		final float acc = 20.0f - MathHelper.floor_float(accuracy / 5.0f);
-		projectile.setThrowableHeading(varX, varY, varZ, angle, acc);
-		worldObj.spawnEntityInWorld(projectile);
-		return projectile;
-	}
-
-	public EntityProjectile shoot(final EntityLivingBase entity, final int accuracy, final ItemStack proj,
-			final boolean indirect) {
-		return this.shoot(entity.posX, entity.getEntityBoundingBox().minY + (entity.height / 2.0f), entity.posZ,
-				accuracy, proj, indirect);
-	}
-
 	public void tpTo(final EntityLivingBase owner) {
 		if (owner == null) {
 			return;
@@ -1770,6 +1722,53 @@ public abstract class EntityNPCInterface extends EntityCreature
 			compound.setTag("ModelData", ((EntityCustomNpc) this).modelData.writeToNBT());
 		}
 		return compound;
+	}
+	
+	@Override
+	public void attackEntityWithRangedAttack(final EntityLivingBase entity, final float f) {
+		final ItemStack proj = ItemStackWrapper.MCItem(inventory.getProjectile());
+		if (proj == null) {
+			updateAI = true;
+			return;
+		}
+		final NpcEvent.RangedLaunchedEvent event = new NpcEvent.RangedLaunchedEvent(wrappedNPC, entity,
+				stats.ranged.getStrength());
+		if (EventHooks.onNPCRangedLaunched(this, event)) {
+			return;
+		}
+		for (int i = 0; i < stats.ranged.getShotCount(); ++i) {
+			final EntityProjectile projectile = this.shoot(entity, stats.ranged.getAccuracy(), proj, f == 1.0f);
+			projectile.damage = event.damage;
+			projectile.callback = new IProjectileCallback() {
+				@Override
+				public boolean onImpact(final EntityProjectile projectile, final BlockPos pos, final Entity entity) {
+					projectile.playSound(stats.ranged.getSound((entity != null) ? 1 : 2), 1.0f,
+							1.2f / ((EntityNPCInterface.this.getRNG().nextFloat() * 0.2f) + 0.9f));
+					return false;
+				}
+			};
+		}
+		playSound(stats.ranged.getSound(0), 2.0f, 1.0f);
+	}
+	
+	public EntityProjectile shoot(final double x, final double y, final double z, final int accuracy,
+			final ItemStack proj, final boolean indirect) {
+		final EntityProjectile projectile = new EntityProjectile(worldObj, this, proj.copy(), true);
+		final double varX = x - posX;
+		final double varY = y - (posY + getEyeHeight());
+		final double varZ = z - posZ;
+		final float varF = projectile.hasGravity() ? MathHelper.sqrt_double((varX * varX) + (varZ * varZ)) : 0.0f;
+		final float angle = projectile.getAngleForXYZ(varX, varY, varZ, varF, indirect);
+		final float acc = 20.0f - MathHelper.floor_float(accuracy / 5.0f);
+		projectile.setThrowableHeading(varX, varY, varZ, angle, acc);
+		worldObj.spawnEntityInWorld(projectile);
+		return projectile;
+	}
+
+	public EntityProjectile shoot(final EntityLivingBase entity, final int accuracy, final ItemStack proj,
+			final boolean indirect) {
+		return this.shoot(entity.posX, entity.getEntityBoundingBox().minY + (entity.height / 2.0f), entity.posZ,
+				accuracy, proj, indirect);
 	}
 
 	@Override
