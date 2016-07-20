@@ -32,12 +32,19 @@ public class Lines {
 		}
 		if (isRandom) {
 			final List<Line> lines = new ArrayList<Line>(this.lines.values());
-			return lines.get(Lines.random.nextInt(lines.size()));
+			Line line;
+			while (true) { //dont get random empty lines...
+				line = lines.get(Lines.random.nextInt(lines.size()));
+				if (line != null) {
+					break;
+				}
+			}
+			return line;
 		}
 		++lastLine;
 		Line line;
 		while (true) {
-			lastLine %= 8;
+			lastLine %= 7;
 			line = lines.get(lastLine);
 			if (line != null) {
 				break;

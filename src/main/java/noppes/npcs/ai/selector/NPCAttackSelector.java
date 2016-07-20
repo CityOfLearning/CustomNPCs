@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import noppes.npcs.constants.EnumCompanionJobs;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobGuard;
 import noppes.npcs.roles.JobSpawner;
@@ -82,7 +81,6 @@ public class NPCAttackSelector implements Predicate {
 		if ((npc.ai.targetType == 1) && player.isSneaking()) {
 			return npc.isInRange(player, npc.ai.specialAggroRange);
 		}
-		return !PixelmonHelper.Enabled || (npc.advanced.job != 6) || !((JobSpawner) npc.jobInterface).hasPixelmon()
-				|| PixelmonHelper.canBattle((EntityPlayerMP) entity, npc);
+		return (npc.advanced.job != 6);
 	}
 }

@@ -36,6 +36,7 @@ public class NoppesStringUtils {
 	}
 
 	public static String formatText(String text, final Object... obs) {
+		LogWriter.info("Text Before: " + text);
 		for (final Object ob : obs) {
 			if (ob instanceof EntityPlayer) {
 				final String username = ((EntityPlayer) ob).getDisplayNameString();
@@ -46,6 +47,7 @@ public class NoppesStringUtils {
 			}
 		}
 		text = text.replace("&", Character.toChars(167)[0] + "");
+		LogWriter.info("Text After: " + text);
 		return text;
 	}
 

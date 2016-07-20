@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.LogWriter;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
@@ -23,30 +24,39 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	private Lines lines;
 	private GuiNpcTextField field;
 	private GuiNpcSoundSelection gui;
+	private final int guiLines = 7;
 
 	public GuiNPCLinesEdit(final EntityNPCInterface npc, final Lines lines) {
 		super(npc);
 		this.lines = lines;
+		for(Line line : lines.lines.values()){
+			LogWriter.info("Lines Edited: " + line.text);
+		}
 		Client.sendData(EnumPacketServer.MainmenuAdvancedGet, new Object[0]);
 	}
 
 	@Override
 	protected void actionPerformed(final GuiButton guibutton) {
-		final GuiNpcButton button = (GuiNpcButton) guibutton;
-		field = getTextField(button.id + 8);
-		NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(this, field.getText()));
+		if(guibutton.id == 99){
+			saveLines();
+			Client.sendData(EnumPacketServer.MainmenuAdvancedSave, npc.advanced.writeToNBT(new NBTTagCompound()));
+		} else {
+			final GuiNpcButton button = (GuiNpcButton) guibutton;
+			field = getTextField(button.id + guiLines);
+			NoppesUtil.openGUI(player, gui = new GuiNpcSoundSelection(this, field.getText()));
+		}
 	}
 
 	@Override
 	public void elementClicked() {
 		field.setText(gui.getSelected());
-		saveLines();
 	}
 
 	@Override
 	public void initGui() {
 		super.initGui();
-		for (int i = 0; i < 8; ++i) {
+		//There needs to be a dedicated save dialog button... come now
+		for (int i = 0; i < guiLines; ++i) {
 			String text = "";
 			String sound = "";
 			if (lines.lines.containsKey(i)) {
@@ -56,23 +66,23 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 			}
 			addTextField(
 					new GuiNpcTextField(i, this, fontRendererObj, guiLeft + 4, guiTop + 4 + (i * 24), 200, 20, text));
-			addTextField(new GuiNpcTextField(i + 8, this, fontRendererObj, guiLeft + 208, guiTop + 4 + (i * 24), 146,
+			addTextField(new GuiNpcTextField(i + guiLines, this, fontRendererObj, guiLeft + 208, guiTop + 4 + (i * 24), 146,
 					20, sound));
 			addButton(new GuiNpcButton(i, guiLeft + 358, guiTop + 4 + (i * 24), 60, 20, "mco.template.button.select"));
 		}
+		addButton(new GuiNpcButton(99, guiLeft + 338, guiTop + 4 + (guiLines * 24), 60, 20, "Save Lines"));
 	}
 
 	@Override
 	public void save() {
-		saveLines();
-		Client.sendData(EnumPacketServer.MainmenuAdvancedSave, npc.advanced.writeToNBT(new NBTTagCompound()));
+	//this is a terrible idea... a global save when the page changes?
 	}
 
 	private void saveLines() {
 		final HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
-		for (int i = 0; i < 8; ++i) {
+		for (int i = 0; i < guiLines; ++i) {
 			final GuiNpcTextField tf = getTextField(i);
-			final GuiNpcTextField tf2 = getTextField(i + 8);
+			final GuiNpcTextField tf2 = getTextField(i + guiLines);
 			if (!tf.isEmpty()) {
 				final Line line = new Line();
 				line.text = tf.getText();

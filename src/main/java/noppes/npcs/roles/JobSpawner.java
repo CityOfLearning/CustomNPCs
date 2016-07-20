@@ -22,7 +22,6 @@ import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.NpcAPI;
 import noppes.npcs.api.entity.IEntityLivingBase;
 import noppes.npcs.api.entity.data.role.IJobSpawner;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class JobSpawner extends JobInterface implements IJobSpawner {
@@ -266,10 +265,6 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		return compound;
 	}
 
-	public boolean hasPixelmon() {
-		return (compound1 != null) && compound1.getString("id").equals("pixelmontainer");
-	}
-
 	private boolean isEmpty() {
 		return ((compound1 == null) || !compound1.hasKey("id")) && ((compound2 == null) || !compound2.hasKey("id"))
 				&& ((compound3 == null) || !compound3.hasKey("id")) && ((compound4 == null) || !compound4.hasKey("id"))
@@ -360,20 +355,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	private void setTarget(final EntityLivingBase base, final EntityLivingBase target) {
-		if (PixelmonHelper.isTrainer(base) && (target instanceof EntityPlayerMP)) {
-			final EntityPlayerMP player = (EntityPlayerMP) target;
-			if (!PixelmonHelper.canBattle(player, npc)) {
-				return;
-			}
-			cooldown.put(player.getName(), System.currentTimeMillis());
-			final Iterator<Map.Entry<String, Long>> ita = cooldown.entrySet().iterator();
-			while (ita.hasNext()) {
-				final Map.Entry<String, Long> entry = ita.next();
-				if (!isOnCooldown(entry.getKey())) {
-					ita.remove();
-				}
-			}
-		} else if (base instanceof EntityLiving) {
+		if (base instanceof EntityLiving) {
 			((EntityLiving) base).setAttackTarget(target);
 		} else {
 			base.setRevengeTarget(target);
@@ -382,7 +364,6 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 
 	public boolean shouldDelete(final EntityLivingBase entity) {
 		return !npc.isInRange(entity, 60.0) || entity.isDead || (entity.getHealth() <= 0.0f)
-				|| (PixelmonHelper.Enabled && hasPixelmon() && !PixelmonHelper.isBattling(entity))
 				|| (despawnOnTargetLost && (this.getTarget(npc) == null));
 	}
 

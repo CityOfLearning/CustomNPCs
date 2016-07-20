@@ -23,17 +23,17 @@ public class GuiMenuTopButton extends GuiNpcButton {
 
 	public IButtonListener listener;
 
-	public GuiMenuTopButton(final int i, final GuiButton parent, final String s) {
-		this(i, parent.xPosition + parent.width, parent.yPosition, s);
+	public GuiMenuTopButton(final int id, final GuiButton parent, final String s) {
+		this(id, parent.xPosition + parent.width, parent.yPosition, s);
 	}
 
-	public GuiMenuTopButton(final int i, final GuiButton parent, final String s, final IButtonListener listener) {
-		this(i, parent, s);
+	public GuiMenuTopButton(final int id, final GuiButton parent, final String s, final IButtonListener listener) {
+		this(id, parent, s);
 		this.listener = listener;
 	}
 
-	public GuiMenuTopButton(final int i, final int j, final int k, final String s) {
-		super(i, j, k, StatCollector.translateToLocal(s));
+	public GuiMenuTopButton(final int id, final int x, final int y, final String s) {
+		super(id, x, y, StatCollector.translateToLocal(s));
 		hover = false;
 		rotated = false;
 		active = false;
@@ -42,7 +42,7 @@ public class GuiMenuTopButton extends GuiNpcButton {
 	}
 
 	@Override
-	public void drawButton(final Minecraft minecraft, final int i, final int j) {
+	public void drawButton(final Minecraft minecraft, final int x, final int y) {
 		if (!getVisible()) {
 			return;
 		}
@@ -50,12 +50,12 @@ public class GuiMenuTopButton extends GuiNpcButton {
 		minecraft.renderEngine.bindTexture(GuiMenuTopButton.resource);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		final int height = this.height - (active ? 0 : 2);
-		hover = ((i >= xPosition) && (j >= yPosition) && (i < (xPosition + getWidth())) && (j < (yPosition + height)));
+		hover = ((x >= xPosition) && (y >= yPosition) && (x < (xPosition + getWidth())) && (y < (yPosition + height)));
 		final int k = getHoverState(hover);
 		this.drawTexturedModalRect(xPosition, yPosition, 0, k * 20, getWidth() / 2, height);
 		this.drawTexturedModalRect(xPosition + (getWidth() / 2), yPosition, 200 - (getWidth() / 2), k * 20,
 				getWidth() / 2, height);
-		mouseDragged(minecraft, i, j);
+		mouseDragged(minecraft, x, y);
 		final FontRenderer fontrenderer = minecraft.fontRendererObj;
 		if (rotated) {
 			GlStateManager.rotate(90.0f, 1.0f, 0.0f, 0.0f);
@@ -85,11 +85,11 @@ public class GuiMenuTopButton extends GuiNpcButton {
 	}
 
 	@Override
-	protected void mouseDragged(final Minecraft minecraft, final int i, final int j) {
+	protected void mouseDragged(final Minecraft minecraft, final int mouseX, final int mouseY) {
 	}
 
 	@Override
-	public boolean mousePressed(final Minecraft minecraft, final int i, final int j) {
+	public boolean mousePressed(final Minecraft minecraft, final int mouseX, final int mouseY) {
 		final boolean bo = !active && getVisible() && hover;
 		if (bo && (listener != null)) {
 			listener.actionPerformed(this);

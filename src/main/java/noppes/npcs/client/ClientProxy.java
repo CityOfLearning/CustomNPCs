@@ -101,7 +101,6 @@ import noppes.npcs.blocks.tiles.TileWallBanner;
 import noppes.npcs.blocks.tiles.TileWeaponRack;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.controllers.PresetController;
-import noppes.npcs.client.fx.EntityElementalStaffFX;
 import noppes.npcs.client.fx.EntityEnderFX;
 import noppes.npcs.client.fx.EntityRainbowFX;
 import noppes.npcs.client.gui.GuiBlockBuilder;
@@ -557,10 +556,6 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.registerKeyBinding(ClientProxy.QuestLog);
 		mc.gameSettings.loadOptions();
 		new PresetController(CustomNpcs.Dir);
-		if (CustomNpcs.EnableUpdateChecker) {
-			final VersionChecker checker = new VersionChecker();
-			checker.start();
-		}
 		blockIgnoreBlockstate(CustomItems.pedestal, BlockRotated.DAMAGE);
 		blockIgnoreBlockstate(CustomItems.beam, BlockRotated.DAMAGE);
 		blockIgnoreBlockstate(CustomItems.crate, BlockRotated.DAMAGE);
@@ -673,7 +668,6 @@ public class ClientProxy extends CommonProxy {
 				(TileEntitySpecialRenderer) new BlockDoorRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileCopy.class,
 				(TileEntitySpecialRenderer) new BlockCopyRenderer());
-		if (!CustomNpcs.DisableExtraBlock) {
 			ClientRegistry.bindTileEntitySpecialRenderer((Class) TileBanner.class,
 					(TileEntitySpecialRenderer) new BlockBannerRenderer());
 			ClientRegistry.bindTileEntitySpecialRenderer((Class) TileWallBanner.class,
@@ -718,7 +712,7 @@ public class ClientProxy extends CommonProxy {
 					(TileEntitySpecialRenderer) new BlockPedestalRenderer());
 			ClientRegistry.bindTileEntitySpecialRenderer((Class) TileTrading.class,
 					(TileEntitySpecialRenderer) new BlockTradingRenderer());
-		}
+		
 	}
 
 	@Override
@@ -762,8 +756,6 @@ public class ClientProxy extends CommonProxy {
 				final double f = (rand.nextDouble() - 0.5) * 2.0;
 				final double f2 = -rand.nextDouble();
 				final double f3 = (rand.nextDouble() - 0.5) * 2.0;
-				Minecraft.getMinecraft().effectRenderer
-						.addEffect(new EntityElementalStaffFX(player, x, y, z, f, f2, f3, color));
 			}
 		} else if (string.equals("Block")) {
 			final BlockPos pos = (BlockPos) ob[0];

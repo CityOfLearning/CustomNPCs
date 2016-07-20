@@ -193,29 +193,27 @@ public class CustomItems {
 		GameRegistry.registerTileEntity(TileBuilder.class, "TileNPCBuilder");
 		GameRegistry.registerTileEntity(TileCopy.class, "TileNPCCopy");
 		GameRegistry.registerTileEntity(TileTrading.class, "TileNPCTrading");
-		if (!CustomNpcs.DisableExtraBlock) {
-			GameRegistry.registerTileEntity(TileWallBanner.class, "TileNPCWallBanner");
-			GameRegistry.registerTileEntity(TileTallLamp.class, "TileNPCTallLamp");
-			GameRegistry.registerTileEntity(TileChair.class, "TileNPCChair");
-			GameRegistry.registerTileEntity(TileCrate.class, "TileNPCCrate");
-			GameRegistry.registerTileEntity(TileWeaponRack.class, "TileNPCWeaponRack");
-			GameRegistry.registerTileEntity(TileCouchWool.class, "TileNPCCouchWool");
-			GameRegistry.registerTileEntity(TileCouchWood.class, "TileNPCCouchWood");
-			GameRegistry.registerTileEntity(TileTable.class, "TileNPCTable");
-			GameRegistry.registerTileEntity(TileLamp.class, "TileNPCLamp");
-			GameRegistry.registerTileEntity(TileCandle.class, "TileNPCCandle");
-			GameRegistry.registerTileEntity(TileBorder.class, "TileNPCBorder");
-			GameRegistry.registerTileEntity(TileStool.class, "TileNPCStool");
-			GameRegistry.registerTileEntity(TileBigSign.class, "TileNPCBigSign");
-			GameRegistry.registerTileEntity(TileBarrel.class, "TileNPCBarrel");
-			GameRegistry.registerTileEntity(TileCampfire.class, "TileNPCCampfire");
-			GameRegistry.registerTileEntity(TileTombstone.class, "TileNPCTombstone");
-			GameRegistry.registerTileEntity(TileShelf.class, "TileNPCShelf");
-			GameRegistry.registerTileEntity(TileSign.class, "TileNPCSign");
-			GameRegistry.registerTileEntity(TileBeam.class, "TileNPCBeam");
-			GameRegistry.registerTileEntity(TileBook.class, "TileNPCBook");
-			GameRegistry.registerTileEntity(TilePedestal.class, "TileNPCPedestal");
-		}
+		GameRegistry.registerTileEntity(TileWallBanner.class, "TileNPCWallBanner");
+		GameRegistry.registerTileEntity(TileTallLamp.class, "TileNPCTallLamp");
+		GameRegistry.registerTileEntity(TileChair.class, "TileNPCChair");
+		GameRegistry.registerTileEntity(TileCrate.class, "TileNPCCrate");
+		GameRegistry.registerTileEntity(TileWeaponRack.class, "TileNPCWeaponRack");
+		GameRegistry.registerTileEntity(TileCouchWool.class, "TileNPCCouchWool");
+		GameRegistry.registerTileEntity(TileCouchWood.class, "TileNPCCouchWood");
+		GameRegistry.registerTileEntity(TileTable.class, "TileNPCTable");
+		GameRegistry.registerTileEntity(TileLamp.class, "TileNPCLamp");
+		GameRegistry.registerTileEntity(TileCandle.class, "TileNPCCandle");
+		GameRegistry.registerTileEntity(TileBorder.class, "TileNPCBorder");
+		GameRegistry.registerTileEntity(TileStool.class, "TileNPCStool");
+		GameRegistry.registerTileEntity(TileBigSign.class, "TileNPCBigSign");
+		GameRegistry.registerTileEntity(TileBarrel.class, "TileNPCBarrel");
+		GameRegistry.registerTileEntity(TileCampfire.class, "TileNPCCampfire");
+		GameRegistry.registerTileEntity(TileTombstone.class, "TileNPCTombstone");
+		GameRegistry.registerTileEntity(TileShelf.class, "TileNPCShelf");
+		GameRegistry.registerTileEntity(TileSign.class, "TileNPCSign");
+		GameRegistry.registerTileEntity(TileBeam.class, "TileNPCBeam");
+		GameRegistry.registerTileEntity(TileBook.class, "TileNPCBook");
+		GameRegistry.registerTileEntity(TilePedestal.class, "TileNPCPedestal");
 		CustomItems.wand = new ItemNpcWand().setUnlocalizedName("npcWand").setFull3D();
 		CustomItems.cloner = new ItemNpcCloner().setUnlocalizedName("npcMobCloner").setFull3D();
 		CustomItems.scripter = new ItemNpcScripter().setUnlocalizedName("npcScripter").setFull3D();
@@ -256,86 +254,85 @@ public class CustomItems {
 		CustomNpcs.proxy.registerBlock(CustomItems.trading, "npcTradingBlock", 0, ItemBlock.class);
 		((ItemNpcBlock) Item.getItemFromBlock(CustomItems.carpentyBench)).names = new String[] {
 				"tile.npcCarpentyBench", "tile.anvil" };
-		if (!CustomNpcs.DisableExtraBlock) {
-			CustomItems.banner = new BlockBanner().setUnlocalizedName("npcBanner").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.wallBanner = new BlockWallBanner().setUnlocalizedName("npcWallBanner").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.tallLamp = new BlockTallLamp().setUnlocalizedName("npcTallLamp").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.chair = new BlockChair().setUnlocalizedName("npcChair").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.crate = new BlockCrate().setUnlocalizedName("npcCrate").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.weaponsRack = new BlockWeaponRack().setUnlocalizedName("npcWeaponRack").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.couchWool = new BlockCouchWool().setUnlocalizedName("npcCouchWool").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.table = new BlockTable().setUnlocalizedName("npcTable").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.couchWood = new BlockCouchWood().setUnlocalizedName("npcCouchWood").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.lamp = new BlockLamp(true).setUnlocalizedName("npcLamp").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.candle = new BlockCandle(true).setUnlocalizedName("npcCandle").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.stool = new BlockStool().setUnlocalizedName("npcStool").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.placeholder = new BlockPlaceholder().setUnlocalizedName("npcPlaceholder").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.bigsign = new BlockBigSign().setUnlocalizedName("npcBigSign").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.barrel = new BlockBarrel().setUnlocalizedName("npcBarrel").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.campfire = new BlockCampfire(true).setUnlocalizedName("npcCampfire").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.tombstone = new BlockTombstone().setUnlocalizedName("npcTombstone").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.shelf = new BlockShelf().setUnlocalizedName("npcShelf").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.sign = new BlockSign().setUnlocalizedName("npcSign").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.beam = new BlockBeam().setUnlocalizedName("npcBeam").setHardness(5.0f).setResistance(10.0f)
-					.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.book = new BlockBook().setHardness(5.0f).setResistance(10.0f).setStepSound(Block.soundTypeWood)
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.pedestal = new BlockPedestal().setUnlocalizedName("npcPedestal").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.crystal = new BlockCrystal().setUnlocalizedName("npcCrystal").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeGlass).setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.campfire_unlit = new BlockCampfire(false).setUnlocalizedName("npcCampfire").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeStone);
-			CustomItems.lamp_unlit = new BlockLamp(false).setUnlocalizedName("npcLamp").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood);
-			CustomItems.candle_unlit = new BlockCandle(false).setUnlocalizedName("npcCandle").setHardness(5.0f)
-					.setResistance(10.0f).setStepSound(Block.soundTypeWood);
-			CustomNpcs.proxy.registerBlock(CustomItems.banner, "npcBanner", 4, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.wallBanner, "npcWallBanner", 4, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.tallLamp, "npcTallLamp", 4, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.chair, "npcChair", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.crate, "npcCrate", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.weaponsRack, "npcWeaponRack", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.couchWool, "npcCouchWool", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.couchWood, "npcCouchWood", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.table, "npcTable", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.stool, "npcStool", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.placeholder, "npcPlaceholder", 15, ItemPlaceholder.class, true);
-			CustomNpcs.proxy.registerBlock(CustomItems.bigsign, "npcBigSign", 0, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.barrel, "npcBarrel", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.tombstone, "npcTombstone", 2, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.shelf, "npcShelf", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.sign, "npcSign", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.beam, "npcBeam", 5, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.book, "npcBook", 0, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.pedestal, "npcPedestal", 4, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.crystal, "npcCrystalBlock", 15, ItemNpcColored.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.campfire, "npcCampfire", 0, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.candle, "npcCandle", 0, ItemBlockLight.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.lamp, "npcLamp", 0, ItemBlockLight.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.campfire_unlit, "npcCampfireUnlit", 0, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.candle_unlit, "npcCandleUnlit", 0, ItemBlock.class);
-			CustomNpcs.proxy.registerBlock(CustomItems.lamp_unlit, "npcLampUnlit", 0, ItemBlock.class);
-		}
+		CustomItems.banner = new BlockBanner().setUnlocalizedName("npcBanner").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.wallBanner = new BlockWallBanner().setUnlocalizedName("npcWallBanner").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.tallLamp = new BlockTallLamp().setUnlocalizedName("npcTallLamp").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.chair = new BlockChair().setUnlocalizedName("npcChair").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.crate = new BlockCrate().setUnlocalizedName("npcCrate").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.weaponsRack = new BlockWeaponRack().setUnlocalizedName("npcWeaponRack").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.couchWool = new BlockCouchWool().setUnlocalizedName("npcCouchWool").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.table = new BlockTable().setUnlocalizedName("npcTable").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.couchWood = new BlockCouchWood().setUnlocalizedName("npcCouchWood").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.lamp = new BlockLamp(true).setUnlocalizedName("npcLamp").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.candle = new BlockCandle(true).setUnlocalizedName("npcCandle").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.stool = new BlockStool().setUnlocalizedName("npcStool").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.placeholder = new BlockPlaceholder().setUnlocalizedName("npcPlaceholder").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.bigsign = new BlockBigSign().setUnlocalizedName("npcBigSign").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.barrel = new BlockBarrel().setUnlocalizedName("npcBarrel").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.campfire = new BlockCampfire(true).setUnlocalizedName("npcCampfire").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.tombstone = new BlockTombstone().setUnlocalizedName("npcTombstone").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.shelf = new BlockShelf().setUnlocalizedName("npcShelf").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.sign = new BlockSign().setUnlocalizedName("npcSign").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.beam = new BlockBeam().setUnlocalizedName("npcBeam").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.book = new BlockBook().setHardness(5.0f).setResistance(10.0f).setStepSound(Block.soundTypeWood)
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.pedestal = new BlockPedestal().setUnlocalizedName("npcPedestal").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.crystal = new BlockCrystal().setUnlocalizedName("npcCrystal").setHardness(5.0f).setResistance(10.0f)
+				.setStepSound(Block.soundTypeGlass).setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.campfire_unlit = new BlockCampfire(false).setUnlocalizedName("npcCampfire").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone);
+		CustomItems.lamp_unlit = new BlockLamp(false).setUnlocalizedName("npcLamp").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood);
+		CustomItems.candle_unlit = new BlockCandle(false).setUnlocalizedName("npcCandle").setHardness(5.0f)
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood);
+		CustomNpcs.proxy.registerBlock(CustomItems.banner, "npcBanner", 4, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.wallBanner, "npcWallBanner", 4, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.tallLamp, "npcTallLamp", 4, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.chair, "npcChair", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.crate, "npcCrate", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.weaponsRack, "npcWeaponRack", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.couchWool, "npcCouchWool", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.couchWood, "npcCouchWood", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.table, "npcTable", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.stool, "npcStool", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.placeholder, "npcPlaceholder", 15, ItemPlaceholder.class, true);
+		CustomNpcs.proxy.registerBlock(CustomItems.bigsign, "npcBigSign", 0, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.barrel, "npcBarrel", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.tombstone, "npcTombstone", 2, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.shelf, "npcShelf", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.sign, "npcSign", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.beam, "npcBeam", 5, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.book, "npcBook", 0, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.pedestal, "npcPedestal", 4, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.crystal, "npcCrystalBlock", 15, ItemNpcColored.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.campfire, "npcCampfire", 0, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.candle, "npcCandle", 0, ItemBlockLight.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.lamp, "npcLamp", 0, ItemBlockLight.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.campfire_unlit, "npcCampfireUnlit", 0, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.candle_unlit, "npcCandleUnlit", 0, ItemBlock.class);
+		CustomNpcs.proxy.registerBlock(CustomItems.lamp_unlit, "npcLampUnlit", 0, ItemBlock.class);
+
 		CustomItems.banjo = new ItemMusicBanjo().setUnlocalizedName("npcBanjo").setFull3D().setMaxStackSize(1);
 		CustomItems.violin = new ItemMusicViolin().setUnlocalizedName("npcViolin").setFull3D().setMaxStackSize(1);
 		CustomItems.violinbow = new ItemNpcInterface().setUnlocalizedName("npcViolinBow").setFull3D().setMaxStackSize(1)
@@ -346,83 +343,80 @@ public class CustomItems {
 				.setMaxStackSize(1);
 		CustomItems.ocarina = new ItemMusicOracina().setUnlocalizedName("npcOcarina").setFull3D().setMaxStackSize(1);
 		CustomItems.clarinet = new ItemMusicClarinet().setUnlocalizedName("npcClarinet").setFull3D().setMaxStackSize(1);
-		if (!CustomNpcs.DisableExtraItems) {
-//			CustomItems.tabArmor = new CreativeTabNpcs("cnpcsa");
-//			CustomItems.tabWeapon = new CreativeTabNpcs("cnpcsw");
-			
-			final Item.ToolMaterial bronze = EnumHelper.addToolMaterial("BRONZE", 2, 170, 5.0f, 2.0f, 15);
-			final Item.ToolMaterial emerald = EnumHelper.addToolMaterial("REALEMERALD", 3, 1000, 8.0f, 4.0f, 10);
-			final Item.ToolMaterial demonic = EnumHelper.addToolMaterial("DEMONIC", 3, 100, 8.0f, 6.0f, 22);
-			final Item.ToolMaterial frost = EnumHelper.addToolMaterial("FROST", 2, 59, 6.0f, 3.0f, 5);
-			final Item.ToolMaterial mithril = EnumHelper.addToolMaterial("MITHRIL", 3, 3000, 8.0f, 3.0f, 10);
-			CustomItems.orb = new ItemOrb(26937).setUnlocalizedName("npcOrb").setCreativeTab(CustomItems.tabBlocks);
-			new ItemOrb(26939).setUnlocalizedName("npcBrokenOrb").setCreativeTab(CustomItems.tabBlocks);
-			new ItemWand(26801).setUnlocalizedName("npcMagicWand").setFull3D().setMaxStackSize(1);
-			new ItemNpcInterface(26802).setUnlocalizedName("npcChickenSword").setFull3D().setMaxStackSize(1)
-					.setCreativeTab(CustomItems.tabBlocks);
-			new ItemNpcInterface(26803).setUnlocalizedName("npcHandCuffs").setFull3D().setMaxStackSize(1)
-					.setCreativeTab(CustomItems.tabBlocks);
-			new ItemFlintAndSteel().setUnlocalizedName("npcLighter").setMaxStackSize(1)
-					.setCreativeTab(CustomItems.tabBlocks);
-			final ItemArmor.ArmorMaterial armorMithril = EnumHelper.addArmorMaterial("MITHRIL", "", 40,
-					new int[] { 3, 8, 6, 3 }, 20);
-			final ItemArmor.ArmorMaterial armorBronze = EnumHelper.addArmorMaterial("BRONZE", "", 7,
-					new int[] { 2, 6, 5, 2 }, 20);
-			final ItemArmor.ArmorMaterial armorEmerald = EnumHelper.addArmorMaterial("EMERALD", "", 35,
-					new int[] { 5, 7, 4, 5 }, 5);
-			CustomItems.coinWood = new ItemNpcInterface(26717).setUnlocalizedName("npcCoinWooden")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinStone = new ItemNpcInterface(26718).setUnlocalizedName("npcCoinStone")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinBronze = new ItemNpcInterface(26719).setUnlocalizedName("npcCoinBronze")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinIron = new ItemNpcInterface(26720).setUnlocalizedName("npcCoinIron")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinGold = new ItemNpcInterface(26721).setUnlocalizedName("npcCoinGold")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinDiamond = new ItemNpcInterface(26722).setUnlocalizedName("npcCoinDiamond")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.coinEmerald = new ItemNpcInterface(26723).setUnlocalizedName("npcCoinEmerald")
-					.setCreativeTab(CustomItems.tabBlocks);
-			new ItemNpcInterface().setUnlocalizedName("npcAncientCoin").setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.letter = new ItemNpcInterface(26950).setUnlocalizedName("npcLetter")
-					.setCreativeTab(CustomItems.tabBlocks);
-			new ItemNpcInterface(26951).setUnlocalizedName("npcPlans").setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.satchel = new ItemNpcInterface(26952).setUnlocalizedName("npcSatchel")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.bag = new ItemNpcInterface(26953).setUnlocalizedName("npcBag")
-					.setCreativeTab(CustomItems.tabBlocks);
-			new ItemNpcInterface(26954).setUnlocalizedName("npcCrystal").setCreativeTab(CustomItems.tabBlocks);
-			
-			new ItemNpcInterface(26964).setUnlocalizedName("npcKey").setCreativeTab(CustomItems.tabBlocks);
-			new ItemNpcInterface(26965).setUnlocalizedName("npcKey2").setCreativeTab(CustomItems.tabBlocks);
-			final Item sapphire = new ItemNpcInterface(26970).setUnlocalizedName("npcSaphire")
-					.setCreativeTab(CustomItems.tabBlocks);
-			final Item ruby = new ItemNpcInterface(26971).setUnlocalizedName("npcRuby")
-					.setCreativeTab(CustomItems.tabBlocks);
-			final Item amethyst = new ItemNpcInterface(26972).setUnlocalizedName("npcAmethyst")
-					.setCreativeTab(CustomItems.tabBlocks);
-			OreDictionary.registerOre("gemSaphire", sapphire);
-			OreDictionary.registerOre("gemRuby", ruby);
-			OreDictionary.registerOre("gemAmethyst", amethyst);
-			CustomItems.bronze_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcBronzeIngot")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.demonic_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcDemonicIngot")
-					.setCreativeTab(CustomItems.tabBlocks);
-			CustomItems.mithril_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcMithrilIngot")
-					.setCreativeTab(CustomItems.tabBlocks);
-			armorMithril.customCraftingMaterial = CustomItems.mithril_ingot;
-			bronze.customCraftingMaterial = CustomItems.bronze_ingot;
-			emerald.customCraftingMaterial = Items.emerald;
-			demonic.customCraftingMaterial = CustomItems.demonic_ingot;
-			frost.customCraftingMaterial = Item.getItemFromBlock(Blocks.ice);
-			mithril.customCraftingMaterial = CustomItems.mithril_ingot;
-			OreDictionary.registerOre("ingotBronze", CustomItems.bronze_ingot);
-			OreDictionary.registerOre("ingotDemonic", CustomItems.demonic_ingot);
-			OreDictionary.registerOre("ingotMithril", CustomItems.mithril_ingot);
-			CustomItems.tabBlocks.item = Item.getItemFromBlock(CustomItems.couchWool);
-			CustomItems.tabBlocks.meta = 1;
-		}
+
+		final Item.ToolMaterial bronze = EnumHelper.addToolMaterial("BRONZE", 2, 170, 5.0f, 2.0f, 15);
+		final Item.ToolMaterial emerald = EnumHelper.addToolMaterial("REALEMERALD", 3, 1000, 8.0f, 4.0f, 10);
+		final Item.ToolMaterial demonic = EnumHelper.addToolMaterial("DEMONIC", 3, 100, 8.0f, 6.0f, 22);
+		final Item.ToolMaterial frost = EnumHelper.addToolMaterial("FROST", 2, 59, 6.0f, 3.0f, 5);
+		final Item.ToolMaterial mithril = EnumHelper.addToolMaterial("MITHRIL", 3, 3000, 8.0f, 3.0f, 10);
+		CustomItems.orb = new ItemOrb(26937).setUnlocalizedName("npcOrb").setCreativeTab(CustomItems.tabBlocks);
+		new ItemOrb(26939).setUnlocalizedName("npcBrokenOrb").setCreativeTab(CustomItems.tabBlocks);
+		new ItemWand(26801).setUnlocalizedName("npcMagicWand").setFull3D().setMaxStackSize(1);
+		new ItemNpcInterface(26802).setUnlocalizedName("npcChickenSword").setFull3D().setMaxStackSize(1)
+				.setCreativeTab(CustomItems.tabBlocks);
+		new ItemNpcInterface(26803).setUnlocalizedName("npcHandCuffs").setFull3D().setMaxStackSize(1)
+				.setCreativeTab(CustomItems.tabBlocks);
+		new ItemFlintAndSteel().setUnlocalizedName("npcLighter").setMaxStackSize(1)
+				.setCreativeTab(CustomItems.tabBlocks);
+		final ItemArmor.ArmorMaterial armorMithril = EnumHelper.addArmorMaterial("MITHRIL", "", 40,
+				new int[] { 3, 8, 6, 3 }, 20);
+		final ItemArmor.ArmorMaterial armorBronze = EnumHelper.addArmorMaterial("BRONZE", "", 7,
+				new int[] { 2, 6, 5, 2 }, 20);
+		final ItemArmor.ArmorMaterial armorEmerald = EnumHelper.addArmorMaterial("EMERALD", "", 35,
+				new int[] { 5, 7, 4, 5 }, 5);
+		CustomItems.coinWood = new ItemNpcInterface(26717).setUnlocalizedName("npcCoinWooden")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinStone = new ItemNpcInterface(26718).setUnlocalizedName("npcCoinStone")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinBronze = new ItemNpcInterface(26719).setUnlocalizedName("npcCoinBronze")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinIron = new ItemNpcInterface(26720).setUnlocalizedName("npcCoinIron")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinGold = new ItemNpcInterface(26721).setUnlocalizedName("npcCoinGold")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinDiamond = new ItemNpcInterface(26722).setUnlocalizedName("npcCoinDiamond")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.coinEmerald = new ItemNpcInterface(26723).setUnlocalizedName("npcCoinEmerald")
+				.setCreativeTab(CustomItems.tabBlocks);
+		new ItemNpcInterface().setUnlocalizedName("npcAncientCoin").setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.letter = new ItemNpcInterface(26950).setUnlocalizedName("npcLetter")
+				.setCreativeTab(CustomItems.tabBlocks);
+		new ItemNpcInterface(26951).setUnlocalizedName("npcPlans").setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.satchel = new ItemNpcInterface(26952).setUnlocalizedName("npcSatchel")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.bag = new ItemNpcInterface(26953).setUnlocalizedName("npcBag")
+				.setCreativeTab(CustomItems.tabBlocks);
+		new ItemNpcInterface(26954).setUnlocalizedName("npcCrystal").setCreativeTab(CustomItems.tabBlocks);
+
+		new ItemNpcInterface(26964).setUnlocalizedName("npcKey").setCreativeTab(CustomItems.tabBlocks);
+		new ItemNpcInterface(26965).setUnlocalizedName("npcKey2").setCreativeTab(CustomItems.tabBlocks);
+		final Item sapphire = new ItemNpcInterface(26970).setUnlocalizedName("npcSaphire")
+				.setCreativeTab(CustomItems.tabBlocks);
+		final Item ruby = new ItemNpcInterface(26971).setUnlocalizedName("npcRuby")
+				.setCreativeTab(CustomItems.tabBlocks);
+		final Item amethyst = new ItemNpcInterface(26972).setUnlocalizedName("npcAmethyst")
+				.setCreativeTab(CustomItems.tabBlocks);
+		OreDictionary.registerOre("gemSaphire", sapphire);
+		OreDictionary.registerOre("gemRuby", ruby);
+		OreDictionary.registerOre("gemAmethyst", amethyst);
+		CustomItems.bronze_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcBronzeIngot")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.demonic_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcDemonicIngot")
+				.setCreativeTab(CustomItems.tabBlocks);
+		CustomItems.mithril_ingot = new ItemNpcInterface(26973).setUnlocalizedName("npcMithrilIngot")
+				.setCreativeTab(CustomItems.tabBlocks);
+		armorMithril.customCraftingMaterial = CustomItems.mithril_ingot;
+		bronze.customCraftingMaterial = CustomItems.bronze_ingot;
+		emerald.customCraftingMaterial = Items.emerald;
+		demonic.customCraftingMaterial = CustomItems.demonic_ingot;
+		frost.customCraftingMaterial = Item.getItemFromBlock(Blocks.ice);
+		mithril.customCraftingMaterial = CustomItems.mithril_ingot;
+		OreDictionary.registerOre("ingotBronze", CustomItems.bronze_ingot);
+		OreDictionary.registerOre("ingotDemonic", CustomItems.demonic_ingot);
+		OreDictionary.registerOre("ingotMithril", CustomItems.mithril_ingot);
+		CustomItems.tabBlocks.item = Item.getItemFromBlock(CustomItems.couchWool);
+		CustomItems.tabBlocks.meta = 1;
+
 		CustomItems.tab.item = CustomItems.wand;
 	}
 }

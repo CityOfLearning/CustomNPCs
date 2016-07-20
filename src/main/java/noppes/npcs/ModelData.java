@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class ModelData extends ModelDataShared {
@@ -32,13 +31,6 @@ public class ModelData extends ModelDataShared {
 					final EntityLiving living = (EntityLiving) entity;
 					for (int i = 0; i < 5; ++i) {
 						living.setCurrentItemOrArmor(0, npc.getEquipmentInSlot(i));
-					}
-				}
-				if (PixelmonHelper.isPixelmon(entity) && npc.worldObj.isRemote) {
-					if (extra.hasKey("Name")) {
-						PixelmonHelper.setName(entity, extra.getString("Name"));
-					} else {
-						PixelmonHelper.setName(entity, "Abra");
 					}
 				}
 			} catch (Exception ex) {
@@ -62,7 +54,7 @@ public class ModelData extends ModelDataShared {
 				e.printStackTrace();
 			}
 		}
-		if (key.equalsIgnoreCase("name") && PixelmonHelper.isPixelmon(entity)) {
+		if (key.equalsIgnoreCase("name")) {
 			extra.setString("Name", value);
 		}
 		clearEntity();

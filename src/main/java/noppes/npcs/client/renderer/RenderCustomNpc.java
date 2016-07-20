@@ -31,7 +31,6 @@ import noppes.npcs.client.layer.LayerLegs;
 import noppes.npcs.client.layer.LayerNpcCloak;
 import noppes.npcs.client.layer.LayerPreRender;
 import noppes.npcs.client.model.ModelBipedAlt;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
@@ -142,9 +141,6 @@ public class RenderCustomNpc<T extends EntityCustomNpc> extends RenderNPCInterfa
 				GlStateManager.alphaFunc(516, 0.003921569f);
 			}
 			ModelBase model = this.renderEntity.getMainModel();
-			if (PixelmonHelper.isPixelmon(this.entity)) {
-				model = (ModelBase) PixelmonHelper.getModel(this.entity);
-			}
 			model.setLivingAnimations(this.entity, par2, par3, this.partialTicks);
 			model.setRotationAngles(par2, par3, par4, par5, par6, par7, this.entity);
 			model.setModelAttributes(mainModel);

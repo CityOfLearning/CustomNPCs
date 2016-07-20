@@ -54,11 +54,13 @@ public class PacketHandlerClient extends PacketHandlerServer {
 			}
 			final EntityNPCInterface npc = (EntityNPCInterface) entity;
 			if (npc.messages == null) {
+				LogWriter.info("Initializing new chat Renderer");
 				npc.messages = new RenderChatMessages();
 			}
 			final String text = NoppesStringUtils.formatText(Server.readString(buffer), player, npc);
 			npc.messages.addMessage(text, npc);
 			if (buffer.readBoolean()) {
+				LogWriter.info("Chat Bubble: " + text);
 				player.addChatMessage(new ChatComponentTranslation(npc.getName() + ": " + text, new Object[0]));
 			}
 		} else if (type == EnumPacketClient.CHAT) {
@@ -67,12 +69,14 @@ public class PacketHandlerClient extends PacketHandlerServer {
 			while (((str = Server.readString(buffer)) != null) && !str.isEmpty()) {
 				message += StatCollector.translateToLocal(str);
 			}
+			LogWriter.info("Chat: " + message);
 			player.addChatMessage(new ChatComponentTranslation(message, new Object[0]));
 		} else if (type == EnumPacketClient.MESSAGE) {
 			final String description = StatCollector.translateToLocal(Server.readString(buffer));
 			final String message2 = Server.readString(buffer);
 			final Achievement ach = new QuestAchievement(message2, description);
 			Minecraft.getMinecraft().guiAchievement.displayAchievement(ach);
+			LogWriter.info(ach.getDescription());
 			ObfuscationReflectionHelper.setPrivateValue(GuiAchievement.class, Minecraft.getMinecraft().guiAchievement,
 					ach.getDescription(), 4);
 			ObfuscationReflectionHelper.setPrivateValue(GuiAchievement.class, Minecraft.getMinecraft().guiAchievement,

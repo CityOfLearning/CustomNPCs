@@ -17,17 +17,17 @@ public class GuiMenuSideButton extends GuiNpcButton {
 
 	public boolean active;
 
-	public GuiMenuSideButton(final int i, final int j, final int k, final int l, final int i1, final String s) {
-		super(i, j, k, l, i1, s);
+	public GuiMenuSideButton(final int id, final int x, final int y, final int width, final int height, final String s) {
+		super(id, x, y, width, height, s);
 		active = false;
 	}
 
-	public GuiMenuSideButton(final int i, final int j, final int k, final String s) {
-		this(i, j, k, 200, 20, s);
+	public GuiMenuSideButton(final int id, final int x, final int y, final String s) {
+		this(id, x, y, 200, 20, s);
 	}
 
 	@Override
-	public void drawButton(final Minecraft minecraft, final int i, final int j) {
+	public void drawButton(final Minecraft minecraft, final int x, final int y) {
 		if (!visible) {
 			return;
 		}
@@ -35,10 +35,10 @@ public class GuiMenuSideButton extends GuiNpcButton {
 		minecraft.renderEngine.bindTexture(GuiMenuSideButton.resource);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
 		final int width = this.width + (active ? 2 : 0);
-		hovered = ((i >= xPosition) && (j >= yPosition) && (i < (xPosition + width)) && (j < (yPosition + height)));
+		hovered = ((x >= xPosition) && (y >= yPosition) && (x < (xPosition + width)) && (y < (yPosition + height)));
 		final int k = getHoverState(hovered);
 		this.drawTexturedModalRect(xPosition, yPosition, 0, k * 22, width, height);
-		mouseDragged(minecraft, i, j);
+		mouseDragged(minecraft, x, y);
 		String text = "";
 		final float maxWidth = width * 0.75f;
 		if (fontrenderer.getStringWidth(displayString) > maxWidth) {
@@ -71,15 +71,15 @@ public class GuiMenuSideButton extends GuiNpcButton {
 	}
 
 	@Override
-	protected void mouseDragged(final Minecraft minecraft, final int i, final int j) {
+	protected void mouseDragged(final Minecraft minecraft, final int mouseX, final int mouseY) {
 	}
 
 	@Override
-	public boolean mousePressed(final Minecraft minecraft, final int i, final int j) {
+	public boolean mousePressed(final Minecraft minecraft, final int mouseX, final int mouseY) {
 		return !active && visible && hovered;
 	}
 
 	@Override
-	public void mouseReleased(final int i, final int j) {
+	public void mouseReleased(final int mouseX, final int mouseY) {
 	}
 }

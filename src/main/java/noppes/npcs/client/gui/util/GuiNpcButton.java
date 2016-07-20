@@ -13,27 +13,27 @@ public class GuiNpcButton extends GuiButton {
 	private int displayValue;
 	public int id;
 
-	public GuiNpcButton(final int i, final int j, final int k, final int l, final int m, final String string) {
-		super(i, j, k, l, m, StatCollector.translateToLocal(string));
+	public GuiNpcButton(final int id, final int x, final int y, final int width, final int height, final String string) {
+		super(id, x, y, width, height, StatCollector.translateToLocal(string));
 		displayValue = 0;
-		id = i;
+		this.id = id;
 	}
 
-	public GuiNpcButton(final int i, final int j, final int k, final int l, final int m, final String[] display,
+	public GuiNpcButton(final int id, final int x, final int y, final int width, final int height, final String[] display,
 			final int val) {
-		this(i, j, k, l, m, (display.length == 0) ? "" : display[val % display.length]);
+		this(id, x, y, width, height, (display.length == 0) ? "" : display[val % display.length]);
 		this.display = display;
 		displayValue = ((display.length == 0) ? 0 : (val % display.length));
 	}
 
-	public GuiNpcButton(final int i, final int j, final int k, final String s) {
-		super(i, j, k, StatCollector.translateToLocal(s));
+	public GuiNpcButton(final int id, final int x, final int y, final String s) {
+		super(id, x, y, StatCollector.translateToLocal(s));
 		displayValue = 0;
-		id = i;
+		this.id = id;
 	}
 
-	public GuiNpcButton(final int i, final int j, final int k, final String[] display, final int val) {
-		this(i, j, k, display[val]);
+	public GuiNpcButton(final int id, final int x, final int y, final String[] display, final int val) {
+		this(id, x, y, display[val]);
 		this.display = display;
 		displayValue = val;
 	}
@@ -51,8 +51,8 @@ public class GuiNpcButton extends GuiButton {
 	}
 
 	@Override
-	public boolean mousePressed(final Minecraft minecraft, final int i, final int j) {
-		final boolean bo = super.mousePressed(minecraft, i, j);
+	public boolean mousePressed(final Minecraft minecraft, final int mouseX, final int mouseY) {
+		final boolean bo = super.mousePressed(minecraft, mouseX, mouseY);
 		if (bo && (display != null) && (display.length != 0)) {
 			displayValue = (displayValue + 1) % display.length;
 			setDisplayText(display[displayValue]);
@@ -69,15 +69,15 @@ public class GuiNpcButton extends GuiButton {
 		displayString = StatCollector.translateToLocal(text);
 	}
 
-	public void setEnabled(final boolean bo) {
-		enabled = bo;
+	public void setEnabled(final boolean enabled) {
+		this.enabled = enabled;
 	}
 
 	public void setTextColor(final int color) {
 		packedFGColour = color;
 	}
 
-	public void setVisible(final boolean b) {
-		visible = b;
+	public void setVisible(final boolean visible) {
+		this.visible = visible;
 	}
 }

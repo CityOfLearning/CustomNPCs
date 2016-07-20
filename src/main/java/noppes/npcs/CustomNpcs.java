@@ -43,7 +43,6 @@ import noppes.npcs.controllers.FactionController;
 import noppes.npcs.controllers.GlobalDataController;
 import noppes.npcs.controllers.LinkedNpcController;
 import noppes.npcs.controllers.MassBlockController;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.QuestController;
 import noppes.npcs.controllers.RecipeController;
@@ -79,7 +78,7 @@ import noppes.npcs.entity.old.EntityNpcNagaFemale;
 import noppes.npcs.entity.old.EntityNpcNagaMale;
 import noppes.npcs.entity.old.EntityNpcSkeleton;
 
-@Mod(modid = "customnpcs", name = "CustomNpcs", version = "1.8.9_beta", acceptedMinecraftVersions = "[1.8.9]")
+@Mod(modid = "customnpcs", name = "CustomNpcs", version = "dyn1.8.9", acceptedMinecraftVersions = "[1.8.9]")
 public class CustomNpcs {
 	@ConfigProp(info = "Disable Chat Bubbles")
 	public static boolean EnableChatBubbles;
@@ -91,16 +90,10 @@ public class CustomNpcs {
 	@ConfigProp
 	public static boolean InventoryGuiEnabled;
 	@ConfigProp
-	public static boolean DisableExtraItems;
-	@ConfigProp
-	public static boolean DisableExtraBlock;
-	@ConfigProp
 	public static boolean SceneButtonsEnabled;
 	public static long ticks;
 	@SidedProxy(clientSide = "noppes.npcs.client.ClientProxy", serverSide = "noppes.npcs.CommonProxy")
 	public static CommonProxy proxy;
-	@ConfigProp(info = "Enables CustomNpcs startup update message")
-	public static boolean EnableUpdateChecker;
 	public static CustomNpcs instance;
 	public static boolean FreezeNPCs;
 	@ConfigProp(info = "Only ops can create and edit npcs")
@@ -120,8 +113,6 @@ public class CustomNpcs {
 	public static boolean VineGrowthEnabled;
 	@ConfigProp(info = "Enables Ice Melting")
 	public static boolean IceMeltsEnabled;
-	@ConfigProp(info = "Normal players can use soulstone on animals")
-	public static boolean SoulStoneAnimals;
 	@ConfigProp(info = "Type 0 = Normal, Type 1 = Solid")
 	public static int HeadWearType;
 	@ConfigProp(info = "When set to Minecraft it will use minecrafts font, when Default it will use OpenSans. Can only use fonts installed on your PC")
@@ -139,10 +130,7 @@ public class CustomNpcs {
 		CustomNpcs.NpcNavRange = 32;
 		CustomNpcs.NpcUseOpCommands = false;
 		CustomNpcs.InventoryGuiEnabled = true;
-		CustomNpcs.DisableExtraItems = false;
-		CustomNpcs.DisableExtraBlock = false;
 		CustomNpcs.SceneButtonsEnabled = true;
-		CustomNpcs.EnableUpdateChecker = true;
 		CustomNpcs.FreezeNPCs = false;
 		CustomNpcs.OpsOnly = false;
 		CustomNpcs.DefaultInteractLine = "Hello @p";
@@ -152,7 +140,6 @@ public class CustomNpcs {
 		CustomNpcs.LeavesDecayEnabled = true;
 		CustomNpcs.VineGrowthEnabled = true;
 		CustomNpcs.IceMeltsEnabled = true;
-		CustomNpcs.SoulStoneAnimals = true;
 		CustomNpcs.HeadWearType = 1;
 		CustomNpcs.FontType = "Default";
 		CustomNpcs.FontSize = 18;
@@ -211,7 +198,6 @@ public class CustomNpcs {
 		MinecraftForge.EVENT_BUS.register(new ServerEventsHandler());
 		MinecraftForge.EVENT_BUS.register(new ScriptController());
 		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
-		PixelmonHelper.load();
 		registerNpc(EntityNPCHumanMale.class, "npchumanmale");
 		registerNpc(EntityNPCVillager.class, "npcvillager");
 		registerNpc(EntityNpcPony.class, "npcpony");

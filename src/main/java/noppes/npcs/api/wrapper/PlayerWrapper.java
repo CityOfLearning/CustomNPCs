@@ -4,11 +4,9 @@
 
 package noppes.npcs.api.wrapper;
 
-import net.minecraft.entity.passive.EntityTameable;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
 import net.minecraft.stats.StatBase;
 import net.minecraft.stats.StatList;
@@ -23,15 +21,12 @@ import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.Server;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
-import noppes.npcs.api.entity.IPixelmon;
 import noppes.npcs.api.entity.IPlayer;
-import noppes.npcs.api.entity.data.IPixelmonPlayerData;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.Dialog;
 import noppes.npcs.controllers.DialogController;
 import noppes.npcs.controllers.DialogOption;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerDialogData;
@@ -99,25 +94,6 @@ public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWra
 	@Override
 	public String getName() {
 		return entity.getName();
-	}
-
-	public IPixelmonPlayerData getPixelmonData() {
-		return new IPixelmonPlayerData() {
-			@Override
-			public int countPCPixelmon() {
-				return PixelmonHelper.countPCPixelmon(PlayerWrapper.this.entity);
-			}
-
-			@Override
-			public IPixelmon getPartySlot(final int slot) {
-				final NBTTagCompound compound = PixelmonHelper.getPartySlot(slot, PlayerWrapper.this.entity);
-				if (compound == null) {
-					return null;
-				}
-				final EntityTameable pixelmon = PixelmonHelper.pixelmonFromNBT(compound, PlayerWrapper.this.entity);
-				return new PixelmonWrapper(pixelmon, compound);
-			}
-		};
 	}
 
 	@Override

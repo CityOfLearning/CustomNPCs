@@ -24,7 +24,8 @@ public class EntityAIWorldLines extends EntityAIBase {
 			--cooldown;
 		}
 		return !npc.isAttacking() && !npc.isKilled() && npc.advanced.hasWorldLines()
-				&& (npc.getRNG().nextInt(1800) == 1);
+				&& (npc.getRNG().nextInt(600) == 1); 
+		//lets make this happen slightly more often 66% more likely
 	}
 
 	@Override

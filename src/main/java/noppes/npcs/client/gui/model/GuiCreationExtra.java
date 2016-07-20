@@ -25,7 +25,6 @@ import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcButtonYesNo;
 import noppes.npcs.client.gui.util.ICustomScrollListener;
-import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityFakeLiving;
 import noppes.npcs.entity.EntityNPCInterface;
 
@@ -115,30 +114,6 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		}
 	}
 
-	class GuiTypePixelmon extends GuiType {
-		public GuiTypePixelmon(final String name) {
-			super(name);
-		}
-
-		@Override
-		public void initGui() {
-			final GuiCustomScroll scroll = new GuiCustomScroll(GuiCreationExtra.this, 1);
-			scroll.setSize(120, 200);
-			scroll.guiLeft = GuiCreationExtra.this.guiLeft + 120;
-			scroll.guiTop = GuiCreationExtra.this.guiTop + 50;
-			addScroll(scroll);
-			scroll.setList(PixelmonHelper.getPixelmonList());
-			scroll.setSelected(PixelmonHelper.getName(GuiCreationExtra.this.entity));
-		}
-
-		@Override
-		public void scrollClicked(final int i, final int j, final int k, final GuiCustomScroll scroll) {
-			final String name = scroll.getSelected();
-			GuiCreationExtra.this.playerdata.setExtra(GuiCreationExtra.this.entity, "name", name);
-			updateTexture();
-		}
-	}
-
 	private final String[] ignoredTags;
 
 	private GuiCustomScroll scroll;
@@ -195,9 +170,6 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 				}
 				data.put(name, new GuiTypeBoolean(name, b == 1));
 			}
-		}
-		if (PixelmonHelper.isPixelmon(entity)) {
-			data.put("Model", new GuiTypePixelmon("Model"));
 		}
 		if (EntityList.getEntityString(entity).equals("tgvstyle.Dog")) {
 			data.put("Breed", new GuiTypeDoggyStyle("Breed"));
