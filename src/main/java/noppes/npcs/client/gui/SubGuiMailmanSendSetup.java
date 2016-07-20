@@ -19,7 +19,7 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.containers.ContainerMail;
-import noppes.npcs.controllers.PlayerMail;
+import noppes.npcs.controllers.mail.PlayerMail;
 
 public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfieldListener, GuiSelectionListener {
 	private PlayerMail mail;

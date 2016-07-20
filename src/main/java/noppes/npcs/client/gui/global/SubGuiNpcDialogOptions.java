@@ -9,8 +9,8 @@ import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogOption;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogOption;
 
 public class SubGuiNpcDialogOptions extends SubGuiInterface {
 	private Dialog dialog;

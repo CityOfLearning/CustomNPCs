@@ -20,8 +20,8 @@ import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
-import noppes.npcs.controllers.IScriptHandler;
-import noppes.npcs.controllers.ScriptContainer;
+import noppes.npcs.controllers.script.IScriptHandler;
+import noppes.npcs.controllers.script.ScriptContainer;
 
 public class NBTTags {
 	public static HashMap<Integer, Boolean> getBooleanList(final NBTTagList tagList) {

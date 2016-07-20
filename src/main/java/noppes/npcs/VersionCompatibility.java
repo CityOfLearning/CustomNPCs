@@ -12,9 +12,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.constants.EnumScriptType;
-import noppes.npcs.controllers.Line;
-import noppes.npcs.controllers.Lines;
-import noppes.npcs.controllers.ScriptContainer;
+import noppes.npcs.controllers.lines.Line;
+import noppes.npcs.controllers.lines.Lines;
+import noppes.npcs.controllers.script.ScriptContainer;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class VersionCompatibility {

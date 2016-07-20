@@ -14,8 +14,8 @@ import noppes.npcs.client.gui.util.GuiNpcButtonYesNo;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.ISubGuiListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.PlayerMail;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.mail.PlayerMail;
 
 public class SubGuiNpcDialogExtra extends SubGuiInterface implements ISubGuiListener {
 	private Dialog dialog;

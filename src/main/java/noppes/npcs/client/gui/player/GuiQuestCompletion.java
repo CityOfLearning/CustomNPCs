@@ -16,7 +16,7 @@ import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.quest.Quest;
 
 public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonListener {
 	private Quest quest;

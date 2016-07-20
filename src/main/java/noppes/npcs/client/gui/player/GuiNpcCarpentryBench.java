@@ -12,7 +12,7 @@ import noppes.npcs.client.CustomNpcResourceListener;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.containers.ContainerCarpentryBench;
-import noppes.npcs.controllers.RecipeController;
+import noppes.npcs.controllers.recipies.RecipeController;
 
 public class GuiNpcCarpentryBench extends GuiContainerNPCInterface {
 	private final ResourceLocation resource;

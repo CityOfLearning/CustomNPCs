@@ -157,14 +157,12 @@ import noppes.npcs.client.model.ModelNpcCrystal;
 import noppes.npcs.client.model.ModelNpcDragon;
 import noppes.npcs.client.model.ModelNpcSlime;
 import noppes.npcs.client.model.ModelPlayerAlt;
-import noppes.npcs.client.model.ModelSkirtArmor;
 import noppes.npcs.client.renderer.RenderCustomNpc;
 import noppes.npcs.client.renderer.RenderNPCInterface;
 import noppes.npcs.client.renderer.RenderNPCPony;
 import noppes.npcs.client.renderer.RenderNpcCrystal;
 import noppes.npcs.client.renderer.RenderNpcDragon;
 import noppes.npcs.client.renderer.RenderNpcSlime;
-import noppes.npcs.client.renderer.RenderProjectile;
 import noppes.npcs.client.renderer.TileEntityItemStackRendererAlt;
 import noppes.npcs.client.renderer.blocks.BlockBannerRenderer;
 import noppes.npcs.client.renderer.blocks.BlockBarrelRenderer;
@@ -220,7 +218,6 @@ import noppes.npcs.entity.EntityNpcCrystal;
 import noppes.npcs.entity.EntityNpcDragon;
 import noppes.npcs.entity.EntityNpcPony;
 import noppes.npcs.entity.EntityNpcSlime;
-import noppes.npcs.entity.EntityProjectile;
 import tconstruct.client.tabs.InventoryTabFactions;
 import tconstruct.client.tabs.InventoryTabQuests;
 import tconstruct.client.tabs.InventoryTabVanilla;
@@ -314,10 +311,8 @@ public class ClientProxy extends CommonProxy {
 		}
 	}
 
-	private ModelSkirtArmor model;
 
 	public ClientProxy() {
-		model = new ModelSkirtArmor();
 	}
 
 	private void blockIgnoreBlockstate(final Block block, final IProperty... properties) {
@@ -523,11 +518,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public ModelBiped getSkirtModel() {
-		return model;
-	}
-
-	@Override
 	public boolean hasClient() {
 		return true;
 	}
@@ -651,7 +641,6 @@ public class ClientProxy extends CommonProxy {
 				new RenderNpcDragon(new ModelNpcDragon(0.0f), 0.5f));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcSlime.class,
 				new RenderNpcSlime(new ModelNpcSlime(16), new ModelNpcSlime(0), 0.25f));
-		RenderingRegistry.registerEntityRenderingHandler(EntityProjectile.class, new RenderProjectile());
 		RenderingRegistry.registerEntityRenderingHandler(EntityCustomNpc.class,
 				new RenderCustomNpc(new ModelPlayerAlt(0.0f, false)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNPC64x32.class,

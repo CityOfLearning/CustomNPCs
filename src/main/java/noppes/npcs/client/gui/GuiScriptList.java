@@ -12,7 +12,7 @@ import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.ScriptContainer;
+import noppes.npcs.controllers.script.ScriptContainer;
 
 public class GuiScriptList extends SubGuiInterface {
 	private GuiCustomScroll scroll1;

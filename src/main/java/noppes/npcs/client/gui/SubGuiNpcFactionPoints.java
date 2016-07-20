@@ -11,7 +11,7 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.Faction;
+import noppes.npcs.controllers.faction.Faction;
 
 public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfieldListener {
 	private Faction faction;

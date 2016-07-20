@@ -14,7 +14,7 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.controllers.RecipeCarpentry;
+import noppes.npcs.controllers.recipies.RecipeCarpentry;
 
 public class ContainerManageRecipes extends Container {
 	private InventoryBasic craftingMatrix;

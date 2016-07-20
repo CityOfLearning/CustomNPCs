@@ -14,11 +14,11 @@ import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.entity.data.role.IRoleDialog;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogOption;
-import noppes.npcs.controllers.PlayerQuestController;
-import noppes.npcs.controllers.Quest;
-import noppes.npcs.controllers.QuestController;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogOption;
+import noppes.npcs.controllers.quest.PlayerQuestController;
+import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.controllers.quest.QuestController;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class RoleDialog extends RoleInterface implements IRoleDialog {

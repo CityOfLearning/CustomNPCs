@@ -35,8 +35,8 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.constants.EnumQuestCompletion;
 import noppes.npcs.constants.EnumQuestRepeat;
-import noppes.npcs.controllers.Quest;
-import noppes.npcs.controllers.QuestCategory;
+import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.controllers.quest.QuestCategory;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, ISubGuiListener, GuiSelectionListener,

@@ -13,7 +13,7 @@ import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.SpawnData;
+import noppes.npcs.controllers.spawn.SpawnData;
 
 public class SubGuiNpcBiomes extends SubGuiInterface {
 	private SpawnData data;

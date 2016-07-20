@@ -23,8 +23,8 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.ICustomScrollListener;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.controllers.PlayerMail;
-import noppes.npcs.controllers.PlayerMailData;
+import noppes.npcs.controllers.mail.PlayerMail;
+import noppes.npcs.controllers.mail.PlayerMailData;
 
 public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScrollListener, GuiYesNoCallback {
 	private GuiCustomScroll scroll;

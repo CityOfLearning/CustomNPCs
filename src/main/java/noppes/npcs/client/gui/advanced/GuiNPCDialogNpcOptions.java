@@ -18,7 +18,7 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiSelectionListener;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.controllers.DialogOption;
+import noppes.npcs.controllers.dialog.DialogOption;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelectionListener, IGuiData {

@@ -14,8 +14,8 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import noppes.npcs.controllers.PlayerMail;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.mail.PlayerMail;
+import noppes.npcs.controllers.quest.Quest;
 
 public class SubGuiNpcQuestAdvanced extends SubGuiInterface implements ITextfieldListener {
 	private Quest quest;

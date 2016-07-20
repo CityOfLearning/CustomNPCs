@@ -28,8 +28,8 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import noppes.npcs.controllers.SpawnController;
-import noppes.npcs.controllers.SpawnData;
+import noppes.npcs.controllers.spawn.SpawnController;
+import noppes.npcs.controllers.spawn.SpawnData;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 

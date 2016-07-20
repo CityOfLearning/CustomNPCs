@@ -10,9 +10,9 @@ import java.util.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.NBTTags;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogController;
 import noppes.npcs.controllers.PlayerDataController;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogController;
 
 public class QuestDialog extends QuestInterface {
 	public HashMap<Integer, Integer> dialogs;

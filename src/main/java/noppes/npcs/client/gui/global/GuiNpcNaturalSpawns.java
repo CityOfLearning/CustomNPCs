@@ -26,7 +26,7 @@ import noppes.npcs.client.gui.util.ISliderListener;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.controllers.SpawnData;
+import noppes.npcs.controllers.spawn.SpawnData;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcNaturalSpawns extends GuiNPCInterface2

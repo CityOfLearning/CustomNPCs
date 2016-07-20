@@ -8,7 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import noppes.npcs.controllers.Bank;
+import noppes.npcs.controllers.bank.Bank;
 
 public class ContainerManageBanks extends Container {
 	public Bank bank;

@@ -24,8 +24,8 @@ import noppes.npcs.client.TextBlockClient;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogOption;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogOption;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiDialogInteract extends GuiNPCInterface {

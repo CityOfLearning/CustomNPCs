@@ -19,7 +19,7 @@ import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.controllers.TransportLocation;
+import noppes.npcs.controllers.transport.TransportLocation;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, IGuiData {

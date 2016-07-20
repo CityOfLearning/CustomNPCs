@@ -10,8 +10,8 @@ import java.util.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.constants.EnumQuestCompletion;
-import noppes.npcs.controllers.PlayerQuestController;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.quest.PlayerQuestController;
+import noppes.npcs.controllers.quest.Quest;
 
 public class QuestLogData {
 	public HashMap<String, Vector<String>> categories;

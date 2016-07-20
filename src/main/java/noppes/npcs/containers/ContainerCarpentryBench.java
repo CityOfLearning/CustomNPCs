@@ -18,8 +18,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.blocks.BlockCarpentryBench;
-import noppes.npcs.controllers.RecipeCarpentry;
-import noppes.npcs.controllers.RecipeController;
+import noppes.npcs.controllers.recipies.RecipeCarpentry;
+import noppes.npcs.controllers.recipies.RecipeController;
 
 public class ContainerCarpentryBench extends Container {
 	public InventoryCrafting craftMatrix;

@@ -15,8 +15,8 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.PlayerQuestData;
-import noppes.npcs.controllers.QuestData;
+import noppes.npcs.controllers.quest.PlayerQuestData;
+import noppes.npcs.controllers.quest.QuestData;
 import noppes.npcs.quests.QuestLocation;
 
 public class TileWaypoint extends TileNpcEntity implements ITickable {

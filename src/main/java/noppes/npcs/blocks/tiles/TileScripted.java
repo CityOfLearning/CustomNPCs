@@ -25,9 +25,9 @@ import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.block.IBlock;
 import noppes.npcs.api.wrapper.BlockScriptedWrapper;
 import noppes.npcs.constants.EnumScriptType;
-import noppes.npcs.controllers.IScriptBlockHandler;
-import noppes.npcs.controllers.ScriptContainer;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.controllers.script.IScriptBlockHandler;
+import noppes.npcs.controllers.script.ScriptContainer;
+import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.data.DataTimers;
 import noppes.npcs.util.ValueUtil;
 

@@ -40,8 +40,8 @@ import noppes.npcs.api.block.IBlock;
 import noppes.npcs.api.entity.IEntity;
 import noppes.npcs.api.entity.IPlayer;
 import noppes.npcs.api.entity.data.IData;
-import noppes.npcs.controllers.ScriptController;
 import noppes.npcs.controllers.ServerCloneController;
+import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class WorldWrapper implements IWorld {

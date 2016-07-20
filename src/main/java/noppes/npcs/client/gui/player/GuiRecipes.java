@@ -21,8 +21,8 @@ import noppes.npcs.client.gui.util.GuiButtonNextPage;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
-import noppes.npcs.controllers.RecipeCarpentry;
-import noppes.npcs.controllers.RecipeController;
+import noppes.npcs.controllers.recipies.RecipeCarpentry;
+import noppes.npcs.controllers.recipies.RecipeController;
 
 @SideOnly(Side.CLIENT)
 public class GuiRecipes extends GuiNPCInterface {

@@ -26,7 +26,7 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.containers.ContainerManageRecipes;
-import noppes.npcs.controllers.RecipeCarpentry;
+import noppes.npcs.controllers.recipies.RecipeCarpentry;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcManageRecipes extends GuiContainerNPCInterface2

@@ -7,7 +7,7 @@ package noppes.npcs.command;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import noppes.npcs.api.CommandNoppesBase;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.controllers.script.ScriptController;
 
 public class CmdScript extends CommandNoppesBase {
 	@Override

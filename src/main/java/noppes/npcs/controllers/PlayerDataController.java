@@ -20,6 +20,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
+import noppes.npcs.controllers.bank.Bank;
+import noppes.npcs.controllers.bank.BankController;
+import noppes.npcs.controllers.bank.PlayerBankData;
+import noppes.npcs.controllers.mail.PlayerMail;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class PlayerDataController {

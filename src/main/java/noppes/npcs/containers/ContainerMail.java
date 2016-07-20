@@ -8,8 +8,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.PlayerMail;
-import noppes.npcs.controllers.PlayerMailData;
+import noppes.npcs.controllers.mail.PlayerMail;
+import noppes.npcs.controllers.mail.PlayerMailData;
 
 public class ContainerMail extends ContainerNpcInterface {
 	public static PlayerMail staticmail;

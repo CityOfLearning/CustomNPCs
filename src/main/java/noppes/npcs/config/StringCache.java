@@ -78,7 +78,7 @@ public class StringCache {
 				if ((c1 != c2) && ((c1 < '0') || (c1 > '9') || (c2 < '0') || (c2 > '9') || colorCode)) {
 					return false;
 				}
-				colorCode = (c1 == '\u00a7'); 
+				colorCode = (c1 == '\u00a7');
 			}
 			return true;
 		}

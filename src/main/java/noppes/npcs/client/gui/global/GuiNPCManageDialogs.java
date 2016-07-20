@@ -29,8 +29,8 @@ import noppes.npcs.client.gui.util.ISubGuiListener;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogCategory;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogCategory;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData, ISubGuiListener, GuiSelectionListener,

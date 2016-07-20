@@ -51,26 +51,4 @@ public class ServerTickHandler {
 			NPCSpawning.findChunksForSpawning((WorldServer) event.world);
 		}
 	}
-
-	@SubscribeEvent
-	public void playerLogin(final PlayerEvent.PlayerLoggedInEvent event) {
-		if (serverName == null) {
-			String e = "local";
-			final MinecraftServer server = MinecraftServer.getServer();
-			if (server.isDedicatedServer()) {
-				try {
-					e = InetAddress.getByName(server.getServerHostname()).getCanonicalHostName();
-				} catch (UnknownHostException e2) {
-					e = MinecraftServer.getServer().getServerHostname();
-				}
-				if (server.getPort() != 25565) {
-					e = e + ":" + server.getPort();
-				}
-			}
-			if ((e == null) || e.startsWith("192.168") || e.contains("127.0.0.1") || e.startsWith("localhost")) {
-				e = "local";
-			}
-			serverName = e;
-		}
-	}
 }

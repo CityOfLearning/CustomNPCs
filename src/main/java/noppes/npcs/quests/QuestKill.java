@@ -11,8 +11,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.NBTTags;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.PlayerQuestData;
-import noppes.npcs.controllers.QuestData;
+import noppes.npcs.controllers.quest.PlayerQuestData;
+import noppes.npcs.controllers.quest.QuestData;
 
 public class QuestKill extends QuestInterface {
 	public HashMap<String, Integer> targets;

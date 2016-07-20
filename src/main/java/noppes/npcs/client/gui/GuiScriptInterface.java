@@ -30,9 +30,9 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextArea;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.IJTextAreaListener;
-import noppes.npcs.controllers.IScriptHandler;
-import noppes.npcs.controllers.ScriptContainer;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.controllers.script.IScriptHandler;
+import noppes.npcs.controllers.script.ScriptContainer;
+import noppes.npcs.controllers.script.ScriptController;
 
 public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, GuiYesNoCallback, IJTextAreaListener {
 	private int activeTab;

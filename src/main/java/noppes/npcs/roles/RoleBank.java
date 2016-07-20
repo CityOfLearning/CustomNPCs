@@ -6,10 +6,10 @@ package noppes.npcs.roles;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.controllers.Bank;
-import noppes.npcs.controllers.BankController;
-import noppes.npcs.controllers.BankData;
 import noppes.npcs.controllers.PlayerDataController;
+import noppes.npcs.controllers.bank.Bank;
+import noppes.npcs.controllers.bank.BankController;
+import noppes.npcs.controllers.bank.BankData;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class RoleBank extends RoleInterface {

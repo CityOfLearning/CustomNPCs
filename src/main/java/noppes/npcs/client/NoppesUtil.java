@@ -34,9 +34,9 @@ import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogController;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogController;
+import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class NoppesUtil {

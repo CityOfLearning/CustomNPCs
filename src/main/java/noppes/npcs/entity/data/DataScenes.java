@@ -24,9 +24,8 @@ import net.minecraft.util.ChatComponentTranslation;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
-import noppes.npcs.controllers.Line;
+import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.entity.EntityProjectile;
 
 public class DataScenes {
 	public class SceneContainer {
@@ -152,8 +151,6 @@ public class DataScenes {
 					final Item item2 = CommandBase.getItemByText(npc, args[2]);
 					stack = new ItemStack(item2, 1, 0);
 				}
-				final EntityProjectile projectile = npc.shoot(entity2, 100, stack, false);
-				projectile.damage = damage;
 			} else if (event.type == SceneType.ANIMATE) {
 				npc.animateAi.temp = 0;
 				if (event.param.equalsIgnoreCase("sleep")) {

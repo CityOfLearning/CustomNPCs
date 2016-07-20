@@ -12,12 +12,12 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import noppes.npcs.Server;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.constants.EnumPacketClient;
-import noppes.npcs.controllers.DialogController;
 import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.Quest;
-import noppes.npcs.controllers.QuestController;
-import noppes.npcs.controllers.QuestData;
+import noppes.npcs.controllers.dialog.DialogController;
+import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.controllers.quest.QuestController;
+import noppes.npcs.controllers.quest.QuestData;
 
 public class CmdQuest extends CommandNoppesBase {
 	@SubCommand(desc = "Finish a quest", usage = "<player> <quest>")

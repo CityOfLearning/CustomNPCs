@@ -19,9 +19,9 @@ import noppes.npcs.api.entity.data.INPCJob;
 import noppes.npcs.api.entity.data.INPCRole;
 import noppes.npcs.api.entity.data.INPCStats;
 import noppes.npcs.api.handler.data.IFaction;
-import noppes.npcs.controllers.Faction;
-import noppes.npcs.controllers.FactionController;
-import noppes.npcs.controllers.Line;
+import noppes.npcs.controllers.faction.Faction;
+import noppes.npcs.controllers.faction.FactionController;
+import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.ValueUtil;
 
@@ -169,7 +169,7 @@ public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrappe
 		accuracy = ValueUtil.CorrectInt(accuracy, 1, 100);
 		entity.shoot(target.getMCEntity(), accuracy, item.getMCItemStack(), false);
 	}
-
+	
 	@Override
 	public boolean typeOf(final int type) {
 		return (type == 2) || super.typeOf(type);

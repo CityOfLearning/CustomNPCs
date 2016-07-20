@@ -13,7 +13,7 @@ import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.EventHooks;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.ITimers;
-import noppes.npcs.controllers.IScriptBlockHandler;
+import noppes.npcs.controllers.script.IScriptBlockHandler;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class DataTimers implements ITimers {

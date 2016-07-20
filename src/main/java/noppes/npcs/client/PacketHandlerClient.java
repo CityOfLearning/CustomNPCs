@@ -40,8 +40,8 @@ import noppes.npcs.client.gui.util.IGuiError;
 import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
-import noppes.npcs.controllers.RecipeCarpentry;
-import noppes.npcs.controllers.RecipeController;
+import noppes.npcs.controllers.recipies.RecipeCarpentry;
+import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.entity.EntityDialogNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
@@ -54,14 +54,12 @@ public class PacketHandlerClient extends PacketHandlerServer {
 			}
 			final EntityNPCInterface npc = (EntityNPCInterface) entity;
 			if (npc.messages == null) {
-				LogWriter.info("Initializing new chat Renderer");
 				npc.messages = new RenderChatMessages();
 			}
 			final String text = NoppesStringUtils.formatText(Server.readString(buffer), player, npc);
 			npc.messages.addMessage(text, npc);
 			if (buffer.readBoolean()) {
-				LogWriter.info("Chat Bubble: " + text);
-				player.addChatMessage(new ChatComponentTranslation(npc.getName() + ": " + text, new Object[0]));
+				player.addChatMessage(new ChatComponentTranslation("<\u00a7a"+npc.getName()+"\u00a7r> " + text, new Object[0]));
 			}
 		} else if (type == EnumPacketClient.CHAT) {
 			String message = "";

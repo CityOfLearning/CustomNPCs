@@ -13,6 +13,10 @@ import noppes.npcs.constants.EnumAvailabilityFaction;
 import noppes.npcs.constants.EnumAvailabilityFactionType;
 import noppes.npcs.constants.EnumAvailabilityQuest;
 import noppes.npcs.constants.EnumDayTime;
+import noppes.npcs.controllers.faction.Faction;
+import noppes.npcs.controllers.faction.FactionController;
+import noppes.npcs.controllers.faction.PlayerFactionData;
+import noppes.npcs.controllers.quest.PlayerQuestController;
 
 public class Availability implements ICompatibilty {
 	public int version;

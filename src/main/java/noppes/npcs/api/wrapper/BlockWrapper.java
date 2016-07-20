@@ -19,7 +19,7 @@ import noppes.npcs.api.IWorld;
 import noppes.npcs.api.block.IBlock;
 import noppes.npcs.api.entity.data.IData;
 import noppes.npcs.blocks.tiles.TileNpcEntity;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.controllers.script.ScriptController;
 
 public class BlockWrapper implements IBlock {
 	protected final IWorld world;

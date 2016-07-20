@@ -17,7 +17,7 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.constants.EnumAvailabilityQuest;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.controllers.Availability;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.quest.Quest;
 
 public class SubGuiNpcAvailabilityQuest extends SubGuiInterface implements GuiSelectionListener, IGuiData {
 	private Availability availabitily;

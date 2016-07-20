@@ -15,9 +15,9 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import noppes.npcs.EventHooks;
 import noppes.npcs.NBTTags;
 import noppes.npcs.constants.EnumScriptType;
-import noppes.npcs.controllers.IScriptHandler;
-import noppes.npcs.controllers.ScriptContainer;
-import noppes.npcs.controllers.ScriptController;
+import noppes.npcs.controllers.script.IScriptHandler;
+import noppes.npcs.controllers.script.ScriptContainer;
+import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class DataScript implements IScriptHandler {

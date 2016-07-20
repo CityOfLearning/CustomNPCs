@@ -35,7 +35,7 @@ import noppes.npcs.client.gui.util.IGuiError;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerMail;
-import noppes.npcs.controllers.PlayerMail;
+import noppes.npcs.controllers.mail.PlayerMail;
 
 @SideOnly(Side.CLIENT)
 public class GuiMailmanWrite extends GuiContainerNPCInterface

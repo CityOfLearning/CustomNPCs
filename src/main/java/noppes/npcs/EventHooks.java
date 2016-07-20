@@ -19,10 +19,10 @@ import noppes.npcs.api.handler.IFactionHandler;
 import noppes.npcs.api.handler.IRecipeHandler;
 import noppes.npcs.api.wrapper.WrapperNpcAPI;
 import noppes.npcs.constants.EnumScriptType;
-import noppes.npcs.controllers.Dialog;
-import noppes.npcs.controllers.DialogOption;
-import noppes.npcs.controllers.IScriptBlockHandler;
-import noppes.npcs.controllers.Quest;
+import noppes.npcs.controllers.dialog.Dialog;
+import noppes.npcs.controllers.dialog.DialogOption;
+import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.controllers.script.IScriptBlockHandler;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EventHooks {

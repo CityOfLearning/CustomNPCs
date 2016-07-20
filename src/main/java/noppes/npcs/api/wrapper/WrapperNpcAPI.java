@@ -31,8 +31,8 @@ import noppes.npcs.api.handler.IFactionHandler;
 import noppes.npcs.api.handler.IRecipeHandler;
 import noppes.npcs.blocks.BlockScripted;
 import noppes.npcs.blocks.BlockScriptedDoor;
-import noppes.npcs.controllers.FactionController;
-import noppes.npcs.controllers.RecipeController;
+import noppes.npcs.controllers.faction.FactionController;
+import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 

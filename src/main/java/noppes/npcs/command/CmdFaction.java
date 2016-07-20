@@ -12,11 +12,11 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import noppes.npcs.api.CommandNoppesBase;
-import noppes.npcs.controllers.Faction;
-import noppes.npcs.controllers.FactionController;
 import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
-import noppes.npcs.controllers.PlayerFactionData;
+import noppes.npcs.controllers.faction.Faction;
+import noppes.npcs.controllers.faction.FactionController;
+import noppes.npcs.controllers.faction.PlayerFactionData;
 
 public class CmdFaction extends CommandNoppesBase {
 	public Faction selectedFaction;
