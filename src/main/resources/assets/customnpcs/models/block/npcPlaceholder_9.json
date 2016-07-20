@@ -1,8 +1,0 @@
-{
-    "ambientocclusion": false,
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "customnpcs:blocks/placeholder_9"
-    }
-}
-
