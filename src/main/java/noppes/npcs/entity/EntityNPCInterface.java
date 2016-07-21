@@ -1086,39 +1086,34 @@ public abstract class EntityNPCInterface extends EntityCreature
 		}
 	}
 
+	
 	@Override
-	public void onDeath(DamageSource damagesource) {
-		LogWriter.info("On Death");
+	public void onDeath(DamageSource cause){
 		setSprinting(false);
 		getNavigator().clearPathEntity();
 		extinguish();
 		clearActivePotions();
-
 		if (!isRemote()) {
-			LogWriter.info("Is Server");
-			Entity attackingEntity = damagesource.getSourceOfDamage();
-			LogWriter.info("Got Entity");
+			Entity attackingEntity = cause.getSourceOfDamage();
 			if ((attackingEntity instanceof EntityArrow)
 					&& (((EntityArrow) attackingEntity).shootingEntity instanceof EntityLivingBase)) {
 				attackingEntity = ((EntityArrow) attackingEntity).shootingEntity;
 			} else if (attackingEntity instanceof EntityThrowable) {
 				attackingEntity = ((EntityThrowable) attackingEntity).getThrower();
 			}
-			LogWriter.info("NPC Dying");
-			if (EventHooks.onNPCDied(this, attackingEntity, damagesource)) {
+			//comment out the below sections and it works
+	/*		if (EventHooks.onNPCDied(this, attackingEntity, cause)) {
 				return;
-			}
-			LogWriter.info("Dropping Stuff");
-			inventory.dropStuff(attackingEntity, damagesource);
-			LogWriter.info("Death Lines");
+			} 
+			//crashes here too
+			inventory.dropStuff(attackingEntity, cause);*/
 			Line line = advanced.getKilledLine();
 			if (line != null) {
 				saySurrounding(line.formatTarget(
 						(EntityLivingBase) ((attackingEntity instanceof EntityLivingBase) ? attackingEntity : null)));
 			}
 		}
-		LogWriter.info("Calling super class");
-		super.onDeath(damagesource);
+		super.onDeath(cause);
 	}
 
 	@Override
