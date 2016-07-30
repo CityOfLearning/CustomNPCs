@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.constants.EnumOptionType;
-import noppes.npcs.client.ClientProxy;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.TextBlockClient;
 import noppes.npcs.client.controllers.MusicController;
@@ -89,16 +88,16 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		if (dialog.showWheel) {
 			dialogHeight = ySize - 58;
 		} else {
-			dialogHeight = ySize - (3 * ClientProxy.Font.height()) - 4;
+			dialogHeight = ySize - (3 * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) - 4;
 			if (dialog.options.size() > 3) {
-				dialogHeight -= (dialog.options.size() - 3) * ClientProxy.Font.height();
+				dialogHeight -= (dialog.options.size() - 3) * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 			}
 		}
 		rowTotal = 0;
 		for (TextBlockClient block : lines) {
 			rowTotal += block.lines.size() + 1;
 		}
-		int max = dialogHeight / ClientProxy.Font.height();
+		int max = dialogHeight / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 		rowStart = rowTotal - max;
 		if (rowStart < 0) {
 			rowStart = 0;
@@ -111,10 +110,10 @@ public class GuiDialogInteract extends GuiNPCInterface {
 
 	private void drawLinedOptions(int j) {
 		drawHorizontalLine(guiLeft - 60, guiLeft + xSize + 120,
-				(guiTop + dialogHeight) - (ClientProxy.Font.height() / 3), -1);
+				(guiTop + dialogHeight) - (Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 3), -1);
 		int offset = dialogHeight;
 		if (j >= (guiTop + offset)) {
-			int selected = (j - (guiTop + offset)) / ClientProxy.Font.height();
+			int selected = (j - (guiTop + offset)) / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 			if (selected < options.size()) {
 				this.selected = selected;
 			}
@@ -128,7 +127,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		for (int k = 0; k < options.size(); ++k) {
 			int id = options.get(k);
 			DialogOption option = dialog.options.get(id);
-			int y = guiTop + offset + (k * ClientProxy.Font.height());
+			int y = guiTop + offset + (k * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
 			if (selected == k) {
 				this.drawString(fontRendererObj, ">", guiLeft - 60, y, 14737632);
 			}
@@ -153,7 +152,7 @@ public class GuiDialogInteract extends GuiNPCInterface {
 		GlStateManager.translate(0.0f, 0.5f, 100.065f);
 		int count = 0;
 		for (TextBlockClient block : new ArrayList<TextBlockClient>(lines)) {
-			int size = ClientProxy.Font.width(block.getName() + ": ");
+			int size = Minecraft.getMinecraft().fontRendererObj.getStringWidth(block.getName() + ": ");
 			this.drawString(block.getName() + ": ", -4 - size, block.color, count);
 			for (IChatComponent line : block.lines) {
 				this.drawString(line.getFormattedText(), 0, block.color, count);
@@ -173,12 +172,13 @@ public class GuiDialogInteract extends GuiNPCInterface {
 
 	@Override
 	public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
-		ClientProxy.Font.drawString(text, x, y, color);
+		Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, color);
 	}
 
 	private void drawString(String text, int left, int color, int count) {
 		int height = count - rowStart;
-		this.drawString(fontRendererObj, text, guiLeft + left, guiTop + (height * ClientProxy.Font.height()), color);
+		this.drawString(fontRendererObj, text, guiLeft + left,
+				guiTop + (height * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT), color);
 	}
 
 	private void drawWheel() {
@@ -234,16 +234,19 @@ public class GuiDialogInteract extends GuiNPCInterface {
 				}
 				if (slot == 3) {
 					this.drawString(fontRendererObj, option.title,
-							(width / 2) - 13 - ClientProxy.Font.width(option.title), yoffset - 6, color);
+							(width / 2) - 13 - Minecraft.getMinecraft().fontRendererObj.getStringWidth(option.title),
+							yoffset - 6, color);
 				}
 				if (slot == 4) {
 					this.drawString(fontRendererObj, option.title,
-							(width / 2) - 33 - ClientProxy.Font.width(option.title), yoffset + 12, color);
+							(width / 2) - 33 - Minecraft.getMinecraft().fontRendererObj.getStringWidth(option.title),
+							yoffset + 12, color);
 				}
 				if (slot != 5) {
 					continue;
 				}
-				this.drawString(fontRendererObj, option.title, (width / 2) - 27 - ClientProxy.Font.width(option.title),
+				this.drawString(fontRendererObj, option.title,
+						(width / 2) - 27 - Minecraft.getMinecraft().fontRendererObj.getStringWidth(option.title),
 						yoffset + 32, color);
 			}
 		}

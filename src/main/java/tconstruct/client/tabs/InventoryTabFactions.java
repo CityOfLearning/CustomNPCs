@@ -12,9 +12,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import noppes.npcs.CustomItems;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.gui.player.GuiFaction;
 import noppes.npcs.util.CustomNPCsScheduler;
@@ -102,12 +100,9 @@ public class InventoryTabFactions extends AbstractTab {
 
 	@Override
 	public void onTabClicked() {
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				Minecraft mc = Minecraft.getMinecraft();
-				mc.displayGuiScreen(new GuiFaction());
-			}
+		CustomNPCsScheduler.runTack(() -> {
+			Minecraft mc = Minecraft.getMinecraft();
+			mc.displayGuiScreen(new GuiFaction());
 		});
 	}
 

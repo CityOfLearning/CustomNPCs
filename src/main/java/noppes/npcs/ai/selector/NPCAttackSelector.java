@@ -12,7 +12,6 @@ import net.minecraft.potion.Potion;
 import noppes.npcs.constants.EnumCompanionJobs;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobGuard;
-import noppes.npcs.roles.JobSpawner;
 import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.roles.companion.CompanionGuard;
 

@@ -6,7 +6,6 @@ package noppes.npcs;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -67,10 +66,7 @@ public class NoppesStringUtils {
 	public static void setClipboardContents(String aString) {
 		StringSelection stringSelection = new StringSelection(aString);
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-		clipboard.setContents(stringSelection, new ClipboardOwner() {
-			@Override
-			public void lostOwnership(Clipboard arg0, Transferable arg1) {
-			}
+		clipboard.setContents(stringSelection, (arg0, arg1) -> {
 		});
 	}
 

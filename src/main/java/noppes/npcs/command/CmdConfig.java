@@ -44,26 +44,6 @@ public class CmdConfig extends CommandNoppesBase {
 		}
 	}
 
-	@SubCommand(desc = "Get/Set font", usage = "[type] [size]", permission = 4)
-	public void font(ICommandSender sender, String[] args) {
-		if (!(sender instanceof EntityPlayerMP)) {
-			return;
-		}
-		int size = 18;
-		if (args.length > 1) {
-			try {
-				size = Integer.parseInt(args[args.length - 1]);
-				args = Arrays.copyOfRange(args, 0, args.length - 1);
-			} catch (Exception ex) {
-			}
-		}
-		String font = "";
-		for (int i = 0; i < args.length; ++i) {
-			font = font + " " + args[i];
-		}
-		Server.sendData((EntityPlayerMP) sender, EnumPacketClient.CONFIG, 0, font.trim(), size);
-	}
-
 	@SubCommand(desc = "Freezes/Unfreezes npcs", usage = "[true/false]", permission = 4)
 	public void freezenpcs(ICommandSender sender, String[] args) {
 		if (args.length == 0) {

@@ -198,26 +198,6 @@ public class PacketHandlerClient extends PacketHandlerServer {
 		} else if (type == EnumPacketClient.VILLAGER_LIST) {
 			MerchantRecipeList merchantrecipelist = MerchantRecipeList.readFromBuf(new PacketBuffer(buffer));
 			ServerEventsHandler.Merchant.setRecipes(merchantrecipelist);
-		} else if (type == EnumPacketClient.CONFIG) {
-			int config = buffer.readInt();
-			if (config == 0) {
-				String font = Server.readString(buffer);
-				int size = buffer.readInt();
-				Runnable run = () -> {
-					if (!font.isEmpty()) {
-						CustomNpcs.FontType = font;
-						CustomNpcs.FontSize = size;
-						ClientProxy.Font = new ClientProxy.FontContainer(CustomNpcs.FontType, CustomNpcs.FontSize);
-						CustomNpcs.Config.updateConfig();
-						player.addChatMessage(new ChatComponentTranslation("Font set to %s",
-								new Object[] { ClientProxy.Font.getName() }));
-					} else {
-						player.addChatMessage(new ChatComponentTranslation("Current font is %s",
-								new Object[] { ClientProxy.Font.getName() }));
-					}
-				};
-				Minecraft.getMinecraft().addScheduledTask(run);
-			}
 		}
 	}
 

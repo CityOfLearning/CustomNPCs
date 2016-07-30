@@ -70,9 +70,7 @@ public class DialogController {
 	}
 
 	public void load() {
-		LogWriter.info("Loading Dialogs");
 		loadCategories();
-		LogWriter.info("Done loading Dialogs");
 	}
 
 	private void loadCategories() {

@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.entity;
 
 import java.io.IOException;
@@ -19,7 +15,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.IRangedAttackMob;
@@ -66,7 +61,6 @@ import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.IChatMessages;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NBTTags;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcDamageSource;
@@ -103,7 +97,6 @@ import noppes.npcs.ai.PathNavigateFlying;
 import noppes.npcs.ai.selector.NPCAttackSelector;
 import noppes.npcs.ai.target.EntityAIClearTarget;
 import noppes.npcs.ai.target.EntityAIClosestTarget;
-import noppes.npcs.util.IProjectileCallback;
 import noppes.npcs.ai.target.EntityAIOwnerHurtByTarget;
 import noppes.npcs.ai.target.EntityAIOwnerHurtTarget;
 import noppes.npcs.api.IItemStack;
@@ -430,6 +423,30 @@ public abstract class EntityNPCInterface extends EntityCreature
 				setRevengeTarget((EntityLivingBase) null);
 			}
 		}
+	}
+
+	@Override
+	public void attackEntityWithRangedAttack(EntityLivingBase entity, float f) {
+		ItemStack proj = ItemStackWrapper.MCItem(inventory.getProjectile());
+		if (proj == null) {
+			updateAI = true;
+			return;
+		}
+		NpcEvent.RangedLaunchedEvent event = new NpcEvent.RangedLaunchedEvent(wrappedNPC, entity,
+				stats.ranged.getStrength());
+		if (EventHooks.onNPCRangedLaunched(this, event)) {
+			return;
+		}
+		for (int i = 0; i < stats.ranged.getShotCount(); ++i) {
+			EntityProjectile projectile = this.shoot(entity, stats.ranged.getAccuracy(), proj, f == 1.0f);
+			projectile.damage = event.damage;
+			projectile.callback = (projectile1, pos, entity1) -> {
+				projectile1.playSound(stats.ranged.getSound((entity1 != null) ? 1 : 2), 1.0f,
+						1.2f / ((EntityNPCInterface.this.getRNG().nextFloat() * 0.2f) + 0.9f));
+				return false;
+			};
+		}
+		playSound(stats.ranged.getSound(0), 2.0f, 1.0f);
 	}
 
 	private double calculateStartYPos(BlockPos pos) {
@@ -1086,34 +1103,33 @@ public abstract class EntityNPCInterface extends EntityCreature
 		}
 	}
 
-	
 	@Override
-	public void onDeath(DamageSource cause){
+	public void onDeath(DamageSource damagesource) {
 		setSprinting(false);
 		getNavigator().clearPathEntity();
 		extinguish();
 		clearActivePotions();
+
 		if (!isRemote()) {
-			Entity attackingEntity = cause.getSourceOfDamage();
+			Entity attackingEntity = damagesource.getSourceOfDamage();
 			if ((attackingEntity instanceof EntityArrow)
 					&& (((EntityArrow) attackingEntity).shootingEntity instanceof EntityLivingBase)) {
 				attackingEntity = ((EntityArrow) attackingEntity).shootingEntity;
 			} else if (attackingEntity instanceof EntityThrowable) {
 				attackingEntity = ((EntityThrowable) attackingEntity).getThrower();
 			}
-			//comment out the below sections and it works
-	/*		if (EventHooks.onNPCDied(this, attackingEntity, cause)) {
-				return;
-			} 
-			//crashes here too
-			inventory.dropStuff(attackingEntity, cause);*/
+			// these both crash things
+			// if (EventHooks.onNPCDied(this, damagesource, attackingEntity)) {
+			// return;
+			// }
+			// inventory.dropStuff(attackingEntity, damagesource);
 			Line line = advanced.getKilledLine();
 			if (line != null) {
 				saySurrounding(line.formatTarget(
 						(EntityLivingBase) ((attackingEntity instanceof EntityLivingBase) ? attackingEntity : null)));
 			}
 		}
-		super.onDeath(cause);
+		super.onDeath(damagesource);
 	}
 
 	@Override
@@ -1594,6 +1610,24 @@ public abstract class EntityNPCInterface extends EntityCreature
 		dataWatcher.updateObject(16, s);
 	}
 
+	public EntityProjectile shoot(double x, double y, double z, int accuracy, ItemStack proj, boolean indirect) {
+		EntityProjectile projectile = new EntityProjectile(worldObj, this, proj.copy(), true);
+		double varX = x - posX;
+		double varY = y - (posY + getEyeHeight());
+		double varZ = z - posZ;
+		float varF = projectile.hasGravity() ? MathHelper.sqrt_double((varX * varX) + (varZ * varZ)) : 0.0f;
+		float angle = projectile.getAngleForXYZ(varX, varY, varZ, varF, indirect);
+		float acc = 20.0f - MathHelper.floor_float(accuracy / 5.0f);
+		projectile.setThrowableHeading(varX, varY, varZ, angle, acc);
+		worldObj.spawnEntityInWorld(projectile);
+		return projectile;
+	}
+
+	public EntityProjectile shoot(EntityLivingBase entity, int accuracy, ItemStack proj, boolean indirect) {
+		return this.shoot(entity.posX, entity.getEntityBoundingBox().minY + (entity.height / 2.0f), entity.posZ,
+				accuracy, proj, indirect);
+	}
+
 	public void tpTo(EntityLivingBase owner) {
 		if (owner == null) {
 			return;
@@ -1722,51 +1756,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 			compound.setTag("ModelData", ((EntityCustomNpc) this).modelData.writeToNBT());
 		}
 		return compound;
-	}
-
-	@Override
-	public void attackEntityWithRangedAttack(EntityLivingBase entity, float f) {
-		ItemStack proj = ItemStackWrapper.MCItem(inventory.getProjectile());
-		if (proj == null) {
-			updateAI = true;
-			return;
-		}
-		NpcEvent.RangedLaunchedEvent event = new NpcEvent.RangedLaunchedEvent(wrappedNPC, entity,
-				stats.ranged.getStrength());
-		if (EventHooks.onNPCRangedLaunched(this, event)) {
-			return;
-		}
-		for (int i = 0; i < stats.ranged.getShotCount(); ++i) {
-			EntityProjectile projectile = this.shoot(entity, stats.ranged.getAccuracy(), proj, f == 1.0f);
-			projectile.damage = event.damage;
-			projectile.callback = new IProjectileCallback() {
-				@Override
-				public boolean onImpact(EntityProjectile projectile, BlockPos pos, Entity entity) {
-					projectile.playSound(stats.ranged.getSound((entity != null) ? 1 : 2), 1.0f,
-							1.2f / ((EntityNPCInterface.this.getRNG().nextFloat() * 0.2f) + 0.9f));
-					return false;
-				}
-			};
-		}
-		playSound(stats.ranged.getSound(0), 2.0f, 1.0f);
-	}
-
-	public EntityProjectile shoot(double x, double y, double z, int accuracy, ItemStack proj, boolean indirect) {
-		EntityProjectile projectile = new EntityProjectile(worldObj, this, proj.copy(), true);
-		double varX = x - posX;
-		double varY = y - (posY + getEyeHeight());
-		double varZ = z - posZ;
-		float varF = projectile.hasGravity() ? MathHelper.sqrt_double((varX * varX) + (varZ * varZ)) : 0.0f;
-		float angle = projectile.getAngleForXYZ(varX, varY, varZ, varF, indirect);
-		float acc = 20.0f - MathHelper.floor_float(accuracy / 5.0f);
-		projectile.setThrowableHeading(varX, varY, varZ, angle, acc);
-		worldObj.spawnEntityInWorld(projectile);
-		return projectile;
-	}
-
-	public EntityProjectile shoot(EntityLivingBase entity, int accuracy, ItemStack proj, boolean indirect) {
-		return this.shoot(entity.posX, entity.getEntityBoundingBox().minY + (entity.height / 2.0f), entity.posZ,
-				accuracy, proj, indirect);
 	}
 
 	@Override

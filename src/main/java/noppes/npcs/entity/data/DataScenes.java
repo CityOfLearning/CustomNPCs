@@ -146,10 +146,10 @@ public class DataScenes {
 				if (damage <= 0.0f) {
 					damage = 0.01f;
 				}
-				ItemStack stack = ItemStackWrapper.MCItem(npc.inventory.getProjectile());
+				ItemStackWrapper.MCItem(npc.inventory.getProjectile());
 				if (args.length > 2) {
 					Item item2 = CommandBase.getItemByText(npc, args[2]);
-					stack = new ItemStack(item2, 1, 0);
+					new ItemStack(item2, 1, 0);
 				}
 			} else if (event.type == SceneType.ANIMATE) {
 				npc.animateAi.temp = 0;

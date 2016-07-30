@@ -4,25 +4,18 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Random;
-
-import com.google.common.collect.Maps;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityFlameFX;
 import net.minecraft.client.particle.EntitySmokeFX;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.statemap.StateMap;
-import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -51,14 +44,12 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.CommonProxy;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.ModelData;
 import noppes.npcs.ModelPartData;
 import noppes.npcs.PacketHandlerPlayer;
 import noppes.npcs.blocks.BlockBuilder;
 import noppes.npcs.blocks.BlockCarpentryBench;
 import noppes.npcs.blocks.BlockMailbox;
-import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileBlockAnvil;
 import noppes.npcs.blocks.tiles.TileCopy;
 import noppes.npcs.blocks.tiles.TileDoor;
@@ -134,7 +125,6 @@ import noppes.npcs.client.renderer.blocks.BlockDoorRenderer;
 import noppes.npcs.client.renderer.blocks.BlockMailboxRenderer;
 import noppes.npcs.client.renderer.blocks.BlockScriptedRenderer;
 import noppes.npcs.client.renderer.blocks.BlockTradingRenderer;
-import noppes.npcs.config.StringCache;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.containers.ContainerCarpentryBench;
 import noppes.npcs.containers.ContainerMail;
@@ -166,75 +156,12 @@ import tconstruct.client.tabs.InventoryTabVanilla;
 import tconstruct.client.tabs.TabRegistry;
 
 public class ClientProxy extends CommonProxy {
-	public static class FontContainer {
-		private StringCache textFont;
-		public boolean useCustomFont;
-
-		private FontContainer() {
-			textFont = null;
-			useCustomFont = true;
-		}
-
-		public FontContainer(String fontType, int fontSize) {
-			textFont = null;
-			useCustomFont = true;
-			(textFont = new StringCache()).setDefaultFont("Arial", fontSize, true);
-			useCustomFont = !fontType.equalsIgnoreCase("minecraft");
-			try {
-				if (!useCustomFont || fontType.isEmpty() || fontType.equalsIgnoreCase("default")) {
-					textFont.setCustomFont(new ResourceLocation("customnpcs", "OpenSans.ttf"), fontSize, true);
-				} else {
-					textFont.setDefaultFont(fontType, fontSize, true);
-				}
-			} catch (Exception e) {
-				LogWriter.info("Failed loading font so using Arial");
-			}
-		}
-
-		public FontContainer copy() {
-			FontContainer font = new FontContainer();
-			font.textFont = textFont;
-			font.useCustomFont = useCustomFont;
-			return font;
-		}
-
-		public void drawString(String text, int x, int y, int color) {
-			if (useCustomFont) {
-				textFont.renderString(text, x, y, color, true);
-				textFont.renderString(text, x, y, color, false);
-			} else {
-				Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, color);
-			}
-		}
-
-		public String getName() {
-			if (!useCustomFont) {
-				return "Minecraft";
-			}
-			return textFont.usedFont().getFontName();
-		}
-
-		public int height() {
-			if (useCustomFont) {
-				return textFont.fontHeight;
-			}
-			return Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
-		}
-
-		public int width(String text) {
-			if (useCustomFont) {
-				return textFont.getStringWidth(text);
-			}
-			return Minecraft.getMinecraft().fontRendererObj.getStringWidth(text);
-		}
-	}
 
 	public static KeyBinding QuestLog;
 	public static KeyBinding Scene1;
 	public static KeyBinding SceneReset;
 	public static KeyBinding Scene2;
 	public static KeyBinding Scene3;
-	public static FontContainer Font;
 
 	public static void bindTexture(ResourceLocation location) {
 		try {
@@ -457,7 +384,6 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void load() {
-		ClientProxy.Font = new FontContainer(CustomNpcs.FontType, CustomNpcs.FontSize);
 		createFolders();
 		CustomNpcs.Channel.register(new PacketHandlerClient());
 		CustomNpcs.ChannelPlayer.register(new PacketHandlerPlayer());
@@ -594,15 +520,14 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void spawnParticle(EntityLivingBase player, String string, Object... ob) {
 		if (string.equals("Spell")) {
-			int color = (Integer) ob[0];
 			for (int number = (Integer) ob[1], i = 0; i < number; ++i) {
 				Random rand = player.getRNG();
-				double x = (rand.nextDouble() - 0.5) * player.width;
-				double y = player.getEyeHeight();
-				double z = (rand.nextDouble() - 0.5) * player.width;
-				double f = (rand.nextDouble() - 0.5) * 2.0;
-				double f2 = -rand.nextDouble();
-				double f3 = (rand.nextDouble() - 0.5) * 2.0;
+				rand.nextDouble();
+				player.getEyeHeight();
+				rand.nextDouble();
+				rand.nextDouble();
+				rand.nextDouble();
+				rand.nextDouble();
 			}
 		} else if (string.equals("Block")) {
 			BlockPos pos = (BlockPos) ob[0];

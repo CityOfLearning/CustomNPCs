@@ -41,13 +41,13 @@ public class EntityNpcPony extends EntityNPCInterface {
 	}
 
 	@Override
-	public void writeSpawnData(ByteBuf buffer) {
+	public void readSpawnData(ByteBuf additionalData) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void readSpawnData(ByteBuf additionalData) {
+	public void writeSpawnData(ByteBuf buffer) {
 		// TODO Auto-generated method stub
 
 	}

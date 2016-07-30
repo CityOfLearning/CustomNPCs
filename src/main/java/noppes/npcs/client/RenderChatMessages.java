@@ -147,7 +147,8 @@ public class RenderChatMessages implements IChatMessages {
 		for (TextBlockClient block2 : messages.values()) {
 			for (IChatComponent chat : block2.lines) {
 				String message = chat.getFormattedText();
-				font.drawString(message, -font.getStringWidth(message) / 2, index * font.FONT_HEIGHT, black);
+				Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(message,
+						-font.getStringWidth(message) / 2, index * font.FONT_HEIGHT, black);
 				++index;
 			}
 		}

@@ -8,16 +8,10 @@ import java.util.Iterator;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemEditableBook;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.api.event.RoleEvent;
@@ -42,16 +36,13 @@ public class PacketHandlerPlayer {
 	public void onServerPacket(FMLNetworkEvent.ServerCustomPacketEvent event) {
 		EntityPlayerMP player = ((NetHandlerPlayServer) event.handler).playerEntity;
 		ByteBuf buffer = event.packet.payload();
-		MinecraftServer.getServer().addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				EnumPlayerPacket type = null;
-				try {
-					type = EnumPlayerPacket.values()[buffer.readInt()];
-					PacketHandlerPlayer.this.player(buffer, player, type);
-				} catch (Exception e) {
-					LogWriter.error("Error with EnumPlayerPacket." + type, e);
-				}
+		MinecraftServer.getServer().addScheduledTask(() -> {
+			EnumPlayerPacket type = null;
+			try {
+				type = EnumPlayerPacket.values()[buffer.readInt()];
+				PacketHandlerPlayer.this.player(buffer, player, type);
+			} catch (Exception e) {
+				LogWriter.error("Error with EnumPlayerPacket." + type, e);
 			}
 		});
 	}

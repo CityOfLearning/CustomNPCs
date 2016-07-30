@@ -21,7 +21,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -114,10 +113,6 @@ public class CustomNpcs {
 	public static boolean IceMeltsEnabled;
 	@ConfigProp(info = "Type 0 = Normal, Type 1 = Solid")
 	public static int HeadWearType;
-	@ConfigProp(info = "When set to Minecraft it will use minecrafts font, when Default it will use OpenSans. Can only use fonts installed on your PC")
-	public static String FontType;
-	@ConfigProp(info = "Font size for custom fonts (doesn't work with minecrafts font)")
-	public static int FontSize;
 	public static FMLEventChannel Channel;
 	public static FMLEventChannel ChannelPlayer;
 	public static ConfigLoader Config;
@@ -140,8 +135,6 @@ public class CustomNpcs {
 		CustomNpcs.VineGrowthEnabled = true;
 		CustomNpcs.IceMeltsEnabled = true;
 		CustomNpcs.HeadWearType = 1;
-		CustomNpcs.FontType = "Default";
-		CustomNpcs.FontSize = 18;
 		CustomNpcs.NoppesCommand = new CommandNoppes();
 	}
 

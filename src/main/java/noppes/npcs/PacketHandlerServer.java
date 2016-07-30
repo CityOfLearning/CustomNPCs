@@ -736,30 +736,27 @@ public class PacketHandlerServer {
 			return;
 		}
 		ByteBuf buffer = event.packet.payload();
-		MinecraftServer.getServer().addScheduledTask(new Runnable() {
-			@Override
-			public void run() {
-				EnumPacketServer type = null;
-				try {
-					type = EnumPacketServer.values()[buffer.readInt()];
-					ItemStack item = player.inventory.getCurrentItem();
-					EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-					if (!type.needsNpc || (npc != null)) {
-						if (type.hasPermission()) {
-							if (!CustomNpcsPermissions.hasPermission(player, type.permission)) {
-								return;
-							}
-						}
-						if (!type.isExempt() && !PacketHandlerServer.this.allowItem(item, type)) {
-							PacketHandlerServer.this.warn(player,
-									"tried to use custom npcs without a tool in hand, possibly a hacker");
-						} else {
-							PacketHandlerServer.this.handlePacket(type, buffer, player, npc);
+		MinecraftServer.getServer().addScheduledTask(() -> {
+			EnumPacketServer type = null;
+			try {
+				type = EnumPacketServer.values()[buffer.readInt()];
+				ItemStack item = player.inventory.getCurrentItem();
+				EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
+				if (!type.needsNpc || (npc != null)) {
+					if (type.hasPermission()) {
+						if (!CustomNpcsPermissions.hasPermission(player, type.permission)) {
+							return;
 						}
 					}
-				} catch (Exception e) {
-					LogWriter.error("Error with EnumPacketServer." + type, e);
+					if (!type.isExempt() && !PacketHandlerServer.this.allowItem(item, type)) {
+						PacketHandlerServer.this.warn(player,
+								"tried to use custom npcs without a tool in hand, possibly a hacker");
+					} else {
+						PacketHandlerServer.this.handlePacket(type, buffer, player, npc);
+					}
 				}
+			} catch (Exception e) {
+				LogWriter.error("Error with EnumPacketServer." + type, e);
 			}
 		});
 	}

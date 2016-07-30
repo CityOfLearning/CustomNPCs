@@ -24,8 +24,6 @@ public class MassBlockController {
 
 	private static Queue<IMassBlock> queue;
 
-	private static MassBlockController Instance;
-
 	public static void Queue(IMassBlock imb) {
 		MassBlockController.queue.add(imb);
 	}
@@ -54,6 +52,5 @@ public class MassBlockController {
 
 	public MassBlockController() {
 		MassBlockController.queue = new LinkedList<IMassBlock>();
-		MassBlockController.Instance = this;
 	}
 }

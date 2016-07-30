@@ -81,7 +81,7 @@ public class EventHooks {
 		return WrapperNpcAPI.EVENT_BUS.post(event);
 	}
 
-	public static boolean onNPCDied(EntityNPCInterface npc, Entity entity, DamageSource damagesource) {
+	public static boolean onNPCDied(EntityNPCInterface npc, DamageSource damagesource, Entity entity) {
 		if (npc.script.isClient()) {
 			return false;
 		}

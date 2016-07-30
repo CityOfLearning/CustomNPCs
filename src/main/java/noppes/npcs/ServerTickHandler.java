@@ -4,14 +4,10 @@
 
 package noppes.npcs;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import noppes.npcs.controllers.MassBlockController;
 import noppes.npcs.controllers.SchematicController;
@@ -19,11 +15,9 @@ import noppes.npcs.entity.data.DataScenes;
 
 public class ServerTickHandler {
 	public int ticks;
-	private String serverName;
 
 	public ServerTickHandler() {
 		ticks = 0;
-		serverName = null;
 	}
 
 	@SubscribeEvent

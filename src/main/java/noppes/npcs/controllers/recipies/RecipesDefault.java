@@ -12,7 +12,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
-import noppes.npcs.CustomNpcs;
 
 public class RecipesDefault {
 	public static void addRecipe(String name, Object ob, boolean isGlobal, Object... recipe) {

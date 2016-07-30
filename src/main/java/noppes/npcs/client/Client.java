@@ -17,18 +17,15 @@ import noppes.npcs.util.CustomNPCsScheduler;
 
 public class Client {
 	public static void sendData(EnumPacketServer enu, Object... obs) {
-		CustomNPCsScheduler.runTack(new Runnable() {
-			@Override
-			public void run() {
-				PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
-				try {
-					if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
-						return;
-					}
-					CustomNpcs.Channel.sendToServer(new FMLProxyPacket(buffer, "CustomNPCs"));
-				} catch (IOException e) {
-					e.printStackTrace();
+		CustomNPCsScheduler.runTack(() -> {
+			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
+			try {
+				if (!Server.fillBuffer((ByteBuf) buffer, enu, obs)) {
+					return;
 				}
+				CustomNpcs.Channel.sendToServer(new FMLProxyPacket(buffer, "CustomNPCs"));
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		});
 	}

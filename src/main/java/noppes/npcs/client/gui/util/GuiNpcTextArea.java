@@ -17,7 +17,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.client.ClientProxy;
 
 public class GuiNpcTextArea extends GuiNpcTextField {
 	public boolean inMenu;
@@ -27,7 +26,6 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 	private int width;
 	private int height;
 	private int cursorCounter;
-	private ClientProxy.FontContainer font;
 	private int cursorPosition;
 	private int listHeight;
 	private float scrolledY;
@@ -49,8 +47,6 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 		width = k;
 		height = l;
 		listHeight = l;
-		font = ClientProxy.Font.copy();
-		font.useCustomFont = true;
 		setMaxStringLength(Integer.MAX_VALUE);
 		setText(s);
 	}
@@ -101,7 +97,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 	@Override
 	public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
-		font.drawString(text, x, y, color);
+		Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, x, y, color);
 	}
 
 	@Override
@@ -111,7 +107,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 		int color = 14737632;
 		boolean flag = isFocused() && (((cursorCounter / 6) % 2) == 0);
 		int startLine = getStartLineY();
-		int maxLine = (height / font.height()) + startLine;
+		int maxLine = (height / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) + startLine;
 		List<String> lines = getLines();
 		int charCount = 0;
 		int lineCount = 0;
@@ -120,35 +116,42 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 			String wholeLine = lines.get(i);
 			String line = "";
 			for (char c : wholeLine.toCharArray()) {
-				if ((font.width(line + c) > maxSize) && wrapLine) {
+				if ((Minecraft.getMinecraft().fontRendererObj.getStringWidth(line + c) > maxSize) && wrapLine) {
 					if ((lineCount >= startLine) && (lineCount < maxLine)) {
-						drawString(null, line, posX + 4, posY + 4 + ((lineCount - startLine) * font.height()), color);
+						drawString(null, line, posX + 4, posY + 4
+								+ ((lineCount - startLine) * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT),
+								color);
 					}
 					line = "";
 					++lineCount;
 				}
 				if (flag && (charCount == cursorPosition) && (lineCount >= startLine) && (lineCount < maxLine)
 						&& canEdit) {
-					int xx = posX + font.width(line) + 4;
-					int yy = posY + ((lineCount - startLine) * font.height()) + 4;
+					int xx = posX + Minecraft.getMinecraft().fontRendererObj.getStringWidth(line) + 4;
+					int yy = posY + ((lineCount - startLine) * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)
+							+ 4;
 					if (getText().length() == cursorPosition) {
-						font.drawString("_", xx, yy, color);
+						Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("_", xx, yy, color);
 					} else {
-						drawCursorVertical(xx, yy, xx + 1, yy + font.height());
+						drawCursorVertical(xx, yy, xx + 1, yy + Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
 					}
 				}
 				++charCount;
 				line += c;
 			}
 			if ((lineCount >= startLine) && (lineCount < maxLine)) {
-				drawString(null, line, posX + 4, posY + 4 + ((lineCount - startLine) * font.height()), color);
+				drawString(null, line, posX + 4,
+						posY + 4 + ((lineCount - startLine) * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT),
+						color);
 				if (flag && (charCount == cursorPosition) && canEdit) {
-					int xx2 = posX + font.width(line) + 4;
-					int yy2 = posY + ((lineCount - startLine) * font.height()) + 4;
+					int xx2 = posX + Minecraft.getMinecraft().fontRendererObj.getStringWidth(line) + 4;
+					int yy2 = posY + ((lineCount - startLine) * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT)
+							+ 4;
 					if (getText().length() == cursorPosition) {
-						font.drawString("_", xx2, yy2, color);
+						Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow("_", xx2, yy2, color);
 					} else {
-						drawCursorVertical(xx2, yy2, xx2 + 1, yy2 + font.height());
+						drawCursorVertical(xx2, yy2, xx2 + 1,
+								yy2 + Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
 					}
 				}
 			}
@@ -172,7 +175,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 		} else {
 			clickVerticalBar = false;
 		}
-		listHeight = lineCount * font.height();
+		listHeight = lineCount * Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
 		drawVerticalScrollBar();
 	}
 
@@ -211,7 +214,8 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 		if (!isScrolling()) {
 			scrolledY = 0.0f;
 		}
-		return MathHelper.ceiling_double_int((scrolledY * listHeight) / font.height());
+		return MathHelper
+				.ceiling_double_int((scrolledY * listHeight) / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
 	}
 
 	private int getVerticalBarSize() {
@@ -240,7 +244,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 			return;
 		}
 		int x = i - posX;
-		int y = ((j - posY - 4) / font.height()) + getStartLineY();
+		int y = ((j - posY - 4) / Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) + getStartLineY();
 		cursorPosition = 0;
 		List<String> lines = getLines();
 		int charCount = 0;
@@ -251,14 +255,14 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 			String line = "";
 			for (char c : wholeLine.toCharArray()) {
 				cursorPosition = charCount;
-				if ((font.width(line + c) > maxSize) && wrapLine) {
+				if ((Minecraft.getMinecraft().fontRendererObj.getStringWidth(line + c) > maxSize) && wrapLine) {
 					++lineCount;
 					line = "";
 					if (y < lineCount) {
 						break;
 					}
 				}
-				if ((lineCount == y) && (x <= font.width(line + c))) {
+				if ((lineCount == y) && (x <= Minecraft.getMinecraft().fontRendererObj.getStringWidth(line + c))) {
 					return;
 				}
 				++charCount;

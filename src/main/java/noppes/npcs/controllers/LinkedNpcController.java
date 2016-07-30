@@ -124,7 +124,6 @@ public class LinkedNpcController {
 	}
 
 	private void loadNpcs() {
-		LogWriter.info("Loading Linked Npcs");
 		File dir = getDir();
 		if (dir.exists()) {
 			List<LinkedData> list = new ArrayList<LinkedData>();
@@ -142,7 +141,6 @@ public class LinkedNpcController {
 			}
 			this.list = list;
 		}
-		LogWriter.info("Done loading Linked Npcs");
 	}
 
 	private NBTTagCompound readNpcData(EntityNPCInterface npc) {
