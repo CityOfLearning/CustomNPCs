@@ -1,3 +1,13 @@
+import com.amazonaws.auth.policy.Policy
+import com.amazonaws.auth.policy.Principal
+import com.amazonaws.auth.policy.Statement
+import com.amazonaws.auth.policy.actions.S3Actions
+import com.amazonaws.auth.policy.resources.S3BucketResource
+import com.amazonaws.auth.policy.resources.S3ObjectResource
+import com.amazonaws.services.s3.model.ObjectMetadata
+
+import jp.classmethod.aws.gradle.s3.AmazonS3FileUploadTask
+
 // For those who want the bleeding edge
 buildscript {
     repositories {
@@ -6,13 +16,24 @@ buildscript {
             name = "forge"
             url = "http://files.minecraftforge.net/maven"
         }
+		mavenCentral()
+		maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+	    classpath "jp.classmethod.aws:gradle-aws-plugin:0.+"
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle.forge'
+apply plugin: "jp.classmethod.aws.s3"
+
+aws {
+	profileName = "minecraft"
+	region = "us-east-1"
+}
+
+def myBucketName = 'broad-participation'
 
 version = "1.8.9"
 group= "noppes.npcs" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
@@ -60,4 +81,28 @@ processResources
 
 reobfJar.doLast {
     ant.checksum file: tasks.jar.archivePath
+}
+
+task publish(dependsOn:['build', 'uploadJar', 'uploadHash']) {
+
+}
+
+task uploadJar(type: AmazonS3FileUploadTask) {
+	file file('./build/libs/'+archivesBaseName +'-' +version+'.jar') // must be a file
+	bucketName myBucketName
+	key archivesBaseName + '.jar'
+	
+	def m = new ObjectMetadata()
+	m.setCacheControl("no-cache, no-store")
+	objectMetadata = m
+}
+
+task uploadHash(type: AmazonS3FileUploadTask) {
+	file file('./build/libs/'+archivesBaseName +'-' +version+'.jar.MD5') // must be a file
+	bucketName myBucketName
+	key archivesBaseName + '.MD5'
+	
+	def m = new ObjectMetadata()
+	m.setCacheControl("no-cache, no-store")
+	objectMetadata = m
 }
