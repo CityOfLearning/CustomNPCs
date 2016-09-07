@@ -25,6 +25,11 @@ buildscript {
     }
 }
 
+repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: "jp.classmethod.aws.s3"
 
