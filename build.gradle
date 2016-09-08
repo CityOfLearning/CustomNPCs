@@ -96,6 +96,7 @@ task uploadJar(type: AmazonS3FileUploadTask) {
 	file file('./build/libs/'+archivesBaseName +'-' +version+'.jar') // must be a file
 	bucketName myBucketName
 	key archivesBaseName + '.jar'
+	overwrite true
 	
 	def m = new ObjectMetadata()
 	m.setCacheControl("no-cache, no-store")
@@ -106,6 +107,7 @@ task uploadHash(type: AmazonS3FileUploadTask) {
 	file file('./build/libs/'+archivesBaseName +'-' +version+'.jar.MD5') // must be a file
 	bucketName myBucketName
 	key archivesBaseName + '.MD5'
+	overwrite true
 	
 	def m = new ObjectMetadata()
 	m.setCacheControl("no-cache, no-store")
