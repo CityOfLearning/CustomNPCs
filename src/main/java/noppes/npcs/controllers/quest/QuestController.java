@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers.quest;
 
@@ -14,7 +11,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.util.NBTJsonUtil;
 
@@ -89,7 +85,7 @@ public class QuestController {
 						}
 						Quest quest = category.quests.get(id);
 						if (quests.containsKey(id)) {
-							LogWriter.error("Duplicate id " + quest.id + " from category " + category.title);
+							CustomNpcs.logger.error("Duplicate id " + quest.id + " from category " + category.title);
 							ite.remove();
 						} else {
 							quests.put(id, quest);
@@ -143,7 +139,7 @@ public class QuestController {
 						category.quests.put(quest.id, quest);
 						quest.category = category;
 					} catch (Exception e) {
-						LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+						CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 					}
 				}
 			}

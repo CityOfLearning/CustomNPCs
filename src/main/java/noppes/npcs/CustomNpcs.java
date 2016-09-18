@@ -1,12 +1,10 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Set;
+
+import org.apache.logging.log4j.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockIce;
@@ -118,6 +116,8 @@ public class CustomNpcs {
 	public static ConfigLoader Config;
 	public static CommandNoppes NoppesCommand;
 
+	public static Logger logger;
+
 	static {
 		CustomNpcs.EnableChatBubbles = true;
 		CustomNpcs.NewEntityStartId = 0;
@@ -171,6 +171,7 @@ public class CustomNpcs {
 
 	@Mod.EventHandler
 	public void load(FMLPreInitializationEvent ev) {
+		logger = ev.getModLog();
 		CustomNpcs.Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCs");
 		CustomNpcs.ChannelPlayer = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCsPlayer");
 		MinecraftServer server = MinecraftServer.getServer();

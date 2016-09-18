@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers.script;
 
@@ -25,7 +22,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.api.wrapper.WorldWrapper;
 import noppes.npcs.util.NBTJsonUtil;
 
@@ -52,7 +48,7 @@ public class ScriptController {
 		shouldSave = false;
 		ScriptController.Instance = this;
 		manager = new ScriptEngineManager();
-		LogWriter.info("Script Engines Available:");
+		CustomNpcs.logger.info("Script Engines Available:");
 		for (ScriptEngineFactory fac : manager.getEngineFactories()) {
 			if (fac.getExtensions().isEmpty()) {
 				continue;
@@ -61,7 +57,7 @@ public class ScriptController {
 				continue;
 			}
 			String ext = "." + fac.getExtensions().get(0).toLowerCase();
-			LogWriter.info(fac.getLanguageName() + ": " + ext);
+			CustomNpcs.logger.info(fac.getLanguageName() + ": " + ext);
 			languages.put(fac.getLanguageName(), ext);
 		}
 	}
@@ -135,7 +131,7 @@ public class ScriptController {
 			compound = NBTJsonUtil.LoadFile(file);
 			shouldSave = false;
 		} catch (Exception e) {
-			LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+			CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 			return false;
 		}
 		return true;
@@ -178,7 +174,7 @@ public class ScriptController {
 		try {
 			NBTJsonUtil.SaveFile(getSavedFile(), compound);
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		shouldSave = false;
 	}

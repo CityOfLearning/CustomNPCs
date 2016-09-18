@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.io.BufferedInputStream;
@@ -73,7 +69,7 @@ public class Server {
 			}
 		}
 		if (buffer.array().length >= 32767) {
-			LogWriter.error("Packet " + enu + " was too big to be send");
+			CustomNpcs.logger.error("Packet " + enu + " was too big to be send");
 			return false;
 		}
 		return true;
@@ -117,7 +113,7 @@ public class Server {
 					CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
 				}
 			} catch (IOException e) {
-				LogWriter.except(e);
+				CustomNpcs.logger.catching(e);
 			}
 		});
 	}
@@ -134,7 +130,7 @@ public class Server {
 			}
 			CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
 		} catch (IOException e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		return true;
 	}
@@ -148,7 +144,7 @@ public class Server {
 				}
 				CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
 			} catch (IOException e) {
-				LogWriter.except(e);
+				CustomNpcs.logger.catching(e);
 			}
 		}, delay);
 	}
@@ -166,7 +162,7 @@ public class Server {
 					CustomNpcs.Channel.sendTo(new FMLProxyPacket(buffer, "CustomNPCs"), player);
 				}
 			} catch (IOException e) {
-				LogWriter.except(e);
+				CustomNpcs.logger.catching(e);
 			}
 		});
 	}

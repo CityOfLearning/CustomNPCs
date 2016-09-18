@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.client;
 
 import java.awt.Graphics;
@@ -15,7 +11,7 @@ import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureUtil;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.LogWriter;
+import noppes.npcs.CustomNpcs;
 
 public class TextureCache extends SimpleTexture {
 	private BufferedImage bufferedImage;
@@ -64,7 +60,7 @@ public class TextureCache extends SimpleTexture {
 			g.drawImage(bufferedimage, i * 3, j, null);
 			textureUploaded = false;
 		} catch (Exception e) {
-			LogWriter.error("Failed caching texture: " + location, e);
+			CustomNpcs.logger.error("Failed caching texture: " + location, e);
 		}
 	}
 }

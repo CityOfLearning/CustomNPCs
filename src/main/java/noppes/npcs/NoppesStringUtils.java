@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs;
 
@@ -57,7 +54,7 @@ public class NoppesStringUtils {
 			try {
 				result = (String) contents.getTransferData(DataFlavor.stringFlavor);
 			} catch (Exception ex) {
-				LogWriter.except(ex);
+				CustomNpcs.logger.catching(ex);
 			}
 		}
 		return result;

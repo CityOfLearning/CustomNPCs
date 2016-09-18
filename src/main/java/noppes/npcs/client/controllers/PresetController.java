@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.client.controllers;
 
@@ -12,7 +9,7 @@ import java.util.HashMap;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import noppes.npcs.LogWriter;
+import noppes.npcs.CustomNpcs;
 
 public class PresetController {
 	public static PresetController instance;
@@ -66,7 +63,7 @@ public class PresetController {
 			}
 			return CompressedStreamTools.readCompressed(new FileInputStream(file));
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 			try {
 				File file = new File(dir, filename + "_old");
 				if (!file.exists()) {
@@ -74,7 +71,7 @@ public class PresetController {
 				}
 				return CompressedStreamTools.readCompressed(new FileInputStream(file));
 			} catch (Exception e1) {
-				LogWriter.except(e1);
+				CustomNpcs.logger.catching(e1);
 				return null;
 			}
 		}
@@ -117,7 +114,7 @@ public class PresetController {
 				file.delete();
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 }

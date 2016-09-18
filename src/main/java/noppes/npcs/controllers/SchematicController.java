@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers;
 
@@ -30,7 +27,6 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.Schematic;
 
@@ -120,7 +116,7 @@ public class SchematicController {
 			stream.close();
 			return schema;
 		} catch (IOException e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 			return null;
 		}
 	}

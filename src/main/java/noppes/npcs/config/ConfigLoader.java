@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.config;
 
 import java.io.BufferedReader;
@@ -14,7 +10,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import noppes.npcs.LogWriter;
+import noppes.npcs.CustomNpcs;
 
 public class ConfigLoader {
 	private boolean updateFile;
@@ -68,7 +64,7 @@ public class ConfigLoader {
 			}
 		} catch (Exception e) {
 			updateFile = true;
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		if (updateFile) {
 			updateConfig();

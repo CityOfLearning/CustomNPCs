@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers.faction;
 
@@ -21,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
-import noppes.npcs.LogWriter;
 import noppes.npcs.api.handler.IFactionHandler;
 import noppes.npcs.api.handler.data.IFaction;
 
@@ -230,7 +226,7 @@ public class FactionController implements IFactionHandler {
 				file.delete();
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 }

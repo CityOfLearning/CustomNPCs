@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.controllers;
 
 import java.io.File;
@@ -12,7 +8,6 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NBTTags;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -88,7 +83,7 @@ public class LinkedNpcController {
 		try {
 			loadNpcs();
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 
@@ -135,7 +130,7 @@ public class LinkedNpcController {
 						linked.setNBT(compound);
 						list.add(linked);
 					} catch (Exception e) {
-						LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+						CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 					}
 				}
 			}
@@ -170,7 +165,7 @@ public class LinkedNpcController {
 			try {
 				saveNpc(npc);
 			} catch (IOException e) {
-				LogWriter.except(e);
+				CustomNpcs.logger.catching(e);
 			}
 		}
 	}
@@ -185,7 +180,7 @@ public class LinkedNpcController {
 			}
 			file.renameTo(file2);
 		} catch (NBTJsonUtil.JsonException e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 

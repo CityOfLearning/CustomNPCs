@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.controllers;
 
 import java.io.File;
@@ -19,7 +15,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.controllers.bank.Bank;
 import noppes.npcs.controllers.bank.BankController;
 import noppes.npcs.controllers.bank.PlayerBankData;
@@ -119,7 +114,7 @@ public class PlayerDataController {
 							map.put(compound.getString("PlayerName"), compound);
 						}
 					} catch (Exception e) {
-						LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+						CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 					}
 				}
 			}
@@ -154,7 +149,7 @@ public class PlayerDataController {
 				return NBTJsonUtil.LoadFile(file);
 			}
 		} catch (Exception e) {
-			LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+			CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 		}
 		return new NBTTagCompound();
 	}
@@ -178,7 +173,7 @@ public class PlayerDataController {
 				return comp;
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		try {
 			File file = new File(saveDir, filename + "_old");
@@ -186,7 +181,7 @@ public class PlayerDataController {
 				return CompressedStreamTools.readCompressed(new FileInputStream(file));
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		return new NBTTagCompound();
 	}
@@ -204,7 +199,7 @@ public class PlayerDataController {
 			}
 			file.renameTo(file2);
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 }

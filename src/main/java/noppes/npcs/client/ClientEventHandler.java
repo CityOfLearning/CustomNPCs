@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.client;
 
@@ -22,7 +19,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import noppes.npcs.LogWriter;
+import noppes.npcs.CustomNpcs;
 import noppes.npcs.Schematic;
 import noppes.npcs.blocks.tiles.TileBuilder;
 
@@ -115,7 +112,7 @@ public class ClientEventHandler {
 						}
 					}
 				} catch (Exception e) {
-					LogWriter.error("Error preview builder block", e);
+					CustomNpcs.logger.error("Error preview builder block", e);
 				} finally {
 					GL11.glEndList();
 					if (GL11.glGetError() == 0) {

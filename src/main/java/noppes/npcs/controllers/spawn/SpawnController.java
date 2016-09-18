@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers.spawn;
 
@@ -23,7 +20,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.WeightedRandom;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 
 public class SpawnController {
 	public static SpawnController instance;
@@ -177,7 +173,7 @@ public class SpawnController {
 				file.delete();
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 

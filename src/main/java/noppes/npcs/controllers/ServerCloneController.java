@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers;
 
@@ -17,7 +14,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ChatComponentText;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class ServerCloneController {
@@ -78,7 +74,7 @@ public class ServerCloneController {
 		try {
 			return NBTJsonUtil.LoadFile(file);
 		} catch (Exception e) {
-			LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+			CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 			if (player != null) {
 				player.addChatMessage(new ChatComponentText(e.getMessage()));
 			}
@@ -126,7 +122,7 @@ public class ServerCloneController {
 				}
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 
@@ -184,7 +180,7 @@ public class ServerCloneController {
 			}
 			file.renameTo(file2);
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 	}
 }

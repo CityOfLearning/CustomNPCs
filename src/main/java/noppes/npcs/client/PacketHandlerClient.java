@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.client;
 
 import java.util.HashMap;
@@ -23,7 +19,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.PacketHandlerServer;
 import noppes.npcs.Server;
@@ -211,7 +206,7 @@ public class PacketHandlerClient extends PacketHandlerServer {
 				en = EnumPacketClient.values()[buffer.readInt()];
 				PacketHandlerClient.this.client(buffer, player, en);
 			} catch (Exception e) {
-				LogWriter.error("Error with EnumPacketClient." + en, e);
+				CustomNpcs.logger.error("Error with EnumPacketClient." + en, e);
 			}
 		});
 	}

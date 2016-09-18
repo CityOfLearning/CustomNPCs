@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.controllers.dialog;
 
@@ -14,7 +11,6 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.util.NBTJsonUtil;
@@ -90,7 +86,7 @@ public class DialogController {
 				return;
 			}
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		File dir = getDir();
 		if (!dir.exists()) {
@@ -109,7 +105,7 @@ public class DialogController {
 						}
 						Dialog dialog = entry.getValue();
 						if (dialogs.containsKey(id)) {
-							LogWriter.error("Duplicate id " + dialog.id + " from category " + category.title);
+							CustomNpcs.logger.error("Duplicate id " + dialog.id + " from category " + category.title);
 							ite.remove();
 						} else {
 							dialogs.put(id, dialog);
@@ -161,7 +157,7 @@ public class DialogController {
 						category.dialogs.put(dialog.id, dialog);
 						dialog.category = category;
 					} catch (Exception e) {
-						LogWriter.error("Error loading: " + file.getAbsolutePath(), e);
+						CustomNpcs.logger.error("Error loading: " + file.getAbsolutePath(), e);
 					}
 				}
 			}
@@ -305,7 +301,7 @@ public class DialogController {
 			}
 			file.renameTo(file2);
 		} catch (Exception e) {
-			LogWriter.except(e);
+			CustomNpcs.logger.catching(e);
 		}
 		return dialog;
 	}

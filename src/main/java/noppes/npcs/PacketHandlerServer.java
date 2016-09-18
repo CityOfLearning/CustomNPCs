@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.util.ArrayList;
@@ -756,7 +752,7 @@ public class PacketHandlerServer {
 					}
 				}
 			} catch (Exception e) {
-				LogWriter.error("Error with EnumPacketServer." + type, e);
+				CustomNpcs.logger.error("Error with EnumPacketServer." + type, e);
 			}
 		});
 	}

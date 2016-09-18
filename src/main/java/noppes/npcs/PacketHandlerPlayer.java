@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.util.Iterator;
@@ -42,7 +38,7 @@ public class PacketHandlerPlayer {
 				type = EnumPlayerPacket.values()[buffer.readInt()];
 				PacketHandlerPlayer.this.player(buffer, player, type);
 			} catch (Exception e) {
-				LogWriter.error("Error with EnumPlayerPacket." + type, e);
+				CustomNpcs.logger.error("Error with EnumPlayerPacket." + type, e);
 			}
 		});
 	}

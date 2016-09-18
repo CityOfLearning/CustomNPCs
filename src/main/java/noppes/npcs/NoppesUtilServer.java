@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.io.ByteArrayOutputStream;
@@ -210,7 +206,7 @@ public class NoppesUtilServer {
 			}
 		}
 		if (minecraftserver.worldServers[0].getGameRules().getBoolean("logAdminCommands")) {
-			LogWriter.info(chatcomponenttranslation.getUnformattedText());
+			CustomNpcs.logger.info(chatcomponenttranslation.getUnformattedText());
 		}
 	}
 
