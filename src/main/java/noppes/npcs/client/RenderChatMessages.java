@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.client;
 
@@ -147,9 +144,9 @@ public class RenderChatMessages implements IChatMessages {
 		for (TextBlockClient block2 : messages.values()) {
 			for (IChatComponent chat : block2.lines) {
 				String message = chat.getFormattedText();
-				//none of the shadows look good...
-				Minecraft.getMinecraft().fontRendererObj.drawString(message,
-						-font.getStringWidth(message) / 2, index * font.FONT_HEIGHT, black, false);
+				// none of the shadows look good...
+				Minecraft.getMinecraft().fontRendererObj.drawString(message, -font.getStringWidth(message) / 2,
+						index * font.FONT_HEIGHT, black, false);
 				++index;
 			}
 		}

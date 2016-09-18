@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs;
 
 import java.util.HashMap;

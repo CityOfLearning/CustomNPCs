@@ -1,6 +1,3 @@
-//
-
-//
 
 package tconstruct.client.tabs;
 

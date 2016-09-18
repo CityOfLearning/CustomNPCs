@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.client;
 
 import java.io.File;

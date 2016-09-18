@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.entity.data;
 
 import java.util.Random;

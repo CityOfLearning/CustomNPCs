@@ -1,10 +1,6 @@
-//
-
-//
 
 package noppes.npcs.command;
 
-import java.util.Arrays;
 import java.util.Set;
 
 import net.minecraft.block.Block;
@@ -13,12 +9,9 @@ import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.BlockVine;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.Server;
 import noppes.npcs.api.CommandNoppesBase;
-import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.ChunkController;
 
 public class CmdConfig extends CommandNoppesBase {
