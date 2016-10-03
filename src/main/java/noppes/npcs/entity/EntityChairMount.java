@@ -6,6 +6,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noppes.npcs.blocks.tiles.TileChair;
 
 public class EntityChairMount extends Entity {
 	public EntityChairMount(World world) {
@@ -53,7 +54,7 @@ public class EntityChairMount extends Entity {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if ((worldObj != null) && (!worldObj.isRemote) && (riddenByEntity == null)) {
+		if ((worldObj != null) && (!worldObj.isRemote) && (riddenByEntity == null) && !(worldObj.getTileEntity(this.getPosition()) instanceof TileChair)) {
 			isDead = true;
 		}
 	}
