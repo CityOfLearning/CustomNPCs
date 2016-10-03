@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -13,16 +12,25 @@ public class ModelWallBanner extends ModelBase {
 	ModelRenderer FlagPole2;
 
 	public ModelWallBanner() {
-		(MiddleStick = new ModelRenderer(this, 56, 0)).addBox(-1.0f, 0.0f, -1.0f, 2, 3, 2);
-		MiddleStick.setRotationPoint(0.0f, -9.0f, 6.5f);
-		(StickDecoration = new ModelRenderer(this, 11, 12)).addBox(0.0f, 0.0f, 0.0f, 16, 3, 3);
-		StickDecoration.setRotationPoint(-8.0f, -7.5f, 5.0f);
-		(TopDecoration = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		TopDecoration.setRotationPoint(-0.5f, -10.0f, 6.0f);
-		(FlagPole1 = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		FlagPole1.setRotationPoint(-7.0f, -6.5f, 4.0f);
-		(FlagPole2 = new ModelRenderer(this, 45, 19)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		FlagPole2.setRotationPoint(6.0f, -6.5f, 4.0f);
+		MiddleStick = new ModelRenderer(this, 56, 0);
+		MiddleStick.addBox(-1.0F, 0.0F, -1.0F, 2, 3, 2);
+		MiddleStick.setRotationPoint(0.0F, -9.0F, 6.5F);
+
+		StickDecoration = new ModelRenderer(this, 11, 12);
+		StickDecoration.addBox(0.0F, 0.0F, 0.0F, 16, 3, 3);
+		StickDecoration.setRotationPoint(-8.0F, -7.5F, 5.0F);
+
+		TopDecoration = new ModelRenderer(this, 45, 19);
+		TopDecoration.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		TopDecoration.setRotationPoint(-0.5F, -10.0F, 6.0F);
+
+		FlagPole1 = new ModelRenderer(this, 45, 19);
+		FlagPole1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		FlagPole1.setRotationPoint(-7.0F, -6.5F, 4.0F);
+
+		FlagPole2 = new ModelRenderer(this, 45, 19);
+		FlagPole2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		FlagPole2.setRotationPoint(6.0F, -6.5F, 4.0F);
 	}
 
 	@Override

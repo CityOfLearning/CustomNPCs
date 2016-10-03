@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -19,38 +18,61 @@ public class ModelCampfire extends ModelBase {
 	ModelRenderer Log2;
 
 	public ModelCampfire() {
-		(Rock1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 2, 3);
-		Rock1.setRotationPoint(5.0f, 22.0f, 3.0f);
-		setRotation(Rock1, 0.0f, -0.7435722f, 0.0f);
-		(Rock2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 3, 6);
-		Rock2.setRotationPoint(5.0f, 21.0f, -3.0f);
-		(Rock3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 5, 3, 3);
-		Rock3.setRotationPoint(2.5f, 21.0f, -8.0f);
-		setRotation(Rock3, 0.0f, -0.5576792f, 0.0f);
-		(Rock4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 2, 2);
-		Rock4.setRotationPoint(-2.0f, 22.0f, -7.5f);
-		(Rock5 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, -2.0f, 7, 2, 2);
-		Rock5.setRotationPoint(-3.5f, 22.0f, 7.8f);
-		(Rock6 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 3, 3);
-		Rock6.setRotationPoint(-5.0f, 21.0f, 3.0f);
-		setRotation(Rock6, 0.0f, -1.003822f, 0.0f);
-		(Rock7 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 3, 3);
-		Rock7.setRotationPoint(-7.0f, 21.0f, -4.5f);
-		setRotation(Rock7, 0.0f, 0.8551081f, 0.0f);
-		(Rock8 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 2, 6);
-		Rock8.setRotationPoint(-8.0f, 22.0f, -3.0f);
-		(Log3 = new ModelRenderer(this, 0, 16)).addBox(0.0f, 0.0f, 0.0f, 2, 9, 2);
-		Log3.setRotationPoint(0.0f, 16.0f, -1.0f);
-		setRotation(Log3, 0.3717861f, -1.487144f, -0.1487144f);
-		(Log1 = new ModelRenderer(this, 8, 21)).addBox(0.0f, 0.0f, 0.0f, 2, 9, 2);
-		Log1.setRotationPoint(0.0f, 16.0f, -1.0f);
-		setRotation(Log1, -0.1487144f, 0.0f, -0.3717861f);
-		(Log4 = new ModelRenderer(this, 0, 16)).addBox(0.0f, 0.0f, -2.0f, 2, 9, 2);
-		Log4.setRotationPoint(1.0f, 16.0f, 1.0f);
-		setRotation(Log4, -0.3346075f, 3.141593f, 0.0f);
-		(Log2 = new ModelRenderer(this, 0, 20)).addBox(0.0f, 0.0f, 0.0f, 2, 9, 2);
-		Log2.setRotationPoint(1.0f, 16.0f, -1.0f);
-		setRotation(Log2, 0.2974289f, 3.141593f, 0.0f);
+		Rock1 = new ModelRenderer(this, 0, 0);
+		Rock1.addBox(0.0F, 0.0F, 0.0F, 3, 2, 3);
+		Rock1.setRotationPoint(5.0F, 22.0F, 3.0F);
+		setRotation(Rock1, 0.0F, -0.7435722F, 0.0F);
+
+		Rock2 = new ModelRenderer(this, 0, 0);
+		Rock2.addBox(0.0F, 0.0F, 0.0F, 3, 3, 6);
+		Rock2.setRotationPoint(5.0F, 21.0F, -3.0F);
+
+		Rock3 = new ModelRenderer(this, 0, 0);
+		Rock3.addBox(0.0F, 0.0F, 0.0F, 5, 3, 3);
+		Rock3.setRotationPoint(2.5F, 21.0F, -8.0F);
+		setRotation(Rock3, 0.0F, -0.5576792F, 0.0F);
+
+		Rock4 = new ModelRenderer(this, 0, 0);
+		Rock4.addBox(0.0F, 0.0F, 0.0F, 3, 2, 2);
+		Rock4.setRotationPoint(-2.0F, 22.0F, -7.5F);
+
+		Rock5 = new ModelRenderer(this, 0, 0);
+		Rock5.addBox(0.0F, 0.0F, -2.0F, 7, 2, 2);
+		Rock5.setRotationPoint(-3.5F, 22.0F, 7.8F);
+
+		Rock6 = new ModelRenderer(this, 0, 0);
+		Rock6.addBox(0.0F, 0.0F, 0.0F, 3, 3, 3);
+		Rock6.setRotationPoint(-5.0F, 21.0F, 3.0F);
+		setRotation(Rock6, 0.0F, -1.003822F, 0.0F);
+
+		Rock7 = new ModelRenderer(this, 0, 0);
+		Rock7.addBox(0.0F, 0.0F, 0.0F, 4, 3, 3);
+		Rock7.setRotationPoint(-7.0F, 21.0F, -4.5F);
+		setRotation(Rock7, 0.0F, 0.8551081F, 0.0F);
+
+		Rock8 = new ModelRenderer(this, 0, 0);
+		Rock8.addBox(0.0F, 0.0F, 0.0F, 3, 2, 6);
+		Rock8.setRotationPoint(-8.0F, 22.0F, -3.0F);
+
+		Log3 = new ModelRenderer(this, 0, 16);
+		Log3.addBox(0.0F, 0.0F, 0.0F, 2, 9, 2);
+		Log3.setRotationPoint(0.0F, 16.0F, -1.0F);
+		setRotation(Log3, 0.3717861F, -1.487144F, -0.1487144F);
+
+		Log1 = new ModelRenderer(this, 8, 21);
+		Log1.addBox(0.0F, 0.0F, 0.0F, 2, 9, 2);
+		Log1.setRotationPoint(0.0F, 16.0F, -1.0F);
+		setRotation(Log1, -0.1487144F, 0.0F, -0.3717861F);
+
+		Log4 = new ModelRenderer(this, 0, 16);
+		Log4.addBox(0.0F, 0.0F, -2.0F, 2, 9, 2);
+		Log4.setRotationPoint(1.0F, 16.0F, 1.0F);
+		setRotation(Log4, -0.3346075F, 3.141593F, 0.0F);
+
+		Log2 = new ModelRenderer(this, 0, 20);
+		Log2.addBox(0.0F, 0.0F, 0.0F, 2, 9, 2);
+		Log2.setRotationPoint(1.0F, 16.0F, -1.0F);
+		setRotation(Log2, 0.2974289F, 3.141593F, 0.0F);
 	}
 
 	public void renderLog(float f5) {

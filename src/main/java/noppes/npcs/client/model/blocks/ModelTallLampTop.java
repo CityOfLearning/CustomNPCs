@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -12,14 +11,21 @@ public class ModelTallLampTop extends ModelBase {
 	ModelRenderer LampShade4;
 
 	public ModelTallLampTop() {
-		(LampShade1 = new ModelRenderer(this, 0, 0)).addBox(-0.5f, -6.0f, -6.0f, 1, 12, 12);
-		LampShade1.setRotationPoint(6.0f, -1.0f, 0.0f);
-		(LampShade3 = new ModelRenderer(this, 0, 0)).addBox(-6.0f, -6.0f, -0.5f, 12, 12, 1);
-		LampShade3.setRotationPoint(0.0f, -1.0f, -6.0f);
-		(LampShade2 = new ModelRenderer(this, 0, 0)).addBox(-0.5f, -6.0f, -6.0f, 1, 12, 12);
-		LampShade2.setRotationPoint(-6.0f, -1.0f, 0.0f);
-		(LampShade4 = new ModelRenderer(this, 0, 0)).addBox(-6.0f, -6.0f, -0.5f, 12, 12, 1);
-		LampShade4.setRotationPoint(0.0f, -1.0f, 6.0f);
+		LampShade1 = new ModelRenderer(this, 0, 0);
+		LampShade1.addBox(-0.5F, -6.0F, -6.0F, 1, 12, 12);
+		LampShade1.setRotationPoint(6.0F, -1.0F, 0.0F);
+
+		LampShade3 = new ModelRenderer(this, 0, 0);
+		LampShade3.addBox(-6.0F, -6.0F, -0.5F, 12, 12, 1);
+		LampShade3.setRotationPoint(0.0F, -1.0F, -6.0F);
+
+		LampShade2 = new ModelRenderer(this, 0, 0);
+		LampShade2.addBox(-0.5F, -6.0F, -6.0F, 1, 12, 12);
+		LampShade2.setRotationPoint(-6.0F, -1.0F, 0.0F);
+
+		LampShade4 = new ModelRenderer(this, 0, 0);
+		LampShade4.addBox(-6.0F, -6.0F, -0.5F, 12, 12, 1);
+		LampShade4.setRotationPoint(0.0F, -1.0F, 6.0F);
 	}
 
 	@Override

@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -12,14 +11,21 @@ public class ModelCouchCornerWool extends ModelBase {
 	ModelRenderer Wool4;
 
 	public ModelCouchCornerWool() {
-		(Wool1 = new ModelRenderer(this, 11, 3)).addBox(0.0f, 0.0f, 0.0f, 13, 5, 2);
-		Wool1.setRotationPoint(-7.0f, 16.0f, -8.0f);
-		(Wool2 = new ModelRenderer(this, 2, 4)).addBox(0.0f, 0.0f, 0.0f, 2, 10, 13);
-		Wool2.setRotationPoint(-7.0f, 6.0f, -8.0f);
-		(Wool3 = new ModelRenderer(this, 14, 15)).addBox(0.0f, 0.0f, 0.0f, 15, 10, 2);
-		Wool3.setRotationPoint(-7.0f, 6.0f, 5.0f);
-		(Wool4 = new ModelRenderer(this, 0, 45)).addBox(0.0f, 0.0f, 0.0f, 15, 5, 13);
-		Wool4.setRotationPoint(-7.0f, 16.0f, -6.0f);
+		Wool1 = new ModelRenderer(this, 11, 3);
+		Wool1.addBox(0.0F, 0.0F, 0.0F, 13, 5, 2);
+		Wool1.setRotationPoint(-7.0F, 16.0F, -8.0F);
+
+		Wool2 = new ModelRenderer(this, 2, 4);
+		Wool2.addBox(0.0F, 0.0F, 0.0F, 2, 10, 13);
+		Wool2.setRotationPoint(-7.0F, 6.0F, -8.0F);
+
+		Wool3 = new ModelRenderer(this, 14, 15);
+		Wool3.addBox(0.0F, 0.0F, 0.0F, 15, 10, 2);
+		Wool3.setRotationPoint(-7.0F, 6.0F, 5.0F);
+
+		Wool4 = new ModelRenderer(this, 0, 45);
+		Wool4.addBox(0.0F, 0.0F, 0.0F, 15, 5, 13);
+		Wool4.setRotationPoint(-7.0F, 16.0F, -6.0F);
 	}
 
 	@Override

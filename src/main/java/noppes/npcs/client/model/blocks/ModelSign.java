@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -12,15 +11,22 @@ public class ModelSign extends ModelBase {
 	ModelRenderer Chain1;
 
 	public ModelSign() {
-		(Sign = new ModelRenderer(this, 0, 22)).addBox(0.0f, 0.0f, 0.0f, 14, 9, 1);
-		Sign.setRotationPoint(-7.0f, 12.0f, -0.5f);
-		setRotation(Sign, 0.0174533f, 0.0f, 0.0f);
-		(Chain2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 2);
-		Chain2.setRotationPoint(5.0f, 11.0f, -1.0f);
-		(Bar = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 1, 1);
-		Bar.setRotationPoint(-8.0f, 10.0f, -0.5f);
-		(Chain1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 2);
-		Chain1.setRotationPoint(-6.0f, 11.0f, -1.0f);
+		Sign = new ModelRenderer(this, 0, 22);
+		Sign.addBox(0.0F, 0.0F, 0.0F, 14, 9, 1);
+		Sign.setRotationPoint(-7.0F, 12.0F, -0.5F);
+		setRotation(Sign, 0.0174533F, 0.0F, 0.0F);
+
+		Chain2 = new ModelRenderer(this, 0, 0);
+		Chain2.addBox(0.0F, 0.0F, 0.0F, 1, 2, 2);
+		Chain2.setRotationPoint(5.0F, 11.0F, -1.0F);
+
+		Bar = new ModelRenderer(this, 0, 0);
+		Bar.addBox(0.0F, 0.0F, 0.0F, 16, 1, 1);
+		Bar.setRotationPoint(-8.0F, 10.0F, -0.5F);
+
+		Chain1 = new ModelRenderer(this, 0, 0);
+		Chain1.addBox(0.0F, 0.0F, 0.0F, 1, 2, 2);
+		Chain1.setRotationPoint(-6.0F, 11.0F, -1.0F);
 	}
 
 	@Override

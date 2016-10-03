@@ -1,6 +1,3 @@
-//
-
-//
 
 package noppes.npcs.client.gui.util;
 
@@ -13,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.GL11;
 
 import com.google.common.collect.Lists;
 
@@ -24,6 +22,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -221,6 +222,17 @@ public abstract class GuiNPCInterface extends GuiScreen {
 
 	public void drawNpc(int x, int y) {
 		this.drawNpc(npc, x, y, 1.0f, 0);
+	}
+
+	public void drawScaledTexturedRect(int x, int y, int z, int width, int height) {
+		Tessellator tessellator = Tessellator.getInstance();
+		WorldRenderer renderer = tessellator.getWorldRenderer();
+		renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+		renderer.pos(x + width, y + height, z).tex(1, 1).endVertex();
+		renderer.pos(x + width, y, z).tex(1, 0).endVertex();
+		renderer.pos(x, y, z).tex(0, 0).endVertex();
+		renderer.pos(x, y + height, z).tex(0, 1).endVertex();
+		tessellator.draw();
 	}
 
 	@Override

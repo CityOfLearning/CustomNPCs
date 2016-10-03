@@ -1,28 +1,4 @@
 {
-  "gun.empty": {
-    "category": "player",
-    "sounds": ["gun/empty"]
-  },
-  "gun.ak47.load": {
-    "category": "player",
-    "sounds": ["gun/ak47chamberround"]
-  },
-  "gun.pistol.shot": {
-    "category": "player",
-    "sounds": ["gun/pistolshot"]
-  },
-  "gun.pistol.trigger": {
-    "category": "player",
-    "sounds": ["gun/pistoltrigger"]
-  },
-  "magic.charge": {
-    "category": "player",
-    "sounds": ["magic/charge"]
-  },
-  "magic.shot": {
-    "category": "player",
-    "sounds": ["magic/shot"]
-  },
   "misc.old_explode": {
     "category": "player",
     "sounds": ["misc/old_explode"]

@@ -1,4 +1,3 @@
-
 package noppes.npcs.entity;
 
 import net.minecraft.entity.Entity;
@@ -11,7 +10,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class EntityChairMount extends Entity {
 	public EntityChairMount(World world) {
 		super(world);
-		setSize(0.0f, 0.0f);
+		setSize(0.0F, 0.0F);
 	}
 
 	@Override
@@ -34,7 +33,7 @@ public class EntityChairMount extends Entity {
 
 	@Override
 	public double getMountedYOffset() {
-		return 0.5;
+		return 0.5D;
 	}
 
 	@Override
@@ -54,7 +53,7 @@ public class EntityChairMount extends Entity {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if ((worldObj != null) && !worldObj.isRemote && (riddenByEntity == null)) {
+		if ((worldObj != null) && (!worldObj.isRemote) && (riddenByEntity == null)) {
 			isDead = true;
 		}
 	}

@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -11,8 +10,9 @@ public class ModelWallBannerFlag extends ModelBase {
 	public ModelWallBannerFlag() {
 		textureWidth = 32;
 		textureHeight = 32;
-		(Flag = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 15, 27, 0);
-		Flag.setRotationPoint(-7.5f, -7.0f, 4.5f);
+		Flag = new ModelRenderer(this, 0, 0);
+		Flag.addBox(0.0F, 0.0F, 0.0F, 15, 27, 0);
+		Flag.setRotationPoint(-7.5F, -7.0F, 4.5F);
 		Flag.setTextureSize(32, 32);
 	}
 

@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -16,24 +15,39 @@ public class ModelLampWall extends ModelBase {
 	ModelRenderer Shape5;
 
 	public ModelLampWall() {
-		(Base = new ModelRenderer(this, 0, 6)).addBox(0.0f, 0.0f, 0.0f, 4, 7, 4);
-		Base.setRotationPoint(-2.0f, 14.0f, 1.0f);
-		(Top1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 5);
-		Top1.setRotationPoint(-2.5f, 14.0f, 0.5f);
-		(Top2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Top2.setRotationPoint(-2.0f, 13.5f, 1.0f);
-		(Top3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 1, 3);
-		Top3.setRotationPoint(-1.5f, 13.0f, 1.5f);
-		(Shape2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 3);
-		Shape2.setRotationPoint(-0.5f, 11.0f, 3.5f);
-		(Shape3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 3, 1);
-		Shape3.setRotationPoint(0.0f, 9.5f, 6.5f);
-		setRotation(Shape3, 0.0f, 0.0f, 0.7853982f);
-		(Shape4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Shape4.setRotationPoint(-0.5f, 10.5f, 2.5f);
-		(Shape5 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 4, 1);
-		Shape5.setRotationPoint(0.0f, 8.7f, 7.0f);
-		setRotation(Shape5, 0.0f, 0.0f, 0.7853982f);
+		Base = new ModelRenderer(this, 0, 6);
+		Base.addBox(0.0F, 0.0F, 0.0F, 4, 7, 4);
+		Base.setRotationPoint(-2.0F, 14.0F, 1.0F);
+
+		Top1 = new ModelRenderer(this, 0, 0);
+		Top1.addBox(0.0F, 0.0F, 0.0F, 5, 1, 5);
+		Top1.setRotationPoint(-2.5F, 14.0F, 0.5F);
+
+		Top2 = new ModelRenderer(this, 0, 0);
+		Top2.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Top2.setRotationPoint(-2.0F, 13.5F, 1.0F);
+
+		Top3 = new ModelRenderer(this, 0, 0);
+		Top3.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3);
+		Top3.setRotationPoint(-1.5F, 13.0F, 1.5F);
+
+		Shape2 = new ModelRenderer(this, 0, 0);
+		Shape2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 3);
+		Shape2.setRotationPoint(-0.5F, 11.0F, 3.5F);
+
+		Shape3 = new ModelRenderer(this, 0, 0);
+		Shape3.addBox(0.0F, 0.0F, 0.0F, 3, 3, 1);
+		Shape3.setRotationPoint(0.0F, 9.5F, 6.5F);
+		setRotation(Shape3, 0.0F, 0.0F, 0.7853982F);
+
+		Shape4 = new ModelRenderer(this, 0, 0);
+		Shape4.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Shape4.setRotationPoint(-0.5F, 10.5F, 2.5F);
+
+		Shape5 = new ModelRenderer(this, 0, 0);
+		Shape5.addBox(0.0F, 0.0F, 0.0F, 4, 4, 1);
+		Shape5.setRotationPoint(0.0F, 8.7F, 7.0F);
+		setRotation(Shape5, 0.0F, 0.0F, 0.7853982F);
 	}
 
 	@Override

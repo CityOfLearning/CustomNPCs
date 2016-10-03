@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -12,16 +11,22 @@ public class ModelTombstone1 extends ModelBase {
 	ModelRenderer OuterEdgeTop;
 
 	public ModelTombstone1() {
-		(Mid = new ModelRenderer(this, 36, 0)).addBox(0.0f, 0.0f, 0.0f, 10, 14, 3);
-		Mid.setRotationPoint(-5.0f, 10.0f, -1.5f);
-		(OuterEdge1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 16, 4);
-		OuterEdge1.setRotationPoint(-7.0f, 8.0f, -2.0f);
+		Mid = new ModelRenderer(this, 36, 0);
+		Mid.addBox(0.0F, 0.0F, 0.0F, 10, 14, 3);
+		Mid.setRotationPoint(-5.0F, 10.0F, -1.5F);
+
+		OuterEdge1 = new ModelRenderer(this, 0, 0);
+		OuterEdge1.addBox(0.0F, 0.0F, 0.0F, 2, 16, 4);
+		OuterEdge1.setRotationPoint(-7.0F, 8.0F, -2.0F);
+
 		OuterEdge2 = new ModelRenderer(this, 0, 0);
 		OuterEdge2.mirror = true;
-		OuterEdge2.addBox(1.0f, 0.0f, 0.0f, 2, 16, 4);
-		OuterEdge2.setRotationPoint(4.0f, 8.0f, -2.0f);
-		(OuterEdgeTop = new ModelRenderer(this, 0, 22)).addBox(0.0f, 0.0f, 0.0f, 10, 2, 4);
-		OuterEdgeTop.setRotationPoint(-5.0f, 8.0f, -2.0f);
+		OuterEdge2.addBox(1.0F, 0.0F, 0.0F, 2, 16, 4);
+		OuterEdge2.setRotationPoint(4.0F, 8.0F, -2.0F);
+
+		OuterEdgeTop = new ModelRenderer(this, 0, 22);
+		OuterEdgeTop.addBox(0.0F, 0.0F, 0.0F, 10, 2, 4);
+		OuterEdgeTop.setRotationPoint(-5.0F, 8.0F, -2.0F);
 	}
 
 	@Override

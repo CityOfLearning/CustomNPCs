@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -20,42 +19,65 @@ public class ModelBarrel extends ModelBase {
 	ModelRenderer Plank12;
 
 	public ModelBarrel() {
-		(Plank1 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank1.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank1, 0.0f, 0.0f, 1.570796f);
-		(Plank2 = new ModelRenderer(this, 10, 8)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank2.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank2, 0.0f, 0.5235988f, 1.570796f);
-		(Plank3 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank3.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank3, 0.0f, 1.047198f, 1.570796f);
-		(Plank4 = new ModelRenderer(this, 10, 8)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank4.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank4, 0.0f, 1.570796f, 1.570796f);
-		(Plank5 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank5.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank5, 0.0f, 2.094395f, 1.570796f);
-		(Plank6 = new ModelRenderer(this, 10, 8)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank6.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank6, 0.0f, 2.617994f, 1.570796f);
-		(Plank7 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank7.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank7, 0.0f, 3.150901f, 1.570796f);
-		(Plank8 = new ModelRenderer(this, 10, 8)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank8.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank8, 0.0f, -2.617994f, 1.570796f);
-		(Plank9 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank9.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank9, 0.0f, -2.094395f, 1.570796f);
-		(Plank10 = new ModelRenderer(this, 10, 8)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank10.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank10, 0.0f, -1.570796f, 1.570796f);
-		(Plank11 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank11.setRotationPoint(0.0f, 7.01f, 0.0f);
-		setRotation(Plank11, 0.0f, -1.047198f, 1.570796f);
-		(Plank12 = new ModelRenderer(this, 10, 0)).addBox(0.0f, 6.5f, -2.0f, 17, 1, 4);
-		Plank12.setRotationPoint(0.0f, 7.0f, 0.0f);
-		setRotation(Plank12, 0.0f, -0.5235988f, 1.570796f);
+		Plank1 = new ModelRenderer(this, 10, 0);
+		Plank1.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank1.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank1, 0.0F, 0.0F, 1.570796F);
+
+		Plank2 = new ModelRenderer(this, 10, 8);
+		Plank2.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank2.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank2, 0.0F, 0.5235988F, 1.570796F);
+
+		Plank3 = new ModelRenderer(this, 10, 0);
+		Plank3.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank3.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank3, 0.0F, 1.047198F, 1.570796F);
+
+		Plank4 = new ModelRenderer(this, 10, 8);
+		Plank4.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank4.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank4, 0.0F, 1.570796F, 1.570796F);
+
+		Plank5 = new ModelRenderer(this, 10, 0);
+		Plank5.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank5.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank5, 0.0F, 2.094395F, 1.570796F);
+
+		Plank6 = new ModelRenderer(this, 10, 8);
+		Plank6.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank6.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank6, 0.0F, 2.617994F, 1.570796F);
+
+		Plank7 = new ModelRenderer(this, 10, 0);
+		Plank7.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank7.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank7, 0.0F, 3.150901F, 1.570796F);
+
+		Plank8 = new ModelRenderer(this, 10, 8);
+		Plank8.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank8.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank8, 0.0F, -2.617994F, 1.570796F);
+
+		Plank9 = new ModelRenderer(this, 10, 0);
+		Plank9.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank9.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank9, 0.0F, -2.094395F, 1.570796F);
+
+		Plank10 = new ModelRenderer(this, 10, 8);
+		Plank10.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank10.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank10, 0.0F, -1.570796F, 1.570796F);
+
+		Plank11 = new ModelRenderer(this, 10, 0);
+		Plank11.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank11.setRotationPoint(0.0F, 7.01F, 0.0F);
+		setRotation(Plank11, 0.0F, -1.047198F, 1.570796F);
+
+		Plank12 = new ModelRenderer(this, 10, 0);
+		Plank12.addBox(0.0F, 6.5F, -2.0F, 17, 1, 4);
+		Plank12.setRotationPoint(0.0F, 7.0F, 0.0F);
+		setRotation(Plank12, 0.0F, -0.5235988F, 1.570796F);
 	}
 
 	@Override

@@ -1,7 +1,3 @@
-//
-
-//
-
 package noppes.npcs.client.gui.player;
 
 import java.util.ArrayList;

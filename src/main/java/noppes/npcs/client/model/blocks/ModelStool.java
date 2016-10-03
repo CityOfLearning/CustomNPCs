@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -17,30 +16,47 @@ public class ModelStool extends ModelBase {
 	ModelRenderer Shape4;
 
 	public ModelStool() {
-		(Base = new ModelRenderer(this, 9, 3)).addBox(-5.0f, 0.0f, -5.0f, 10, 1, 10);
-		Base.setRotationPoint(0.0f, 16.0f, 0.0f);
-		(Leg1 = new ModelRenderer(this, 0, 12)).addBox(-1.0f, 0.0f, 0.0f, 2, 8, 1);
-		Leg1.setRotationPoint(2.0f, 17.0f, 2.0f);
-		setRotation(Leg1, 0.3316126f, 0.7853982f, 0.0f);
-		(Leg2 = new ModelRenderer(this, 0, 12)).addBox(-1.0f, 0.0f, 0.0f, 2, 8, 1);
-		Leg2.setRotationPoint(2.0f, 17.0f, -2.0f);
-		setRotation(Leg2, 0.3316126f, 2.356194f, -0.0081449f);
-		(Leg3 = new ModelRenderer(this, 0, 12)).addBox(-1.0f, 0.0f, 0.0f, 2, 8, 1);
-		Leg3.setRotationPoint(-2.0f, 17.0f, 2.0f);
-		setRotation(Leg3, 0.3316126f, -0.7853982f, 0.0f);
-		(Leg4 = new ModelRenderer(this, 0, 12)).addBox(-1.0f, 0.0f, 0.0f, 2, 8, 1);
-		Leg4.setRotationPoint(-2.0f, 17.0f, -2.0f);
-		setRotation(Leg4, 0.3316126f, -2.356194f, 0.0f);
-		(Shape1 = new ModelRenderer(this, 0, 11)).addBox(-3.0f, 0.0f, 0.0f, 6, 1, 1);
-		Shape1.setRotationPoint(2.4f, 19.0f, 0.0f);
-		setRotation(Shape1, 0.0f, 1.570796f, 0.0f);
-		(Shape2 = new ModelRenderer(this, 0, 11)).addBox(-3.0f, 0.0f, 0.0f, 6, 1, 1);
-		Shape2.setRotationPoint(0.0f, 19.0f, 2.4f);
-		(Shape3 = new ModelRenderer(this, 0, 11)).addBox(-3.0f, 0.0f, 0.0f, 6, 1, 1);
-		Shape3.setRotationPoint(0.0f, 19.0f, -3.4f);
-		(Shape4 = new ModelRenderer(this, 0, 11)).addBox(-3.0f, 0.0f, 0.0f, 6, 1, 1);
-		Shape4.setRotationPoint(-3.4f, 19.0f, 0.0f);
-		setRotation(Shape4, 0.0f, 1.570796f, 0.0f);
+		Base = new ModelRenderer(this, 9, 3);
+		Base.addBox(-5.0F, 0.0F, -5.0F, 10, 1, 10);
+		Base.setRotationPoint(0.0F, 16.0F, 0.0F);
+
+		Leg1 = new ModelRenderer(this, 0, 12);
+		Leg1.addBox(-1.0F, 0.0F, 0.0F, 2, 8, 1);
+		Leg1.setRotationPoint(2.0F, 17.0F, 2.0F);
+		setRotation(Leg1, 0.3316126F, 0.7853982F, 0.0F);
+
+		Leg2 = new ModelRenderer(this, 0, 12);
+		Leg2.addBox(-1.0F, 0.0F, 0.0F, 2, 8, 1);
+		Leg2.setRotationPoint(2.0F, 17.0F, -2.0F);
+		setRotation(Leg2, 0.3316126F, 2.356194F, -0.0081449F);
+
+		Leg3 = new ModelRenderer(this, 0, 12);
+		Leg3.addBox(-1.0F, 0.0F, 0.0F, 2, 8, 1);
+		Leg3.setRotationPoint(-2.0F, 17.0F, 2.0F);
+		setRotation(Leg3, 0.3316126F, -0.7853982F, 0.0F);
+
+		Leg4 = new ModelRenderer(this, 0, 12);
+		Leg4.addBox(-1.0F, 0.0F, 0.0F, 2, 8, 1);
+		Leg4.setRotationPoint(-2.0F, 17.0F, -2.0F);
+		setRotation(Leg4, 0.3316126F, -2.356194F, 0.0F);
+
+		Shape1 = new ModelRenderer(this, 0, 11);
+		Shape1.addBox(-3.0F, 0.0F, 0.0F, 6, 1, 1);
+		Shape1.setRotationPoint(2.4F, 19.0F, 0.0F);
+		setRotation(Shape1, 0.0F, 1.570796F, 0.0F);
+
+		Shape2 = new ModelRenderer(this, 0, 11);
+		Shape2.addBox(-3.0F, 0.0F, 0.0F, 6, 1, 1);
+		Shape2.setRotationPoint(0.0F, 19.0F, 2.4F);
+
+		Shape3 = new ModelRenderer(this, 0, 11);
+		Shape3.addBox(-3.0F, 0.0F, 0.0F, 6, 1, 1);
+		Shape3.setRotationPoint(0.0F, 19.0F, -3.4F);
+
+		Shape4 = new ModelRenderer(this, 0, 11);
+		Shape4.addBox(-3.0F, 0.0F, 0.0F, 6, 1, 1);
+		Shape4.setRotationPoint(-3.4F, 19.0F, 0.0F);
+		setRotation(Shape4, 0.0F, 1.570796F, 0.0F);
 	}
 
 	@Override

@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -14,21 +13,32 @@ public class ModelTallLamp extends ModelBase {
 	ModelRenderer LampShadeStick4;
 
 	public ModelTallLamp() {
-		(Base = new ModelRenderer(this, 6, 2)).addBox(-6.0f, 0.0f, -6.0f, 12, 1, 12);
-		Base.setRotationPoint(0.0f, 23.0f, 0.0f);
-		(MiddleStick = new ModelRenderer(this, 12, 2)).addBox(-1.0f, 0.0f, -1.0f, 2, 28, 2);
-		MiddleStick.setRotationPoint(0.0f, -5.0f, 0.0f);
-		(LampShadeStick1 = new ModelRenderer(this, 0, 30)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 1);
-		LampShadeStick1.setRotationPoint(1.0f, -1.0f, -0.5f);
-		(LampShadeStick2 = new ModelRenderer(this, 0, 30)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 1);
-		LampShadeStick2.setRotationPoint(-0.5f, -1.0f, -1.0f);
-		setRotation(LampShadeStick2, 0.0f, 1.570796f, 0.0f);
-		(LampShadeStick3 = new ModelRenderer(this, 0, 30)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 1);
-		LampShadeStick3.setRotationPoint(-1.0f, -1.0f, 0.5f);
-		setRotation(LampShadeStick3, 0.0f, 3.141593f, 0.0f);
-		(LampShadeStick4 = new ModelRenderer(this, 0, 30)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 1);
-		LampShadeStick4.setRotationPoint(0.5f, -1.0f, 1.0f);
-		setRotation(LampShadeStick4, 0.0f, -1.570796f, 0.0f);
+		Base = new ModelRenderer(this, 6, 2);
+		Base.addBox(-6.0F, 0.0F, -6.0F, 12, 1, 12);
+		Base.setRotationPoint(0.0F, 23.0F, 0.0F);
+
+		MiddleStick = new ModelRenderer(this, 12, 2);
+		MiddleStick.addBox(-1.0F, 0.0F, -1.0F, 2, 28, 2);
+		MiddleStick.setRotationPoint(0.0F, -5.0F, 0.0F);
+
+		LampShadeStick1 = new ModelRenderer(this, 0, 30);
+		LampShadeStick1.addBox(0.0F, 0.0F, 0.0F, 5, 1, 1);
+		LampShadeStick1.setRotationPoint(1.0F, -1.0F, -0.5F);
+
+		LampShadeStick2 = new ModelRenderer(this, 0, 30);
+		LampShadeStick2.addBox(0.0F, 0.0F, 0.0F, 5, 1, 1);
+		LampShadeStick2.setRotationPoint(-0.5F, -1.0F, -1.0F);
+		setRotation(LampShadeStick2, 0.0F, 1.570796F, 0.0F);
+
+		LampShadeStick3 = new ModelRenderer(this, 0, 30);
+		LampShadeStick3.addBox(0.0F, 0.0F, 0.0F, 5, 1, 1);
+		LampShadeStick3.setRotationPoint(-1.0F, -1.0F, 0.5F);
+		setRotation(LampShadeStick3, 0.0F, 3.141593F, 0.0F);
+
+		LampShadeStick4 = new ModelRenderer(this, 0, 30);
+		LampShadeStick4.addBox(0.0F, 0.0F, 0.0F, 5, 1, 1);
+		LampShadeStick4.setRotationPoint(0.5F, -1.0F, 1.0F);
+		setRotation(LampShadeStick4, 0.0F, -1.570796F, 0.0F);
 	}
 
 	@Override

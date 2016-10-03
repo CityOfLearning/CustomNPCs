@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -14,19 +13,30 @@ public class ModelLamp extends ModelBase {
 	ModelRenderer Shape1;
 
 	public ModelLamp() {
-		(Base = new ModelRenderer(this, 0, 6)).addBox(0.0f, 0.0f, 0.0f, 4, 7, 4);
-		Base.setRotationPoint(-2.0f, 16.0f, -2.0f);
-		(Top1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 5);
-		Top1.setRotationPoint(-2.5f, 16.0f, -2.5f);
-		(Top2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Top2.setRotationPoint(-2.0f, 15.5f, -2.0f);
-		(Top3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 1, 3);
-		Top3.setRotationPoint(-1.5f, 15.0f, -1.5f);
-		(Handle = new ModelRenderer(this, 24, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 0, 3);
-		Handle.setRotationPoint(0.0f, 15.0f, 0.0f);
-		setRotation(Handle, 0.296706f, 0.1745329f, 0.0f);
-		(Shape1 = new ModelRenderer(this, 0, 17)).addBox(-2.0f, 0.0f, -2.0f, 4, 1, 4);
-		Shape1.setRotationPoint(0.0f, 23.0f, 0.0f);
+		Base = new ModelRenderer(this, 0, 6);
+		Base.addBox(0.0F, 0.0F, 0.0F, 4, 7, 4);
+		Base.setRotationPoint(-2.0F, 16.0F, -2.0F);
+
+		Top1 = new ModelRenderer(this, 0, 0);
+		Top1.addBox(0.0F, 0.0F, 0.0F, 5, 1, 5);
+		Top1.setRotationPoint(-2.5F, 16.0F, -2.5F);
+
+		Top2 = new ModelRenderer(this, 0, 0);
+		Top2.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Top2.setRotationPoint(-2.0F, 15.5F, -2.0F);
+
+		Top3 = new ModelRenderer(this, 0, 0);
+		Top3.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3);
+		Top3.setRotationPoint(-1.5F, 15.0F, -1.5F);
+
+		Handle = new ModelRenderer(this, 24, 0);
+		Handle.addBox(0.0F, 0.0F, 0.0F, 3, 0, 3);
+		Handle.setRotationPoint(0.0F, 15.0F, 0.0F);
+		setRotation(Handle, 0.296706F, 0.1745329F, 0.0F);
+
+		Shape1 = new ModelRenderer(this, 0, 17);
+		Shape1.addBox(-2.0F, 0.0F, -2.0F, 4, 1, 4);
+		Shape1.setRotationPoint(0.0F, 23.0F, 0.0F);
 	}
 
 	@Override

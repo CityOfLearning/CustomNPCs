@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -10,10 +9,13 @@ public class ModelCouchMiddleWool extends ModelBase {
 	ModelRenderer Wool2;
 
 	public ModelCouchMiddleWool() {
-		(Wool1 = new ModelRenderer(this, 3, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 5, 13);
-		Wool1.setRotationPoint(-8.0f, 16.0f, -6.0f);
-		(Wool2 = new ModelRenderer(this, 14, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 10, 2);
-		Wool2.setRotationPoint(-8.0f, 6.0f, 5.0f);
+		Wool1 = new ModelRenderer(this, 3, 0);
+		Wool1.addBox(0.0F, 0.0F, 0.0F, 16, 5, 13);
+		Wool1.setRotationPoint(-8.0F, 16.0F, -6.0F);
+
+		Wool2 = new ModelRenderer(this, 14, 0);
+		Wool2.addBox(0.0F, 0.0F, 0.0F, 16, 10, 2);
+		Wool2.setRotationPoint(-8.0F, 6.0F, 5.0F);
 	}
 
 	@Override

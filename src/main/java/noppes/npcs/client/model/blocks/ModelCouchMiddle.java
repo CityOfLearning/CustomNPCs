@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -14,18 +13,29 @@ public class ModelCouchMiddle extends ModelBase {
 	ModelRenderer Back;
 
 	public ModelCouchMiddle() {
-		(Leg1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 2);
-		Leg1.setRotationPoint(7.0f, 23.0f, 6.0f);
-		(Leg2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 2);
-		Leg2.setRotationPoint(7.0f, 23.0f, -6.0f);
-		(Leg3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 2);
-		Leg3.setRotationPoint(-8.0f, 23.0f, -6.0f);
-		(Leg4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 2);
-		Leg4.setRotationPoint(-8.0f, 23.0f, 6.0f);
-		(Bottom = new ModelRenderer(this, 2, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 14);
-		Bottom.setRotationPoint(-8.0f, 21.0f, -6.0f);
-		(Back = new ModelRenderer(this, 14, 15)).addBox(0.0f, 0.0f, 0.0f, 16, 15, 1);
-		Back.setRotationPoint(-8.0f, 6.0f, 7.0f);
+		Leg1 = new ModelRenderer(this, 0, 0);
+		Leg1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 2);
+		Leg1.setRotationPoint(7.0F, 23.0F, 6.0F);
+
+		Leg2 = new ModelRenderer(this, 0, 0);
+		Leg2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 2);
+		Leg2.setRotationPoint(7.0F, 23.0F, -6.0F);
+
+		Leg3 = new ModelRenderer(this, 0, 0);
+		Leg3.addBox(0.0F, 0.0F, 0.0F, 1, 1, 2);
+		Leg3.setRotationPoint(-8.0F, 23.0F, -6.0F);
+
+		Leg4 = new ModelRenderer(this, 0, 0);
+		Leg4.addBox(0.0F, 0.0F, 0.0F, 1, 1, 2);
+		Leg4.setRotationPoint(-8.0F, 23.0F, 6.0F);
+
+		Bottom = new ModelRenderer(this, 2, 0);
+		Bottom.addBox(0.0F, 0.0F, 0.0F, 16, 2, 14);
+		Bottom.setRotationPoint(-8.0F, 21.0F, -6.0F);
+
+		Back = new ModelRenderer(this, 14, 15);
+		Back.addBox(0.0F, 0.0F, 0.0F, 16, 15, 1);
+		Back.setRotationPoint(-8.0F, 6.0F, 7.0F);
 	}
 
 	@Override

@@ -19,7 +19,6 @@ import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -47,15 +46,45 @@ import noppes.npcs.CustomNpcs;
 import noppes.npcs.ModelData;
 import noppes.npcs.ModelPartData;
 import noppes.npcs.PacketHandlerPlayer;
+import noppes.npcs.blocks.BlockBanner;
 import noppes.npcs.blocks.BlockBuilder;
 import noppes.npcs.blocks.BlockCarpentryBench;
+import noppes.npcs.blocks.BlockCouchWood;
+import noppes.npcs.blocks.BlockCouchWool;
+import noppes.npcs.blocks.BlockLightable;
 import noppes.npcs.blocks.BlockMailbox;
+import noppes.npcs.blocks.BlockRotated;
+import noppes.npcs.blocks.BlockTallLamp;
+import noppes.npcs.blocks.BlockTombstone;
+import noppes.npcs.blocks.BlockWallBanner;
+import noppes.npcs.blocks.BlockWeaponRack;
+import noppes.npcs.blocks.tiles.TileBanner;
+import noppes.npcs.blocks.tiles.TileBarrel;
+import noppes.npcs.blocks.tiles.TileBeam;
+import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileBlockAnvil;
+import noppes.npcs.blocks.tiles.TileBook;
+import noppes.npcs.blocks.tiles.TileCampfire;
+import noppes.npcs.blocks.tiles.TileCandle;
+import noppes.npcs.blocks.tiles.TileChair;
 import noppes.npcs.blocks.tiles.TileCopy;
+import noppes.npcs.blocks.tiles.TileCouchWood;
+import noppes.npcs.blocks.tiles.TileCouchWool;
+import noppes.npcs.blocks.tiles.TileCrate;
 import noppes.npcs.blocks.tiles.TileDoor;
+import noppes.npcs.blocks.tiles.TileLamp;
 import noppes.npcs.blocks.tiles.TileMailbox;
+import noppes.npcs.blocks.tiles.TilePedestal;
 import noppes.npcs.blocks.tiles.TileScripted;
+import noppes.npcs.blocks.tiles.TileShelf;
+import noppes.npcs.blocks.tiles.TileSign;
+import noppes.npcs.blocks.tiles.TileStool;
+import noppes.npcs.blocks.tiles.TileTable;
+import noppes.npcs.blocks.tiles.TileTallLamp;
+import noppes.npcs.blocks.tiles.TileTombstone;
 import noppes.npcs.blocks.tiles.TileTrading;
+import noppes.npcs.blocks.tiles.TileWallBanner;
+import noppes.npcs.blocks.tiles.TileWeaponRack;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.controllers.PresetController;
 import noppes.npcs.client.fx.EntityEnderFX;
@@ -88,6 +117,8 @@ import noppes.npcs.client.gui.mainmenu.GuiNpcAI;
 import noppes.npcs.client.gui.mainmenu.GuiNpcAdvanced;
 import noppes.npcs.client.gui.mainmenu.GuiNpcDisplay;
 import noppes.npcs.client.gui.mainmenu.GuiNpcStats;
+import noppes.npcs.client.gui.player.GuiBigSign;
+import noppes.npcs.client.gui.player.GuiCrate;
 import noppes.npcs.client.gui.player.GuiMailbox;
 import noppes.npcs.client.gui.player.GuiMailmanWrite;
 import noppes.npcs.client.gui.player.GuiNPCBankChest;
@@ -119,14 +150,36 @@ import noppes.npcs.client.renderer.RenderNpcCrystal;
 import noppes.npcs.client.renderer.RenderNpcDragon;
 import noppes.npcs.client.renderer.RenderNpcSlime;
 import noppes.npcs.client.renderer.TileEntityItemStackRendererAlt;
+import noppes.npcs.client.renderer.blocks.BlockBannerRenderer;
+import noppes.npcs.client.renderer.blocks.BlockBarrelRenderer;
+import noppes.npcs.client.renderer.blocks.BlockBeamRenderer;
+import noppes.npcs.client.renderer.blocks.BlockBigSignRenderer;
+import noppes.npcs.client.renderer.blocks.BlockBookRenderer;
+import noppes.npcs.client.renderer.blocks.BlockCampfireRenderer;
+import noppes.npcs.client.renderer.blocks.BlockCandleRenderer;
 import noppes.npcs.client.renderer.blocks.BlockCarpentryBenchRenderer;
+import noppes.npcs.client.renderer.blocks.BlockChairRenderer;
 import noppes.npcs.client.renderer.blocks.BlockCopyRenderer;
+import noppes.npcs.client.renderer.blocks.BlockCouchWoodRenderer;
+import noppes.npcs.client.renderer.blocks.BlockCouchWoolRenderer;
+import noppes.npcs.client.renderer.blocks.BlockCrateRenderer;
 import noppes.npcs.client.renderer.blocks.BlockDoorRenderer;
+import noppes.npcs.client.renderer.blocks.BlockLampRenderer;
 import noppes.npcs.client.renderer.blocks.BlockMailboxRenderer;
+import noppes.npcs.client.renderer.blocks.BlockPedestalRenderer;
 import noppes.npcs.client.renderer.blocks.BlockScriptedRenderer;
+import noppes.npcs.client.renderer.blocks.BlockShelfRenderer;
+import noppes.npcs.client.renderer.blocks.BlockSignRenderer;
+import noppes.npcs.client.renderer.blocks.BlockStoolRenderer;
+import noppes.npcs.client.renderer.blocks.BlockTableRenderer;
+import noppes.npcs.client.renderer.blocks.BlockTallLampRenderer;
+import noppes.npcs.client.renderer.blocks.BlockTombstoneRenderer;
 import noppes.npcs.client.renderer.blocks.BlockTradingRenderer;
+import noppes.npcs.client.renderer.blocks.BlockWallBannerRenderer;
+import noppes.npcs.client.renderer.blocks.BlockWeaponRackRenderer;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.containers.ContainerCarpentryBench;
+import noppes.npcs.containers.ContainerCrate;
 import noppes.npcs.containers.ContainerMail;
 import noppes.npcs.containers.ContainerManageBanks;
 import noppes.npcs.containers.ContainerManageRecipes;
@@ -338,11 +391,17 @@ public class ClientProxy extends CommonProxy {
 			if (gui == EnumGuiType.MerchantAdd) {
 				return new GuiMerchantAdd();
 			}
+			if (gui == EnumGuiType.Crate) {
+				return new GuiCrate((ContainerCrate) container);
+			}
 			if (gui == EnumGuiType.NpcDimensions) {
 				return new GuiNpcDimension();
 			}
 			if (gui == EnumGuiType.Border) {
 				return new GuiBorderBlock(x, y, z);
+			}
+			if (gui == EnumGuiType.BigSign) {
+				return new GuiBigSign(x, y, z);
 			}
 			if (gui == EnumGuiType.RedstoneBlock) {
 				return new GuiNpcRedstoneBlock(x, y, z);
@@ -390,25 +449,60 @@ public class ClientProxy extends CommonProxy {
 		new MusicController();
 		new TileEntityItemStackRendererAlt();
 		MinecraftForge.EVENT_BUS.register(new ClientTickHandler());
+
 		Minecraft mc = Minecraft.getMinecraft();
-		ClientProxy.QuestLog = new KeyBinding("Quest Log", 38, "key.categories.gameplay");
+
+		QuestLog = new KeyBinding("Quest Log", 38, "key.categories.gameplay");
 		if (CustomNpcs.SceneButtonsEnabled) {
-			ClientProxy.Scene1 = new KeyBinding("Scene1 start/pause", 79, "key.categories.gameplay");
-			ClientProxy.Scene2 = new KeyBinding("Scene2 start/pause", 80, "key.categories.gameplay");
-			ClientProxy.Scene3 = new KeyBinding("Scene3 start/pause", 81, "key.categories.gameplay");
-			ClientProxy.SceneReset = new KeyBinding("Scene reset", 82, "key.categories.gameplay");
-			ClientRegistry.registerKeyBinding(ClientProxy.Scene1);
-			ClientRegistry.registerKeyBinding(ClientProxy.Scene2);
-			ClientRegistry.registerKeyBinding(ClientProxy.Scene3);
-			ClientRegistry.registerKeyBinding(ClientProxy.SceneReset);
+			Scene1 = new KeyBinding("Scene1 start/pause", 79, "key.categories.gameplay");
+			Scene2 = new KeyBinding("Scene2 start/pause", 80, "key.categories.gameplay");
+			Scene3 = new KeyBinding("Scene3 start/pause", 81, "key.categories.gameplay");
+			SceneReset = new KeyBinding("Scene reset", 82, "key.categories.gameplay");
+
+			ClientRegistry.registerKeyBinding(Scene1);
+			ClientRegistry.registerKeyBinding(Scene2);
+			ClientRegistry.registerKeyBinding(Scene3);
+			ClientRegistry.registerKeyBinding(SceneReset);
 		}
-		ClientRegistry.registerKeyBinding(ClientProxy.QuestLog);
+		ClientRegistry.registerKeyBinding(QuestLog);
 		mc.gameSettings.loadOptions();
+
 		new PresetController(CustomNpcs.Dir);
-		blockIgnoreBlockstate(CustomItems.mailbox, BlockMailbox.ROTATION, BlockMailbox.TYPE);
-		blockIgnoreBlockstate(CustomItems.carpentyBench, BlockCarpentryBench.ROTATION, BlockCarpentryBench.TYPE);
-		blockIgnoreBlockstate(CustomItems.scriptedDoor, BlockDoor.POWERED);
-		blockIgnoreBlockstate(CustomItems.builder, BlockBuilder.ROTATION);
+
+		blockIgnoreBlockstate(CustomItems.pedestal, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.beam, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.crate, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.book, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.stool, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.chair, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.sign, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.barrel, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.couchWood, new IProperty[] { BlockCouchWood.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.couchWool, new IProperty[] { BlockCouchWool.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.tombstone, new IProperty[] { BlockTombstone.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.bigsign, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.table, new IProperty[] { BlockRotated.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.shelf, new IProperty[] { BlockRotated.DAMAGE });
+
+		blockIgnoreBlockstate(CustomItems.wallBanner, new IProperty[] { BlockWallBanner.DAMAGE });
+		blockIgnoreBlockstate(CustomItems.banner, new IProperty[] { BlockBanner.DAMAGE, BlockBanner.TOP });
+		blockIgnoreBlockstate(CustomItems.weaponsRack,
+				new IProperty[] { BlockWeaponRack.DAMAGE, BlockWeaponRack.IS_TOP });
+		blockIgnoreBlockstate(CustomItems.tallLamp, new IProperty[] { BlockTallLamp.DAMAGE, BlockTallLamp.IS_TOP });
+		blockIgnoreBlockstate(CustomItems.mailbox, new IProperty[] { BlockMailbox.ROTATION, BlockMailbox.TYPE });
+		blockIgnoreBlockstate(CustomItems.carpentyBench,
+				new IProperty[] { BlockCarpentryBench.ROTATION, BlockCarpentryBench.TYPE });
+
+		blockIgnoreBlockstate(CustomItems.lamp, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+		blockIgnoreBlockstate(CustomItems.lamp_unlit, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+		blockIgnoreBlockstate(CustomItems.candle, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+		blockIgnoreBlockstate(CustomItems.candle_unlit, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+		blockIgnoreBlockstate(CustomItems.campfire, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+		blockIgnoreBlockstate(CustomItems.campfire_unlit, new IProperty[] { BlockRotated.DAMAGE, BlockLightable.LIT });
+
+		blockIgnoreBlockstate(CustomItems.scriptedDoor, new IProperty[] { BlockDoor.POWERED });
+
+		blockIgnoreBlockstate(CustomItems.builder, new IProperty[] { BlockBuilder.ROTATION });
 	}
 
 	@Override
@@ -462,29 +556,45 @@ public class ClientProxy extends CommonProxy {
 		}
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcPony.class, new RenderNPCPony());
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcCrystal.class,
-				new RenderNpcCrystal(new ModelNpcCrystal(0.5f)));
+				new RenderNpcCrystal(new ModelNpcCrystal(0.5F)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcDragon.class,
-				new RenderNpcDragon(new ModelNpcDragon(0.0f), 0.5f));
+				new RenderNpcDragon(new ModelNpcDragon(0.0F), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcSlime.class,
-				new RenderNpcSlime(new ModelNpcSlime(16), new ModelNpcSlime(0), 0.25f));
+				new RenderNpcSlime(new ModelNpcSlime(16), new ModelNpcSlime(0), 0.25F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityCustomNpc.class,
-				new RenderCustomNpc(new ModelPlayerAlt(0.0f, false)));
+				new RenderCustomNpc(new ModelPlayerAlt(0.0F, false)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNPC64x32.class,
-				new RenderCustomNpc(new ModelBipedAlt(0.0f)));
+				new RenderCustomNpc(new ModelBipedAlt(0.0F)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNPCGolem.class,
-				new RenderNPCInterface(new ModelNPCGolem(0.0f), 0.0f));
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileBlockAnvil.class,
-				(TileEntitySpecialRenderer) new BlockCarpentryBenchRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileMailbox.class,
-				(TileEntitySpecialRenderer) new BlockMailboxRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileScripted.class,
-				(TileEntitySpecialRenderer) new BlockScriptedRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileDoor.class,
-				(TileEntitySpecialRenderer) new BlockDoorRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileCopy.class,
-				(TileEntitySpecialRenderer) new BlockCopyRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer((Class) TileTrading.class,
-				(TileEntitySpecialRenderer) new BlockTradingRenderer());
+				new RenderNPCInterface(new ModelNPCGolem(0.0F), 0.0F));
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBlockAnvil.class, new BlockCarpentryBenchRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileMailbox.class, new BlockMailboxRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileScripted.class, new BlockScriptedRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileDoor.class, new BlockDoorRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCopy.class, new BlockCopyRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBanner.class, new BlockBannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWallBanner.class, new BlockWallBannerRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTallLamp.class, new BlockTallLampRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileChair.class, new BlockChairRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileWeaponRack.class, new BlockWeaponRackRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCrate.class, new BlockCrateRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCouchWool.class, new BlockCouchWoolRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCouchWood.class, new BlockCouchWoodRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTable.class, new BlockTableRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCandle.class, new BlockCandleRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileLamp.class, new BlockLampRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileStool.class, new BlockStoolRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBigSign.class, new BlockBigSignRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new BlockBarrelRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileCampfire.class, new BlockCampfireRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTombstone.class, new BlockTombstoneRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileShelf.class, new BlockShelfRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileSign.class, new BlockSignRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBeam.class, new BlockBeamRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileBook.class, new BlockBookRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new BlockPedestalRenderer());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileTrading.class, new BlockTradingRenderer());
 
 	}
 

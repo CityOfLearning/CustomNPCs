@@ -47,7 +47,6 @@ import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.controllers.spawn.SpawnController;
 import noppes.npcs.controllers.transport.TransportController;
-import noppes.npcs.entity.EntityChairMount;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPC64x32;
 import noppes.npcs.entity.EntityNPCGolem;
@@ -163,14 +162,14 @@ public class CustomNpcs {
 	}
 
 	@Mod.EventHandler
-	public void load(FMLInitializationEvent ev) {
+	public void init(FMLInitializationEvent ev) {
 		ForgeModContainer.fullBoundingBoxLadders = true;
 		new RecipeController();
 		CustomNpcs.proxy.postload();
 	}
 
 	@Mod.EventHandler
-	public void load(FMLPreInitializationEvent ev) {
+	public void preInit(FMLPreInitializationEvent ev) {
 		logger = ev.getModLog();
 		CustomNpcs.Channel = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCs");
 		CustomNpcs.ChannelPlayer = NetworkRegistry.INSTANCE.newEventDrivenChannel("CustomNPCsPlayer");
@@ -216,7 +215,6 @@ public class CustomNpcs {
 		registerNpc(EntityNPCGolem.class, "npcGolem");
 		registerNpc(EntityCustomNpc.class, "CustomNpc");
 		registerNpc(EntityNPC64x32.class, "CustomNpc64x32");
-		registerNewEntity(EntityChairMount.class, "CustomNpcChairMount", 64, 10, false);
 		ArrayList<BiomeGenBase> list = new ArrayList<BiomeGenBase>();
 		for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 			if (base != null) {
@@ -225,10 +223,6 @@ public class CustomNpcs {
 		}
 		ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkController());
 		CustomNpcs.proxy.load();
-	}
-
-	private void registerNewEntity(Class<? extends Entity> cl, String name, int range, int update, boolean velocity) {
-		EntityRegistry.registerModEntity(cl, name, CustomNpcs.NewEntityStartId++, this, range, update, velocity);
 	}
 
 	private void registerNpc(Class<? extends Entity> cl, String name) {

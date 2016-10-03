@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -25,42 +24,75 @@ public class ModelLampCeiling extends ModelBase {
 	ModelRenderer Shape2;
 
 	public ModelLampCeiling() {
-		(Base = new ModelRenderer(this, 0, 6)).addBox(0.0f, 0.0f, 0.0f, 4, 7, 4);
-		Base.setRotationPoint(-2.0f, 17.0f, -2.0f);
-		(Top1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 5, 1, 5);
-		Top1.setRotationPoint(-2.5f, 17.0f, -2.5f);
-		(Top2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Top2.setRotationPoint(-2.0f, 16.5f, -2.0f);
-		(Top3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 1, 3);
-		Top3.setRotationPoint(-1.5f, 16.0f, -1.5f);
-		(Chain8 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Chain8.setRotationPoint(-0.5f, 14.0f, -1.5f);
-		(Chain1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain1.setRotationPoint(0.5f, 8.0f, -0.5f);
-		(Chain2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain2.setRotationPoint(-1.5f, 8.0f, -0.5f);
-		(Chain3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain3.setRotationPoint(-0.5f, 10.0f, 0.5f);
-		(Chain4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain4.setRotationPoint(-0.5f, 10.0f, -1.5f);
-		(Chain5 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain5.setRotationPoint(-1.5f, 12.0f, -0.5f);
-		(Chain6 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 3, 1);
-		Chain6.setRotationPoint(0.5f, 12.0f, -0.5f);
-		(Chain7 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Chain7.setRotationPoint(-0.5f, 14.0f, 0.5f);
-		(TippyTop1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		TippyTop1.setRotationPoint(-2.8f, 8.0f, 0.0f);
-		setRotation(TippyTop1, 0.0f, 0.7853982f, 0.0f);
-		(TippyTop2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 1, 3);
-		TippyTop2.setRotationPoint(-2.1f, 8.5f, 0.0f);
-		setRotation(TippyTop2, 0.0f, 0.7853982f, 0.0f);
-		(Shape3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Shape3.setRotationPoint(-0.5f, 14.0f, -0.5f);
-		(Shape1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Shape1.setRotationPoint(-0.5f, 10.0f, -0.5f);
-		(Shape2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Shape2.setRotationPoint(-0.5f, 12.0f, -0.5f);
+		Base = new ModelRenderer(this, 0, 6);
+		Base.addBox(0.0F, 0.0F, 0.0F, 4, 7, 4);
+		Base.setRotationPoint(-2.0F, 17.0F, -2.0F);
+
+		Top1 = new ModelRenderer(this, 0, 0);
+		Top1.addBox(0.0F, 0.0F, 0.0F, 5, 1, 5);
+		Top1.setRotationPoint(-2.5F, 17.0F, -2.5F);
+
+		Top2 = new ModelRenderer(this, 0, 0);
+		Top2.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Top2.setRotationPoint(-2.0F, 16.5F, -2.0F);
+
+		Top3 = new ModelRenderer(this, 0, 0);
+		Top3.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3);
+		Top3.setRotationPoint(-1.5F, 16.0F, -1.5F);
+
+		Chain8 = new ModelRenderer(this, 0, 0);
+		Chain8.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Chain8.setRotationPoint(-0.5F, 14.0F, -1.5F);
+
+		Chain1 = new ModelRenderer(this, 0, 0);
+		Chain1.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain1.setRotationPoint(0.5F, 8.0F, -0.5F);
+
+		Chain2 = new ModelRenderer(this, 0, 0);
+		Chain2.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain2.setRotationPoint(-1.5F, 8.0F, -0.5F);
+
+		Chain3 = new ModelRenderer(this, 0, 0);
+		Chain3.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain3.setRotationPoint(-0.5F, 10.0F, 0.5F);
+
+		Chain4 = new ModelRenderer(this, 0, 0);
+		Chain4.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain4.setRotationPoint(-0.5F, 10.0F, -1.5F);
+
+		Chain5 = new ModelRenderer(this, 0, 0);
+		Chain5.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain5.setRotationPoint(-1.5F, 12.0F, -0.5F);
+
+		Chain6 = new ModelRenderer(this, 0, 0);
+		Chain6.addBox(0.0F, 0.0F, 0.0F, 1, 3, 1);
+		Chain6.setRotationPoint(0.5F, 12.0F, -0.5F);
+
+		Chain7 = new ModelRenderer(this, 0, 0);
+		Chain7.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Chain7.setRotationPoint(-0.5F, 14.0F, 0.5F);
+
+		TippyTop1 = new ModelRenderer(this, 0, 0);
+		TippyTop1.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		TippyTop1.setRotationPoint(-2.8F, 8.0F, 0.0F);
+		setRotation(TippyTop1, 0.0F, 0.7853982F, 0.0F);
+
+		TippyTop2 = new ModelRenderer(this, 0, 0);
+		TippyTop2.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3);
+		TippyTop2.setRotationPoint(-2.1F, 8.5F, 0.0F);
+		setRotation(TippyTop2, 0.0F, 0.7853982F, 0.0F);
+
+		Shape3 = new ModelRenderer(this, 0, 0);
+		Shape3.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Shape3.setRotationPoint(-0.5F, 14.0F, -0.5F);
+
+		Shape1 = new ModelRenderer(this, 0, 0);
+		Shape1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Shape1.setRotationPoint(-0.5F, 10.0F, -0.5F);
+
+		Shape2 = new ModelRenderer(this, 0, 0);
+		Shape2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Shape2.setRotationPoint(-0.5F, 12.0F, -0.5F);
 	}
 
 	@Override

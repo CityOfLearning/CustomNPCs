@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -27,50 +26,87 @@ public class ModelCrate extends ModelBase {
 	ModelRenderer Shape2;
 
 	public ModelCrate() {
-		(sticky1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 2, 12);
-		sticky1.setRotationPoint(6.0f, 22.0f, -6.0f);
-		(sticky2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 12, 2, 2);
-		sticky2.setRotationPoint(-6.0f, 22.0f, -8.0f);
-		(sticky3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 2, 12);
-		sticky3.setRotationPoint(-8.0f, 22.0f, -6.0f);
-		(sticky4 = new ModelRenderer(this, 32, 0)).addBox(0.0f, 0.0f, 0.0f, 12, 2, 2);
-		sticky4.setRotationPoint(-6.0f, 22.0f, 6.0f);
-		(core = new ModelRenderer(this, 0, 0)).addBox(-8.0f, 0.0f, -8.0f, 16, 16, 16, -1.0f);
-		core.setRotationPoint(0.0f, 8.0f, 0.0f);
-		(sticky1top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 2, 12);
-		sticky1top.setRotationPoint(6.0f, 8.0f, -6.0f);
-		(sticky2top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 12, 2, 2);
-		sticky2top.setRotationPoint(-6.0f, 8.0f, 6.0f);
-		(sticky3top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 2, 12);
-		sticky3top.setRotationPoint(-8.0f, 8.0f, -6.0f);
-		(sticky4top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 12, 2, 2);
-		sticky4top.setRotationPoint(-6.0f, 8.0f, -8.0f);
-		(sidestick1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 16, 2);
-		sidestick1.setRotationPoint(-8.0f, 8.0f, 6.0f);
-		(sidestick2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 16, 2);
-		sidestick2.setRotationPoint(6.0f, 8.0f, 6.0f);
-		(sidestick3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 16, 2);
-		sidestick3.setRotationPoint(-8.0f, 8.0f, -8.0f);
-		(sidestick4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 16, 2);
-		sidestick4.setRotationPoint(6.0f, 8.0f, -8.0f);
-		(sidestuff1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 1.0f, 0.0f, 1, 18, 2);
-		sidestuff1.setRotationPoint(6.0f, 8.5f, -6.5f);
-		setRotation(sidestuff1, -0.7853982f, 1.570796f, 0.0f);
-		(sidestuff2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, -1.0f, 0.0f, 1, 18, 2);
-		sidestuff2.setRotationPoint(-7.5f, 9.5f, 5.0f);
-		setRotation(sidestuff2, -0.7853982f, 0.0f, 0.0f);
-		(sidestuff3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 1.0f, 0.0f, 1, 18, 2);
-		sidestuff3.setRotationPoint(7.5f, 8.5f, -6.0f);
-		setRotation(sidestuff3, -0.7853982f, 3.141593f, 0.0f);
-		(sidestuff4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 1.0f, 0.0f, 1, 18, 2);
-		sidestuff4.setRotationPoint(-6.0f, 8.5f, 6.5f);
-		setRotation(sidestuff4, -0.7853982f, -1.570796f, 0.0f);
-		(Shape1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 18, 1, 2);
-		Shape1.setRotationPoint(-5.5f, 22.5f, -7.0f);
-		setRotation(Shape1, 0.0f, -0.7853982f, 0.0f);
-		(Shape2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 18, 1, 2);
-		Shape2.setRotationPoint(-5.5f, 8.5f, -7.0f);
-		setRotation(Shape2, 0.0f, -0.7853982f, 0.0f);
+		sticky1 = new ModelRenderer(this, 0, 0);
+		sticky1.addBox(0.0F, 0.0F, 0.0F, 2, 2, 12);
+		sticky1.setRotationPoint(6.0F, 22.0F, -6.0F);
+
+		sticky2 = new ModelRenderer(this, 0, 0);
+		sticky2.addBox(0.0F, 0.0F, 0.0F, 12, 2, 2);
+		sticky2.setRotationPoint(-6.0F, 22.0F, -8.0F);
+
+		sticky3 = new ModelRenderer(this, 0, 0);
+		sticky3.addBox(0.0F, 0.0F, 0.0F, 2, 2, 12);
+		sticky3.setRotationPoint(-8.0F, 22.0F, -6.0F);
+
+		sticky4 = new ModelRenderer(this, 32, 0);
+		sticky4.addBox(0.0F, 0.0F, 0.0F, 12, 2, 2);
+		sticky4.setRotationPoint(-6.0F, 22.0F, 6.0F);
+
+		core = new ModelRenderer(this, 0, 0);
+		core.addBox(-8.0F, 0.0F, -8.0F, 16, 16, 16, -1.0F);
+		core.setRotationPoint(0.0F, 8.0F, 0.0F);
+
+		sticky1top = new ModelRenderer(this, 0, 0);
+		sticky1top.addBox(0.0F, 0.0F, 0.0F, 2, 2, 12);
+		sticky1top.setRotationPoint(6.0F, 8.0F, -6.0F);
+
+		sticky2top = new ModelRenderer(this, 0, 0);
+		sticky2top.addBox(0.0F, 0.0F, 0.0F, 12, 2, 2);
+		sticky2top.setRotationPoint(-6.0F, 8.0F, 6.0F);
+
+		sticky3top = new ModelRenderer(this, 0, 0);
+		sticky3top.addBox(0.0F, 0.0F, 0.0F, 2, 2, 12);
+		sticky3top.setRotationPoint(-8.0F, 8.0F, -6.0F);
+
+		sticky4top = new ModelRenderer(this, 0, 0);
+		sticky4top.addBox(0.0F, 0.0F, 0.0F, 12, 2, 2);
+		sticky4top.setRotationPoint(-6.0F, 8.0F, -8.0F);
+
+		sidestick1 = new ModelRenderer(this, 0, 0);
+		sidestick1.addBox(0.0F, 0.0F, 0.0F, 2, 16, 2);
+		sidestick1.setRotationPoint(-8.0F, 8.0F, 6.0F);
+
+		sidestick2 = new ModelRenderer(this, 0, 0);
+		sidestick2.addBox(0.0F, 0.0F, 0.0F, 2, 16, 2);
+		sidestick2.setRotationPoint(6.0F, 8.0F, 6.0F);
+
+		sidestick3 = new ModelRenderer(this, 0, 0);
+		sidestick3.addBox(0.0F, 0.0F, 0.0F, 2, 16, 2);
+		sidestick3.setRotationPoint(-8.0F, 8.0F, -8.0F);
+
+		sidestick4 = new ModelRenderer(this, 0, 0);
+		sidestick4.addBox(0.0F, 0.0F, 0.0F, 2, 16, 2);
+		sidestick4.setRotationPoint(6.0F, 8.0F, -8.0F);
+
+		sidestuff1 = new ModelRenderer(this, 0, 0);
+		sidestuff1.addBox(0.0F, 1.0F, 0.0F, 1, 18, 2);
+		sidestuff1.setRotationPoint(6.0F, 8.5F, -6.5F);
+		setRotation(sidestuff1, -0.7853982F, 1.570796F, 0.0F);
+
+		sidestuff2 = new ModelRenderer(this, 0, 0);
+		sidestuff2.addBox(0.0F, -1.0F, 0.0F, 1, 18, 2);
+		sidestuff2.setRotationPoint(-7.5F, 9.5F, 5.0F);
+		setRotation(sidestuff2, -0.7853982F, 0.0F, 0.0F);
+
+		sidestuff3 = new ModelRenderer(this, 0, 0);
+		sidestuff3.addBox(0.0F, 1.0F, 0.0F, 1, 18, 2);
+		sidestuff3.setRotationPoint(7.5F, 8.5F, -6.0F);
+		setRotation(sidestuff3, -0.7853982F, 3.141593F, 0.0F);
+
+		sidestuff4 = new ModelRenderer(this, 0, 0);
+		sidestuff4.addBox(0.0F, 1.0F, 0.0F, 1, 18, 2);
+		sidestuff4.setRotationPoint(-6.0F, 8.5F, 6.5F);
+		setRotation(sidestuff4, -0.7853982F, -1.570796F, 0.0F);
+
+		Shape1 = new ModelRenderer(this, 0, 0);
+		Shape1.addBox(0.0F, 0.0F, 0.0F, 18, 1, 2);
+		Shape1.setRotationPoint(-5.5F, 22.5F, -7.0F);
+		setRotation(Shape1, 0.0F, -0.7853982F, 0.0F);
+
+		Shape2 = new ModelRenderer(this, 0, 0);
+		Shape2.addBox(0.0F, 0.0F, 0.0F, 18, 1, 2);
+		Shape2.setRotationPoint(-5.5F, 8.5F, -7.0F);
+		setRotation(Shape2, 0.0F, -0.7853982F, 0.0F);
 	}
 
 	@Override
@@ -85,6 +121,7 @@ public class ModelCrate extends ModelBase {
 		sticky2top.render(f5);
 		sticky3top.render(f5);
 		sticky4top.render(f5);
+
 		sidestick1.render(f5);
 		sidestick2.render(f5);
 		sidestick3.render(f5);

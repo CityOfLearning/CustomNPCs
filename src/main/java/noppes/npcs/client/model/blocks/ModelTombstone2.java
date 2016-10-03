@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -10,10 +9,13 @@ public class ModelTombstone2 extends ModelBase {
 	ModelRenderer mid;
 
 	public ModelTombstone2() {
-		(Top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 10, 1, 4);
-		Top.setRotationPoint(-5.0f, 9.0f, -2.0f);
-		(mid = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 12, 14, 4);
-		mid.setRotationPoint(-6.0f, 10.0f, -2.0f);
+		Top = new ModelRenderer(this, 0, 0);
+		Top.addBox(0.0F, 0.0F, 0.0F, 10, 1, 4);
+		Top.setRotationPoint(-5.0F, 9.0F, -2.0F);
+
+		mid = new ModelRenderer(this, 0, 0);
+		mid.addBox(0.0F, 0.0F, 0.0F, 12, 14, 4);
+		mid.setRotationPoint(-6.0F, 10.0F, -2.0F);
 	}
 
 	@Override

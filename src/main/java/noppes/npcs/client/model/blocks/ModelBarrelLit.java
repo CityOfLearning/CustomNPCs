@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -10,10 +9,13 @@ public class ModelBarrelLit extends ModelBase {
 	ModelRenderer Bottom;
 
 	public ModelBarrelLit() {
-		(Top = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 0, 16);
-		Top.setRotationPoint(-8.0f, 9.0f, -8.0f);
-		(Bottom = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 0, 16);
-		Bottom.setRotationPoint(-8.0f, 23.0f, -8.0f);
+		Top = new ModelRenderer(this, 0, 0);
+		Top.addBox(0.0F, 0.0F, 0.0F, 16, 0, 16);
+		Top.setRotationPoint(-8.0F, 9.0F, -8.0F);
+
+		Bottom = new ModelRenderer(this, 0, 0);
+		Bottom.addBox(0.0F, 0.0F, 0.0F, 16, 0, 16);
+		Bottom.setRotationPoint(-8.0F, 23.0F, -8.0F);
 	}
 
 	@Override

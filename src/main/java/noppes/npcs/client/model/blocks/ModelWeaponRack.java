@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -28,50 +27,89 @@ public class ModelWeaponRack extends ModelBase {
 	ModelRenderer Middle_Support_1;
 
 	public ModelWeaponRack() {
-		(Support_1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_1.setRotationPoint(-5.0f, -6.9f, 5.0f);
-		(Support_2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_2.setRotationPoint(-8.01f, -6.9f, 5.0f);
-		(Support_3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_3.setRotationPoint(-2.0f, -6.9f, 5.0f);
-		(Support_4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_4.setRotationPoint(1.0f, -6.9f, 5.0f);
-		(Support_5 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_5.setRotationPoint(4.0f, -6.9f, 5.0f);
-		(Support_6 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 30, 2);
-		Support_6.setRotationPoint(7.01f, -6.9f, 5.0f);
-		(Rung_1_A = new ModelRenderer(this, 0, 22)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 0);
-		Rung_1_A.setRotationPoint(-8.0f, 11.0f, 3.99f);
-		(Rung_1_B = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_1_B.setRotationPoint(-8.0f, 11.0f, 4.0f);
-		(Rung_1_C = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_1_C.setRotationPoint(-5.0f, 11.0f, 4.0f);
-		(Rung_2_A = new ModelRenderer(this, 0, 22)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 0);
-		Rung_2_A.setRotationPoint(-2.0f, 11.0f, 3.99f);
-		(Rung_2_B = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_2_B.setRotationPoint(-2.0f, 11.0f, 4.0f);
-		(Rung_2_C = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_2_C.setRotationPoint(1.0f, 11.0f, 4.0f);
-		(Rung_3_A = new ModelRenderer(this, 0, 22)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 0);
-		Rung_3_A.setRotationPoint(4.0f, 11.0f, 3.99f);
-		(Rung_3_B = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_3_B.setRotationPoint(4.0f, 11.0f, 4.0f);
-		(Rung_3_C = new ModelRenderer(this, 0, 24)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 1);
-		Rung_3_C.setRotationPoint(7.0f, 11.0f, 4.0f);
-		(Cross_Top_1 = new ModelRenderer(this, 6, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 1);
-		Cross_Top_1.setRotationPoint(-8.0f, -8.6f, 6.0f);
-		setRotation(Cross_Top_1, -0.5235988f, 0.0f, 0.0f);
-		(Cross_Top_2 = new ModelRenderer(this, 6, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 1);
-		Cross_Top_2.setRotationPoint(-8.0f, -8.6f, 6.01f);
-		(Bottom_Support_1 = new ModelRenderer(this, 6, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 1);
-		Bottom_Support_1.setRotationPoint(-8.0f, 23.0f, 6.0f);
-		setRotation(Bottom_Support_1, -1.570796f, 0.0f, 0.0f);
-		(Bottom_Support_2 = new ModelRenderer(this, 6, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 1);
-		Bottom_Support_2.setRotationPoint(-8.0f, 23.0f, 8.0f);
-		setRotation(Bottom_Support_2, -1.570796f, 0.0f, 0.0f);
-		(Middle_Support_1 = new ModelRenderer(this, 6, 3)).addBox(0.0f, 0.0f, 0.0f, 16, 1, 3);
-		Middle_Support_1.setRotationPoint(-8.0f, 10.0f, 7.01f);
-		setRotation(Middle_Support_1, -1.570796f, 0.0f, 0.0f);
+		Support_1 = new ModelRenderer(this, 0, 0);
+		Support_1.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_1.setRotationPoint(-5.0F, -6.9F, 5.0F);
+
+		Support_2 = new ModelRenderer(this, 0, 0);
+		Support_2.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_2.setRotationPoint(-8.01F, -6.9F, 5.0F);
+
+		Support_3 = new ModelRenderer(this, 0, 0);
+		Support_3.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_3.setRotationPoint(-2.0F, -6.9F, 5.0F);
+
+		Support_4 = new ModelRenderer(this, 0, 0);
+		Support_4.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_4.setRotationPoint(1.0F, -6.9F, 5.0F);
+
+		Support_5 = new ModelRenderer(this, 0, 0);
+		Support_5.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_5.setRotationPoint(4.0F, -6.9F, 5.0F);
+
+		Support_6 = new ModelRenderer(this, 0, 0);
+		Support_6.addBox(0.0F, 0.0F, 0.0F, 1, 30, 2);
+		Support_6.setRotationPoint(7.01F, -6.9F, 5.0F);
+
+		Rung_1_A = new ModelRenderer(this, 0, 22);
+		Rung_1_A.addBox(0.0F, 0.0F, 0.0F, 4, 1, 0);
+		Rung_1_A.setRotationPoint(-8.0F, 11.0F, 3.99F);
+
+		Rung_1_B = new ModelRenderer(this, 0, 24);
+		Rung_1_B.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_1_B.setRotationPoint(-8.0F, 11.0F, 4.0F);
+
+		Rung_1_C = new ModelRenderer(this, 0, 24);
+		Rung_1_C.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_1_C.setRotationPoint(-5.0F, 11.0F, 4.0F);
+
+		Rung_2_A = new ModelRenderer(this, 0, 22);
+		Rung_2_A.addBox(0.0F, 0.0F, 0.0F, 4, 1, 0);
+		Rung_2_A.setRotationPoint(-2.0F, 11.0F, 3.99F);
+
+		Rung_2_B = new ModelRenderer(this, 0, 24);
+		Rung_2_B.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_2_B.setRotationPoint(-2.0F, 11.0F, 4.0F);
+
+		Rung_2_C = new ModelRenderer(this, 0, 24);
+		Rung_2_C.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_2_C.setRotationPoint(1.0F, 11.0F, 4.0F);
+
+		Rung_3_A = new ModelRenderer(this, 0, 22);
+		Rung_3_A.addBox(0.0F, 0.0F, 0.0F, 4, 1, 0);
+		Rung_3_A.setRotationPoint(4.0F, 11.0F, 3.99F);
+
+		Rung_3_B = new ModelRenderer(this, 0, 24);
+		Rung_3_B.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_3_B.setRotationPoint(4.0F, 11.0F, 4.0F);
+
+		Rung_3_C = new ModelRenderer(this, 0, 24);
+		Rung_3_C.addBox(0.0F, 0.0F, 0.0F, 1, 1, 1);
+		Rung_3_C.setRotationPoint(7.0F, 11.0F, 4.0F);
+
+		Cross_Top_1 = new ModelRenderer(this, 6, 0);
+		Cross_Top_1.addBox(0.0F, 0.0F, 0.0F, 16, 2, 1);
+		Cross_Top_1.setRotationPoint(-8.0F, -8.6F, 6.0F);
+		setRotation(Cross_Top_1, -0.5235988F, 0.0F, 0.0F);
+
+		Cross_Top_2 = new ModelRenderer(this, 6, 0);
+		Cross_Top_2.addBox(0.0F, 0.0F, 0.0F, 16, 2, 1);
+		Cross_Top_2.setRotationPoint(-8.0F, -8.6F, 6.01F);
+
+		Bottom_Support_1 = new ModelRenderer(this, 6, 0);
+		Bottom_Support_1.addBox(0.0F, 0.0F, 0.0F, 16, 2, 1);
+		Bottom_Support_1.setRotationPoint(-8.0F, 23.0F, 6.0F);
+		setRotation(Bottom_Support_1, -1.570796F, 0.0F, 0.0F);
+
+		Bottom_Support_2 = new ModelRenderer(this, 6, 0);
+		Bottom_Support_2.addBox(0.0F, 0.0F, 0.0F, 16, 2, 1);
+		Bottom_Support_2.setRotationPoint(-8.0F, 23.0F, 8.0F);
+		setRotation(Bottom_Support_2, -1.570796F, 0.0F, 0.0F);
+
+		Middle_Support_1 = new ModelRenderer(this, 6, 3);
+		Middle_Support_1.addBox(0.0F, 0.0F, 0.0F, 16, 1, 3);
+		Middle_Support_1.setRotationPoint(-8.0F, 10.0F, 7.01F);
+		setRotation(Middle_Support_1, -1.570796F, 0.0F, 0.0F);
 	}
 
 	@Override

@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -27,51 +26,88 @@ public class ModelCandleCeiling extends ModelBase {
 	ModelRenderer BottomBar4;
 
 	public ModelCandleCeiling() {
-		(Wax1 = new ModelRenderer(this, 16, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 4, 2);
-		Wax1.setRotationPoint(-1.0f, 15.5f, 5.0f);
-		(Wax2 = new ModelRenderer(this, 16, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 4, 2);
-		Wax2.setRotationPoint(7.0f, 15.5f, 1.0f);
-		setRotation(Wax2, 0.0f, 3.141593f, 0.0f);
-		(Wax3 = new ModelRenderer(this, 16, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 4, 2);
-		Wax3.setRotationPoint(-7.0f, 15.5f, -1.0f);
-		(Wax4 = new ModelRenderer(this, 16, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 4, 2);
-		Wax4.setRotationPoint(1.0f, 15.5f, -5.0f);
-		setRotation(Wax4, 0.0f, 3.141593f, 0.0f);
-		(TippyTop1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		TippyTop1.setRotationPoint(-2.8f, 7.5f, 0.0f);
-		setRotation(TippyTop1, 0.0f, 0.7853982f, 0.0f);
-		(TippyTop2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 1, 3);
-		TippyTop2.setRotationPoint(-2.1f, 8.0f, 0.0f);
-		setRotation(TippyTop2, 0.0f, 0.7853982f, 0.0f);
-		(Middle = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 13, 1);
-		Middle.setRotationPoint(-0.5f, 9.0f, -0.5f);
-		(BottomBar1 = new ModelRenderer(this, 0, 4)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 5);
-		BottomBar1.setRotationPoint(-0.5f, 21.0f, 0.5f);
-		(Rod1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Rod1.setRotationPoint(-0.5f, 20.0f, 5.5f);
-		(Rod2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Rod2.setRotationPoint(5.5f, 20.0f, -0.5f);
-		(Rod3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Rod3.setRotationPoint(-6.5f, 20.0f, -0.5f);
-		(Rod4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Rod4.setRotationPoint(-0.5f, 20.0f, -6.5f);
-		(Base1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Base1.setRotationPoint(-2.0f, 19.0f, 4.0f);
-		(Base2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Base2.setRotationPoint(4.0f, 19.0f, -2.0f);
-		(Base3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Base3.setRotationPoint(-8.0f, 19.0f, -2.0f);
-		(Base4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Base4.setRotationPoint(-2.0f, 19.0f, -8.0f);
-		(BottomBar3 = new ModelRenderer(this, 0, 4)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 5);
-		BottomBar3.setRotationPoint(-0.5f, 21.0f, -0.5f);
-		setRotation(BottomBar3, 0.0f, -1.570796f, 0.0f);
-		(BottomBar2 = new ModelRenderer(this, 0, 4)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 5);
-		BottomBar2.setRotationPoint(0.5f, 21.0f, 0.5f);
-		setRotation(BottomBar2, 0.0f, 1.570796f, 0.0f);
-		(BottomBar4 = new ModelRenderer(this, 0, 4)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 5);
-		BottomBar4.setRotationPoint(0.4f, 21.0f, -0.5f);
-		setRotation(BottomBar4, 0.0f, 3.141593f, 0.0f);
+		Wax1 = new ModelRenderer(this, 16, 0);
+		Wax1.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2);
+		Wax1.setRotationPoint(-1.0F, 15.5F, 5.0F);
+
+		Wax2 = new ModelRenderer(this, 16, 0);
+		Wax2.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2);
+		Wax2.setRotationPoint(7.0F, 15.5F, 1.0F);
+		setRotation(Wax2, 0.0F, 3.141593F, 0.0F);
+
+		Wax3 = new ModelRenderer(this, 16, 0);
+		Wax3.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2);
+		Wax3.setRotationPoint(-7.0F, 15.5F, -1.0F);
+
+		Wax4 = new ModelRenderer(this, 16, 0);
+		Wax4.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2);
+		Wax4.setRotationPoint(1.0F, 15.5F, -5.0F);
+		setRotation(Wax4, 0.0F, 3.141593F, 0.0F);
+
+		TippyTop1 = new ModelRenderer(this, 0, 0);
+		TippyTop1.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		TippyTop1.setRotationPoint(-2.8F, 7.5F, 0.0F);
+		setRotation(TippyTop1, 0.0F, 0.7853982F, 0.0F);
+
+		TippyTop2 = new ModelRenderer(this, 0, 0);
+		TippyTop2.addBox(0.0F, 0.0F, 0.0F, 3, 1, 3);
+		TippyTop2.setRotationPoint(-2.1F, 8.0F, 0.0F);
+		setRotation(TippyTop2, 0.0F, 0.7853982F, 0.0F);
+
+		Middle = new ModelRenderer(this, 0, 0);
+		Middle.addBox(0.0F, 0.0F, 0.0F, 1, 13, 1);
+		Middle.setRotationPoint(-0.5F, 9.0F, -0.5F);
+
+		BottomBar1 = new ModelRenderer(this, 0, 4);
+		BottomBar1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 5);
+		BottomBar1.setRotationPoint(-0.5F, 21.0F, 0.5F);
+
+		Rod1 = new ModelRenderer(this, 0, 0);
+		Rod1.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Rod1.setRotationPoint(-0.5F, 20.0F, 5.5F);
+
+		Rod2 = new ModelRenderer(this, 0, 0);
+		Rod2.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Rod2.setRotationPoint(5.5F, 20.0F, -0.5F);
+
+		Rod3 = new ModelRenderer(this, 0, 0);
+		Rod3.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Rod3.setRotationPoint(-6.5F, 20.0F, -0.5F);
+
+		Rod4 = new ModelRenderer(this, 0, 0);
+		Rod4.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Rod4.setRotationPoint(-0.5F, 20.0F, -6.5F);
+
+		Base1 = new ModelRenderer(this, 0, 0);
+		Base1.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Base1.setRotationPoint(-2.0F, 19.0F, 4.0F);
+
+		Base2 = new ModelRenderer(this, 0, 0);
+		Base2.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Base2.setRotationPoint(4.0F, 19.0F, -2.0F);
+
+		Base3 = new ModelRenderer(this, 0, 0);
+		Base3.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Base3.setRotationPoint(-8.0F, 19.0F, -2.0F);
+
+		Base4 = new ModelRenderer(this, 0, 0);
+		Base4.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Base4.setRotationPoint(-2.0F, 19.0F, -8.0F);
+
+		BottomBar3 = new ModelRenderer(this, 0, 4);
+		BottomBar3.addBox(0.0F, 0.0F, 0.0F, 1, 1, 5);
+		BottomBar3.setRotationPoint(-0.5F, 21.0F, -0.5F);
+		setRotation(BottomBar3, 0.0F, -1.570796F, 0.0F);
+
+		BottomBar2 = new ModelRenderer(this, 0, 4);
+		BottomBar2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 5);
+		BottomBar2.setRotationPoint(0.5F, 21.0F, 0.5F);
+		setRotation(BottomBar2, 0.0F, 1.570796F, 0.0F);
+
+		BottomBar4 = new ModelRenderer(this, 0, 4);
+		BottomBar4.addBox(0.0F, 0.0F, 0.0F, 1, 1, 5);
+		BottomBar4.setRotationPoint(0.4F, 21.0F, -0.5F);
+		setRotation(BottomBar4, 0.0F, 3.141593F, 0.0F);
 	}
 
 	@Override

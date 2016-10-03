@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -9,11 +8,12 @@ public class ModelBeam extends ModelBase {
 	ModelRenderer Bar;
 
 	public ModelBeam() {
-		(Bar = new ModelRenderer(this, 6, 6)).addBox(0.0f, 0.0f, 0.0f, 5, 5, 12);
-		Bar.setRotationPoint(-2.5f, 13.5f, -4.0f);
+		Bar = new ModelRenderer(this, 6, 6);
+		Bar.addBox(0.0F, 0.0F, 0.0F, 5, 5, 12);
+		Bar.setRotationPoint(-2.5F, 13.5F, -4.0F);
 		Bar.setTextureSize(64, 32);
 		Bar.mirror = true;
-		setRotation(Bar, 0.0f, 0.0f, 0.0f);
+		setRotation(Bar, 0.0F, 0.0F, 0.0F);
 	}
 
 	@Override

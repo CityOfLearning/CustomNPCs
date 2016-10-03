@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -15,20 +14,27 @@ public class ModelShelf extends ModelBase {
 	public ModelShelf() {
 		SupportLeft2 = new ModelRenderer(this, 0, 0);
 		SupportLeft2.mirror = true;
-		SupportLeft2.addBox(0.0f, 0.0f, 0.0f, 2, 10, 2);
-		SupportLeft2.setRotationPoint(-7.498f, 9.5f, -0.5f);
-		setRotation(SupportLeft2, 0.7853982f, 0.0f, 0.0f);
-		(Top = new ModelRenderer(this, 5, 0)).addBox(0.0f, 0.0f, 0.0f, 16, 2, 11);
-		Top.setRotationPoint(-8.0f, 8.0f, -3.0f);
+		SupportLeft2.addBox(0.0F, 0.0F, 0.0F, 2, 10, 2);
+		SupportLeft2.setRotationPoint(-7.498F, 9.5F, -0.5F);
+		setRotation(SupportLeft2, 0.7853982F, 0.0F, 0.0F);
+
+		Top = new ModelRenderer(this, 5, 0);
+		Top.addBox(0.0F, 0.0F, 0.0F, 16, 2, 11);
+		Top.setRotationPoint(-8.0F, 8.0F, -3.0F);
+
 		SupportLeft1 = new ModelRenderer(this, 0, 0);
 		SupportLeft1.mirror = true;
-		SupportLeft1.addBox(0.0f, 0.0f, 0.0f, 2, 7, 2);
-		SupportLeft1.setRotationPoint(-7.5f, 10.0f, 6.0f);
-		(SupportRight1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 7, 2);
-		SupportRight1.setRotationPoint(5.5f, 10.0f, 6.0f);
-		(SupportRight2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 10, 2);
-		SupportRight2.setRotationPoint(5.498f, 9.5f, -0.5f);
-		setRotation(SupportRight2, 0.7853982f, 0.0f, 0.0f);
+		SupportLeft1.addBox(0.0F, 0.0F, 0.0F, 2, 7, 2);
+		SupportLeft1.setRotationPoint(-7.5F, 10.0F, 6.0F);
+
+		SupportRight1 = new ModelRenderer(this, 0, 0);
+		SupportRight1.addBox(0.0F, 0.0F, 0.0F, 2, 7, 2);
+		SupportRight1.setRotationPoint(5.5F, 10.0F, 6.0F);
+
+		SupportRight2 = new ModelRenderer(this, 0, 0);
+		SupportRight2.addBox(0.0F, 0.0F, 0.0F, 2, 10, 2);
+		SupportRight2.setRotationPoint(5.498F, 9.5F, -0.5F);
+		setRotation(SupportRight2, 0.7853982F, 0.0F, 0.0F);
 	}
 
 	@Override

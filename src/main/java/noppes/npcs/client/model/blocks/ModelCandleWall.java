@@ -1,4 +1,3 @@
-
 package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
@@ -18,28 +17,47 @@ public class ModelCandleWall extends ModelBase {
 	ModelRenderer Bar6;
 
 	public ModelCandleWall() {
-		(Base = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 4);
-		Base.setRotationPoint(-2.0f, 13.0f, -4.0f);
-		(Bar1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 6);
-		Bar1.setRotationPoint(-3.0f, 12.0f, -5.0f);
-		(Bar2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 6);
-		Bar2.setRotationPoint(2.0f, 12.0f, -5.0f);
-		(Bar3 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 1);
-		Bar3.setRotationPoint(-2.0f, 12.0f, -5.0f);
-		(Bar4 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 1, 1);
-		Bar4.setRotationPoint(-2.0f, 12.0f, 0.0f);
-		(Wax = new ModelRenderer(this, 16, 0)).addBox(0.0f, 0.0f, 0.0f, 2, 4, 2);
-		Wax.setRotationPoint(-1.0f, 9.0f, -3.0f);
-		(Wall2 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 3, 3, 1);
-		Wall2.setRotationPoint(0.0f, 13.7f, -7.5f);
-		setRotation(Wall2, 0.0f, 0.0f, 0.7853982f);
-		(Wall1 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 4, 4, 1);
-		Wall1.setRotationPoint(0.0f, 13.0f, -8.0f);
-		setRotation(Wall1, 0.0f, 0.0f, 0.7853982f);
-		(Bar5 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 2, 1);
-		Bar5.setRotationPoint(-0.5f, 13.5f, -2.5f);
-		(Bar6 = new ModelRenderer(this, 0, 0)).addBox(0.0f, 0.0f, 0.0f, 1, 1, 5);
-		Bar6.setRotationPoint(-0.5f, 15.5f, -6.5f);
+		Base = new ModelRenderer(this, 0, 0);
+		Base.addBox(0.0F, 0.0F, 0.0F, 4, 1, 4);
+		Base.setRotationPoint(-2.0F, 13.0F, -4.0F);
+
+		Bar1 = new ModelRenderer(this, 0, 0);
+		Bar1.addBox(0.0F, 0.0F, 0.0F, 1, 1, 6);
+		Bar1.setRotationPoint(-3.0F, 12.0F, -5.0F);
+
+		Bar2 = new ModelRenderer(this, 0, 0);
+		Bar2.addBox(0.0F, 0.0F, 0.0F, 1, 1, 6);
+		Bar2.setRotationPoint(2.0F, 12.0F, -5.0F);
+
+		Bar3 = new ModelRenderer(this, 0, 0);
+		Bar3.addBox(0.0F, 0.0F, 0.0F, 4, 1, 1);
+		Bar3.setRotationPoint(-2.0F, 12.0F, -5.0F);
+
+		Bar4 = new ModelRenderer(this, 0, 0);
+		Bar4.addBox(0.0F, 0.0F, 0.0F, 4, 1, 1);
+		Bar4.setRotationPoint(-2.0F, 12.0F, 0.0F);
+
+		Wax = new ModelRenderer(this, 16, 0);
+		Wax.addBox(0.0F, 0.0F, 0.0F, 2, 4, 2);
+		Wax.setRotationPoint(-1.0F, 9.0F, -3.0F);
+
+		Wall2 = new ModelRenderer(this, 0, 0);
+		Wall2.addBox(0.0F, 0.0F, 0.0F, 3, 3, 1);
+		Wall2.setRotationPoint(0.0F, 13.7F, -7.5F);
+		setRotation(Wall2, 0.0F, 0.0F, 0.7853982F);
+
+		Wall1 = new ModelRenderer(this, 0, 0);
+		Wall1.addBox(0.0F, 0.0F, 0.0F, 4, 4, 1);
+		Wall1.setRotationPoint(0.0F, 13.0F, -8.0F);
+		setRotation(Wall1, 0.0F, 0.0F, 0.7853982F);
+
+		Bar5 = new ModelRenderer(this, 0, 0);
+		Bar5.addBox(0.0F, 0.0F, 0.0F, 1, 2, 1);
+		Bar5.setRotationPoint(-0.5F, 13.5F, -2.5F);
+
+		Bar6 = new ModelRenderer(this, 0, 0);
+		Bar6.addBox(0.0F, 0.0F, 0.0F, 1, 1, 5);
+		Bar6.setRotationPoint(-0.5F, 15.5F, -6.5F);
 	}
 
 	@Override
