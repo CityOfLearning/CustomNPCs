@@ -31,49 +31,48 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2 implements IScr
    public GuiNPCManageBanks(EntityNPCInterface npc, ContainerManageBanks container) {
       super(npc, container);
       this.container = container;
-      super.drawDefaultBackground = false;
-      Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
+      this.drawDefaultBackground = false;
       this.setBackground("npcbanksetup.png");
-      super.ySize = 200;
+      this.ySize = 200;
+   }
+
+   public void initPacket() {
+      Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
    }
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(6, super.field_147003_i + 340, super.field_147009_r + 10, 45, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(7, super.field_147003_i + 340, super.field_147009_r + 32, 45, 20, "gui.remove"));
+      this.addButton(new GuiNpcButton(6, this.guiLeft + 340, this.guiTop + 10, 45, 20, "gui.add"));
+      this.addButton(new GuiNpcButton(7, this.guiLeft + 340, this.guiTop + 32, 45, 20, "gui.remove"));
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
       }
 
       this.scroll.setSize(160, 180);
-      this.scroll.guiLeft = super.field_147003_i + 174;
-      this.scroll.guiTop = super.field_147009_r + 8;
+      this.scroll.guiLeft = this.guiLeft + 174;
+      this.scroll.guiTop = this.guiTop + 8;
       this.addScroll(this.scroll);
 
       for(int i = 0; i < 6; ++i) {
-         int x = super.field_147003_i + 6;
-         int y = super.field_147009_r + 36 + i * 22;
+         int x = this.guiLeft + 6;
+         int y = this.guiTop + 36 + i * 22;
          this.addButton(new GuiNpcButton(i, x + 50, y, 80, 20, new String[]{"Can Upgrade", "Can\'t Upgrade", "Upgraded"}, 0));
          this.getButton(i).setEnabled(false);
       }
 
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.field_147003_i + 8, super.field_147009_r + 8, 160, 16, ""));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 8, this.guiTop + 8, 160, 16, ""));
       this.getTextField(0).setMaxStringLength(20);
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.field_147003_i + 10, super.field_147009_r + 80, 16, 16, ""));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 10, this.guiTop + 80, 16, 16, ""));
       this.getTextField(1).numbersOnly = true;
       this.getTextField(1).setMaxStringLength(1);
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.field_147003_i + 10, super.field_147009_r + 110, 16, 16, ""));
+      this.addTextField(new GuiNpcTextField(2, this, this.fontRendererObj, this.guiLeft + 10, this.guiTop + 110, 16, 16, ""));
       this.getTextField(2).numbersOnly = true;
       this.getTextField(2).setMaxStringLength(1);
    }
 
-   public void drawScreen(int x, int y, float f) {
-      super.drawScreen(x, y, f);
-   }
-
    protected void actionPerformed(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 6) {
+      if(button.id == 6) {
          this.save();
          this.scroll.clear();
 
@@ -87,21 +86,21 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2 implements IScr
          NBTTagCompound compound = new NBTTagCompound();
          bank.writeEntityToNBT(compound);
          Client.sendData(EnumPacketServer.BankSave, new Object[]{compound});
-      } else if(button.field_146127_k == 7) {
+      } else if(button.id == 7) {
          if(this.data.containsKey(this.scroll.getSelected())) {
             Client.sendData(EnumPacketServer.BankRemove, new Object[]{this.data.get(this.selected)});
          }
-      } else if(button.field_146127_k >= 0 && button.field_146127_k < 6) {
-         this.bank.slotTypes.put(Integer.valueOf(button.field_146127_k), Integer.valueOf(button.getValue()));
+      } else if(button.id >= 0 && button.id < 6) {
+         this.bank.slotTypes.put(Integer.valueOf(button.id), Integer.valueOf(button.getValue()));
       }
 
    }
 
    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-      super.fontRendererObj.drawString("Tab Cost", 23, 28, CustomNpcResourceListener.DefaultTextColor);
-      super.fontRendererObj.drawString("Upg. Cost", 123, 28, CustomNpcResourceListener.DefaultTextColor);
-      super.fontRendererObj.drawString("Start", 6, 70, CustomNpcResourceListener.DefaultTextColor);
-      super.fontRendererObj.drawString("Max", 9, 100, CustomNpcResourceListener.DefaultTextColor);
+      this.fontRendererObj.drawString("Tab Cost", 23, 28, CustomNpcResourceListener.DefaultTextColor);
+      this.fontRendererObj.drawString("Upg. Cost", 123, 28, CustomNpcResourceListener.DefaultTextColor);
+      this.fontRendererObj.drawString("Start", 6, 70, CustomNpcResourceListener.DefaultTextColor);
+      this.fontRendererObj.drawString("Max", 9, 100, CustomNpcResourceListener.DefaultTextColor);
    }
 
    public void setGuiData(NBTTagCompound compound) {

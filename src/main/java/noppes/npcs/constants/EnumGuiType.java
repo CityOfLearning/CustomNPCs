@@ -47,13 +47,18 @@ public enum EnumGuiType {
    Border("Border", 41),
    BigSign("BigSign", 42),
    Script("Script", 43),
-   Companion("Companion", 44),
-   CompanionInv("CompanionInv", 45),
-   CompanionTalent("CompanionTalent", 46),
-   CompanionTrader("CompanionTrader", 47),
-   ManageLinked("ManageLinked", 48);
+   ScriptBlock("ScriptBlock", 44),
+   ScriptDoor("ScriptDoor", 45),
+   Companion("Companion", 46),
+   CompanionInv("CompanionInv", 47),
+   CompanionTalent("CompanionTalent", 48),
+   CompanionTrader("CompanionTrader", 49),
+   ManageLinked("ManageLinked", 50),
+   BuilderBlock("BuilderBlock", 51),
+   CopyBlock("CopyBlock", 52),
+   TradingBlock("TradingBlock", 53);
    // $FF: synthetic field
-   private static final EnumGuiType[] $VALUES = new EnumGuiType[]{MainMenuDisplay, MainMenuInv, MainMenuStats, ManageFactions, MainMenuAdvanced, MainMenuGlobal, PlayerBankSmall, PlayerFollowerHire, PlayerFollower, SetupItemGiver, SetupTrader, SetupFollower, PlayerTrader, PlayerTransporter, RedstoneBlock, SetupTransporter, ManageTransport, ManageBanks, MobSpawner, SetupBank, ManageDialogs, ManageQuests, PlayerAnvil, QuestReward, ManageRecipes, QuestItem, NpcRemote, MoneyBag, MainMenuAI, MovingPath, PlayerBankUnlock, PlayerBankUprade, PlayerBankLarge, MobSpawnerAdd, PlayerMailbox, PlayerMailman, Waypoint, MerchantAdd, MobSpawnerMounter, Crate, NpcDimensions, Border, BigSign, Script, Companion, CompanionInv, CompanionTalent, CompanionTrader, ManageLinked};
+   private static final EnumGuiType[] $VALUES = new EnumGuiType[]{MainMenuDisplay, MainMenuInv, MainMenuStats, ManageFactions, MainMenuAdvanced, MainMenuGlobal, PlayerBankSmall, PlayerFollowerHire, PlayerFollower, SetupItemGiver, SetupTrader, SetupFollower, PlayerTrader, PlayerTransporter, RedstoneBlock, SetupTransporter, ManageTransport, ManageBanks, MobSpawner, SetupBank, ManageDialogs, ManageQuests, PlayerAnvil, QuestReward, ManageRecipes, QuestItem, NpcRemote, MoneyBag, MainMenuAI, MovingPath, PlayerBankUnlock, PlayerBankUprade, PlayerBankLarge, MobSpawnerAdd, PlayerMailbox, PlayerMailman, Waypoint, MerchantAdd, MobSpawnerMounter, Crate, NpcDimensions, Border, BigSign, Script, ScriptBlock, ScriptDoor, Companion, CompanionInv, CompanionTalent, CompanionTrader, ManageLinked, BuilderBlock, CopyBlock, TradingBlock};
 
 
    private EnumGuiType(String var1, int var2) {}

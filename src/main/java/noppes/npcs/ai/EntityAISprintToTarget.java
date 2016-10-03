@@ -7,42 +7,39 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAISprintToTarget extends EntityAIBase {
 
-   EntityNPCInterface runner;
-   EntityLivingBase runTarget;
+   private EntityNPCInterface npc;
 
 
    public EntityAISprintToTarget(EntityNPCInterface par1EntityLiving) {
-      this.runner = par1EntityLiving;
-      this.setMutexBits(AiMutex.PASSIVE + AiMutex.PATHING);
+      this.npc = par1EntityLiving;
+      this.setMutexBits(AiMutex.PASSIVE);
    }
 
    public boolean shouldExecute() {
-      this.runTarget = this.runner.getAttackTarget();
-      if(this.runTarget == null) {
-         return false;
-      } else if(this.runner.getNavigator().noPath()) {
-         return false;
-      } else {
-         switch(this.runner.ai.onAttack) {
+      EntityLivingBase runTarget = this.npc.getAttackTarget();
+      if(runTarget != null && !this.npc.getNavigator().noPath()) {
+         switch(this.npc.ai.onAttack) {
          case 0:
-            return this.runner.getDistanceSqToEntity(this.runTarget) >= 64.0D?this.runner.onGround:false;
+            return !this.npc.isInRange(runTarget, 8.0D)?this.npc.onGround:false;
          case 2:
-            return this.runner.getDistanceSqToEntity(this.runTarget) <= 49.0D?this.runner.onGround:false;
+            return this.npc.isInRange(runTarget, 7.0D)?this.npc.onGround:false;
          default:
             return false;
          }
+      } else {
+         return false;
       }
    }
 
    public boolean continueExecuting() {
-      return this.runner.isEntityAlive() && this.runner.onGround && this.runner.hurtTime <= 0 && this.runner.motionX != 0.0D && this.runner.motionZ != 0.0D;
+      return this.npc.isEntityAlive() && this.npc.onGround && this.npc.hurtTime <= 0 && this.npc.motionX != 0.0D && this.npc.motionZ != 0.0D;
    }
 
    public void startExecuting() {
-      this.runner.setSprinting(true);
+      this.npc.setSprinting(true);
    }
 
    public void resetTask() {
-      this.runner.setSprinting(false);
+      this.npc.setSprinting(false);
    }
 }

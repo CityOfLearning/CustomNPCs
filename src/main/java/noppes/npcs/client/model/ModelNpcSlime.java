@@ -1,11 +1,11 @@
 package noppes.npcs.client.model;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public class ModelNpcSlime extends ModelBase {
@@ -18,8 +18,8 @@ public class ModelNpcSlime extends ModelBase {
 
 
    public ModelNpcSlime(int par1) {
-      super.textureHeight = 64;
-      super.textureWidth = 64;
+      this.textureHeight = 64;
+      this.textureWidth = 64;
       this.outerBody = new ModelRenderer(this, 0, 0);
       this.outerBody = new ModelRenderer(this, 0, 0);
       this.outerBody.addBox(-8.0F, 32.0F, -8.0F, 16, 16, 16);
@@ -41,10 +41,10 @@ public class ModelNpcSlime extends ModelBase {
       if(this.innerBody != null) {
          this.innerBody.render(par7);
       } else {
-         GL11.glPushMatrix();
-         GL11.glScalef(0.5F, 0.5F, 0.5F);
+         GlStateManager.pushMatrix();
+         GlStateManager.scale(0.5F, 0.5F, 0.5F);
          this.outerBody.render(par7);
-         GL11.glPopMatrix();
+         GlStateManager.popMatrix();
       }
 
       if(this.slimeRightEye != null) {

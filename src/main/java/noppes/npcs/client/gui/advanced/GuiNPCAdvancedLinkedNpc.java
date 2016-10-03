@@ -25,20 +25,23 @@ public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScroll
    public GuiNPCAdvancedLinkedNpc(EntityNPCInterface npc) {
       super(npc);
       Instance = this;
+   }
+
+   public void initPacket() {
       Client.sendData(EnumPacketServer.LinkedGetAll, new Object[0]);
    }
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.clear"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 358, this.guiTop + 38, 58, 20, "gui.clear"));
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
          this.scroll.setSize(143, 208);
       }
 
-      this.scroll.guiLeft = super.guiLeft + 137;
-      this.scroll.guiTop = super.guiTop + 4;
-      this.scroll.setSelected(super.npc.linkedName);
+      this.scroll.guiLeft = this.guiLeft + 137;
+      this.scroll.guiTop = this.guiTop + 4;
+      this.scroll.setSelected(this.npc.linkedName);
       this.scroll.setList(this.data);
       this.addScroll(this.scroll);
    }

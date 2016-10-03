@@ -40,17 +40,17 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
             sound = line.sound;
          }
 
-         this.addTextField(new GuiNpcTextField(i, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 4 + i * 24, 200, 20, text));
-         this.addTextField(new GuiNpcTextField(i + 8, this, super.fontRendererObj, super.guiLeft + 208, super.guiTop + 4 + i * 24, 146, 20, sound));
-         this.addButton(new GuiNpcButton(i, super.guiLeft + 358, super.guiTop + 4 + i * 24, 60, 20, "mco.template.button.select"));
+         this.addTextField(new GuiNpcTextField(i, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 4 + i * 24, 200, 20, text));
+         this.addTextField(new GuiNpcTextField(i + 8, this, this.fontRendererObj, this.guiLeft + 208, this.guiTop + 4 + i * 24, 146, 20, sound));
+         this.addButton(new GuiNpcButton(i, this.guiLeft + 358, this.guiTop + 4 + i * 24, 60, 20, "mco.template.button.select"));
       }
 
    }
 
    protected void actionPerformed(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
-      this.field = this.getTextField(button.field_146127_k + 8);
-      NoppesUtil.openGUI(super.player, this.gui = new GuiNpcSoundSelection(super.npc, this, this.field.getText()));
+      this.field = this.getTextField(button.id + 8);
+      NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this, this.field.getText()));
    }
 
    public void elementClicked() {
@@ -59,7 +59,7 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
    }
 
    public void setGuiData(NBTTagCompound compound) {
-      super.npc.advanced.readToNBT(compound);
+      this.npc.advanced.readToNBT(compound);
       this.initGui();
    }
 
@@ -82,6 +82,6 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 
    public void save() {
       this.saveLines();
-      Client.sendData(EnumPacketServer.MainmenuAdvancedSave, new Object[]{super.npc.advanced.writeToNBT(new NBTTagCompound())});
+      Client.sendData(EnumPacketServer.MainmenuAdvancedSave, new Object[]{this.npc.advanced.writeToNBT(new NBTTagCompound())});
    }
 }

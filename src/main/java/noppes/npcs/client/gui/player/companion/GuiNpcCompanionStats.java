@@ -1,6 +1,5 @@
 package noppes.npcs.client.gui.player.companion;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.item.ItemStack;
@@ -31,42 +30,46 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
    public GuiNpcCompanionStats(EntityNPCInterface npc) {
       super(npc);
       this.role = (RoleCompanion)npc.roleInterface;
-      super.closeOnEsc = true;
+      this.closeOnEsc = true;
       this.setBackground("companion.png");
-      super.xSize = 171;
-      super.ySize = 166;
+      this.xSize = 171;
+      this.ySize = 166;
       NoppesUtilPlayer.sendData(EnumPlayerPacket.RoleGet, new Object[0]);
    }
 
    public void initGui() {
       super.initGui();
-      int y = super.guiTop + 10;
-      this.addLabel(new GuiNpcLabel(0, NoppesStringUtils.translate(new Object[]{"gui.name", ": ", super.npc.display.name}), super.guiLeft + 4, y));
-      GuiNpcLabel var10001;
+      int y = this.guiTop + 10;
+      this.addLabel(new GuiNpcLabel(0, NoppesStringUtils.translate(new Object[]{"gui.name", ": ", this.npc.display.getName()}), this.guiLeft + 4, y));
+      GuiNpcLabel var10001 = new GuiNpcLabel;
       String var10004 = NoppesStringUtils.translate(new Object[]{"companion.owner", ": ", this.role.ownerName});
-      int var10005 = super.guiLeft + 4;
+      int var10005 = this.guiLeft + 4;
       y += 12;
-      var10001 = new GuiNpcLabel(1, var10004, var10005, y);
+      var10001.<init>(1, var10004, var10005, y);
       this.addLabel(var10001);
+      var10001 = new GuiNpcLabel;
       var10004 = NoppesStringUtils.translate(new Object[]{"companion.age", ": ", this.role.ticksActive / 18000L + " (", this.role.stage.name, ")"});
-      var10005 = super.guiLeft + 4;
+      var10005 = this.guiLeft + 4;
       y += 12;
-      var10001 = new GuiNpcLabel(2, var10004, var10005, y);
+      var10001.<init>(2, var10004, var10005, y);
       this.addLabel(var10001);
-      var10004 = NoppesStringUtils.translate(new Object[]{"companion.strength", ": ", Integer.valueOf(super.npc.stats.getAttackStrength())});
-      var10005 = super.guiLeft + 4;
+      var10001 = new GuiNpcLabel;
+      var10004 = NoppesStringUtils.translate(new Object[]{"companion.strength", ": ", Integer.valueOf(this.npc.stats.melee.getStrength())});
+      var10005 = this.guiLeft + 4;
       y += 12;
-      var10001 = new GuiNpcLabel(3, var10004, var10005, y);
+      var10001.<init>(3, var10004, var10005, y);
       this.addLabel(var10001);
+      var10001 = new GuiNpcLabel;
       var10004 = NoppesStringUtils.translate(new Object[]{"companion.level", ": ", Integer.valueOf(this.role.getTotalLevel())});
-      var10005 = super.guiLeft + 4;
+      var10005 = this.guiLeft + 4;
       y += 12;
-      var10001 = new GuiNpcLabel(4, var10004, var10005, y);
+      var10001.<init>(4, var10004, var10005, y);
       this.addLabel(var10001);
+      var10001 = new GuiNpcLabel;
       var10004 = NoppesStringUtils.translate(new Object[]{"job.name", ": ", "gui.none"});
-      var10005 = super.guiLeft + 4;
+      var10005 = this.guiLeft + 4;
       y += 12;
-      var10001 = new GuiNpcLabel(5, var10004, var10005, y);
+      var10001.<init>(5, var10004, var10005, y);
       this.addLabel(var10001);
       addTopMenu(this.role, this, 1);
    }
@@ -90,7 +93,7 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
 
       if(screen instanceof GuiContainerNPCInterface) {
          GuiContainerNPCInterface gui1 = (GuiContainerNPCInterface)screen;
-         gui1.addTopButton(button = new GuiMenuTopIconButton(1, gui1.field_147003_i + 4, gui1.field_147009_r - 27, "menu.stats", new ItemStack(CustomItems.letter)));
+         gui1.addTopButton(button = new GuiMenuTopIconButton(1, gui1.guiLeft + 4, gui1.guiTop - 27, "menu.stats", new ItemStack(CustomItems.letter)));
          gui1.addTopButton(button = new GuiMenuTopIconButton(2, button, "companion.talent", new ItemStack(CustomItems.spellHoly)));
          if(role.hasInv()) {
             gui1.addTopButton(button = new GuiMenuTopIconButton(3, button, "inv.inventory", new ItemStack(CustomItems.bag)));
@@ -109,7 +112,7 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
       super.actionPerformed(guibutton);
       int id = guibutton.id;
       if(id == 2) {
-         CustomNpcs.proxy.openGui(super.npc, EnumGuiType.CompanionTalent);
+         CustomNpcs.proxy.openGui(this.npc, EnumGuiType.CompanionTalent);
       }
 
       if(id == 3) {
@@ -126,16 +129,16 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
 
       this.isEating = this.role.isEating();
       super.drawNpc(34, 150);
-      int y = this.drawHealth(super.guiTop + 88);
+      int y = this.drawHealth(this.guiTop + 88);
    }
 
    private int drawHealth(int y) {
-      super.mc.getTextureManager().bindTexture(Gui.icons);
+      this.mc.getTextureManager().bindTexture(icons);
       int max = this.role.getTotalArmorValue();
       int k;
       if(this.role.talents.containsKey(EnumCompanionTalent.ARMOR) || max > 0) {
          for(k = 0; k < 10; ++k) {
-            int scale = super.guiLeft + 66 + k * 10;
+            int scale = this.guiLeft + 66 + k * 10;
             if(k * 2 + 1 < max) {
                this.drawTexturedModalRect(scale, y, 34, 9, 9, 9);
             }
@@ -152,8 +155,8 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
          y += 10;
       }
 
-      max = MathHelper.ceiling_float_int(super.npc.getMaxHealth());
-      k = (int)super.npc.getHealth();
+      max = MathHelper.ceiling_float_int(this.npc.getMaxHealth());
+      k = (int)this.npc.getHealth();
       float var8 = 1.0F;
       if(max > 40) {
          var8 = (float)max / 40.0F;
@@ -164,7 +167,7 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
       int i;
       int x;
       for(i = 0; i < max; ++i) {
-         x = super.guiLeft + 66 + i % 20 * 5;
+         x = this.guiLeft + 66 + i % 20 * 5;
          int offset = i / 20 * 10;
          this.drawTexturedModalRect(x, y + offset, 52 + i % 2 * 5, 9, i % 2 == 1?4:5, 9);
          if(k > i) {
@@ -179,7 +182,7 @@ public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
       }
 
       for(i = 0; i < 20; ++i) {
-         x = super.guiLeft + 66 + i % 20 * 5;
+         x = this.guiLeft + 66 + i % 20 * 5;
          this.drawTexturedModalRect(x, y, 16 + i % 2 * 5, 27, i % 2 == 1?4:5, 9);
          if(k > i) {
             this.drawTexturedModalRect(x, y, 52 + i % 2 * 5, 27, i % 2 == 1?4:5, 9);

@@ -2,6 +2,7 @@ package noppes.npcs.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
@@ -26,8 +27,8 @@ public class ModelNpcDragon extends ModelBase {
 
 
    public ModelNpcDragon(float f) {
-      super.textureWidth = 256;
-      super.textureHeight = 256;
+      this.textureWidth = 256;
+      this.textureHeight = 256;
       this.setTextureOffset("body.body", 0, 0);
       this.setTextureOffset("wing.skin", -56, 88);
       this.setTextureOffset("wingtip.skin", -56, 144);
@@ -109,13 +110,13 @@ public class ModelNpcDragon extends ModelBase {
 
    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
       EntityNpcDragon entitydragon = (EntityNpcDragon)entity;
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       float f6 = entitydragon.field_40173_aw + (entitydragon.field_40172_ax - entitydragon.field_40173_aw) * this.field_40317_s;
       this.jaw.rotateAngleX = (float)(Math.sin((double)(f6 * 3.1415927F * 2.0F)) + 1.0D) * 0.2F;
       float f7 = (float)(Math.sin((double)(f6 * 3.1415927F * 2.0F - 1.0F)) + 1.0D);
       f7 = (f7 * f7 * 1.0F + f7 * 2.0F) * 0.05F;
-      GL11.glTranslatef(0.0F, f7 - 2.0F, -3.0F);
-      GL11.glRotatef(f7 * 2.0F, 1.0F, 0.0F, 0.0F);
+      GlStateManager.translate(0.0F, f7 - 2.0F, -3.0F);
+      GlStateManager.rotate(f7 * 2.0F, 1.0F, 0.0F, 0.0F);
       float f8 = -30.0F;
       float f9 = 22.0F;
       float f10 = 0.0F;
@@ -151,21 +152,21 @@ public class ModelNpcDragon extends ModelBase {
       this.head.rotateAngleY = this.func_40307_a(var23[0] - ad[0]) * 3.1415927F / 180.0F * 1.0F;
       this.head.rotateAngleZ = -this.func_40307_a(var23[0] - (double)f13) * 3.1415927F / 180.0F * 1.0F;
       this.head.render(f5);
-      GL11.glPushMatrix();
-      GL11.glTranslatef(0.0F, 1.0F, 0.0F);
+      GlStateManager.pushMatrix();
+      GlStateManager.translate(0.0F, 1.0F, 0.0F);
       if(entitydragon.onGround) {
-         GL11.glRotatef(-f12 * f11 * 0.3F, 0.0F, 0.0F, 1.0F);
+         GlStateManager.rotate(-f12 * f11 * 0.3F, 0.0F, 0.0F, 1.0F);
       } else {
-         GL11.glRotatef(-f12 * f11 * 1.0F, 0.0F, 0.0F, 1.0F);
+         GlStateManager.rotate(-f12 * f11 * 1.0F, 0.0F, 0.0F, 1.0F);
       }
 
-      GL11.glTranslatef(0.0F, -1.0F, 0.0F);
+      GlStateManager.translate(0.0F, -1.0F, 0.0F);
       this.body.rotateAngleZ = 0.0F;
       this.body.render(f5);
       int var24;
       if(entitydragon.onGround) {
          for(var24 = 0; var24 < 2; ++var24) {
-            GL11.glEnable(2884);
+            GlStateManager.enableCull();
             this.wing.rotateAngleX = 0.25F;
             this.wing.rotateAngleY = 0.95F;
             this.wing.rotateAngleZ = -0.5F;
@@ -181,9 +182,9 @@ public class ModelNpcDragon extends ModelBase {
             this.rearFoot.rotateAngleX = 0.85F + f7 * 0.2F;
             this.rearLeg.render(f5);
             this.wing.render(f5);
-            GL11.glScalef(-1.0F, 1.0F, 1.0F);
+            GlStateManager.scale(-1.0F, 1.0F, 1.0F);
             if(var24 == 0) {
-               GL11.glCullFace(1028);
+               GlStateManager.disableCull();
             }
          }
       } else {
@@ -205,14 +206,14 @@ public class ModelNpcDragon extends ModelBase {
             this.wing.render(f5);
             this.frontLeg.render(f5);
             this.rearLeg.render(f5);
-            GL11.glScalef(-1.0F, 1.0F, 1.0F);
+            GlStateManager.scale(-1.0F, 1.0F, 1.0F);
             if(var24 == 0) {
                GL11.glCullFace(1028);
             }
          }
       }
 
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
       GL11.glCullFace(1029);
       GL11.glDisable(2884);
       f14 = -((float)Math.sin((double)(f6 * 3.141593F * 2.0F))) * 0.0F;
@@ -237,7 +238,7 @@ public class ModelNpcDragon extends ModelBase {
          this.neck.render(f5);
       }
 
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
    }
 
    private float func_40307_a(double d) {

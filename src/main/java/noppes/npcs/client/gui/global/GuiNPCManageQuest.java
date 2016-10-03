@@ -5,6 +5,7 @@ import java.util.Vector;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.SubGuiMailmanSendSetup;
 import noppes.npcs.client.gui.SubGuiNpcCommand;
@@ -30,7 +31,6 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.constants.EnumQuestCompletion;
 import noppes.npcs.constants.EnumQuestRepeat;
-import noppes.npcs.constants.EnumQuestType;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.controllers.QuestCategory;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -54,16 +54,16 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 358, super.guiTop + 8, 58, 20, this.categorySelection?"quest.quests":"gui.categories"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 358, super.guiTop + 61, 58, 20, "gui.remove"));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 358, this.guiTop + 8, 58, 20, this.categorySelection?"quest.quests":"gui.categories"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 358, this.guiTop + 38, 58, 20, "gui.add"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 358, this.guiTop + 61, 58, 20, "gui.remove"));
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
          this.scroll.setSize(143, 208);
       }
 
-      this.scroll.guiLeft = super.guiLeft + 214;
-      this.scroll.guiTop = super.guiTop + 4;
+      this.scroll.guiLeft = this.guiLeft + 214;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
       if(this.categorySelection && this.category.id >= 0) {
          this.categoryGuiInit();
@@ -76,39 +76,39 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
    }
 
    private void dialogGuiInit() {
-      this.addLabel(new GuiNpcLabel(1, "gui.title", super.guiLeft + 4, super.guiTop + 8));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 36, super.guiTop + 3, 140, 20, quest.title));
-      this.addLabel(new GuiNpcLabel(0, "ID", super.guiLeft + 178, super.guiTop + 4));
-      this.addLabel(new GuiNpcLabel(2, quest.id + "", super.guiLeft + 178, super.guiTop + 14));
-      this.addLabel(new GuiNpcLabel(3, "quest.completedtext", super.guiLeft + 4, super.guiTop + 30));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 120, super.guiTop + 25, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(4, "quest.questlogtext", super.guiLeft + 4, super.guiTop + 51));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 120, super.guiTop + 46, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(5, "quest.reward", super.guiLeft + 4, super.guiTop + 72));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 120, super.guiTop + 67, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(6, "gui.type", super.guiLeft + 4, super.guiTop + 93));
-      this.addButton(new GuiNpcButton(6, super.guiLeft + 90, super.guiTop + 88, 70, 20, new String[]{"quest.item", "quest.dialog", "quest.kill", "quest.location", "quest.areakill"}, quest.type.ordinal()));
-      this.addButton(new GuiNpcButton(7, super.guiLeft + 162, super.guiTop + 88, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(8, "quest.repeatable", super.guiLeft + 4, super.guiTop + 114));
-      this.addButton(new GuiNpcButton(8, super.guiLeft + 110, super.guiTop + 109, 70, 20, new String[]{"gui.no", "gui.yes", "quest.mcdaily", "quest.mcweekly", "quest.rldaily", "quest.rlweekly"}, quest.repeat.ordinal()));
-      this.addButton(new GuiNpcButton(9, super.guiLeft + 4, super.guiTop + 131, 90, 20, new String[]{"quest.npc", "quest.instant"}, quest.completion.ordinal()));
+      this.addLabel(new GuiNpcLabel(1, "gui.title", this.guiLeft + 4, this.guiTop + 8));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 36, this.guiTop + 3, 140, 20, quest.title));
+      this.addLabel(new GuiNpcLabel(0, "ID", this.guiLeft + 178, this.guiTop + 4));
+      this.addLabel(new GuiNpcLabel(2, quest.id + "", this.guiLeft + 178, this.guiTop + 14));
+      this.addLabel(new GuiNpcLabel(3, "quest.completedtext", this.guiLeft + 4, this.guiTop + 30));
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 120, this.guiTop + 25, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(4, "quest.questlogtext", this.guiLeft + 4, this.guiTop + 51));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 120, this.guiTop + 46, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(5, "quest.reward", this.guiLeft + 4, this.guiTop + 72));
+      this.addButton(new GuiNpcButton(5, this.guiLeft + 120, this.guiTop + 67, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(6, "gui.type", this.guiLeft + 4, this.guiTop + 93));
+      this.addButton(new GuiNpcButton(6, this.guiLeft + 90, this.guiTop + 88, 70, 20, new String[]{"quest.item", "quest.dialog", "quest.kill", "quest.location", "quest.areakill"}, quest.type.ordinal()));
+      this.addButton(new GuiNpcButton(7, this.guiLeft + 162, this.guiTop + 88, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(8, "quest.repeatable", this.guiLeft + 4, this.guiTop + 114));
+      this.addButton(new GuiNpcButton(8, this.guiLeft + 110, this.guiTop + 109, 70, 20, new String[]{"gui.no", "gui.yes", "quest.mcdaily", "quest.mcweekly", "quest.rldaily", "quest.rlweekly"}, quest.repeat.ordinal()));
+      this.addButton(new GuiNpcButton(9, this.guiLeft + 4, this.guiTop + 131, 90, 20, new String[]{"quest.npc", "quest.instant"}, quest.completion.ordinal()));
       if(quest.completerNpc.isEmpty()) {
-         quest.completerNpc = super.npc.display.name;
+         quest.completerNpc = this.npc.display.getName();
       }
 
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 96, super.guiTop + 131, 114, 20, quest.completerNpc));
+      this.addTextField(new GuiNpcTextField(2, this, this.fontRendererObj, this.guiLeft + 96, this.guiTop + 131, 114, 20, quest.completerNpc));
       this.getTextField(2).enabled = quest.completion == EnumQuestCompletion.Npc;
-      this.addLabel(new GuiNpcLabel(10, "menu.advanced", super.guiLeft + 4, super.guiTop + 158));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 120, super.guiTop + 153, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(10, "menu.advanced", this.guiLeft + 4, this.guiTop + 158));
+      this.addButton(new GuiNpcButton(10, this.guiLeft + 120, this.guiTop + 153, 50, 20, "selectServer.edit"));
    }
 
    private void categoryGuiInit() {
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 8, super.guiTop + 8, 160, 16, this.category.title));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 8, this.guiTop + 8, 160, 16, this.category.title));
    }
 
    public void buttonEvent(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
+      if(button.id == 0) {
          this.save();
          if(this.categorySelection) {
             if(this.category.id < 0) {
@@ -129,7 +129,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
          this.data.clear();
       }
 
-      if(button.field_146127_k == 1) {
+      if(button.id == 1) {
          this.save();
 
          String name;
@@ -148,7 +148,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
          }
       }
 
-      if(button.field_146127_k == 2 && this.data.containsKey(this.scroll.getSelected())) {
+      if(button.id == 2 && this.data.containsKey(this.scroll.getSelected())) {
          if(this.categorySelection) {
             Client.sendData(EnumPacketServer.QuestCategoryRemove, new Object[]{Integer.valueOf(this.category.id)});
             this.category = new QuestCategory();
@@ -160,56 +160,56 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
          this.scroll.clear();
       }
 
-      if(button.field_146127_k == 3 && quest.id >= 0) {
+      if(button.id == 3 && quest.id >= 0) {
          this.questlogTA = false;
          this.setSubGui(new SubGuiNpcTextArea(quest.completeText));
       }
 
-      if(button.field_146127_k == 4 && quest.id >= 0) {
+      if(button.id == 4 && quest.id >= 0) {
          this.questlogTA = true;
          this.setSubGui(new SubGuiNpcTextArea(quest.logText));
       }
 
-      if(button.field_146127_k == 5 && quest.id >= 0) {
+      if(button.id == 5 && quest.id >= 0) {
          Client.sendData(EnumPacketServer.QuestOpenGui, new Object[]{EnumGuiType.QuestReward, quest.writeToNBT(new NBTTagCompound())});
       }
 
-      if(button.field_146127_k == 6 && quest.id >= 0) {
+      if(button.id == 6 && quest.id >= 0) {
          quest.setType(EnumQuestType.values()[button.getValue()]);
       }
 
-      if(button.field_146127_k == 7) {
-         if(quest.type == EnumQuestType.Item) {
+      if(button.id == 7) {
+         if(quest.type == EnumQuestType.ITEM) {
             Client.sendData(EnumPacketServer.QuestOpenGui, new Object[]{EnumGuiType.QuestItem, quest.writeToNBT(new NBTTagCompound())});
          }
 
-         if(quest.type == EnumQuestType.Dialog) {
-            this.setSubGui(new GuiNpcQuestTypeDialog(super.npc, quest, this));
+         if(quest.type == EnumQuestType.DIALOG) {
+            this.setSubGui(new GuiNpcQuestTypeDialog(this.npc, quest, this));
          }
 
-         if(quest.type == EnumQuestType.Kill) {
-            this.setSubGui(new GuiNpcQuestTypeKill(super.npc, quest, this));
+         if(quest.type == EnumQuestType.KILL) {
+            this.setSubGui(new GuiNpcQuestTypeKill(this.npc, quest, this));
          }
 
-         if(quest.type == EnumQuestType.Location) {
-            this.setSubGui(new GuiNpcQuestTypeLocation(super.npc, quest, this));
+         if(quest.type == EnumQuestType.LOCATION) {
+            this.setSubGui(new GuiNpcQuestTypeLocation(this.npc, quest, this));
          }
 
-         if(quest.type == EnumQuestType.AreaKill) {
-            this.setSubGui(new GuiNpcQuestTypeKill(super.npc, quest, this));
+         if(quest.type == EnumQuestType.AREA_KILL) {
+            this.setSubGui(new GuiNpcQuestTypeKill(this.npc, quest, this));
          }
       }
 
-      if(button.field_146127_k == 8) {
+      if(button.id == 8) {
          quest.repeat = EnumQuestRepeat.values()[button.getValue()];
       }
 
-      if(button.field_146127_k == 9) {
+      if(button.id == 9) {
          quest.completion = EnumQuestCompletion.values()[button.getValue()];
          this.getTextField(2).enabled = quest.completion == EnumQuestCompletion.Npc;
       }
 
-      if(button.field_146127_k == 10) {
+      if(button.id == 10) {
          this.setSubGui(new SubGuiNpcQuestAdvanced(quest, this));
       }
 

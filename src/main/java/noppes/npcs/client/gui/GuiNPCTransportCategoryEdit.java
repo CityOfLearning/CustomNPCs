@@ -23,15 +23,15 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
       this.parent = parent;
       this.name = name;
       this.id = id;
-      super.title = "Npc Transport Category";
+      this.title = "Npc Transport Category";
    }
 
    public void initGui() {
       super.initGui();
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.width / 2 - 40, 100, 140, 20, this.name));
-      this.addLabel(new GuiNpcLabel(1, "Title:", super.width / 2 - 100 + 4, 105, 16777215));
-      this.addButton(new GuiNpcButton(2, super.width / 2 - 100, 210, 98, 20, "gui.back"));
-      this.addButton(new GuiNpcButton(3, super.width / 2 + 2, 210, 98, 20, "Save"));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.width / 2 - 40, 100, 140, 20, this.name));
+      this.addLabel(new GuiNpcLabel(1, "Title:", this.width / 2 - 100 + 4, 105, 16777215));
+      this.addButton(new GuiNpcButton(2, this.width / 2 - 100, 210, 98, 20, "gui.back"));
+      this.addButton(new GuiNpcButton(3, this.width / 2 + 2, 210, 98, 20, "Save"));
    }
 
    public void drawScreen(int i, int j, float f) {
@@ -41,13 +41,13 @@ public class GuiNPCTransportCategoryEdit extends GuiNPCInterface {
    protected void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 2) {
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
          Client.sendData(EnumPacketServer.TransportCategoriesGet, new Object[0]);
       }
 
       if(id == 3) {
          this.save();
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
          Client.sendData(EnumPacketServer.TransportCategoriesGet, new Object[0]);
       }
 

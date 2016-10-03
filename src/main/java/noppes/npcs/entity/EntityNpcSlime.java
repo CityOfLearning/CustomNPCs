@@ -10,29 +10,29 @@ public class EntityNpcSlime extends EntityNPCInterface {
 
    public EntityNpcSlime(World world) {
       super(world);
-      super.scaleX = 2.0F;
-      super.scaleY = 2.0F;
-      super.scaleZ = 2.0F;
-      super.display.texture = "customnpcs:textures/entity/slime/Slime.png";
-      super.width = 0.8F;
-      super.height = 0.8F;
+      this.scaleX = 2.0F;
+      this.scaleY = 2.0F;
+      this.scaleZ = 2.0F;
+      this.display.setSkinTexture("customnpcs:textures/entity/slime/Slime.png");
+      this.width = 0.8F;
+      this.height = 0.8F;
    }
 
    public void updateHitbox() {
-      super.width = 0.8F;
-      super.height = 0.8F;
+      this.width = 0.8F;
+      this.height = 0.8F;
    }
 
    public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
+      this.isDead = true;
+      if(!this.worldObj.isRemote) {
          NBTTagCompound compound = new NBTTagCompound();
          this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.worldObj);
          npc.readFromNBT(compound);
          ModelData data = npc.modelData;
          data.setEntityClass(EntityNpcSlime.class);
-         super.worldObj.spawnEntityInWorld(npc);
+         this.worldObj.spawnEntityInWorld(npc);
       }
 
       super.onUpdate();

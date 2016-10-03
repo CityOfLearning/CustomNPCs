@@ -1,5 +1,6 @@
 package noppes.npcs.client.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -26,15 +27,18 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
 
    public GuiNPCFactionSelection(EntityNPCInterface npc, GuiScreen parent, int dialog) {
       super(npc);
-      super.drawDefaultBackground = false;
-      super.title = "Select Dialog Category";
+      this.drawDefaultBackground = false;
+      this.title = "Select Dialog Category";
       this.parent = parent;
       this.factionId = dialog;
-      Client.sendData(EnumPacketServer.FactionsGet, new Object[0]);
       if(parent instanceof GuiSelectionListener) {
          this.listener = (GuiSelectionListener)parent;
       }
 
+   }
+
+   public void initPacket() {
+      Client.sendData(EnumPacketServer.FactionsGet, new Object[0]);
    }
 
    public void initGui() {
@@ -42,8 +46,8 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
       Vector list = new Vector();
       this.slot = new GuiNPCStringSlot(list, this, false, 18);
       this.slot.registerScrollButtons(4, 5);
-      this.addButton(new GuiNpcButton(2, super.width / 2 - 100, super.height - 41, 98, 20, "gui.back"));
-      this.addButton(new GuiNpcButton(4, super.width / 2 + 2, super.height - 41, 98, 20, "mco.template.button.select"));
+      this.addButton(new GuiNpcButton(2, this.width / 2 - 100, this.height - 41, 98, 20, "gui.back"));
+      this.addButton(new GuiNpcButton(4, this.width / 2 + 2, this.height - 41, 98, 20, "mco.template.button.select"));
    }
 
    public void drawScreen(int i, int j, float f) {
@@ -51,11 +55,16 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
       super.drawScreen(i, j, f);
    }
 
+   public void handleMouseInput() throws IOException {
+      this.slot.handleMouseInput();
+      super.handleMouseInput();
+   }
+
    protected void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 2) {
          this.close();
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
       }
 
       if(id == 4) {
@@ -68,7 +77,7 @@ public class GuiNPCFactionSelection extends GuiNPCInterface implements IScrollDa
       if(this.slot.selected != null && !this.slot.selected.isEmpty()) {
          this.factionId = ((Integer)this.data.get(this.slot.selected)).intValue();
          this.close();
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
       }
    }
 

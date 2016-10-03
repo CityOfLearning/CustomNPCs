@@ -11,19 +11,19 @@ public class EntityNPCVillager extends EntityNPCInterface {
 
    public EntityNPCVillager(World world) {
       super(world);
-      super.display.texture = "textures/entity/villager/villager.png";
+      this.display.setSkinTexture("textures/entity/villager/villager.png");
    }
 
    public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
+      this.isDead = true;
+      if(!this.worldObj.isRemote) {
          NBTTagCompound compound = new NBTTagCompound();
          this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.worldObj);
          npc.readFromNBT(compound);
          ModelData data = npc.modelData;
          data.setEntityClass(EntityVillager.class);
-         super.worldObj.spawnEntityInWorld(npc);
+         this.worldObj.spawnEntityInWorld(npc);
       }
 
       super.onUpdate();

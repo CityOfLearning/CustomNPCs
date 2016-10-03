@@ -1,20 +1,7 @@
 package noppes.npcs;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerAboutToStartEvent;
-import cpw.mods.fml.common.event.FMLServerStartedEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppedEvent;
-import cpw.mods.fml.common.network.FMLEventChannel;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import foxz.command.CommandNoppes;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import net.minecraft.block.Block;
@@ -22,13 +9,31 @@ import net.minecraft.block.BlockIce;
 import net.minecraft.block.BlockLeavesBase;
 import net.minecraft.block.BlockVine;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.ForgeChunkManager;
+import net.minecraftforge.common.ForgeModContainer;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartedEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.FMLServerStoppedEvent;
+import net.minecraftforge.fml.common.network.FMLEventChannel;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
 import noppes.npcs.CommonProxy;
 import noppes.npcs.CustomItems;
 import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.ServerTickHandler;
+import noppes.npcs.command.CommandNoppes;
 import noppes.npcs.config.ConfigLoader;
 import noppes.npcs.config.ConfigProp;
 import noppes.npcs.controllers.BankController;
@@ -37,6 +42,8 @@ import noppes.npcs.controllers.DialogController;
 import noppes.npcs.controllers.FactionController;
 import noppes.npcs.controllers.GlobalDataController;
 import noppes.npcs.controllers.LinkedNpcController;
+import noppes.npcs.controllers.MassBlockController;
+import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.QuestController;
 import noppes.npcs.controllers.RecipeController;
@@ -47,6 +54,7 @@ import noppes.npcs.controllers.TransportController;
 import noppes.npcs.enchants.EnchantInterface;
 import noppes.npcs.entity.EntityChairMount;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.entity.EntityNPC64x32;
 import noppes.npcs.entity.EntityNPCGolem;
 import noppes.npcs.entity.EntityNpcCrystal;
 import noppes.npcs.entity.EntityNpcDragon;
@@ -75,7 +83,8 @@ import noppes.npcs.entity.old.EntityNpcSkeleton;
 @Mod(
    modid = "customnpcs",
    name = "CustomNpcs",
-   version = "1.7.10c"
+   version = "1.8.9_beta",
+   acceptedMinecraftVersions = "[1.8.9]"
 )
 public class CustomNpcs {
 
@@ -83,14 +92,7 @@ public class CustomNpcs {
       info = "Disable Chat Bubbles"
    )
    public static boolean EnableChatBubbles = true;
-   @ConfigProp(
-      info = "Uses unique entities ids"
-   )
-   public static boolean UseUniqueEntities = true;
-   @ConfigProp(
-      info = "To use this UseUniqueEntities has to be false"
-   )
-   public static int EntityStartId = 120;
+   private static int NewEntityStartId = 0;
    @ConfigProp(
       info = "Navigation search range for NPCs. Not recommended to increase if you have a slow pc or on a server"
    )
@@ -105,7 +107,8 @@ public class CustomNpcs {
    public static boolean DisableExtraItems = false;
    @ConfigProp
    public static boolean DisableExtraBlock = false;
-   public static boolean PixelMonEnabled = false;
+   @ConfigProp
+   public static boolean SceneButtonsEnabled = true;
    public static long ticks;
    @SidedProxy(
       clientSide = "noppes.npcs.client.ClientProxy",
@@ -157,9 +160,22 @@ public class CustomNpcs {
       info = "Normal players can use soulstone on animals"
    )
    public static boolean SoulStoneAnimals = true;
+   @ConfigProp(
+      info = "Type 0 = Normal, Type 1 = Solid"
+   )
+   public static int HeadWearType = 1;
+   @ConfigProp(
+      info = "When set to Minecraft it will use minecrafts font, when Default it will use OpenSans. Can only use fonts installed on your PC"
+   )
+   public static String FontType = "Default";
+   @ConfigProp(
+      info = "Font size for custom fonts (doesn\'t work with minecrafts font)"
+   )
+   public static int FontSize = 18;
    public static FMLEventChannel Channel;
    public static FMLEventChannel ChannelPlayer;
    public static ConfigLoader Config;
+   public static CommandNoppes NoppesCommand = new CommandNoppes();
 
 
    public CustomNpcs() {
@@ -188,42 +204,58 @@ public class CustomNpcs {
 
       EnchantInterface.load();
       CustomItems.load();
-      proxy.load();
       NetworkRegistry.INSTANCE.registerGuiHandler(this, proxy);
       MinecraftForge.EVENT_BUS.register(new ServerEventsHandler());
       MinecraftForge.EVENT_BUS.register(new ScriptController());
       FMLCommonHandler.instance().bus().register(new ServerTickHandler());
-      PixelMonEnabled = Loader.isModLoaded("pixelmon");
-      this.registerNpc(EntityNPCHumanMale.class, "npchumanmale", getEntityId());
-      this.registerNpc(EntityNPCVillager.class, "npcvillager", getEntityId());
-      this.registerNpc(EntityNpcPony.class, "npcpony", getEntityId());
-      this.registerNpc(EntityNPCHumanFemale.class, "npchumanfemale", getEntityId());
-      this.registerNpc(EntityNPCDwarfMale.class, "npcdwarfmale", getEntityId());
-      this.registerNpc(EntityNPCFurryMale.class, "npcfurrymale", getEntityId());
-      this.registerNpc(EntityNpcMonsterMale.class, "npczombiemale", getEntityId());
-      this.registerNpc(EntityNpcMonsterFemale.class, "npczombiefemale", getEntityId());
-      this.registerNpc(EntityNpcSkeleton.class, "npcskeleton", getEntityId());
-      this.registerNpc(EntityNPCDwarfFemale.class, "npcdwarffemale", getEntityId());
-      this.registerNpc(EntityNPCFurryFemale.class, "npcfurryfemale", getEntityId());
-      this.registerNpc(EntityNPCOrcMale.class, "npcorcfmale", getEntityId());
-      this.registerNpc(EntityNPCOrcFemale.class, "npcorcfemale", getEntityId());
-      this.registerNpc(EntityNPCElfMale.class, "npcelfmale", getEntityId());
-      this.registerNpc(EntityNPCElfFemale.class, "npcelffemale", getEntityId());
-      this.registerNpc(EntityNpcCrystal.class, "npccrystal", getEntityId());
-      this.registerNpc(EntityNpcEnderchibi.class, "npcenderchibi", getEntityId());
-      this.registerNpc(EntityNpcNagaMale.class, "npcnagamale", getEntityId());
-      this.registerNpc(EntityNpcNagaFemale.class, "npcnagafemale", getEntityId());
-      this.registerNpc(EntityNpcSlime.class, "NpcSlime", getEntityId());
-      this.registerNpc(EntityNpcDragon.class, "NpcDragon", getEntityId());
-      this.registerNpc(EntityNPCEnderman.class, "npcEnderman", getEntityId());
-      this.registerNpc(EntityNPCGolem.class, "npcGolem", getEntityId());
-      this.registerNpc(EntityCustomNpc.class, "CustomNpc", getEntityId());
-      this.registerNpc(EntityChairMount.class, "CustomNpcChairMount", getEntityId());
-      int thowid = getEntityId();
-      EntityRegistry.registerGlobalEntityID(EntityProjectile.class, "throwableitem", thowid);
-      EntityRegistry.registerModEntity(EntityProjectile.class, "throwableitem", thowid, this, 64, 3, true);
-      new RecipeController();
+      PixelmonHelper.load();
+      this.registerNpc(EntityNPCHumanMale.class, "npchumanmale");
+      this.registerNpc(EntityNPCVillager.class, "npcvillager");
+      this.registerNpc(EntityNpcPony.class, "npcpony");
+      this.registerNpc(EntityNPCHumanFemale.class, "npchumanfemale");
+      this.registerNpc(EntityNPCDwarfMale.class, "npcdwarfmale");
+      this.registerNpc(EntityNPCFurryMale.class, "npcfurrymale");
+      this.registerNpc(EntityNpcMonsterMale.class, "npczombiemale");
+      this.registerNpc(EntityNpcMonsterFemale.class, "npczombiefemale");
+      this.registerNpc(EntityNpcSkeleton.class, "npcskeleton");
+      this.registerNpc(EntityNPCDwarfFemale.class, "npcdwarffemale");
+      this.registerNpc(EntityNPCFurryFemale.class, "npcfurryfemale");
+      this.registerNpc(EntityNPCOrcMale.class, "npcorcfmale");
+      this.registerNpc(EntityNPCOrcFemale.class, "npcorcfemale");
+      this.registerNpc(EntityNPCElfMale.class, "npcelfmale");
+      this.registerNpc(EntityNPCElfFemale.class, "npcelffemale");
+      this.registerNpc(EntityNpcCrystal.class, "npccrystal");
+      this.registerNpc(EntityNpcEnderchibi.class, "npcenderchibi");
+      this.registerNpc(EntityNpcNagaMale.class, "npcnagamale");
+      this.registerNpc(EntityNpcNagaFemale.class, "npcnagafemale");
+      this.registerNpc(EntityNpcSlime.class, "NpcSlime");
+      this.registerNpc(EntityNpcDragon.class, "NpcDragon");
+      this.registerNpc(EntityNPCEnderman.class, "npcEnderman");
+      this.registerNpc(EntityNPCGolem.class, "npcGolem");
+      this.registerNpc(EntityCustomNpc.class, "CustomNpc");
+      this.registerNpc(EntityNPC64x32.class, "CustomNpc64x32");
+      this.registerNewEntity(EntityChairMount.class, "CustomNpcChairMount", 64, 10, false);
+      this.registerNewEntity(EntityProjectile.class, "throwableitem", 64, 3, true);
+      ArrayList list = new ArrayList();
+      BiomeGenBase[] var5 = BiomeGenBase.getBiomeGenArray();
+      int var6 = var5.length;
+
+      for(int var7 = 0; var7 < var6; ++var7) {
+         BiomeGenBase base = var5[var7];
+         if(base != null) {
+            list.add(base);
+         }
+      }
+
       ForgeChunkManager.setForcedChunkLoadingCallback(this, new ChunkController());
+      proxy.load();
+   }
+
+   @EventHandler
+   public void load(FMLInitializationEvent ev) {
+      ForgeModContainer.fullBoundingBoxLadders = true;
+      new RecipeController();
+      proxy.postload();
    }
 
    @EventHandler
@@ -236,13 +268,14 @@ public class CustomNpcs {
       new GlobalDataController();
       new SpawnController();
       new LinkedNpcController();
+      new MassBlockController();
       ScriptController.Instance.loadStoredData();
       ScriptController.HasStart = false;
       Set names = Block.blockRegistry.getKeys();
       Iterator var3 = names.iterator();
 
       while(var3.hasNext()) {
-         String name = (String)var3.next();
+         ResourceLocation name = (ResourceLocation)var3.next();
          Block block = (Block)Block.blockRegistry.getObject(name);
          if(block instanceof BlockLeavesBase) {
             block.setTickRandomly(LeavesDecayEnabled);
@@ -276,33 +309,37 @@ public class CustomNpcs {
 
    @EventHandler
    public void serverstart(FMLServerStartingEvent event) {
-      event.registerServerCommand(new CommandNoppes());
+      event.registerServerCommand(NoppesCommand);
    }
 
-   public static int getEntityId() {
-      return UseUniqueEntities?EntityRegistry.findGlobalUniqueEntityId():EntityStartId++;
+   private void registerNpc(Class cl, String name) {
+      EntityList.stringToClassMapping.put(name, cl);
+      EntityRegistry.registerModEntity(cl, name, NewEntityStartId++, this, 64, 3, true);
    }
 
-   private void registerNpc(Class cl, String name, int id) {
-      EntityRegistry.registerGlobalEntityID(cl, name, id);
-      EntityRegistry.registerModEntity(cl, name, id, this, 80, 5, true);
+   private void registerNewEntity(Class cl, String name, int range, int update, boolean velocity) {
+      EntityRegistry.registerModEntity(cl, name, NewEntityStartId++, this, range, update, velocity);
    }
 
    public static File getWorldSaveDirectory() {
-      MinecraftServer server = MinecraftServer.getServer();
-      File saves = new File(".");
-      if(server != null && !server.isDedicatedServer()) {
-         saves = new File(Minecraft.getMinecraft().mcDataDir, "saves");
-      }
+      try {
+         MinecraftServer e = MinecraftServer.getServer();
+         if(e == null) {
+            return null;
+         } else {
+            File saves = new File(".");
+            if(!e.isDedicatedServer()) {
+               saves = new File(Minecraft.getMinecraft().mcDataDir, "saves");
+            }
 
-      if(server != null) {
-         File savedir = new File(new File(saves, server.getFolderName()), "customnpcs");
-         if(!savedir.exists()) {
-            savedir.mkdir();
+            File savedir = new File(new File(saves, e.getFolderName()), "customnpcs");
+            if(!savedir.exists()) {
+               savedir.mkdir();
+            }
+
+            return savedir;
          }
-
-         return savedir;
-      } else {
+      } catch (Exception var3) {
          return null;
       }
    }

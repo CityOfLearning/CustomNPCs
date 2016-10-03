@@ -9,23 +9,34 @@ import noppes.npcs.client.gui.util.SubGuiInterface;
 public class SubGuiNpcTextArea extends SubGuiInterface {
 
    public String text;
+   private GuiNpcTextArea textarea;
 
 
    public SubGuiNpcTextArea(String text) {
       this.text = text;
-      this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.setBackground("bgfilled.png");
+      this.xSize = 256;
+      this.ySize = 256;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
+      this.xSize = (int)((double)this.width * 0.88D);
+      this.ySize = (int)((double)this.xSize * 0.56D);
+      this.bgScale = (float)this.xSize / 440.0F;
       super.initGui();
-      this.addTextField(new GuiNpcTextArea(2, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 4, 186, 208, this.text));
-      super.buttonList.add(new GuiNpcButton(102, super.guiLeft + 196, super.guiTop + 20, 56, 20, "gui.clear"));
-      super.buttonList.add(new GuiNpcButton(101, super.guiLeft + 196, super.guiTop + 43, 56, 20, "gui.paste"));
-      super.buttonList.add(new GuiNpcButton(100, super.guiLeft + 196, super.guiTop + 66, 56, 20, "gui.copy"));
-      super.buttonList.add(new GuiNpcButton(0, super.guiLeft + 196, super.guiTop + 160, 56, 20, "gui.close"));
+      if(this.textarea != null) {
+         this.text = this.textarea.getText();
+      }
+
+      int yoffset = (int)((double)this.ySize * 0.02D);
+      this.addTextField(this.textarea = new GuiNpcTextArea(2, this, this.guiLeft + yoffset, this.guiTop + yoffset, this.xSize - 100 - yoffset * 2, this.ySize - yoffset * 2, this.text));
+      this.buttonList.add(new GuiNpcButton(102, this.guiLeft + this.xSize - 90 - yoffset, this.guiTop + 20, 56, 20, "gui.clear"));
+      this.buttonList.add(new GuiNpcButton(101, this.guiLeft + this.xSize - 90 - yoffset, this.guiTop + 43, 56, 20, "gui.paste"));
+      this.buttonList.add(new GuiNpcButton(100, this.guiLeft + this.xSize - 90 - yoffset, this.guiTop + 66, 56, 20, "gui.copy"));
+      this.buttonList.add(new GuiNpcButton(0, this.guiLeft + this.xSize - 90 - yoffset, this.guiTop + 160, 56, 20, "gui.close"));
+      this.xSize = 420;
+      this.ySize = 256;
    }
 
    public void close() {

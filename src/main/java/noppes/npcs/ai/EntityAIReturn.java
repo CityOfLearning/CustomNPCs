@@ -1,10 +1,11 @@
 package noppes.npcs.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.ai.RandomPositionGeneratorAlt;
-import noppes.npcs.constants.EnumMovingType;
+import noppes.npcs.constants.AiMutex;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIReturn extends EntityAIBase {
@@ -23,17 +24,22 @@ public class EntityAIReturn extends EntityAIBase {
 
    public EntityAIReturn(EntityNPCInterface npc) {
       this.npc = npc;
-      this.setMutexBits(1);
+      this.setMutexBits(AiMutex.PASSIVE);
    }
 
    public boolean shouldExecute() {
       if(!this.npc.hasOwner() && this.npc.ai.returnToStart && !this.npc.isKilled() && this.npc.getNavigator().noPath() && !this.npc.isInteracting()) {
-         if(this.npc.ai.findShelter == 0 && (!this.npc.worldObj.isDaytime() || this.npc.worldObj.isRaining()) && !this.npc.worldObj.provider.hasNoSky) {
-            if(this.npc.worldObj.canBlockSeeTheSky((int)this.npc.getStartXPos(), (int)this.npc.getStartYPos(), (int)this.npc.getStartZPos()) || this.npc.worldObj.getFullBlockLightValue((int)this.npc.getStartXPos(), (int)this.npc.getStartYPos(), (int)this.npc.getStartZPos()) <= 8) {
+         BlockPos x;
+         if(this.npc.ai.findShelter == 0 && (!this.npc.worldObj.isDaytime() || this.npc.worldObj.isRaining()) && !this.npc.worldObj.provider.getHasNoSky()) {
+            x = new BlockPos((double)this.npc.getStartXPos(), this.npc.getStartYPos(), (double)this.npc.getStartZPos());
+            if(this.npc.worldObj.canSeeSky(x) || this.npc.worldObj.getLight(x) <= 8) {
                return false;
             }
-         } else if(this.npc.ai.findShelter == 1 && this.npc.worldObj.isDaytime() && this.npc.worldObj.canBlockSeeTheSky((int)this.npc.getStartXPos(), (int)this.npc.getStartYPos(), (int)this.npc.getStartZPos())) {
-            return false;
+         } else if(this.npc.ai.findShelter == 1 && this.npc.worldObj.isDaytime()) {
+            x = new BlockPos((double)this.npc.getStartXPos(), this.npc.getStartYPos(), (double)this.npc.getStartZPos());
+            if(this.npc.worldObj.canSeeSky(x)) {
+               return false;
+            }
          }
 
          if(this.npc.isAttacking()) {
@@ -43,8 +49,16 @@ public class EntityAIReturn extends EntityAIBase {
             }
 
             return false;
+         } else if(!this.npc.isAttacking() && this.wasAttacked) {
+            return true;
+         } else if(this.npc.ai.getMovingType() == 2 && this.npc.ai.getDistanceSqToPathPoint() < (double)(CustomNpcs.NpcNavRange * CustomNpcs.NpcNavRange)) {
+            return false;
+         } else if(this.npc.ai.getMovingType() == 1) {
+            double x1 = this.npc.posX - (double)this.npc.getStartXPos();
+            double z = this.npc.posX - (double)this.npc.getStartZPos();
+            return !this.npc.isInRange((double)this.npc.getStartXPos(), -1.0D, (double)this.npc.getStartZPos(), (double)this.npc.ai.walkingRange);
          } else {
-            return !this.npc.isAttacking() && this.wasAttacked?true:(this.npc.ai.movingType == EnumMovingType.MovingPath && this.npc.ai.getDistanceSqToPathPoint() < (double)(CustomNpcs.NpcNavRange * CustomNpcs.NpcNavRange)?false:(this.npc.ai.movingType == EnumMovingType.Wandering?this.npc.getDistanceSq((double)this.npc.getStartXPos(), this.npc.getStartYPos(), (double)this.npc.getStartZPos()) > (double)(this.npc.ai.walkingRange * this.npc.ai.walkingRange):(this.npc.ai.movingType == EnumMovingType.Standing?!this.npc.isVeryNearAssignedPlace():false)));
+            return this.npc.ai.getMovingType() == 0?!this.npc.isVeryNearAssignedPlace():false;
          }
       } else {
          return false;
@@ -52,7 +66,7 @@ public class EntityAIReturn extends EntityAIBase {
    }
 
    public boolean continueExecuting() {
-      return !this.npc.isFollower() && !this.npc.isKilled() && !this.npc.isAttacking() && !this.npc.isVeryNearAssignedPlace() && this.totalTicks <= 600 && !this.npc.isInteracting();
+      return !this.npc.isFollower() && !this.npc.isKilled() && !this.npc.isAttacking() && !this.npc.isVeryNearAssignedPlace() && !this.npc.isInteracting()?(this.npc.getNavigator().noPath() && this.wasAttacked && !this.isTooFar()?false:this.totalTicks <= 600):false;
    }
 
    public void updateTask() {
@@ -81,11 +95,13 @@ public class EntityAIReturn extends EntityAIBase {
 
    private boolean isTooFar() {
       int allowedDistance = this.npc.stats.aggroRange * 2;
-      if(this.npc.ai.movingType == EnumMovingType.Wandering) {
+      if(this.npc.ai.getMovingType() == 1) {
          allowedDistance += this.npc.ai.walkingRange;
       }
 
-      return this.npc.getDistanceSq(this.endPosX, this.endPosY, this.endPosZ) > (double)(allowedDistance * allowedDistance);
+      double x = this.npc.posX - this.endPosX;
+      double z = this.npc.posX - this.endPosZ;
+      return x * x + z * z > (double)(allowedDistance * allowedDistance);
    }
 
    public void startExecuting() {
@@ -119,7 +135,7 @@ public class EntityAIReturn extends EntityAIBase {
          }
 
          if(distance > 2) {
-            Vec3 start = Vec3.createVectorHelper(posX, posY, posZ);
+            Vec3 start = new Vec3(posX, posY, posZ);
             Vec3 pos = RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.npc, distance, distance / 2 > 7?7:distance / 2, start);
             if(pos != null) {
                posX = pos.xCoord;

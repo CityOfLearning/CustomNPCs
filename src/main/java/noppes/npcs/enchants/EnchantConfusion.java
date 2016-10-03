@@ -1,5 +1,6 @@
 package noppes.npcs.enchants;
 
+import net.minecraft.util.ResourceLocation;
 import noppes.npcs.enchants.EnchantInterface;
 import noppes.npcs.items.ItemGun;
 import noppes.npcs.items.ItemStaff;
@@ -7,7 +8,7 @@ import noppes.npcs.items.ItemStaff;
 public class EnchantConfusion extends EnchantInterface {
 
    public EnchantConfusion() {
-      super(3, new Class[]{ItemStaff.class, ItemGun.class});
+      super(3, new ResourceLocation("cnpc_confusion"), new Class[]{ItemStaff.class, ItemGun.class});
       this.setName("confusion");
    }
 

@@ -1,6 +1,6 @@
 package noppes.npcs.client.gui;
 
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,13 +14,13 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNPCStringSlot;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
-import noppes.npcs.entity.EntityNPCInterface;
 
 public class GuiNpcSoundSelection extends GuiNPCInterface {
 
@@ -31,15 +31,14 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
    private HashMap domains = new HashMap();
 
 
-   public GuiNpcSoundSelection(EntityNPCInterface npc, GuiScreen parent, String sound) {
-      super(npc);
+   public GuiNpcSoundSelection(GuiScreen parent, String sound) {
       SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
       SoundRegistry registry = (SoundRegistry)ObfuscationReflectionHelper.getPrivateValue(SoundHandler.class, handler, 4);
       Set set = registry.getKeys();
-      Iterator var7 = set.iterator();
+      Iterator var6 = set.iterator();
 
-      while(var7.hasNext()) {
-         ResourceLocation location = (ResourceLocation)var7.next();
+      while(var6.hasNext()) {
+         ResourceLocation location = (ResourceLocation)var6.next();
          Object list = (List)this.domains.get(location.getResourceDomain());
          if(list == null) {
             this.domains.put(location.getResourceDomain(), list = new ArrayList());
@@ -49,7 +48,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
          this.domains.put(location.getResourceDomain(), list);
       }
 
-      super.drawDefaultBackground = false;
+      this.drawDefaultBackground = false;
       this.parent = parent;
    }
 
@@ -60,7 +59,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
          ss = "Select domain";
       }
 
-      this.addLabel(new GuiNpcLabel(0, ss, super.width / 2 - super.fontRendererObj.getStringWidth(ss) / 2, 20, 16777215));
+      this.addLabel(new GuiNpcLabel(0, ss, this.width / 2 - this.fontRendererObj.getStringWidth(ss) / 2, 20, 16777215));
       Object col = this.domains.keySet();
       if(this.domain != null) {
          col = (Collection)this.domains.get(this.domain);
@@ -72,18 +71,23 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
       this.slot = new GuiNPCStringSlot((Collection)col, this, false, 18);
       this.slot.registerScrollButtons(4, 5);
       if(this.domain != null) {
-         this.addButton(new GuiNpcButton(1, super.width / 2 - 100, super.height - 27, 198, 20, "gui.play"));
-         this.addButton(new GuiNpcButton(3, super.width / 2 - 100, super.height - 50, 98, 20, "gui.done"));
+         this.addButton(new GuiNpcButton(1, this.width / 2 - 100, this.height - 27, 198, 20, "gui.play"));
+         this.addButton(new GuiNpcButton(3, this.width / 2 - 100, this.height - 50, 98, 20, "gui.done"));
       } else {
-         this.addButton(new GuiNpcButton(4, super.width / 2 - 100, super.height - 50, 98, 20, "gui.open"));
+         this.addButton(new GuiNpcButton(4, this.width / 2 - 100, this.height - 50, 98, 20, "gui.open"));
       }
 
-      this.addButton(new GuiNpcButton(2, super.width / 2 + 2, super.height - 50, 98, 20, "gui.cancel"));
+      this.addButton(new GuiNpcButton(2, this.width / 2 + 2, this.height - 50, 98, 20, "gui.cancel"));
    }
 
    public void drawScreen(int i, int j, float f) {
       this.slot.drawScreen(i, j, f);
       super.drawScreen(i, j, f);
+   }
+
+   public void handleMouseInput() throws IOException {
+      this.slot.handleMouseInput();
+      super.handleMouseInput();
    }
 
    public void doubleClicked() {
@@ -111,7 +115,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
       super.actionPerformed(guibutton);
       if(guibutton.id == 1) {
          MusicController.Instance.stopMusic();
-         MusicController.Instance.playSound(this.getSelected(), (float)super.player.posX, (float)super.player.posY, (float)super.player.posZ);
+         MusicController.Instance.playSound(this.getSelected(), (float)this.player.posX, (float)this.player.posY, (float)this.player.posZ);
       }
 
       if(guibutton.id == 2) {
@@ -135,6 +139,6 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
    public void save() {}
 
    public String getSelected() {
-      return this.slot.selected.isEmpty()?"":this.domain + ":" + this.slot.selected;
+      return this.slot.selected != null && !this.slot.selected.isEmpty()?this.domain + ":" + this.slot.selected:"";
    }
 }

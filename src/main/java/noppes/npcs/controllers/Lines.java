@@ -1,5 +1,6 @@
 package noppes.npcs.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Random;
@@ -10,6 +11,7 @@ import noppes.npcs.controllers.Line;
 public class Lines {
 
    private static final Random random = new Random();
+   private int lastLine = -1;
    public HashMap lines = new HashMap();
 
 
@@ -47,8 +49,25 @@ public class Lines {
       this.lines = map;
    }
 
-   public Line getLine() {
-      return this.lines.isEmpty()?null:(Line)this.lines.get(Integer.valueOf(random.nextInt(this.lines.size())));
+   public Line getLine(boolean isRandom) {
+      if(this.lines.isEmpty()) {
+         return null;
+      } else if(isRandom) {
+         ArrayList var3 = new ArrayList(this.lines.values());
+         return (Line)var3.get(random.nextInt(var3.size()));
+      } else {
+         ++this.lastLine;
+
+         while(true) {
+            this.lastLine %= 8;
+            Line line = (Line)this.lines.get(Integer.valueOf(this.lastLine));
+            if(line != null) {
+               return line;
+            }
+
+            ++this.lastLine;
+         }
+      }
    }
 
    public boolean isEmpty() {

@@ -7,18 +7,13 @@ import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.client.model.util.ModelPlaneRenderer;
-import noppes.npcs.constants.EnumAnimation;
+import noppes.npcs.client.model.ModelPlaneRenderer;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.entity.EntityNpcPony;
-import org.lwjgl.opengl.GL11;
 
 public class ModelPony extends ModelBase {
 
@@ -278,8 +273,8 @@ public class ModelPony extends ModelBase {
 
    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
       EntityNPCInterface npc = (EntityNPCInterface)entity;
-      super.isRiding = npc.isRiding();
-      if(this.isSneak && (npc.currentAnimation == EnumAnimation.CRAWLING || npc.currentAnimation == EnumAnimation.LYING)) {
+      this.isRiding = npc.isRiding();
+      if(this.isSneak && (npc.currentAnimation == 7 || npc.currentAnimation == 2)) {
          this.isSneak = false;
       }
 
@@ -762,10 +757,10 @@ public class ModelPony extends ModelBase {
       this.isSneak = pony.isSneaking();
       this.heldItemRight = pony.getHeldItem() == null?0:1;
       this.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-      GL11.glPushMatrix();
+      GlStateManager.pushMatrix();
       if(this.isSleeping) {
-         GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-         GL11.glTranslatef(0.0F, -0.5F, -0.9F);
+         GlStateManager.rotate(90.0F, 1.0F, 0.0F, 0.0F);
+         GlStateManager.translate(0.0F, -0.5F, -0.9F);
       }
 
       float var17 = f5;
@@ -813,38 +808,6 @@ public class ModelPony extends ModelBase {
          }
       }
 
-      GL11.glPopMatrix();
-   }
-
-   protected void renderGlow(RenderManager rendermanager, EntityPlayer entityplayer) {
-      ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-      if(itemstack != null) {
-         GL11.glPushMatrix();
-         double d = entityplayer.posX;
-         double d1 = entityplayer.posY;
-         double d2 = entityplayer.posZ;
-         GL11.glEnable('\u803a');
-         GL11.glTranslatef((float)d + 0.0F, (float)d1 + 2.3F, (float)d2);
-         GL11.glScalef(5.0F, 5.0F, 5.0F);
-         GL11.glRotatef(-rendermanager.playerViewY, 0.0F, 1.0F, 0.0F);
-         GL11.glRotatef(rendermanager.playerViewX, 1.0F, 0.0F, 0.0F);
-         Tessellator tessellator = Tessellator.instance;
-         float f = 0.0F;
-         float f1 = 0.25F;
-         float f2 = 0.0F;
-         float f3 = 0.25F;
-         float f4 = 1.0F;
-         float f5 = 0.5F;
-         float f6 = 0.25F;
-         tessellator.startDrawingQuads();
-         tessellator.setNormal(0.0F, 1.0F, 0.0F);
-         tessellator.addVertexWithUV(-1.0D, -1.0D, 0.0D, 0.0D, 1.0D);
-         tessellator.addVertexWithUV(-1.0D, 1.0D, 0.0D, 1.0D, 1.0D);
-         tessellator.addVertexWithUV(1.0D, 1.0D, 0.0D, 1.0D, 0.0D);
-         tessellator.addVertexWithUV(1.0D, -1.0D, 0.0D, 0.0D, 0.0D);
-         tessellator.draw();
-         GL11.glDisable('\u803a');
-         GL11.glPopMatrix();
-      }
+      GlStateManager.popMatrix();
    }
 }

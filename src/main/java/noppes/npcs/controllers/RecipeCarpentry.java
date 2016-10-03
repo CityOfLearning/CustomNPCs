@@ -1,5 +1,6 @@
 package noppes.npcs.controllers;
 
+import java.io.IOException;
 import java.util.HashMap;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
@@ -8,11 +9,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import noppes.npcs.NBTTags;
 import noppes.npcs.NoppesUtilPlayer;
+import noppes.npcs.api.handler.data.IRecipe;
 import noppes.npcs.controllers.Availability;
+import noppes.npcs.controllers.RecipeController;
 
-public class RecipeCarpentry extends ShapedRecipes {
+public class RecipeCarpentry extends ShapedRecipes implements IRecipe {
 
    public int id = -1;
    public String name = "";
@@ -20,6 +24,7 @@ public class RecipeCarpentry extends ShapedRecipes {
    public boolean isGlobal = false;
    public boolean ignoreDamage = false;
    public boolean ignoreNBT = false;
+   public boolean savesRecipe = true;
 
 
    public RecipeCarpentry(int width, int height, ItemStack[] recipe, ItemStack result) {
@@ -45,13 +50,13 @@ public class RecipeCarpentry extends ShapedRecipes {
    public NBTTagCompound writeNBT() {
       NBTTagCompound compound = new NBTTagCompound();
       compound.setInteger("ID", this.id);
-      compound.setInteger("Width", super.recipeWidth);
-      compound.setInteger("Height", super.recipeHeight);
+      compound.setInteger("Width", this.recipeWidth);
+      compound.setInteger("Height", this.recipeHeight);
       if(this.getRecipeOutput() != null) {
          compound.setTag("Item", this.getRecipeOutput().writeToNBT(new NBTTagCompound()));
       }
 
-      compound.setTag("Materials", NBTTags.nbtItemStackArray(super.recipeItems));
+      compound.setTag("Materials", NBTTags.nbtItemStackArray(this.recipeItems));
       compound.setTag("Availability", this.availability.writeToNBT(new NBTTagCompound()));
       compound.setString("Name", this.name);
       compound.setBoolean("Global", this.isGlobal);
@@ -61,8 +66,8 @@ public class RecipeCarpentry extends ShapedRecipes {
    }
 
    public boolean matches(InventoryCrafting par1InventoryCrafting, World world) {
-      for(int i = 0; i <= 4 - super.recipeWidth; ++i) {
-         for(int j = 0; j <= 4 - super.recipeHeight; ++j) {
+      for(int i = 0; i <= 4 - this.recipeWidth; ++i) {
+         for(int j = 0; j <= 4 - this.recipeHeight; ++j) {
             if(this.checkMatch(par1InventoryCrafting, i, j, true)) {
                return true;
             }
@@ -82,11 +87,11 @@ public class RecipeCarpentry extends ShapedRecipes {
             int var7 = i - par2;
             int var8 = j - par3;
             ItemStack var9 = null;
-            if(var7 >= 0 && var8 >= 0 && var7 < super.recipeWidth && var8 < super.recipeHeight) {
+            if(var7 >= 0 && var8 >= 0 && var7 < this.recipeWidth && var8 < this.recipeHeight) {
                if(par4) {
-                  var9 = super.recipeItems[super.recipeWidth - var7 - 1 + var8 * super.recipeWidth];
+                  var9 = this.recipeItems[this.recipeWidth - var7 - 1 + var8 * this.recipeWidth];
                } else {
-                  var9 = super.recipeItems[var7 + var8 * super.recipeWidth];
+                  var9 = this.recipeItems[var7 + var8 * this.recipeWidth];
                }
             }
 
@@ -108,7 +113,7 @@ public class RecipeCarpentry extends ShapedRecipes {
       return 16;
    }
 
-   public static RecipeCarpentry saveRecipe(RecipeCarpentry recipe, ItemStack par1ItemStack, Object ... par2ArrayOfObj) {
+   public static RecipeCarpentry createRecipe(RecipeCarpentry recipe, ItemStack par1ItemStack, Object ... par2ArrayOfObj) {
       String var3 = "";
       int var4 = 0;
       int var5 = 0;
@@ -169,6 +174,17 @@ public class RecipeCarpentry extends ShapedRecipes {
       return var18;
    }
 
+   public ItemStack[] getRemainingItems(InventoryCrafting p_179532_1_) {
+      ItemStack[] aitemstack = new ItemStack[p_179532_1_.getSizeInventory()];
+
+      for(int i = 0; i < aitemstack.length; ++i) {
+         ItemStack itemstack = p_179532_1_.getStackInSlot(i);
+         aitemstack[i] = ForgeHooks.getContainerItem(itemstack);
+      }
+
+      return aitemstack;
+   }
+
    public void copy(RecipeCarpentry recipe) {
       this.id = recipe.id;
       this.name = recipe.name;
@@ -179,19 +195,19 @@ public class RecipeCarpentry extends ShapedRecipes {
    }
 
    public ItemStack getCraftingItem(int i) {
-      return super.recipeItems != null && i < super.recipeItems.length?super.recipeItems[i]:null;
+      return this.recipeItems != null && i < this.recipeItems.length?this.recipeItems[i]:null;
    }
 
    public void setCraftingItem(int i, ItemStack item) {
-      if(i < super.recipeItems.length) {
-         super.recipeItems[i] = item;
+      if(i < this.recipeItems.length) {
+         this.recipeItems[i] = item;
       }
 
    }
 
    public boolean isValid() {
-      if(super.recipeItems.length != 0 && this.getRecipeOutput() != null) {
-         ItemStack[] var1 = super.recipeItems;
+      if(this.recipeItems.length != 0 && this.getRecipeOutput() != null) {
+         ItemStack[] var1 = this.recipeItems;
          int var2 = var1.length;
 
          for(int var3 = 0; var3 < var2; ++var3) {
@@ -205,5 +221,74 @@ public class RecipeCarpentry extends ShapedRecipes {
       } else {
          return false;
       }
+   }
+
+   public String getName() {
+      return this.name;
+   }
+
+   public ItemStack getResult() {
+      return this.getRecipeOutput();
+   }
+
+   public boolean isGlobal() {
+      return this.isGlobal;
+   }
+
+   public void setIsGlobal(boolean bo) {
+      this.isGlobal = bo;
+   }
+
+   public boolean getIgnoreNBT() {
+      return this.ignoreNBT;
+   }
+
+   public void setIgnoreNBT(boolean bo) {
+      this.ignoreNBT = bo;
+   }
+
+   public boolean getIgnoreDamage() {
+      return this.ignoreDamage;
+   }
+
+   public void setIgnoreDamage(boolean bo) {
+      this.ignoreDamage = bo;
+   }
+
+   public void save() {
+      try {
+         RecipeController.instance.saveRecipe(this);
+      } catch (IOException var2) {
+         ;
+      }
+
+   }
+
+   public void delete() {
+      RecipeController.instance.delete(this.id);
+   }
+
+   public int getWidth() {
+      return this.recipeWidth;
+   }
+
+   public int getHeight() {
+      return this.recipeHeight;
+   }
+
+   public ItemStack[] getRecipe() {
+      return this.recipeItems;
+   }
+
+   public void saves(boolean bo) {
+      this.savesRecipe = bo;
+   }
+
+   public boolean saves() {
+      return this.savesRecipe;
+   }
+
+   public int getId() {
+      return this.id;
    }
 }

@@ -17,23 +17,20 @@ public class EntityAIClearTarget extends EntityAITarget {
    }
 
    public boolean shouldExecute() {
-      this.target = super.taskOwner.getAttackTarget();
-      if(this.target == null) {
-         return false;
-      } else if(this.target instanceof EntityPlayer && ((EntityPlayer)this.target).capabilities.disableDamage) {
-         return true;
-      } else {
-         int distance = this.npc.stats.aggroRange * 2 * this.npc.stats.aggroRange;
-         return this.npc.getOwner() != null && this.npc.getDistanceSqToEntity(this.npc.getOwner()) > (double)distance?true:this.npc.getDistanceSqToEntity(this.target) > (double)distance;
-      }
+      this.target = this.taskOwner.getAttackTarget();
+      return this.target == null?false:(this.target instanceof EntityPlayer && ((EntityPlayer)this.target).capabilities.disableDamage?true:(this.npc.getOwner() != null && !this.npc.isInRange(this.npc.getOwner(), (double)(this.npc.stats.aggroRange * 2))?true:!this.npc.isInRange(this.target, (double)(this.npc.stats.aggroRange * 2))));
    }
 
    public void startExecuting() {
-      super.taskOwner.setAttackTarget((EntityLivingBase)null);
-      if(this.target == super.taskOwner.getAITarget()) {
-         super.taskOwner.setRevengeTarget((EntityLivingBase)null);
+      this.taskOwner.setAttackTarget((EntityLivingBase)null);
+      if(this.target == this.taskOwner.getAITarget()) {
+         this.taskOwner.setRevengeTarget((EntityLivingBase)null);
       }
 
       super.startExecuting();
+   }
+
+   public void resetTask() {
+      this.npc.getNavigator().clearPathEntity();
    }
 }

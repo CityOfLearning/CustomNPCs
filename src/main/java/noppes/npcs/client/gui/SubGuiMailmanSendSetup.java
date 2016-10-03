@@ -24,31 +24,31 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
 
 
    public SubGuiMailmanSendSetup(PlayerMail mail, GuiScreen parent) {
-      super.parent = parent;
-      super.xSize = 256;
+      this.parent = parent;
+      this.xSize = 256;
       this.setBackground("menubg.png");
       this.mail = mail;
    }
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(1, "mailbox.subject", super.guiLeft + 4, super.guiTop + 19));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 14, 180, 20, this.mail.subject));
-      this.addLabel(new GuiNpcLabel(0, "mailbox.sender", super.guiLeft + 4, super.guiTop + 41));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 36, 180, 20, this.mail.sender));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 29, super.guiTop + 100, "mailbox.write"));
-      this.addLabel(new GuiNpcLabel(3, "quest.quest", super.guiLeft + 13, super.guiTop + 135));
+      this.addLabel(new GuiNpcLabel(1, "mailbox.subject", this.guiLeft + 4, this.guiTop + 19));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 60, this.guiTop + 14, 180, 20, this.mail.subject));
+      this.addLabel(new GuiNpcLabel(0, "mailbox.sender", this.guiLeft + 4, this.guiTop + 41));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 60, this.guiTop + 36, 180, 20, this.mail.sender));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 29, this.guiTop + 100, "mailbox.write"));
+      this.addLabel(new GuiNpcLabel(3, "quest.quest", this.guiLeft + 13, this.guiTop + 135));
       String title = this.mail.questTitle;
       if(title.isEmpty()) {
          title = "gui.select";
       }
 
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 70, super.guiTop + 130, 100, 20, title));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 171, super.guiTop + 130, 20, 20, "X"));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 26, super.guiTop + 190, 100, 20, "gui.done"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 130, super.guiTop + 190, 100, 20, "gui.cancel"));
-      if(super.player.openContainer instanceof ContainerMail) {
-         ContainerMail container = (ContainerMail)super.player.openContainer;
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 70, this.guiTop + 130, 100, 20, title));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 171, this.guiTop + 130, 20, 20, "X"));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 26, this.guiTop + 190, 100, 20, "gui.done"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 130, this.guiTop + 190, 100, 20, "gui.cancel"));
+      if(this.player.openContainer instanceof ContainerMail) {
+         ContainerMail container = (ContainerMail)this.player.openContainer;
          this.mail.items = container.mail.items;
       }
 
@@ -68,13 +68,13 @@ public class SubGuiMailmanSendSetup extends SubGuiInterface implements ITextfiel
       }
 
       if(id == 2) {
-         GuiMailmanWrite.parent = super.parent;
+         GuiMailmanWrite.parent = this.parent;
          GuiMailmanWrite.mail = this.mail;
          Client.sendData(EnumPacketServer.MailOpenSetup, new Object[]{this.mail.writeNBT()});
       }
 
       if(id == 3) {
-         NoppesUtil.openGUI(super.player, this.questSelection = new GuiNPCQuestSelection(super.npc, this.getParent(), this.mail.questId));
+         NoppesUtil.openGUI(this.player, this.questSelection = new GuiNPCQuestSelection(this.npc, this.getParent(), this.mail.questId));
          this.questSelection.listener = this;
       }
 

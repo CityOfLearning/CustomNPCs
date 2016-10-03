@@ -1,44 +1,49 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.entity.EntityProjectile;
 import noppes.npcs.items.ItemNpcInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemMachineGun extends ItemNpcInterface {
 
    public ItemMachineGun(int par1) {
       super(par1);
-      this.setMaxDurability(80);
+      this.setMaxDamage(80);
       this.setCreativeTab(CustomItems.tabWeapon);
    }
 
    public void onPlayerStoppedUsing(ItemStack stack, World par2World, EntityPlayer player, int count) {
       if(!player.capabilities.isCreativeMode) {
+         NBTTagCompound compound = stack.getTagCompound();
+         if(compound == null) {
+            stack.setTagCompound(compound = new NBTTagCompound());
+         }
+
          int ticks = this.getMaxItemUseDuration(stack) - count;
-         int shotsleft = stack.stackTagCompound.getInteger("ShotsLeft") - ticks / 6;
-         if(stack.stackTagCompound.getBoolean("Reloading2")) {
+         int shotsleft = compound.getInteger("ShotsLeft") - ticks / 6;
+         if(compound.getBoolean("Reloading2")) {
             shotsleft = ticks / 5;
             if(ticks > 40) {
                shotsleft = 8;
             }
 
             if(shotsleft > 1) {
-               stack.stackTagCompound.setInteger("ShotsLeft", shotsleft);
-               stack.stackTagCompound.setBoolean("Reloading2", false);
+               compound.setInteger("ShotsLeft", shotsleft);
+               compound.setBoolean("Reloading2", false);
             }
          } else if(shotsleft <= 0) {
-            stack.stackTagCompound.setBoolean("Reloading2", true);
+            compound.setBoolean("Reloading2", true);
             stack.damageItem(1, player);
          } else {
-            stack.stackTagCompound.setInteger("ShotsLeft", shotsleft);
+            compound.setInteger("ShotsLeft", shotsleft);
          }
 
       }
@@ -48,11 +53,16 @@ public class ItemMachineGun extends ItemNpcInterface {
       if(!player.worldObj.isRemote) {
          int ticks = this.getMaxItemUseDuration(stack) - count;
          if(ticks % 6 == 0) {
-            int shotsleft = stack.stackTagCompound.getInteger("ShotsLeft") - ticks / 6;
+            NBTTagCompound compound = stack.getTagCompound();
+            if(compound == null) {
+               stack.setTagCompound(compound = new NBTTagCompound());
+            }
+
+            int shotsleft = compound.getInteger("ShotsLeft") - ticks / 6;
             if(player.capabilities.isCreativeMode && CustomNpcs.GunsEnabled) {
-               stack.stackTagCompound.removeTag("Reloading2");
+               compound.removeTag("Reloading2");
             } else {
-               if(stack.stackTagCompound.getBoolean("Reloading2") && this.hasItem(player, CustomItems.bulletBlack)) {
+               if(compound.getBoolean("Reloading2") && this.hasItem(player, CustomItems.bulletBlack)) {
                   if(ticks > 0 && ticks <= 24) {
                      player.worldObj.playSoundAtEntity(player, "customnpcs:gun.ak47.load", 1.0F, 1.0F);
                   }
@@ -74,25 +84,21 @@ public class ItemMachineGun extends ItemNpcInterface {
                this.consumeItem(player, CustomItems.bulletBlack);
             }
 
-            player.worldObj.playSoundAtEntity(player, "customnpcs:gun.pistol.shot", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
+            player.worldObj.playSoundAtEntity(player, "customnpcs:gun.pistol.shot", 0.9F, itemRand.nextFloat() * 0.3F + 0.8F);
             player.worldObj.spawnEntityInWorld(projectile);
          }
       }
    }
 
    public void renderSpecial() {
-      GL11.glRotatef(-6.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glScalef(0.8F, 0.7F, 0.7F);
-      GL11.glTranslatef(0.2F, 0.0F, 0.2F);
+      GlStateManager.rotate(-6.0F, 0.0F, 0.0F, 1.0F);
+      GlStateManager.scale(0.8F, 0.7F, 0.7F);
+      GlStateManager.translate(0.2F, 0.0F, 0.2F);
    }
 
    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-      if(stack.stackTagCompound == null) {
-         stack.stackTagCompound = new NBTTagCompound();
-      }
-
       if(!player.capabilities.isCreativeMode && !this.hasItem(player, CustomItems.bulletBlack)) {
-         stack.stackTagCompound.setBoolean("Reloading2", true);
+         stack.setTagInfo("Reloading2", new NBTTagByte((byte)1));
       }
 
       player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
@@ -104,6 +110,6 @@ public class ItemMachineGun extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack stack) {
-      return stack.stackTagCompound != null && stack.stackTagCompound.getBoolean("Reloading2")?EnumAction.block:EnumAction.bow;
+      return stack.hasTagCompound() && stack.getTagCompound().getBoolean("Reloading2")?EnumAction.BLOCK:EnumAction.BOW;
    }
 }

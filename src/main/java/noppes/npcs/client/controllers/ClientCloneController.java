@@ -6,7 +6,7 @@ import noppes.npcs.controllers.ServerCloneController;
 
 public class ClientCloneController extends ServerCloneController {
 
-   public static ClientCloneController Instance;
+   public static ClientCloneController Instance = new ClientCloneController();
 
 
    public File getDir() {
@@ -17,4 +17,5 @@ public class ClientCloneController extends ServerCloneController {
 
       return dir;
    }
+
 }

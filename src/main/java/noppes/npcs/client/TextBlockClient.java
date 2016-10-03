@@ -2,25 +2,38 @@ package noppes.npcs.client;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.TextBlock;
+import noppes.npcs.client.ClientProxy;
 
 public class TextBlockClient extends TextBlock {
 
    private ChatStyle style;
    public int color;
-   public String name;
+   private String name;
+   private ICommandSender sender;
 
 
    public TextBlockClient(String name, String text, int lineWidth, int color, Object ... obs) {
-      this(text, lineWidth, obs);
+      this(text, lineWidth, false, obs);
       this.color = color;
       this.name = name;
    }
 
-   public TextBlockClient(String text, int lineWidth, Object ... obs) {
+   public TextBlockClient(ICommandSender sender, String text, int lineWidth, int color, Object ... obs) {
+      this(text, lineWidth, false, obs);
+      this.color = color;
+      this.sender = sender;
+   }
+
+   public String getName() {
+      return this.sender != null?this.sender.getName():this.name;
+   }
+
+   public TextBlockClient(String text, int lineWidth, boolean mcFont, Object ... obs) {
       this.color = 14737632;
       this.style = new ChatStyle();
       text = NoppesStringUtils.formatText(text, obs);
@@ -29,11 +42,11 @@ public class TextBlockClient extends TextBlock {
       text = text.replace("\r", " \r ");
       String[] words = text.split(" ");
       FontRenderer font = Minecraft.getMinecraft().fontRendererObj;
-      String[] var7 = words;
-      int var8 = words.length;
+      String[] var8 = words;
+      int var9 = words.length;
 
-      for(int var9 = 0; var9 < var8; ++var9) {
-         String word = var7[var9];
+      for(int var10 = 0; var10 < var9; ++var10) {
+         String word = var8[var10];
          if(!word.isEmpty()) {
             if(word.length() == 1) {
                char newLine = word.charAt(0);
@@ -44,18 +57,18 @@ public class TextBlockClient extends TextBlock {
                }
             }
 
-            String var12;
+            String var13;
             if(line.isEmpty()) {
-               var12 = word;
+               var13 = word;
             } else {
-               var12 = line + " " + word;
+               var13 = line + " " + word;
             }
 
-            if(font.getStringWidth(var12) > lineWidth) {
+            if((mcFont?font.getStringWidth(var13):ClientProxy.Font.width(var13)) > lineWidth) {
                this.addLine(line);
                line = word.trim();
             } else {
-               line = var12;
+               line = var13;
             }
          }
       }
@@ -69,6 +82,6 @@ public class TextBlockClient extends TextBlock {
    private void addLine(String text) {
       ChatComponentText line = new ChatComponentText(text);
       line.setChatStyle(this.style);
-      super.lines.add(line);
+      this.lines.add(line);
    }
 }

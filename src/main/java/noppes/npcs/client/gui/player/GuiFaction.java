@@ -3,6 +3,7 @@ package noppes.npcs.client.gui.player;
 import java.util.ArrayList;
 import java.util.Iterator;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
@@ -15,7 +16,6 @@ import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.controllers.Faction;
 import noppes.npcs.controllers.PlayerFactionData;
-import org.lwjgl.opengl.GL11;
 import tconstruct.client.tabs.InventoryTabFactions;
 import tconstruct.client.tabs.TabRegistry;
 
@@ -34,32 +34,32 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 
 
    public GuiFaction() {
-      super.drawDefaultBackground = false;
-      super.title = "";
+      this.drawDefaultBackground = false;
+      this.title = "";
       NoppesUtilPlayer.sendData(EnumPlayerPacket.FactionsGet, new Object[0]);
       this.indicator = this.getResource("standardbg.png");
    }
 
    public void initGui() {
       super.initGui();
-      this.guiLeft = (super.width - this.xSize) / 2;
-      this.guiTop = (super.height - this.ySize) / 2 + 12;
+      this.guiLeft = (this.width - this.xSize) / 2;
+      this.guiTop = (this.height - this.ySize) / 2 + 12;
       TabRegistry.updateTabValues(this.guiLeft, this.guiTop + 8, InventoryTabFactions.class);
-      TabRegistry.addTabsToList(super.buttonList);
-      super.buttonList.add(this.buttonNextPage = new GuiButtonNextPage(1, this.guiLeft + this.xSize - 43, this.guiTop + 180, true));
-      super.buttonList.add(this.buttonPreviousPage = new GuiButtonNextPage(2, this.guiLeft + 20, this.guiTop + 180, false));
+      TabRegistry.addTabsToList(this.buttonList);
+      this.buttonList.add(this.buttonNextPage = new GuiButtonNextPage(1, this.guiLeft + this.xSize - 43, this.guiTop + 180, true));
+      this.buttonList.add(this.buttonPreviousPage = new GuiButtonNextPage(2, this.guiLeft + 20, this.guiTop + 180, false));
       this.updateButtons();
    }
 
    public void drawScreen(int i, int j, float f) {
       this.drawDefaultBackground();
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.indicator);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.indicator);
       this.drawTexturedModalRect(this.guiLeft, this.guiTop + 8, 0, 0, this.xSize, this.ySize);
       this.drawTexturedModalRect(this.guiLeft + 4, this.guiTop + 8, 56, 0, 200, this.ySize);
       if(this.playerFactions.isEmpty()) {
          String noFaction = StatCollector.translateToLocal("faction.nostanding");
-         super.fontRendererObj.drawString(noFaction, this.guiLeft + (this.xSize - super.fontRendererObj.getStringWidth(noFaction)) / 2, this.guiTop + 80, CustomNpcResourceListener.DefaultTextColor);
+         this.fontRendererObj.drawString(noFaction, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(noFaction)) / 2, this.guiTop + 80, CustomNpcResourceListener.DefaultTextColor);
       } else {
          this.renderScreen();
       }
@@ -96,15 +96,15 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
             points = points + "/-";
          }
 
-         super.fontRendererObj.drawString(name, this.guiLeft + (this.xSize - super.fontRendererObj.getStringWidth(name)) / 2, this.guiTop + 19 + s * 30, faction.color);
-         super.fontRendererObj.drawString(standing, super.width / 2 - super.fontRendererObj.getStringWidth(standing) - 1, this.guiTop + 33 + s * 30, color);
-         super.fontRendererObj.drawString(points, super.width / 2, this.guiTop + 33 + s * 30, CustomNpcResourceListener.DefaultTextColor);
+         this.fontRendererObj.drawString(name, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(name)) / 2, this.guiTop + 19 + s * 30, faction.color);
+         this.fontRendererObj.drawString(standing, this.width / 2 - this.fontRendererObj.getStringWidth(standing) - 1, this.guiTop + 33 + s * 30, color);
+         this.fontRendererObj.drawString(points, this.width / 2, this.guiTop + 33 + s * 30, CustomNpcResourceListener.DefaultTextColor);
       }
 
       this.drawHorizontalLine(this.guiLeft + 2, this.guiLeft + this.xSize, this.guiTop + 14 + size * 30, -16777216 + CustomNpcResourceListener.DefaultTextColor);
       if(this.pages > 1) {
          String var8 = this.page + "/" + this.pages;
-         super.fontRendererObj.drawString(var8, this.guiLeft + (this.xSize - super.fontRendererObj.getStringWidth(var8)) / 2, this.guiTop + 203, CustomNpcResourceListener.DefaultTextColor);
+         this.fontRendererObj.drawString(var8, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(var8)) / 2, this.guiTop + 203, CustomNpcResourceListener.DefaultTextColor);
       }
 
    }

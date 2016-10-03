@@ -1,11 +1,10 @@
 package noppes.npcs.ai;
 
 import java.util.Iterator;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.entity.player.EntityPlayer;
 import noppes.npcs.constants.AiMutex;
-import noppes.npcs.constants.EnumStandingType;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAILook extends EntityAIBase {
@@ -15,6 +14,8 @@ public class EntityAILook extends EntityAIBase {
    private double lookX;
    private double lookZ;
    boolean rotatebody;
+   private boolean forced = false;
+   private Entity forcedEntity = null;
 
 
    public EntityAILook(EntityNPCInterface npc) {
@@ -27,66 +28,72 @@ public class EntityAILook extends EntityAIBase {
    }
 
    public void startExecuting() {
-      this.rotatebody = this.npc.ai.standingType == EnumStandingType.RotateBody || this.npc.ai.standingType == EnumStandingType.HeadRotation;
+      this.rotatebody = this.npc.ai.getStandingType() == 0 || this.npc.ai.getStandingType() == 3;
+   }
+
+   public void rotate(Entity entity) {
+      this.forced = true;
+      this.forcedEntity = entity;
+   }
+
+   public void rotate(int degrees) {
+      this.forced = true;
+      this.npc.rotationYawHead = this.npc.rotationYaw = this.npc.renderYawOffset = (float)degrees;
    }
 
    public void resetTask() {
       this.rotatebody = false;
+      this.forced = false;
+      this.forcedEntity = null;
    }
 
    public void updateTask() {
-      if(this.npc.ai.standingType == EnumStandingType.Stalking) {
-         EntityPlayer var1 = this.npc.worldObj.getClosestPlayerToEntity(this.npc, 16.0D);
-         if(var1 == null) {
-            this.rotatebody = true;
-         } else {
-            this.npc.getLookHelper().setLookPositionWithEntity(var1, 10.0F, (float)this.npc.getVerticalFaceSpeed());
-         }
-      }
-
-      if(this.npc.isInteracting()) {
-         Iterator var11 = this.npc.interactingEntities.iterator();
-         EntityLivingBase closest = null;
+      Object lookat = null;
+      if(this.forced && this.forcedEntity != null) {
+         lookat = this.forcedEntity;
+      } else if(this.npc.isInteracting()) {
+         Iterator var1 = this.npc.interactingEntities.iterator();
          double closestDistance = 12.0D;
 
-         while(var11.hasNext()) {
-            EntityLivingBase entity = (EntityLivingBase)var11.next();
+         while(var1.hasNext()) {
+            EntityLivingBase entity = (EntityLivingBase)var1.next();
             double distance = entity.getDistanceSqToEntity(this.npc);
             if(distance < closestDistance) {
                closestDistance = entity.getDistanceSqToEntity(this.npc);
-               closest = entity;
+               lookat = entity;
             } else if(distance > 12.0D) {
-               var11.remove();
+               var1.remove();
+            }
+         }
+      } else if(this.npc.ai.getStandingType() == 2) {
+         lookat = this.npc.worldObj.getClosestPlayerToEntity(this.npc, 16.0D);
+      }
+
+      if(lookat != null) {
+         this.npc.getLookHelper().setLookPositionWithEntity((Entity)lookat, 10.0F, (float)this.npc.getVerticalFaceSpeed());
+      } else {
+         if(this.rotatebody) {
+            if(this.idle == 0 && this.npc.getRNG().nextFloat() < 0.004F) {
+               double var11 = 6.283185307179586D * this.npc.getRNG().nextDouble();
+               if(this.npc.ai.getStandingType() == 3) {
+                  var11 = 0.017453292519943295D * (double)this.npc.ai.orientation + 0.6283185307179586D + 1.8849555921538759D * this.npc.getRNG().nextDouble();
+               }
+
+               this.lookX = Math.cos(var11);
+               this.lookZ = Math.sin(var11);
+               this.idle = 20 + this.npc.getRNG().nextInt(20);
+            }
+
+            if(this.idle > 0) {
+               --this.idle;
+               this.npc.getLookHelper().setLookPosition(this.npc.posX + this.lookX, this.npc.posY + (double)this.npc.getEyeHeight(), this.npc.posZ + this.lookZ, 10.0F, (float)this.npc.getVerticalFaceSpeed());
             }
          }
 
-         if(closest != null) {
-            this.npc.getLookHelper().setLookPositionWithEntity(closest, 10.0F, (float)this.npc.getVerticalFaceSpeed());
-            return;
-         }
-      }
-
-      if(this.rotatebody) {
-         if(this.idle == 0 && this.npc.getRNG().nextFloat() < 0.02F) {
-            double var12 = 6.283185307179586D * this.npc.getRNG().nextDouble();
-            if(this.npc.ai.standingType == EnumStandingType.HeadRotation) {
-               var12 = 0.017453292519943295D * (double)this.npc.ai.orientation + 0.6283185307179586D + 1.8849555921538759D * this.npc.getRNG().nextDouble();
-            }
-
-            this.lookX = Math.cos(var12);
-            this.lookZ = Math.sin(var12);
-            this.idle = 20 + this.npc.getRNG().nextInt(20);
+         if(this.npc.ai.getStandingType() == 1 && !this.forced) {
+            this.npc.rotationYawHead = this.npc.rotationYaw = this.npc.renderYawOffset = (float)this.npc.ai.orientation;
          }
 
-         if(this.idle > 0) {
-            --this.idle;
-            this.npc.getLookHelper().setLookPosition(this.npc.posX + this.lookX, this.npc.posY + (double)this.npc.getEyeHeight(), this.npc.posZ + this.lookZ, 10.0F, (float)this.npc.getVerticalFaceSpeed());
-         }
       }
-
-      if(this.npc.ai.standingType == EnumStandingType.NoRotation) {
-         this.npc.rotationYawHead = this.npc.rotationYaw = this.npc.renderYawOffset = (float)this.npc.ai.orientation;
-      }
-
    }
 }

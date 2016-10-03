@@ -3,15 +3,19 @@ package noppes.npcs.blocks.tiles;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ITickable;
+import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.blocks.BlockNpcRedstone;
+import noppes.npcs.blocks.tiles.TileNpcEntity;
 import noppes.npcs.controllers.Availability;
 
-public class TileRedstoneBlock extends TileEntity {
+public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 
    public int onRange = 6;
    public int offRange = 10;
@@ -27,12 +31,12 @@ public class TileRedstoneBlock extends TileEntity {
    private int ticks = 10;
 
 
-   public void updateEntity() {
-      if(!super.worldObj.isRemote) {
+   public void update() {
+      if(!this.worldObj.isRemote) {
          --this.ticks;
          if(this.ticks <= 0) {
             this.ticks = 20;
-            Block block = super.worldObj.getBlock(super.xCoord, super.yCoord, super.zCoord);
+            Block block = this.getBlockType();
             if(block != null && block instanceof BlockNpcRedstone) {
                if(CustomNpcs.FreezeNPCs) {
                   if(this.isActivated) {
@@ -87,15 +91,20 @@ public class TileRedstoneBlock extends TileEntity {
       }
    }
 
+   public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
+      return oldState.getBlock() != newState.getBlock();
+   }
+
    private void setActive(Block block, boolean bo) {
       this.isActivated = bo;
-      super.worldObj.setBlockMetadataWithNotify(super.xCoord, super.yCoord, super.zCoord, this.isActivated?1:0, 2);
-      super.worldObj.markBlockForUpdate(super.xCoord, super.yCoord, super.zCoord);
-      block.onBlockAdded(super.worldObj, super.xCoord, super.yCoord, super.zCoord);
+      IBlockState state = block.getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, Boolean.valueOf(this.isActivated));
+      this.worldObj.setBlockState(this.pos, state, 2);
+      this.worldObj.markBlockForUpdate(this.pos);
+      block.onBlockAdded(this.worldObj, this.pos, state);
    }
 
    private List getPlayerList(int x, int y, int z) {
-      return super.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 1), (double)(super.zCoord + 1)).expand((double)x, (double)y, (double)z));
+      return this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB((double)this.pos.getX(), (double)this.pos.getY(), (double)this.pos.getZ(), (double)(this.pos.getX() + 1), (double)(this.pos.getY() + 1), (double)(this.pos.getZ() + 1))).expand((double)x, (double)y, (double)z));
    }
 
    public void readFromNBT(NBTTagCompound compound) {
@@ -113,9 +122,12 @@ public class TileRedstoneBlock extends TileEntity {
          this.offRangeZ = compound.getInteger("BlockOffRangeZ");
       }
 
-      this.isActivated = compound.getBoolean("BlockActivated");
+      if(compound.hasKey("BlockActivated")) {
+         this.isActivated = compound.getBoolean("BlockActivated");
+      }
+
       this.availability.readFromNBT(compound);
-      if(super.worldObj != null) {
+      if(this.worldObj != null) {
          this.setActive(this.getBlockType(), this.isActivated);
       }
 

@@ -20,8 +20,8 @@ public class ModelAnvil extends ModelBase {
 
 
    public ModelAnvil() {
-      super.textureWidth = 64;
-      super.textureHeight = 32;
+      this.textureWidth = 64;
+      this.textureHeight = 32;
       this.Tail = new ModelRenderer(this, 0, 0);
       this.Tail.addBox(0.0F, 0.0F, 0.0F, 1, 2, 4);
       this.Tail.setRotationPoint(-7.0F, 12.0F, -2.0F);

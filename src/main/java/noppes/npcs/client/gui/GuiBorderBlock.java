@@ -2,6 +2,7 @@ package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import noppes.npcs.blocks.tiles.TileBorder;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.SubGuiNpcAvailability;
@@ -18,20 +19,20 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 
 
    public GuiBorderBlock(int x, int y, int z) {
-      this.tile = (TileBorder)super.player.worldObj.getTileEntity(x, y, z);
+      this.tile = (TileBorder)this.player.worldObj.getTileEntity(new BlockPos(x, y, z));
       Client.sendData(EnumPacketServer.GetTileEntity, new Object[]{Integer.valueOf(x), Integer.valueOf(y), Integer.valueOf(z)});
    }
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 40, super.guiTop + 40, 120, 20, "Availability Options"));
-      this.addLabel(new GuiNpcLabel(0, "Height", super.guiLeft + 1, super.guiTop + 76, 16777215));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 71, 40, 20, this.tile.height + ""));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 40, this.guiTop + 40, 120, 20, "Availability Options"));
+      this.addLabel(new GuiNpcLabel(0, "Height", this.guiLeft + 1, this.guiTop + 76, 16777215));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 60, this.guiTop + 71, 40, 20, this.tile.height + ""));
       this.getTextField(0).numbersOnly = true;
       this.getTextField(0).setMinMaxDefault(0, 500, 6);
-      this.addLabel(new GuiNpcLabel(1, "Message", super.guiLeft + 1, super.guiTop + 100, 16777215));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 95, 200, 20, this.tile.message));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 40, super.guiTop + 190, 120, 20, "Done"));
+      this.addLabel(new GuiNpcLabel(1, "Message", this.guiLeft + 1, this.guiTop + 100, 16777215));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 60, this.guiTop + 95, 200, 20, this.tile.message));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 40, this.guiTop + 190, 120, 20, "Done"));
    }
 
    protected void actionPerformed(GuiButton guibutton) {

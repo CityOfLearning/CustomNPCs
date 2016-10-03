@@ -1,8 +1,5 @@
 package noppes.npcs.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -10,7 +7,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 
@@ -46,11 +45,7 @@ public class ItemSkirt extends ItemArmor {
 
    public Item setUnlocalizedName(String name) {
       GameRegistry.registerItem(this, name);
+      CustomNpcs.proxy.registerItem(this, name, 0);
       return super.setUnlocalizedName(name);
-   }
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIconFromDamageForRenderPass(int par1, int par2) {
-      return super.getIconFromDamage(par1);
    }
 }

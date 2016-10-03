@@ -14,16 +14,16 @@ public class SubGuiEditText extends SubGuiInterface {
    public SubGuiEditText(String text) {
       this.text = text;
       this.setBackground("extrasmallbg.png");
-      super.closeOnEsc = true;
-      super.xSize = 176;
-      super.ySize = 71;
+      this.closeOnEsc = true;
+      this.xSize = 176;
+      this.ySize = 71;
    }
 
    public void initGui() {
       super.initGui();
-      this.addTextField(new GuiNpcTextField(0, super.parent, super.guiLeft + 4, super.guiTop + 14, 168, 20, this.text));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 4, super.guiTop + 44, 80, 20, "gui.done"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 90, super.guiTop + 44, 80, 20, "gui.cancel"));
+      this.addTextField(new GuiNpcTextField(0, this.parent, this.guiLeft + 4, this.guiTop + 14, 168, 20, this.text));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 4, this.guiTop + 44, 80, 20, "gui.done"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 90, this.guiTop + 44, 80, 20, "gui.cancel"));
    }
 
    public void buttonEvent(GuiButton button) {

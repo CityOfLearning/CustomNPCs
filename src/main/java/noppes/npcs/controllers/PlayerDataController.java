@@ -2,9 +2,13 @@ package noppes.npcs.controllers;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerSelector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.CompressedStreamTools;
@@ -88,14 +92,15 @@ public class PlayerDataController {
       }
 
       filename = filename + ".json";
+      File file = null;
 
       try {
-         File e = new File(saveDir, filename);
-         if(e.exists()) {
-            return NBTJsonUtil.LoadFile(e);
+         file = new File(saveDir, filename);
+         if(file.exists()) {
+            return NBTJsonUtil.LoadFile(file);
          }
-      } catch (Exception var5) {
-         LogWriter.except(var5);
+      } catch (Exception var6) {
+         LogWriter.error("Error loading: " + file.getAbsolutePath(), var6);
       }
 
       return new NBTTagCompound();
@@ -139,6 +144,7 @@ public class PlayerDataController {
          data.loadNBTData((NBTTagCompound)null);
       }
 
+      data.player = player;
       return data;
    }
 
@@ -201,12 +207,32 @@ public class PlayerDataController {
                   map.put(e.getString("PlayerName"), e);
                }
             } catch (Exception var7) {
-               LogWriter.except(var7);
+               LogWriter.error("Error loading: " + file.getAbsolutePath(), var7);
             }
          }
       }
 
       return map;
+   }
+
+   public List getPlayersData(ICommandSender sender, String username) {
+      ArrayList list = new ArrayList();
+      List players = PlayerSelector.matchEntities(sender, username, EntityPlayerMP.class);
+      if(players.isEmpty()) {
+         PlayerData data = instance.getDataFromUsername(username);
+         if(data != null) {
+            list.add(data);
+         }
+      } else {
+         Iterator data1 = players.iterator();
+
+         while(data1.hasNext()) {
+            EntityPlayer player = (EntityPlayer)data1.next();
+            list.add(instance.getPlayerData(player));
+         }
+      }
+
+      return list;
    }
 
    public boolean hasMail(EntityPlayer player) {

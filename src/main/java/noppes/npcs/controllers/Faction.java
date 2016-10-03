@@ -4,11 +4,14 @@ import java.util.HashSet;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.NBTTags;
+import noppes.npcs.api.entity.ICustomNpc;
+import noppes.npcs.api.entity.IPlayer;
+import noppes.npcs.api.handler.data.IFaction;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerFactionData;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class Faction {
+public class Faction implements IFaction {
 
    public String name = "";
    public int color = Integer.parseInt("FF00", 16);
@@ -59,7 +62,7 @@ public class Faction {
       compound.setInteger("DefaultPoints", this.defaultPoints);
       compound.setBoolean("HideFaction", this.hideFaction);
       compound.setBoolean("GetsAttacked", this.getsAttacked);
-      compound.setTag("AttackFactions", NBTTags.nbtIntegerSet(this.attackFactions));
+      compound.setTag("AttackFactions", NBTTags.nbtIntegerCollection(this.attackFactions));
    }
 
    public boolean isFriendlyToPlayer(EntityPlayer player) {
@@ -80,5 +83,31 @@ public class Faction {
 
    public boolean isAggressiveToNpc(EntityNPCInterface entity) {
       return this.attackFactions.contains(Integer.valueOf(entity.faction.id));
+   }
+
+   public int getId() {
+      return this.id;
+   }
+
+   public String getName() {
+      return this.name;
+   }
+
+   public int getDefaultPoints() {
+      return this.defaultPoints;
+   }
+
+   public int getColor() {
+      return this.color;
+   }
+
+   public int playerStatus(IPlayer player) {
+      PlayerFactionData data = PlayerDataController.instance.getPlayerData(player.getMCEntity()).factionData;
+      int points = data.getFactionPoints(this.id);
+      return points >= this.friendlyPoints?1:(points < this.neutralPoints?-1:0);
+   }
+
+   public boolean hostileToNpc(ICustomNpc npc) {
+      return this.attackFactions.contains(Integer.valueOf(npc.getFaction().getId()));
    }
 }

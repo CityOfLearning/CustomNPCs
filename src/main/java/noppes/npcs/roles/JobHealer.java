@@ -1,21 +1,27 @@
 package noppes.npcs.roles;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NoppesUtilServer;
+import net.minecraft.potion.PotionEffect;
+import noppes.npcs.NBTTags;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobInterface;
+import noppes.npcs.util.ValueUtil;
 
 public class JobHealer extends JobInterface {
 
-   private long healTicks = 0L;
-   public int range = 5;
-   public int speed = 5;
-   private List toHeal = new ArrayList();
+   private int healTicks = 0;
+   public int range = 8;
+   public byte type = 2;
+   public int speed = 20;
+   public HashMap effects = new HashMap();
+   private List affected = new ArrayList();
 
 
    public JobHealer(EntityNPCInterface npc) {
@@ -24,59 +30,58 @@ public class JobHealer extends JobInterface {
 
    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {
       nbttagcompound.setInteger("HealerRange", this.range);
+      nbttagcompound.setByte("HealerType", this.type);
+      nbttagcompound.setTag("BeaconEffects", NBTTags.nbtIntegerIntegerMap(this.effects));
       nbttagcompound.setInteger("HealerSpeed", this.speed);
       return nbttagcompound;
    }
 
    public void readFromNBT(NBTTagCompound nbttagcompound) {
       this.range = nbttagcompound.getInteger("HealerRange");
-      this.speed = nbttagcompound.getInteger("HealerSpeed");
+      this.type = nbttagcompound.getByte("HealerType");
+      this.effects = NBTTags.getIntegerIntegerMap(nbttagcompound.getTagList("BeaconEffects", 10));
+      this.speed = ValueUtil.CorrectInt(nbttagcompound.getInteger("HealerSpeed"), 10, Integer.MAX_VALUE);
    }
 
    public boolean aiShouldExecute() {
       ++this.healTicks;
-      if(this.healTicks < (long)(this.speed * 10)) {
+      if(this.healTicks < this.speed) {
          return false;
       } else {
-         Iterator var1 = super.npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, super.npc.boundingBox.expand((double)this.range, (double)(this.range / 2), (double)this.range)).iterator();
-
-         while(var1.hasNext()) {
-            Object plObj = var1.next();
-            EntityLivingBase entity = (EntityLivingBase)plObj;
-            if(entity instanceof EntityPlayer) {
-               EntityPlayer npc = (EntityPlayer)entity;
-               if(npc.getHealth() < npc.getMaxHealth() && !super.npc.faction.isAggressiveToPlayer(npc)) {
-                  this.toHeal.add(npc);
-               }
-            }
-
-            if(entity instanceof EntityNPCInterface) {
-               EntityNPCInterface npc1 = (EntityNPCInterface)entity;
-               if(npc1.getHealth() < npc1.getMaxHealth() && !super.npc.faction.isAggressiveToNpc(npc1)) {
-                  this.toHeal.add(npc1);
-               }
-            }
-         }
-
-         this.healTicks = 0L;
-         return !this.toHeal.isEmpty();
+         this.healTicks = 0;
+         this.affected = this.npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.npc.getEntityBoundingBox().expand((double)this.range, (double)this.range / 2.0D, (double)this.range));
+         return !this.affected.isEmpty();
       }
+   }
+
+   public boolean aiContinueExecute() {
+      return false;
    }
 
    public void aiStartExecuting() {
-      Iterator var1 = this.toHeal.iterator();
+      Iterator var1 = this.affected.iterator();
 
       while(var1.hasNext()) {
          EntityLivingBase entity = (EntityLivingBase)var1.next();
-         float heal = entity.getMaxHealth() / 20.0F;
-         this.heal(entity, heal > 0.0F?heal:1.0F);
+         boolean isEnemy = false;
+         if(entity instanceof EntityPlayer) {
+            isEnemy = this.npc.faction.isAggressiveToPlayer((EntityPlayer)entity);
+         } else if(entity instanceof EntityNPCInterface) {
+            isEnemy = this.npc.faction.isAggressiveToNpc((EntityNPCInterface)entity);
+         } else {
+            isEnemy = entity instanceof EntityMob;
+         }
+
+         if(entity != this.npc && (this.type == 2 || !isEnemy || this.type == 1 || isEnemy || this.type == 0)) {
+            Iterator var4 = this.effects.keySet().iterator();
+
+            while(var4.hasNext()) {
+               Integer potionEffect = (Integer)var4.next();
+               entity.addPotionEffect(new PotionEffect(potionEffect.intValue(), 100, ((Integer)this.effects.get(potionEffect)).intValue()));
+            }
+         }
       }
 
-      this.toHeal.clear();
-   }
-
-   public void heal(EntityLivingBase entity, float amount) {
-      entity.heal(amount);
-      NoppesUtilServer.spawnParticle(entity, "heal", entity.dimension);
+      this.affected.clear();
    }
 }

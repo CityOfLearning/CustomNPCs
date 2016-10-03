@@ -25,8 +25,11 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 
 
    public GuiNpcRemoteEditor() {
-      super.xSize = 256;
+      this.xSize = 256;
       this.setBackground("menubg.png");
+   }
+
+   public void initPacket() {
       Client.sendData(EnumPacketServer.RemoteNpcsGet, new Object[0]);
    }
 
@@ -35,20 +38,20 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
          this.scroll.setSize(165, 208);
-         this.scroll.guiLeft = super.guiLeft + 4;
-         this.scroll.guiTop = super.guiTop + 4;
       }
 
+      this.scroll.guiLeft = this.guiLeft + 4;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
       String title = StatCollector.translateToLocal("remote.title");
-      int x = (super.xSize - super.fontRendererObj.getStringWidth(title)) / 2;
-      this.addLabel(new GuiNpcLabel(0, title, super.guiLeft + x, super.guiTop - 8));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 170, super.guiTop + 6, 82, 20, "selectServer.edit"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 170, super.guiTop + 28, 82, 20, "selectWorld.deleteButton"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 170, super.guiTop + 50, 82, 20, "remote.reset"));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 170, super.guiTop + 72, 82, 20, "remote.tp"));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 170, super.guiTop + 110, 82, 20, "remote.resetall"));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 170, super.guiTop + 132, 82, 20, "remote.freeze"));
+      int x = (this.xSize - this.fontRendererObj.getStringWidth(title)) / 2;
+      this.addLabel(new GuiNpcLabel(0, title, this.guiLeft + x, this.guiTop - 8));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 170, this.guiTop + 6, 82, 20, "selectServer.edit"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 170, this.guiTop + 28, 82, 20, "selectWorld.deleteButton"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 170, this.guiTop + 50, 82, 20, "remote.reset"));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 170, this.guiTop + 72, 82, 20, "remote.tp"));
+      this.addButton(new GuiNpcButton(5, this.guiLeft + 170, this.guiTop + 110, 82, 20, "remote.resetall"));
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 170, this.guiTop + 132, 82, 20, "remote.freeze"));
    }
 
    public void confirmClicked(boolean flag, int i) {
@@ -56,7 +59,7 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
          Client.sendData(EnumPacketServer.RemoteDelete, new Object[]{this.data.get(this.scroll.getSelected())});
       }
 
-      NoppesUtil.openGUI(super.player, this);
+      NoppesUtil.openGUI(this.player, this);
    }
 
    protected void actionPerformed(GuiButton guibutton) {
@@ -71,7 +74,7 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
          while(entity.hasNext()) {
             int ids = ((Integer)entity.next()).intValue();
             Client.sendData(EnumPacketServer.RemoteReset, new Object[]{Integer.valueOf(ids)});
-            Entity entity1 = super.player.worldObj.getEntityByID(ids);
+            Entity entity1 = this.player.worldObj.getEntityByID(ids);
             if(entity1 != null && entity1 instanceof EntityNPCInterface) {
                ((EntityNPCInterface)entity1).reset();
             }
@@ -90,7 +93,7 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 
          if(id == 2) {
             Client.sendData(EnumPacketServer.RemoteReset, new Object[]{this.data.get(this.scroll.getSelected())});
-            Entity entity3 = super.player.worldObj.getEntityByID(((Integer)this.data.get(this.scroll.getSelected())).intValue());
+            Entity entity3 = this.player.worldObj.getEntityByID(((Integer)this.data.get(this.scroll.getSelected())).intValue());
             if(entity3 != null && entity3 instanceof EntityNPCInterface) {
                ((EntityNPCInterface)entity3).reset();
             }

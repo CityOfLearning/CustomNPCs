@@ -7,7 +7,7 @@ import noppes.npcs.containers.ContainerNPCBankInterface;
 
 public class SlotNpcBankCurrency extends Slot {
 
-   public ItemStack item;
+   public ItemStack item = null;
 
 
    public SlotNpcBankCurrency(ContainerNPCBankInterface containerplayer, IInventory iinventory, int i, int j, int k) {
@@ -19,6 +19,6 @@ public class SlotNpcBankCurrency extends Slot {
    }
 
    public boolean isItemValid(ItemStack itemstack) {
-      return this.item == null?false:this.item.getItem() == itemstack.getItem() && (!this.item.getHasSubtypes() || this.item.getMetadata() == itemstack.getMetadata());
+      return this.item == null?false:this.item.getItem() == itemstack.getItem() && (!this.item.getHasSubtypes() || this.item.getItemDamage() == itemstack.getItemDamage());
    }
 }

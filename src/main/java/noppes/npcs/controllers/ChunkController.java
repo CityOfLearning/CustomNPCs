@@ -12,7 +12,6 @@ import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.ForgeChunkManager.Ticket;
 import net.minecraftforge.common.ForgeChunkManager.Type;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.constants.EnumJobType;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class ChunkController implements LoadingCallback {
@@ -37,10 +36,14 @@ public class ChunkController implements LoadingCallback {
          return null;
       } else {
          ticket = ForgeChunkManager.requestTicket(CustomNpcs.instance, npc.worldObj, Type.ENTITY);
-         ticket.bindEntity(npc);
-         ticket.setChunkListDepth(6);
-         this.tickets.put(npc, ticket);
-         return null;
+         if(ticket == null) {
+            return null;
+         } else {
+            ticket.bindEntity(npc);
+            ticket.setChunkListDepth(6);
+            this.tickets.put(npc, ticket);
+            return null;
+         }
       }
    }
 
@@ -60,7 +63,7 @@ public class ChunkController implements LoadingCallback {
          Ticket ticket = (Ticket)var3.next();
          if(ticket.getEntity() instanceof EntityNPCInterface) {
             EntityNPCInterface npc = (EntityNPCInterface)ticket.getEntity();
-            if(npc.advanced.job == EnumJobType.ChunkLoader && !tickets.contains(npc)) {
+            if(npc.advanced.job == 8 && !tickets.contains(npc)) {
                this.tickets.put(npc, ticket);
                double x = npc.posX / 16.0D;
                double z = npc.posZ / 16.0D;

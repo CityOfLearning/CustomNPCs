@@ -9,7 +9,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIOrbitTarget extends EntityAIBase {
 
-   private EntityNPCInterface theEntity;
+   private EntityNPCInterface npc;
    private EntityLivingBase targetEntity;
    private double movePosX;
    private double movePosY;
@@ -26,10 +26,9 @@ public class EntityAIOrbitTarget extends EntityAIBase {
    private int tick = 0;
 
 
-   public EntityAIOrbitTarget(EntityNPCInterface par1EntityCreature, double par2, float par4, boolean par5) {
-      this.theEntity = par1EntityCreature;
+   public EntityAIOrbitTarget(EntityNPCInterface par1EntityCreature, double par2, boolean par5) {
+      this.npc = par1EntityCreature;
       this.speed = par2;
-      this.distance = par4;
       this.decay = par5;
       this.setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
    }
@@ -38,56 +37,61 @@ public class EntityAIOrbitTarget extends EntityAIBase {
       if(--this.delay > 0) {
          return false;
       } else {
-         this.targetEntity = this.theEntity.getAttackTarget();
+         this.delay = 10;
+         this.targetEntity = this.npc.getAttackTarget();
          if(this.targetEntity == null) {
             return false;
          } else {
-            double d0 = (double)this.theEntity.getDistanceToEntity(this.targetEntity);
-            return d0 >= (double)(this.distance / 2.0F) && (this.theEntity.inventory.getProjectile() != null || d0 <= (double)this.distance);
+            if(this.decay) {
+               this.distance = (float)this.npc.ai.getTacticalRange();
+            } else {
+               this.distance = (float)this.npc.stats.ranged.getRange();
+            }
+
+            return !this.npc.isInRange(this.targetEntity, (double)(this.distance / 2.0F)) && (this.npc.inventory.getProjectile() != null || this.npc.isInRange(this.targetEntity, (double)this.distance));
          }
       }
    }
 
    public boolean continueExecuting() {
-      double d0 = (double)this.targetEntity.getDistanceToEntity(this.theEntity);
-      return this.targetEntity.isEntityAlive() && d0 >= (double)(this.distance / 2.0F) && d0 <= (double)(this.distance * 1.5F) && !this.theEntity.isInWater() && this.canNavigate;
+      return this.targetEntity.isEntityAlive() && !this.npc.isInRange(this.targetEntity, (double)(this.distance / 2.0F)) && this.npc.isInRange(this.targetEntity, (double)this.distance * 1.5D) && !this.npc.isInWater() && this.canNavigate;
    }
 
    public void resetTask() {
-      this.theEntity.getNavigator().clearPathEntity();
+      this.npc.getNavigator().clearPathEntity();
       this.delay = 60;
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(false);
+      if(this.npc.getRangedTask() != null) {
+         this.npc.getRangedTask().navOverride(false);
       }
 
    }
 
    public void startExecuting() {
       this.canNavigate = true;
-      Random random = this.theEntity.getRNG();
+      Random random = this.npc.getRNG();
       this.direction = random.nextInt(10) > 5?1:-1;
       this.decayRate = random.nextFloat() + this.distance / 16.0F;
-      this.targetDistance = this.theEntity.getDistanceToEntity(this.targetEntity);
-      double d0 = this.theEntity.posX - this.targetEntity.posX;
-      double d1 = this.theEntity.posZ - this.targetEntity.posZ;
+      this.targetDistance = this.npc.getDistanceToEntity(this.targetEntity);
+      double d0 = this.npc.posX - this.targetEntity.posX;
+      double d1 = this.npc.posZ - this.targetEntity.posZ;
       this.angle = (float)(Math.atan2(d1, d0) * 180.0D / 3.141592653589793D);
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(true);
+      if(this.npc.getRangedTask() != null) {
+         this.npc.getRangedTask().navOverride(true);
       }
 
    }
 
    public void updateTask() {
-      this.theEntity.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
-      if(this.theEntity.getNavigator().noPath() && this.tick >= 0 && this.theEntity.onGround && !this.theEntity.isInWater()) {
+      this.npc.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
+      if(this.npc.getNavigator().noPath() && this.tick >= 0 && this.npc.onGround && !this.npc.isInWater()) {
          double d0 = (double)this.targetDistance * (double)MathHelper.cos(this.angle / 180.0F * 3.1415927F);
          double d1 = (double)this.targetDistance * (double)MathHelper.sin(this.angle / 180.0F * 3.1415927F);
          this.movePosX = this.targetEntity.posX + d0;
-         this.movePosY = this.targetEntity.boundingBox.maxY;
+         this.movePosY = this.targetEntity.getEntityBoundingBox().maxY;
          this.movePosZ = this.targetEntity.posZ + d1;
-         this.theEntity.getNavigator().tryMoveToXYZ(this.movePosX, this.movePosY, this.movePosZ, this.speed);
+         this.npc.getNavigator().tryMoveToXYZ(this.movePosX, this.movePosY, this.movePosZ, this.speed);
          this.angle += 15.0F * (float)this.direction;
-         this.tick = MathHelper.ceiling_double_int(this.theEntity.getDistance(this.movePosX, this.movePosY, this.movePosZ) / (double)(this.theEntity.getSpeed() / 20.0F));
+         this.tick = MathHelper.ceiling_double_int(this.npc.getDistance(this.movePosX, this.movePosY, this.movePosZ) / (double)(this.npc.getSpeed() / 20.0F));
          if(this.decay) {
             this.targetDistance -= this.decayRate;
          }

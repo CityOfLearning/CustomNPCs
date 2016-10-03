@@ -27,8 +27,8 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
 
 
    public GuiNpcMobSpawnerSelector() {
-      super.xSize = 256;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.closeOnEsc = true;
       this.setBackground("menubg.png");
    }
 
@@ -41,21 +41,21 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
          this.scroll.clear();
       }
 
-      this.scroll.guiLeft = super.guiLeft + 4;
-      this.scroll.guiTop = super.guiTop + 26;
+      this.scroll.guiLeft = this.guiLeft + 4;
+      this.scroll.guiTop = this.guiTop + 26;
       this.addScroll(this.scroll);
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 4, 165, 20, search));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 171, super.guiTop + 80, 80, 20, "gui.done"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 171, super.guiTop + 103, 80, 20, "gui.cancel"));
-      this.addSideButton(new GuiMenuSideButton(21, super.guiLeft - 69, super.guiTop + 2, 70, 22, "Tab 1"));
-      this.addSideButton(new GuiMenuSideButton(22, super.guiLeft - 69, super.guiTop + 23, 70, 22, "Tab 2"));
-      this.addSideButton(new GuiMenuSideButton(23, super.guiLeft - 69, super.guiTop + 44, 70, 22, "Tab 3"));
-      this.addSideButton(new GuiMenuSideButton(24, super.guiLeft - 69, super.guiTop + 65, 70, 22, "Tab 4"));
-      this.addSideButton(new GuiMenuSideButton(25, super.guiLeft - 69, super.guiTop + 86, 70, 22, "Tab 5"));
-      this.addSideButton(new GuiMenuSideButton(26, super.guiLeft - 69, super.guiTop + 107, 70, 22, "Tab 6"));
-      this.addSideButton(new GuiMenuSideButton(27, super.guiLeft - 69, super.guiTop + 128, 70, 22, "Tab 7"));
-      this.addSideButton(new GuiMenuSideButton(28, super.guiLeft - 69, super.guiTop + 149, 70, 22, "Tab 8"));
-      this.addSideButton(new GuiMenuSideButton(29, super.guiLeft - 69, super.guiTop + 170, 70, 22, "Tab 9"));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 4, 165, 20, search));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 171, this.guiTop + 80, 80, 20, "gui.done"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 171, this.guiTop + 103, 80, 20, "gui.cancel"));
+      this.addSideButton(new GuiMenuSideButton(21, this.guiLeft - 69, this.guiTop + 2, 70, 22, "Tab 1"));
+      this.addSideButton(new GuiMenuSideButton(22, this.guiLeft - 69, this.guiTop + 23, 70, 22, "Tab 2"));
+      this.addSideButton(new GuiMenuSideButton(23, this.guiLeft - 69, this.guiTop + 44, 70, 22, "Tab 3"));
+      this.addSideButton(new GuiMenuSideButton(24, this.guiLeft - 69, this.guiTop + 65, 70, 22, "Tab 4"));
+      this.addSideButton(new GuiMenuSideButton(25, this.guiLeft - 69, this.guiTop + 86, 70, 22, "Tab 5"));
+      this.addSideButton(new GuiMenuSideButton(26, this.guiLeft - 69, this.guiTop + 107, 70, 22, "Tab 6"));
+      this.addSideButton(new GuiMenuSideButton(27, this.guiLeft - 69, this.guiTop + 128, 70, 22, "Tab 7"));
+      this.addSideButton(new GuiMenuSideButton(28, this.guiLeft - 69, this.guiTop + 149, 70, 22, "Tab 8"));
+      this.addSideButton(new GuiMenuSideButton(29, this.guiLeft - 69, this.guiTop + 170, 70, 22, "Tab 9"));
       this.getSideButton(20 + this.activeTab).active = true;
       this.showClones();
    }
@@ -102,7 +102,7 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
 
    public NBTTagCompound getCompound() {
       String sel = this.scroll.getSelected();
-      return sel == null?null:ClientCloneController.Instance.getCloneData(super.player, sel, this.activeTab);
+      return sel == null?null:ClientCloneController.Instance.getCloneData(this.player, sel, this.activeTab);
    }
 
    public void buttonEvent(GuiButton guibutton) {

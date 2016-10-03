@@ -29,9 +29,9 @@ public class Line {
       } else {
          Line line = this.copy();
          if(entity instanceof EntityPlayer) {
-            line.text = line.text.replace("@target", ((EntityPlayer)entity).getDisplayName());
+            line.text = line.text.replace("@target", ((EntityPlayer)entity).getDisplayNameString());
          } else {
-            line.text = line.text.replace("@target", entity.getCommandSenderName());
+            line.text = line.text.replace("@target", entity.getName());
          }
 
          return line;

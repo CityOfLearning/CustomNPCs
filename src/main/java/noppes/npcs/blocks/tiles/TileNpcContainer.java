@@ -6,6 +6,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.tiles.TileColorable;
 
@@ -48,7 +51,7 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
       }
 
       compound.setTag("Items", nbttaglist);
-      if(this.isCustomInventoryName()) {
+      if(this.hasCustomName()) {
          compound.setString("CustomName", this.customName);
       }
 
@@ -93,7 +96,7 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
       }
    }
 
-   public ItemStack getStackInSlotOnClosing(int par1) {
+   public ItemStack removeStackFromSlot(int par1) {
       if(this.chestContents[par1] != null) {
          ItemStack itemstack = this.chestContents[par1];
          this.chestContents[par1] = null;
@@ -112,13 +115,13 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
       this.markDirty();
    }
 
-   public String getInventoryName() {
-      return this.isCustomInventoryName()?this.customName:this.getName();
+   public IChatComponent getDisplayName() {
+      return new ChatComponentText(this.hasCustomName()?this.customName:this.getName());
    }
 
    public abstract String getName();
 
-   public boolean isCustomInventoryName() {
+   public boolean hasCustomName() {
       return !this.customName.isEmpty();
    }
 
@@ -127,22 +130,34 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
    }
 
    public boolean isUseableByPlayer(EntityPlayer player) {
-      return !player.isDead && super.worldObj.getTileEntity(super.xCoord, super.yCoord, super.zCoord) == this?player.getDistanceSq((double)super.xCoord + 0.5D, (double)super.yCoord + 0.5D, (double)super.zCoord + 0.5D) <= 64.0D:false;
+      return !player.isDead && this.worldObj.getTileEntity(this.pos) != this?false:player.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
    }
 
-   public void openChest() {
+   public void openInventory(EntityPlayer player) {
       ++this.playerUsing;
    }
 
-   public void closeChest() {
+   public void closeInventory(EntityPlayer player) {
       --this.playerUsing;
    }
+
+   public int getField(int id) {
+      return 0;
+   }
+
+   public void setField(int id, int value) {}
+
+   public int getFieldCount() {
+      return 0;
+   }
+
+   public void clear() {}
 
    public boolean isItemValidForSlot(int var1, ItemStack var2) {
       return true;
    }
 
-   public void dropItems(World world, int x, int y, int z) {
+   public void dropItems(World world, BlockPos pos) {
       for(int i1 = 0; i1 < this.getSizeInventory(); ++i1) {
          ItemStack itemstack = this.getStackInSlot(i1);
          if(itemstack != null) {
@@ -157,7 +172,7 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
                }
 
                itemstack.stackSize -= j1;
-               entityitem = new EntityItem(world, (double)((float)x + f), (double)((float)y + f1), (double)((float)z + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getMetadata()));
+               entityitem = new EntityItem(world, (double)((float)pos.getX() + f), (double)((float)pos.getY() + f1), (double)((float)pos.getZ() + f2), new ItemStack(itemstack.getItem(), j1, itemstack.getItemDamage()));
                float f3 = 0.05F;
                entityitem.motionX = (double)((float)world.rand.nextGaussian() * f3);
                entityitem.motionY = (double)((float)world.rand.nextGaussian() * f3 + 0.2F);

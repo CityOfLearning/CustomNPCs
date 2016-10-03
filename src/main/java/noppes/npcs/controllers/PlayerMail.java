@@ -5,10 +5,12 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.IChatComponent;
+import noppes.npcs.api.entity.data.IPlayerMail;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.controllers.QuestController;
 
-public class PlayerMail implements IInventory {
+public class PlayerMail implements IInventory, IPlayerMail {
 
    public String subject = "";
    public String sender = "";
@@ -120,7 +122,7 @@ public class PlayerMail implements IInventory {
       }
    }
 
-   public ItemStack getStackInSlotOnClosing(int var1) {
+   public ItemStack removeStackFromSlot(int var1) {
       if(this.items[var1] != null) {
          ItemStack itemstack = this.items[var1];
          this.items[var1] = null;
@@ -139,11 +141,11 @@ public class PlayerMail implements IInventory {
       this.markDirty();
    }
 
-   public String getInventoryName() {
+   public IChatComponent getDisplayName() {
       return null;
    }
 
-   public boolean isCustomInventoryName() {
+   public boolean hasCustomName() {
       return false;
    }
 
@@ -153,9 +155,9 @@ public class PlayerMail implements IInventory {
       return true;
    }
 
-   public void openChest() {}
+   public void openInventory(EntityPlayer player) {}
 
-   public void closeChest() {}
+   public void closeInventory(EntityPlayer player) {}
 
    public boolean isItemValidForSlot(int var1, ItemStack var2) {
       return true;
@@ -166,4 +168,20 @@ public class PlayerMail implements IInventory {
       mail.readNBT(this.writeNBT());
       return mail;
    }
+
+   public String getName() {
+      return null;
+   }
+
+   public int getField(int id) {
+      return 0;
+   }
+
+   public void setField(int id, int value) {}
+
+   public int getFieldCount() {
+      return 0;
+   }
+
+   public void clear() {}
 }

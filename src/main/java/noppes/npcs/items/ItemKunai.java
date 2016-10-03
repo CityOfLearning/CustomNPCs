@@ -1,12 +1,12 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.world.World;
 import noppes.npcs.entity.EntityProjectile;
 import noppes.npcs.items.ItemNpcWeaponInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemKunai extends ItemNpcWeaponInterface {
 
@@ -19,7 +19,7 @@ public class ItemKunai extends ItemNpcWeaponInterface {
          player.swingItem();
       } else {
          EntityProjectile projectile = new EntityProjectile(worldObj, player, par1ItemStack, false);
-         projectile.damage = this.func_150931_i();
+         projectile.damage = this.getDamageVsEntity();
          projectile.destroyedOnEntityHit = false;
          projectile.canBePickedUp = !player.capabilities.isCreativeMode;
          projectile.setIs3D(true);
@@ -51,8 +51,8 @@ public class ItemKunai extends ItemNpcWeaponInterface {
    }
 
    public void renderSpecial() {
-      GL11.glScalef(0.4F, 0.4F, 0.4F);
-      GL11.glTranslatef(-0.4F, 0.5F, 0.1F);
+      GlStateManager.scale(0.4F, 0.4F, 0.4F);
+      GlStateManager.translate(-0.4F, 0.5F, 0.1F);
    }
 
    public boolean shouldRotateAroundWhenRendering() {

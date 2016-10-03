@@ -1,5 +1,6 @@
 package noppes.npcs.client.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
@@ -27,20 +28,24 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
 
    public GuiNPCDialogSelection(EntityNPCInterface npc, GuiScreen parent, int dialog) {
       super(npc);
-      super.drawDefaultBackground = false;
-      super.title = "Select Dialog Category";
+      this.drawDefaultBackground = false;
+      this.title = "Select Dialog Category";
       this.parent = parent;
       this.dialog = dialog;
-      if(dialog >= 0) {
-         Client.sendData(EnumPacketServer.DialogsGetFromDialog, new Object[]{Integer.valueOf(dialog)});
-         this.selectCategory = false;
-         super.title = "Select Dialog";
-      } else {
-         Client.sendData(EnumPacketServer.DialogCategoriesGet, new Object[]{Integer.valueOf(dialog)});
-      }
-
       if(parent instanceof GuiSelectionListener) {
          this.listener = (GuiSelectionListener)parent;
+      }
+
+   }
+
+   public void initPacket() {
+      if(this.dialog >= 0) {
+         Client.sendData(EnumPacketServer.DialogsGetFromDialog, new Object[]{Integer.valueOf(this.dialog)});
+         this.selectCategory = false;
+         this.title = "Select Dialog";
+      } else {
+         Client.sendData(EnumPacketServer.DialogCategoriesGet, new Object[]{Integer.valueOf(this.dialog)});
+         this.title = "Select Dialog Category";
       }
 
    }
@@ -48,10 +53,15 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
    public void initGui() {
       super.initGui();
       Vector list = new Vector();
+      this.addButton(new GuiNpcButton(2, this.width / 2 - 100, this.height - 41, 98, 20, "gui.back"));
+      this.addButton(new GuiNpcButton(4, this.width / 2 + 2, this.height - 41, 98, 20, "mco.template.button.select"));
       this.slot = new GuiNPCStringSlot(list, this, false, 18);
       this.slot.registerScrollButtons(4, 5);
-      this.addButton(new GuiNpcButton(2, super.width / 2 - 100, super.height - 41, 98, 20, "gui.back"));
-      this.addButton(new GuiNpcButton(4, super.width / 2 + 2, super.height - 41, 98, 20, "mco.template.button.select"));
+   }
+
+   public void handleMouseInput() throws IOException {
+      this.slot.handleMouseInput();
+      super.handleMouseInput();
    }
 
    public void drawScreen(int i, int j, float f) {
@@ -64,9 +74,9 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
       if(id == 2) {
          if(this.selectCategory) {
             this.close();
-            NoppesUtil.openGUI(super.player, this.parent);
+            NoppesUtil.openGUI(this.player, this.parent);
          } else {
-            super.title = "Select Dialog Category";
+            this.title = "Select Dialog Category";
             this.selectCategory = true;
             Client.sendData(EnumPacketServer.DialogCategoriesGet, new Object[]{Integer.valueOf(this.dialog)});
          }
@@ -82,12 +92,12 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
       if(this.slot.selected != null && !this.slot.selected.isEmpty()) {
          if(this.selectCategory) {
             this.selectCategory = false;
-            super.title = "Select Dialog";
+            this.title = "Select Dialog";
             Client.sendData(EnumPacketServer.DialogsGet, new Object[]{this.data.get(this.slot.selected)});
          } else {
             this.dialog = ((Integer)this.data.get(this.slot.selected)).intValue();
             this.close();
-            NoppesUtil.openGUI(super.player, this.parent);
+            NoppesUtil.openGUI(this.player, this.parent);
          }
 
       }

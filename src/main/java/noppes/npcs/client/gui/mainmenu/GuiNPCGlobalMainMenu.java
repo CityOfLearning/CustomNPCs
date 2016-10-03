@@ -18,40 +18,47 @@ public class GuiNPCGlobalMainMenu extends GuiNPCInterface2 {
 
    public void initGui() {
       super.initGui();
-      int y = super.guiTop + 10;
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 85, y, "global.banks"));
-      GuiNpcButton var10001;
-      int var10004 = super.guiLeft + 85;
+      int y = this.guiTop + 10;
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 85, y, "global.banks"));
+      GuiNpcButton var10001 = new GuiNpcButton;
+      int var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(3, var10004, y, "menu.factions");
+      var10001.<init>(3, var10004, y, "menu.factions");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(4, var10004, y, "dialog.dialogs");
+      var10001.<init>(4, var10004, y, "dialog.dialogs");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(11, var10004, y, "quest.quests");
+      var10001.<init>(11, var10004, y, "quest.quests");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(12, var10004, y, "global.transport");
+      var10001.<init>(12, var10004, y, "global.transport");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(13, var10004, y, "global.playerdata");
+      var10001.<init>(13, var10004, y, "global.playerdata");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(14, var10004, y, "global.recipes");
+      var10001.<init>(14, var10004, y, "global.recipes");
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(15, var10004, y, NoppesStringUtils.translate(new Object[]{"global.naturalspawn", "(WIP)"}));
+      var10001.<init>(15, var10004, y, NoppesStringUtils.translate(new Object[]{"global.naturalspawn", "(WIP)"}));
       this.addButton(var10001);
-      var10004 = super.guiLeft + 85;
+      var10001 = new GuiNpcButton;
+      var10004 = this.guiLeft + 85;
       y += 22;
-      var10001 = new GuiNpcButton(16, var10004, y, "global.linked");
+      var10001.<init>(16, var10004, y, "global.linked");
       this.addButton(var10001);
    }
 
@@ -78,7 +85,7 @@ public class GuiNPCGlobalMainMenu extends GuiNPCInterface2 {
       }
 
       if(id == 13) {
-         NoppesUtil.openGUI(super.player, new GuiNpcManagePlayerData(super.npc, this));
+         NoppesUtil.openGUI(this.player, new GuiNpcManagePlayerData(this.npc, this));
       }
 
       if(id == 14) {
@@ -86,7 +93,7 @@ public class GuiNPCGlobalMainMenu extends GuiNPCInterface2 {
       }
 
       if(id == 15) {
-         NoppesUtil.openGUI(super.player, new GuiNpcNaturalSpawns(super.npc));
+         NoppesUtil.openGUI(this.player, new GuiNpcNaturalSpawns(this.npc));
       }
 
       if(id == 16) {

@@ -1,8 +1,5 @@
 package noppes.npcs.client;
 
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.ModContainer;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -15,9 +12,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.client.resources.NPCResourceHelper;
 import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.ModContainer;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import org.apache.commons.lang3.StringUtils;
 
 public class AssetsBrowser {
@@ -64,15 +63,17 @@ public class AssetsBrowser {
          mod = (String)var5.next();
          if(map.get(mod) instanceof FallbackResourceManager) {
             FallbackResourceManager manager = (FallbackResourceManager)map.get(mod);
-            List list = (List)ObfuscationReflectionHelper.getPrivateValue(FallbackResourceManager.class, manager, 0);
+            List list = (List)ObfuscationReflectionHelper.getPrivateValue(FallbackResourceManager.class, manager, 1);
             Iterator var9 = list.iterator();
 
             while(var9.hasNext()) {
                IResourcePack pack = (IResourcePack)var9.next();
                if(pack instanceof AbstractResourcePack) {
                   AbstractResourcePack p = (AbstractResourcePack)pack;
-                  File file = NPCResourceHelper.getPackFile(p);
-                  set.add(file.getAbsolutePath());
+                  File file = p.resourcePackFile;
+                  if(file != null) {
+                     set.add(file.getAbsolutePath());
+                  }
                }
             }
          }

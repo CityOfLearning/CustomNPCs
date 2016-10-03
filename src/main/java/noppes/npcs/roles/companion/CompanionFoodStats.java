@@ -1,12 +1,12 @@
 package noppes.npcs.roles.companion;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class CompanionFoodStats {
@@ -28,7 +28,7 @@ public class CompanionFoodStats {
    }
 
    public void onUpdate(EntityNPCInterface npc) {
-      EnumDifficulty enumdifficulty = npc.worldObj.difficultySetting;
+      EnumDifficulty enumdifficulty = npc.worldObj.getDifficulty();
       this.prevFoodLevel = this.foodLevel;
       if(this.foodExhaustionLevel > 4.0F) {
          this.foodExhaustionLevel -= 4.0F;
@@ -39,7 +39,7 @@ public class CompanionFoodStats {
          }
       }
 
-      if(npc.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && this.foodLevel >= 18 && npc.getHealth() > 0.0F && npc.getHealth() < npc.getMaxHealth()) {
+      if(npc.worldObj.getGameRules().getBoolean("naturalRegeneration") && this.foodLevel >= 18 && npc.getHealth() > 0.0F && npc.getHealth() < npc.getMaxHealth()) {
          ++this.foodTimer;
          if(this.foodTimer >= 80) {
             npc.heal(1.0F);

@@ -1,17 +1,17 @@
 package tconstruct.client.tabs;
 
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.NPCGuiHelper;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.network.play.client.C0DPacketCloseWindow;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tconstruct.client.tabs.AbstractTab;
 import tconstruct.client.tabs.InventoryTabVanilla;
 
@@ -37,8 +37,9 @@ public class TabRegistry {
          short ySize = 166;
          int guiLeft = (event.gui.width - xSize) / 2;
          int guiTop = (event.gui.height - ySize) / 2;
+         guiLeft += getPotionOffset();
          updateTabValues(guiLeft, guiTop, InventoryTabVanilla.class);
-         addTabsToList(NPCGuiHelper.getButtonList(event.gui));
+         addTabsToList(event.buttonList);
       }
 
    }
@@ -75,6 +76,27 @@ public class TabRegistry {
          }
       }
 
+   }
+
+   public static int getPotionOffset() {
+      if(!mc.thePlayer.getActivePotionEffects().isEmpty()) {
+         if(!Loader.isModLoaded("NotEnoughItems")) {
+            return 60;
+         }
+
+         try {
+            Class e = Class.forName("codechicken.nei.NEIClientConfig");
+            Object hidden = e.getMethod("isHidden", new Class[0]).invoke((Object)null, new Object[0]);
+            Object enabled = e.getMethod("isEnabled", new Class[0]).invoke((Object)null, new Object[0]);
+            if(hidden != null && hidden instanceof Boolean && enabled != null && enabled instanceof Boolean && (((Boolean)hidden).booleanValue() || !((Boolean)enabled).booleanValue())) {
+               return 60;
+            }
+         } catch (Exception var3) {
+            ;
+         }
+      }
+
+      return 0;
    }
 
 }

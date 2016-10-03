@@ -3,6 +3,7 @@ package noppes.npcs.containers;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.roles.RoleCompanion;
 
 class SlotCompanionWeapon extends Slot {
@@ -20,6 +21,6 @@ class SlotCompanionWeapon extends Slot {
    }
 
    public boolean isItemValid(ItemStack itemstack) {
-      return this.role.canWearSword(itemstack);
+      return itemstack == null?false:this.role.canWearSword(new ItemStackWrapper(itemstack));
    }
 }

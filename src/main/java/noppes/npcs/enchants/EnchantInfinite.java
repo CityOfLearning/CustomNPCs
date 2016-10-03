@@ -1,5 +1,6 @@
 package noppes.npcs.enchants;
 
+import net.minecraft.util.ResourceLocation;
 import noppes.npcs.enchants.EnchantInterface;
 import noppes.npcs.items.ItemGun;
 import noppes.npcs.items.ItemStaff;
@@ -7,7 +8,7 @@ import noppes.npcs.items.ItemStaff;
 public class EnchantInfinite extends EnchantInterface {
 
    public EnchantInfinite() {
-      super(3, new Class[]{ItemStaff.class, ItemGun.class});
+      super(3, new ResourceLocation("cnpc_infinite"), new Class[]{ItemStaff.class, ItemGun.class});
       this.setName("infinite");
    }
 

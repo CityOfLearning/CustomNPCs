@@ -1,19 +1,17 @@
 package noppes.npcs.client.model.part.tails;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import noppes.npcs.client.model.ModelMPM;
 
 public class ModelSquirrelTail extends ModelRenderer {
 
-   private ModelMPM base;
+   private ModelBiped base;
 
 
-   public ModelSquirrelTail(ModelMPM base) {
+   public ModelSquirrelTail(ModelBiped base) {
       super(base);
       this.base = base;
-      super.textureWidth = 64.0F;
-      super.textureHeight = 32.0F;
       ModelRenderer Shape1 = new ModelRenderer(base, 0, 0);
       Shape1.addBox(-1.0F, -1.0F, -1.0F, 2, 2, 3);
       Shape1.setRotationPoint(0.0F, -1.0F, 3.0F);

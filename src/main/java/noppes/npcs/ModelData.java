@@ -1,7 +1,10 @@
 package noppes.npcs;
 
+import java.lang.reflect.Method;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelDataShared;
 import noppes.npcs.controllers.PixelmonHelper;
@@ -10,35 +13,34 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class ModelData extends ModelDataShared {
 
    public EntityLivingBase getEntity(EntityNPCInterface npc) {
-      if(super.entityClass == null) {
+      if(this.entityClass == null) {
          return null;
       } else {
-         if(super.entity == null) {
+         if(this.entity == null) {
             try {
-               super.entity = (EntityLivingBase)super.entityClass.getConstructor(new Class[]{World.class}).newInstance(new Object[]{npc.worldObj});
-               super.entity.readEntityFromNBT(super.extra);
-               if(super.entity instanceof EntityLiving) {
-                  EntityLiving e = (EntityLiving)super.entity;
-                  e.setCurrentItemOrArmor(0, npc.getHeldItem() != null?npc.getHeldItem():npc.getOffHand());
-                  e.setCurrentItemOrArmor(1, npc.inventory.armorItemInSlot(3));
-                  e.setCurrentItemOrArmor(2, npc.inventory.armorItemInSlot(2));
-                  e.setCurrentItemOrArmor(3, npc.inventory.armorItemInSlot(1));
-                  e.setCurrentItemOrArmor(4, npc.inventory.armorItemInSlot(0));
-               }
+               this.entity = (EntityLivingBase)this.entityClass.getConstructor(new Class[]{World.class}).newInstance(new Object[]{npc.worldObj});
+               this.entity.readEntityFromNBT(this.extra);
+               if(this.entity instanceof EntityLiving) {
+                  EntityLiving e = (EntityLiving)this.entity;
 
-               if(PixelmonHelper.isPixelmon(super.entity) && npc.worldObj.isRemote) {
-                  if(super.extra.hasKey("Name")) {
-                     PixelmonHelper.setName(super.entity, super.extra.getString("Name"));
-                  } else {
-                     PixelmonHelper.setName(super.entity, "Abra");
+                  for(int i = 0; i < 5; ++i) {
+                     e.setCurrentItemOrArmor(0, npc.getEquipmentInSlot(i));
                   }
                }
-            } catch (Exception var3) {
+
+               if(PixelmonHelper.isPixelmon(this.entity) && npc.worldObj.isRemote) {
+                  if(this.extra.hasKey("Name")) {
+                     PixelmonHelper.setName(this.entity, this.extra.getString("Name"));
+                  } else {
+                     PixelmonHelper.setName(this.entity, "Abra");
+                  }
+               }
+            } catch (Exception var4) {
                ;
             }
          }
 
-         return super.entity;
+         return this.entity;
       }
    }
 
@@ -46,5 +48,28 @@ public class ModelData extends ModelDataShared {
       ModelData data = new ModelData();
       data.readFromNBT(this.writeToNBT());
       return data;
+   }
+
+   public void setExtra(EntityLivingBase entity, String key, String value) {
+      key = key.toLowerCase();
+      if(key.equals("breed") && EntityList.getEntityString(entity).equals("tgvstyle.Dog")) {
+         try {
+            Method e = entity.getClass().getMethod("getBreedID", new Class[0]);
+            Enum breed = (Enum)e.invoke(entity, new Object[0]);
+            e = entity.getClass().getMethod("setBreedID", new Class[]{breed.getClass()});
+            e.invoke(entity, new Object[]{((Enum[])breed.getClass().getEnumConstants())[Integer.parseInt(value)]});
+            NBTTagCompound comp = new NBTTagCompound();
+            entity.writeEntityToNBT(comp);
+            this.extra.setString("EntityData21", comp.getString("EntityData21"));
+         } catch (Exception var7) {
+            var7.printStackTrace();
+         }
+      }
+
+      if(key.equalsIgnoreCase("name") && PixelmonHelper.isPixelmon(entity)) {
+         this.extra.setString("Name", value);
+      }
+
+      this.clearEntity();
    }
 }

@@ -14,6 +14,6 @@ public class ItemNpcBlock extends ItemBlock {
    }
 
    public String getUnlocalizedName(ItemStack par1ItemStack) {
-      return this.names != null && par1ItemStack.getMetadata() < this.names.length?this.names[par1ItemStack.getMetadata()]:super.blockInstance.getUnlocalizedName();
+      return this.names != null && par1ItemStack.getItemDamage() < this.names.length?this.names[par1ItemStack.getItemDamage()]:this.block.getUnlocalizedName();
    }
 }

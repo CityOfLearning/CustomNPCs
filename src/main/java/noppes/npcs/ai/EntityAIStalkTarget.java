@@ -2,6 +2,7 @@ package noppes.npcs.ai;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -11,71 +12,62 @@ import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIStalkTarget extends EntityAIBase {
 
-   private EntityNPCInterface theEntity;
+   private EntityNPCInterface npc;
    private EntityLivingBase targetEntity;
    private Vec3 movePosition;
-   private double distance;
    private boolean overRide;
    private World theWorld;
    private int delay;
    private int tick = 0;
 
 
-   public EntityAIStalkTarget(EntityNPCInterface par1EntityCreature, double par2) {
-      this.theEntity = par1EntityCreature;
+   public EntityAIStalkTarget(EntityNPCInterface par1EntityCreature) {
+      this.npc = par1EntityCreature;
       this.theWorld = par1EntityCreature.worldObj;
-      this.distance = par2 * par2;
       this.overRide = false;
       this.delay = 0;
       this.setMutexBits(AiMutex.PASSIVE + AiMutex.LOOK);
    }
 
    public boolean shouldExecute() {
-      this.targetEntity = this.theEntity.getAttackTarget();
-      if(this.targetEntity == null) {
-         return false;
-      } else if(this.tick > 0) {
-         --this.tick;
-         return false;
-      } else {
-         return this.targetEntity.getDistanceSqToEntity(this.theEntity) > this.distance;
-      }
+      this.targetEntity = this.npc.getAttackTarget();
+      return this.targetEntity != null && this.tick-- <= 0?!this.npc.isInRange(this.targetEntity, (double)this.npc.ai.getTacticalRange()):false;
    }
 
    public void resetTask() {
-      this.theEntity.getNavigator().clearPathEntity();
-      if(this.theEntity.getAttackTarget() == null && this.targetEntity != null) {
-         this.theEntity.setAttackTarget(this.targetEntity);
+      this.npc.getNavigator().clearPathEntity();
+      if(this.npc.getAttackTarget() == null && this.targetEntity != null) {
+         this.npc.setAttackTarget(this.targetEntity);
       }
 
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(false);
+      if(this.npc.getRangedTask() != null) {
+         this.npc.getRangedTask().navOverride(false);
       }
 
    }
 
    public void startExecuting() {
-      if(this.theEntity.getRangedTask() != null) {
-         this.theEntity.getRangedTask().navOverride(true);
+      if(this.npc.getRangedTask() != null) {
+         this.npc.getRangedTask().navOverride(true);
       }
 
    }
 
    public void updateTask() {
-      this.theEntity.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
-      if(this.theEntity.getNavigator().noPath() || this.overRide) {
+      this.npc.getLookHelper().setLookPositionWithEntity(this.targetEntity, 30.0F, 30.0F);
+      if(this.npc.getNavigator().noPath() || this.overRide) {
          if(this.isLookingAway()) {
             this.movePosition = this.stalkTarget();
             if(this.movePosition != null) {
-               this.theEntity.getNavigator().tryMoveToXYZ(this.movePosition.xCoord, this.movePosition.yCoord, this.movePosition.zCoord, 1.0D);
+               this.npc.getNavigator().tryMoveToXYZ(this.movePosition.xCoord, this.movePosition.yCoord, this.movePosition.zCoord, 1.0D);
                this.overRide = false;
             } else {
                this.tick = 100;
             }
-         } else if(this.theEntity.canSee(this.targetEntity)) {
+         } else if(this.npc.canSee(this.targetEntity)) {
             this.movePosition = this.hideFromTarget();
             if(this.movePosition != null) {
-               this.theEntity.getNavigator().tryMoveToXYZ(this.movePosition.xCoord, this.movePosition.yCoord, this.movePosition.zCoord, 1.33D);
+               this.npc.getNavigator().tryMoveToXYZ(this.movePosition.xCoord, this.movePosition.yCoord, this.movePosition.zCoord, 1.33D);
                this.overRide = false;
             } else {
                this.tick = 100;
@@ -87,7 +79,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
          --this.delay;
       }
 
-      if(!this.isLookingAway() && this.theEntity.canSee(this.targetEntity) && this.delay == 0) {
+      if(!this.isLookingAway() && this.npc.canSee(this.targetEntity) && this.delay == 0) {
          this.overRide = true;
          this.delay = 60;
       }
@@ -118,7 +110,7 @@ public class EntityAIStalkTarget extends EntityAIBase {
 
    private Vec3 findSecludedXYZ(int radius, boolean nearest) {
       Vec3 idealPos = null;
-      double dist = this.targetEntity.getDistanceSqToEntity(this.theEntity);
+      double dist = this.targetEntity.getDistanceSqToEntity(this.npc);
       double u = 0.0D;
       double v = 0.0D;
       double w = 0.0D;
@@ -129,19 +121,22 @@ public class EntityAIStalkTarget extends EntityAIBase {
       }
 
       for(int y = -2; y <= 2; ++y) {
+         double k = (double)MathHelper.floor_double(this.npc.getEntityBoundingBox().minY + (double)y);
+
          for(int x = -radius; x <= radius; ++x) {
+            double j = (double)MathHelper.floor_double(this.npc.posX + (double)x) + 0.5D;
+
             for(int z = -radius; z <= radius; ++z) {
-               double j = (double)MathHelper.floor_double(this.theEntity.posX + (double)x) + 0.5D;
-               double k = (double)MathHelper.floor_double(this.theEntity.boundingBox.minY + (double)y);
-               double l = (double)MathHelper.floor_double(this.theEntity.posZ + (double)z) + 0.5D;
-               if(this.theWorld.getBlock((int)j, (int)k, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 1, (int)l).isOpaqueCube() && !this.theWorld.getBlock((int)j, (int)k + 2, (int)l).isOpaqueCube()) {
-                  Vec3 vec1 = Vec3.createVectorHelper(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
-                  Vec3 vec2 = Vec3.createVectorHelper(j, k + (double)this.theEntity.getEyeHeight(), l);
+               double l = (double)MathHelper.floor_double(this.npc.posZ + (double)z) + 0.5D;
+               BlockPos pos = new BlockPos(j, k, l);
+               if(this.isOpaque(pos) && !this.isOpaque(pos.up()) && !this.isOpaque(pos.up(2))) {
+                  Vec3 vec1 = new Vec3(this.targetEntity.posX, this.targetEntity.posY + (double)this.targetEntity.getEyeHeight(), this.targetEntity.posZ);
+                  Vec3 vec2 = new Vec3(j, k + (double)this.npc.getEyeHeight(), l);
                   MovingObjectPosition movingobjectposition = this.theWorld.rayTraceBlocks(vec1, vec2);
                   if(movingobjectposition != null) {
                      boolean weight = nearest?this.targetEntity.getDistanceSq(j, k, l) <= dist:true;
                      if(weight && (j != u || k != v || l != w)) {
-                        idealPos = Vec3.createVectorHelper(j, k, l);
+                        idealPos = new Vec3(j, k, l);
                         if(nearest) {
                            dist = this.targetEntity.getDistanceSq(j, k, l);
                         }
@@ -155,9 +150,13 @@ public class EntityAIStalkTarget extends EntityAIBase {
       return idealPos;
    }
 
+   private boolean isOpaque(BlockPos pos) {
+      return this.theWorld.getBlockState(pos).getBlock().isOpaqueCube();
+   }
+
    private boolean isLookingAway() {
       Vec3 vec3 = this.targetEntity.getLook(1.0F).normalize();
-      Vec3 vec31 = Vec3.createVectorHelper(this.theEntity.posX - this.targetEntity.posX, this.theEntity.boundingBox.minY + (double)(this.theEntity.height / 2.0F) - (this.targetEntity.posY + (double)this.targetEntity.getEyeHeight()), this.theEntity.posZ - this.targetEntity.posZ);
+      Vec3 vec31 = new Vec3(this.npc.posX - this.targetEntity.posX, this.npc.getEntityBoundingBox().minY + (double)(this.npc.height / 2.0F) - (this.targetEntity.posY + (double)this.targetEntity.getEyeHeight()), this.npc.posZ - this.targetEntity.posZ);
       double d0 = vec31.lengthVector();
       vec31 = vec31.normalize();
       double d1 = vec3.dotProduct(vec31);

@@ -6,18 +6,22 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import net.minecraft.entity.EntityList;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.CustomNpcs;
+import net.minecraft.util.MathHelper;
+import noppes.npcs.NoppesUtilServer;
+import noppes.npcs.api.NpcAPI;
+import noppes.npcs.api.entity.IEntityLivingBase;
+import noppes.npcs.api.entity.data.role.IJobSpawner;
 import noppes.npcs.controllers.PixelmonHelper;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobInterface;
 import org.apache.commons.lang3.RandomStringUtils;
 
-public class JobSpawner extends JobInterface {
+public class JobSpawner extends JobInterface implements IJobSpawner {
 
    public NBTTagCompound compound6;
    public NBTTagCompound compound5;
@@ -142,12 +146,12 @@ public class JobSpawner extends JobInterface {
    public void aiUpdateTask() {
       if(this.spawned.isEmpty()) {
          if(this.spawnType == 0 && this.spawnEntity(this.number + 1) == null && !this.doesntDie) {
-            super.npc.setDead();
+            this.npc.setDead();
          }
 
          if(this.spawnType == 1) {
             if(this.number >= 6 && !this.doesntDie) {
-               super.npc.setDead();
+               this.npc.setDead();
             } else {
                this.spawnEntity(this.compound1);
                this.spawnEntity(this.compound2);
@@ -186,10 +190,10 @@ public class JobSpawner extends JobInterface {
             }
 
             if(!list.isEmpty()) {
-               NBTTagCompound compound = (NBTTagCompound)list.get(super.npc.getRNG().nextInt(list.size()));
+               NBTTagCompound compound = (NBTTagCompound)list.get(this.npc.getRNG().nextInt(list.size()));
                this.spawnEntity(compound);
             } else if(!this.doesntDie) {
-               super.npc.setDead();
+               this.npc.setDead();
             }
          }
       } else {
@@ -216,21 +220,21 @@ public class JobSpawner extends JobInterface {
    public void checkTarget(EntityLivingBase entity) {
       if(entity instanceof EntityLiving) {
          EntityLiving liv = (EntityLiving)entity;
-         if(liv.getAttackTarget() == null || super.npc.getRNG().nextInt(100) == 1) {
+         if(liv.getAttackTarget() == null || this.npc.getRNG().nextInt(100) == 1) {
             liv.setAttackTarget(this.target);
          }
-      } else if(entity.getAITarget() == null || super.npc.getRNG().nextInt(100) == 1) {
+      } else if(entity.getAITarget() == null || this.npc.getRNG().nextInt(100) == 1) {
          entity.setRevengeTarget(this.target);
       }
 
    }
 
    public boolean shouldDelete(EntityLivingBase entity) {
-      return super.npc.getDistanceToEntity(entity) > 60.0F || entity.isDead || entity.getHealth() <= 0.0F || CustomNpcs.PixelMonEnabled && !PixelmonHelper.isBattling(entity) || this.despawnOnTargetLost && this.getTarget(super.npc) == null;
+      return !this.npc.isInRange(entity, 60.0D) || entity.isDead || entity.getHealth() <= 0.0F || PixelmonHelper.Enabled && this.hasPixelmon() && !PixelmonHelper.isBattling(entity) || this.despawnOnTargetLost && this.getTarget(this.npc) == null;
    }
 
    private EntityLivingBase getTarget() {
-      EntityLivingBase target = this.getTarget(super.npc);
+      EntityLivingBase target = this.getTarget(this.npc);
       if(target != null) {
          return target;
       } else {
@@ -268,11 +272,11 @@ public class JobSpawner extends JobInterface {
    private void setTarget(EntityLivingBase base, EntityLivingBase target) {
       if(PixelmonHelper.isTrainer(base) && target instanceof EntityPlayerMP) {
          EntityPlayerMP player = (EntityPlayerMP)target;
-         if(!PixelmonHelper.canBattle(player, super.npc)) {
+         if(!PixelmonHelper.canBattle(player, this.npc)) {
             return;
          }
 
-         this.cooldown.put(player.getCommandSenderName(), Long.valueOf(System.currentTimeMillis()));
+         this.cooldown.put(player.getName(), Long.valueOf(System.currentTimeMillis()));
          Iterator ita = this.cooldown.entrySet().iterator();
 
          while(ita.hasNext()) {
@@ -290,9 +294,9 @@ public class JobSpawner extends JobInterface {
    }
 
    public boolean aiShouldExecute() {
-      if(!this.isEmpty() && !super.npc.isKilled()) {
+      if(!this.isEmpty() && !this.npc.isKilled()) {
          this.target = this.getTarget();
-         if(super.npc.getRNG().nextInt(30) == 1 && this.spawned.isEmpty()) {
+         if(this.npc.getRNG().nextInt(30) == 1 && this.spawned.isEmpty()) {
             this.spawned = this.getNearbySpawned();
          }
 
@@ -318,7 +322,7 @@ public class JobSpawner extends JobInterface {
       this.number = 0;
 
       EntityLivingBase entity;
-      for(Iterator var1 = this.spawned.iterator(); var1.hasNext(); this.setTarget(entity, super.npc.getAttackTarget())) {
+      for(Iterator var1 = this.spawned.iterator(); var1.hasNext(); this.setTarget(entity, this.npc.getAttackTarget())) {
          entity = (EntityLivingBase)var1.next();
          int i = entity.getEntityData().getInteger("NpcSpawnerNr");
          if(i > this.number) {
@@ -347,30 +351,28 @@ public class JobSpawner extends JobInterface {
       this.reset();
    }
 
-   public EntityLivingBase spawnEntity(int i) {
-      NBTTagCompound compound = this.getCompound(i);
-      return compound == null?null:this.spawnEntity(compound);
-   }
-
    private EntityLivingBase spawnEntity(NBTTagCompound compound) {
       if(compound != null && compound.hasKey("id")) {
-         EntityLivingBase entity = (EntityLivingBase)EntityList.createEntityFromNBT(compound, super.npc.worldObj);
-         if(entity == null) {
-            return null;
-         } else {
-            entity.getEntityData().setString("NpcSpawnerId", this.id);
-            entity.getEntityData().setInteger("NpcSpawnerNr", this.number);
-            this.setTarget(entity, super.npc.getAttackTarget());
-            entity.setPosition(super.npc.posX + (double)this.xOffset - 0.5D + (double)entity.getRNG().nextFloat(), super.npc.posY + (double)this.yOffset, super.npc.posZ + (double)this.zOffset - 0.5D + (double)entity.getRNG().nextFloat());
-            if(entity instanceof EntityNPCInterface) {
-               EntityNPCInterface snpc = (EntityNPCInterface)entity;
+         double x = this.npc.posX + (double)this.xOffset - 0.5D + (double)this.npc.getRNG().nextFloat();
+         double y = this.npc.posY + (double)this.yOffset;
+         double z = this.npc.posZ + (double)this.zOffset - 0.5D + (double)this.npc.getRNG().nextFloat();
+         Entity entity = NoppesUtilServer.spawnClone(compound, MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z), this.npc.worldObj);
+         if(entity != null && entity instanceof EntityLivingBase) {
+            EntityLivingBase living = (EntityLivingBase)entity;
+            living.getEntityData().setString("NpcSpawnerId", this.id);
+            living.getEntityData().setInteger("NpcSpawnerNr", this.number);
+            this.setTarget(living, this.npc.getAttackTarget());
+            living.setPosition(x, y, z);
+            if(living instanceof EntityNPCInterface) {
+               EntityNPCInterface snpc = (EntityNPCInterface)living;
                snpc.stats.spawnCycle = 3;
                snpc.ai.returnToStart = false;
             }
 
-            super.npc.worldObj.spawnEntityInWorld(entity);
-            this.spawned.add(entity);
-            return entity;
+            this.spawned.add(living);
+            return living;
+         } else {
+            return null;
          }
       } else {
          return null;
@@ -403,7 +405,7 @@ public class JobSpawner extends JobInterface {
 
    private List getNearbySpawned() {
       ArrayList spawnList = new ArrayList();
-      List list = super.npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, super.npc.boundingBox.expand(40.0D, 40.0D, 40.0D));
+      List list = this.npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.npc.getEntityBoundingBox().expand(40.0D, 40.0D, 40.0D));
       Iterator var3 = list.iterator();
 
       while(var3.hasNext()) {
@@ -423,5 +425,28 @@ public class JobSpawner extends JobInterface {
          long time = ((Long)this.cooldown.get(name)).longValue();
          return System.currentTimeMillis() < time + 1200000L;
       }
+   }
+
+   public boolean hasPixelmon() {
+      return this.compound1 != null && this.compound1.getString("id").equals("pixelmontainer");
+   }
+
+   public IEntityLivingBase spawnEntity(int i) {
+      NBTTagCompound compound = this.getCompound(i + 1);
+      if(compound == null) {
+         return null;
+      } else {
+         EntityLivingBase base = this.spawnEntity(compound);
+         return base == null?null:(IEntityLivingBase)NpcAPI.Instance().getIEntity(base);
+      }
+   }
+
+   public void removeAllSpawned() {
+      EntityLivingBase entity;
+      for(Iterator var1 = this.spawned.iterator(); var1.hasNext(); entity.isDead = true) {
+         entity = (EntityLivingBase)var1.next();
+      }
+
+      this.spawned = new ArrayList();
    }
 }

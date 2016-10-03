@@ -1,11 +1,7 @@
 package noppes.npcs.client;
 
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
-import java.io.File;
-import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.FolderResourcePack;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -13,7 +9,7 @@ import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.LogWriter;
+import noppes.npcs.client.TextureCache;
 
 public class CustomNpcResourceListener implements IResourceManagerReloadListener {
 
@@ -22,7 +18,7 @@ public class CustomNpcResourceListener implements IResourceManagerReloadListener
 
    public void onResourceManagerReload(IResourceManager var1) {
       if(var1 instanceof SimpleReloadableResourceManager) {
-         this.createTextureCache(new File(CustomNpcs.Dir, "assets/customnpcs/textures/cache"));
+         this.createTextureCache();
          SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager)var1;
          FolderResourcePack pack = new FolderResourcePack(CustomNpcs.Dir);
          simplemanager.reloadResourcePack(pack);
@@ -36,44 +32,32 @@ public class CustomNpcResourceListener implements IResourceManagerReloadListener
 
    }
 
-   private void createTextureCache(File dir) {
-      if(dir != null) {
-         this.enlargeTexture("planks_oak", dir);
-         this.enlargeTexture("planks_big_oak", dir);
-         this.enlargeTexture("planks_birch", dir);
-         this.enlargeTexture("planks_jungle", dir);
-         this.enlargeTexture("planks_spruce", dir);
-         this.enlargeTexture("planks_acacia", dir);
-         this.enlargeTexture("iron_block", dir);
-         this.enlargeTexture("diamond_block", dir);
-         this.enlargeTexture("stone", dir);
-         this.enlargeTexture("gold_block", dir);
-         this.enlargeTexture("wool_colored_white", dir);
-      }
+   private void createTextureCache() {
+      this.enlargeTexture("planks_oak");
+      this.enlargeTexture("planks_big_oak");
+      this.enlargeTexture("planks_birch");
+      this.enlargeTexture("planks_jungle");
+      this.enlargeTexture("planks_spruce");
+      this.enlargeTexture("planks_acacia");
+      this.enlargeTexture("iron_block");
+      this.enlargeTexture("diamond_block");
+      this.enlargeTexture("stone");
+      this.enlargeTexture("gold_block");
+      this.enlargeTexture("wool_colored_white");
    }
 
-   private void enlargeTexture(String texture, File dir) {
-      try {
-         IResourceManager e = Minecraft.getMinecraft().getResourceManager();
-         ResourceLocation location = new ResourceLocation("textures/blocks/" + texture + ".png");
-         BufferedImage bufferedimage = ImageIO.read(e.getResource(location).getInputStream());
-         int i = bufferedimage.getWidth();
-         int j = bufferedimage.getHeight();
-         BufferedImage image = new BufferedImage(i * 4, j * 2, 1);
-         Graphics g = image.getGraphics();
-         g.drawImage(bufferedimage, 0, 0, (ImageObserver)null);
-         g.drawImage(bufferedimage, i, 0, (ImageObserver)null);
-         g.drawImage(bufferedimage, i * 2, 0, (ImageObserver)null);
-         g.drawImage(bufferedimage, i * 3, 0, (ImageObserver)null);
-         g.drawImage(bufferedimage, 0, i, (ImageObserver)null);
-         g.drawImage(bufferedimage, i, j, (ImageObserver)null);
-         g.drawImage(bufferedimage, i * 2, j, (ImageObserver)null);
-         g.drawImage(bufferedimage, i * 3, j, (ImageObserver)null);
-         ImageIO.write(image, "png", new File(dir, texture + ".png"));
-      } catch (Exception var10) {
-         LogWriter.error("Failed caching texture: " + texture, var10);
-      }
+   private void enlargeTexture(String texture) {
+      TextureManager manager = Minecraft.getMinecraft().getTextureManager();
+      if(manager != null) {
+         ResourceLocation location = new ResourceLocation("customnpcs:textures/cache/" + texture + ".png");
+         TextureCache ob = (TextureCache)manager.getTexture(location);
+         if(ob == null) {
+            ob = new TextureCache(location);
+            manager.loadTexture(location, ob);
+         }
 
+         ob.setImage(new ResourceLocation("textures/blocks/" + texture + ".png"));
+      }
    }
 
 }

@@ -124,13 +124,13 @@ public class JobItemGiver extends JobInterface {
                   }
                }
             } else if(this.isRandomGiver()) {
-               toGive.add(((ItemStack)items.get(super.npc.worldObj.rand.nextInt(items.size()))).copy());
+               toGive.add(((ItemStack)items.get(this.npc.worldObj.rand.nextInt(items.size()))).copy());
             } else if(this.isGiverWhenNotOwnedAny()) {
                boolean var9 = false;
-               Iterator var11 = items.iterator();
+               Iterator var10 = items.iterator();
 
-               while(var11.hasNext()) {
-                  ItemStack is = (ItemStack)var11.next();
+               while(var10.hasNext()) {
+                  ItemStack is = (ItemStack)var10.next();
                   if(this.playerHasItem(player, is.getItem())) {
                      var9 = true;
                      break;
@@ -143,12 +143,12 @@ public class JobItemGiver extends JobInterface {
 
                toGive = items;
             } else if(this.isChainedGiver()) {
-               int var10 = data.getItemIndex(this);
+               int var11 = data.getItemIndex(this);
                int var12 = 0;
 
                for(Iterator var13 = this.inventory.items.values().iterator(); var13.hasNext(); ++var12) {
                   ItemStack item = (ItemStack)var13.next();
-                  if(var12 == var10) {
+                  if(var12 == var11) {
                      toGive.add(item);
                      break;
                   }
@@ -159,7 +159,7 @@ public class JobItemGiver extends JobInterface {
                return false;
             } else if(this.givePlayerItems(player, toGive)) {
                if(!this.lines.isEmpty()) {
-                  super.npc.say(player, new Line((String)this.lines.get(super.npc.getRNG().nextInt(this.lines.size()))));
+                  this.npc.say(player, new Line((String)this.lines.get(this.npc.getRNG().nextInt(this.lines.size()))));
                }
 
                if(this.isDaily()) {
@@ -181,7 +181,7 @@ public class JobItemGiver extends JobInterface {
    }
 
    private int getDay() {
-      return (int)(super.npc.worldObj.getTotalWorldTime() / 24000L);
+      return (int)(this.npc.worldObj.getTotalWorldTime() / 24000L);
    }
 
    private boolean canPlayerInteract(PlayerItemGiverData data) {
@@ -198,7 +198,7 @@ public class JobItemGiver extends JobInterface {
 
          while(var3.hasNext()) {
             ItemStack is = (ItemStack)var3.next();
-            super.npc.givePlayerItem(player, is);
+            this.npc.givePlayerItem(player, is);
          }
 
          return true;
@@ -279,7 +279,7 @@ public class JobItemGiver extends JobInterface {
    }
 
    public boolean aiShouldExecute() {
-      if(super.npc.isAttacking()) {
+      if(this.npc.isAttacking()) {
          return false;
       } else {
          --this.ticks;
@@ -287,9 +287,9 @@ public class JobItemGiver extends JobInterface {
             return false;
          } else {
             this.ticks = 10;
-            this.toCheck = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(3.0D, 3.0D, 3.0D));
+            this.toCheck = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(3.0D, 3.0D, 3.0D));
             this.toCheck.removeAll(this.recentlyChecked);
-            List listMax = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(10.0D, 10.0D, 10.0D));
+            List listMax = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(10.0D, 10.0D, 10.0D));
             this.recentlyChecked.retainAll(listMax);
             this.recentlyChecked.addAll(this.toCheck);
             return this.toCheck.size() > 0;
@@ -297,12 +297,16 @@ public class JobItemGiver extends JobInterface {
       }
    }
 
+   public boolean aiContinueExecute() {
+      return false;
+   }
+
    public void aiStartExecuting() {
       Iterator var1 = this.toCheck.iterator();
 
       while(var1.hasNext()) {
          EntityPlayer player = (EntityPlayer)var1.next();
-         if(super.npc.canSee(player) && this.availability.isAvailable(player)) {
+         if(this.npc.canSee(player) && this.availability.isAvailable(player)) {
             this.recentlyChecked.add(player);
             this.interact(player);
          }
@@ -314,7 +318,7 @@ public class JobItemGiver extends JobInterface {
 
    private boolean interact(EntityPlayer player) {
       if(!this.giveItems(player)) {
-         super.npc.say(player, super.npc.advanced.getInteractLine());
+         this.npc.say(player, this.npc.advanced.getInteractLine());
       }
 
       return true;

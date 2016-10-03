@@ -1,9 +1,7 @@
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
-import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,7 +10,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockTrigger;
@@ -26,18 +25,18 @@ public class BlockPedestal extends BlockTrigger {
       super(Blocks.stone);
    }
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+   public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
       if(par1World.isRemote) {
          return true;
       } else {
-         TilePedestal tile = (TilePedestal)par1World.getTileEntity(i, j, k);
+         TilePedestal tile = (TilePedestal)par1World.getTileEntity(pos);
          ItemStack item = player.getCurrentEquippedItem();
          ItemStack weapon = tile.getStackInSlot(0);
          if(item == null && weapon != null) {
             tile.setInventorySlotContents(0, (ItemStack)null);
             player.inventory.setInventorySlotContents(player.inventory.currentItem, weapon);
-            par1World.markBlockForUpdate(i, j, k);
-            this.updateSurrounding(par1World, i, j, k);
+            par1World.markBlockForUpdate(pos);
+            this.updateSurrounding(par1World, pos);
          } else {
             if(item == null || item.getItem() == null || !(item.getItem() instanceof ItemSword)) {
                return true;
@@ -46,8 +45,8 @@ public class BlockPedestal extends BlockTrigger {
             if(item != null && weapon == null) {
                tile.setInventorySlotContents(0, item);
                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
-               par1World.markBlockForUpdate(i, j, k);
-               this.updateSurrounding(par1World, i, j, k);
+               par1World.markBlockForUpdate(pos);
+               this.updateSurrounding(par1World, pos);
             }
          }
 
@@ -63,14 +62,14 @@ public class BlockPedestal extends BlockTrigger {
       par3List.add(new ItemStack(par1, 1, 4));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      TileEntity tileentity = world.getTileEntity(x, y, z);
+   public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+      TileEntity tileentity = world.getTileEntity(pos);
       if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
+         super.setBlockBoundsBasedOnState(world, pos);
       } else {
          TileColorable tile = (TileColorable)tileentity;
          if(tile.rotation % 2 == 0) {
@@ -82,27 +81,21 @@ public class BlockPedestal extends BlockTrigger {
       }
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-   }
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int p_149691_1_, int meta) {
-      meta %= 7;
-      return meta == 1?Blocks.stone.getIcon(p_149691_1_, 0):(meta == 2?Blocks.iron_block.getIcon(p_149691_1_, 0):(meta == 3?Blocks.gold_block.getIcon(p_149691_1_, 0):(meta == 4?Blocks.diamond_block.getIcon(p_149691_1_, 0):Blocks.planks.getIcon(p_149691_1_, 0))));
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      super.onBlockPlacedBy(world, pos, state, entity, stack);
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {
       return new TilePedestal();
    }
 
-   public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_) {
-      TileNpcContainer tile = (TileNpcContainer)world.getTileEntity(x, y, z);
+   public void breakBlock(World world, BlockPos pos, IBlockState state) {
+      TileNpcContainer tile = (TileNpcContainer)world.getTileEntity(pos);
       if(tile != null) {
-         tile.dropItems(world, x, y, z);
-         world.updateNeighborsAboutBlockChange(x, y, z, block);
-         super.breakBlock(world, x, y, z, block, p_149749_6_);
+         tile.dropItems(world, pos);
+         world.updateComparatorOutputLevel(pos, state.getBlock());
+         super.breakBlock(world, pos, state);
       }
    }
 }

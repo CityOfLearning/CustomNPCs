@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.IChatComponent;
 import noppes.npcs.NBTTags;
 import noppes.npcs.NoppesUtilPlayer;
 
@@ -79,7 +80,7 @@ public class NpcMiscInventory implements IInventory {
       return true;
    }
 
-   public ItemStack getStackInSlotOnClosing(int var1) {
+   public ItemStack removeStackFromSlot(int var1) {
       if(this.items.get(Integer.valueOf(var1)) != null) {
          ItemStack var3 = (ItemStack)this.items.get(Integer.valueOf(var1));
          this.items.put(Integer.valueOf(var1), (Object)null);
@@ -107,19 +108,7 @@ public class NpcMiscInventory implements IInventory {
       return true;
    }
 
-   public String getInventoryName() {
-      return "Npc Misc Inventory";
-   }
-
-   public boolean isCustomInventoryName() {
-      return true;
-   }
-
    public void markDirty() {}
-
-   public void openChest() {}
-
-   public void closeChest() {}
 
    public boolean addItemStack(ItemStack item) {
       boolean merged = false;
@@ -180,4 +169,32 @@ public class NpcMiscInventory implements IInventory {
    public void setSize(int i) {
       this.size = i;
    }
+
+   public String getName() {
+      return "Npc Misc Inventory";
+   }
+
+   public boolean hasCustomName() {
+      return true;
+   }
+
+   public IChatComponent getDisplayName() {
+      return null;
+   }
+
+   public void openInventory(EntityPlayer player) {}
+
+   public void closeInventory(EntityPlayer player) {}
+
+   public int getField(int id) {
+      return 0;
+   }
+
+   public void setField(int id, int value) {}
+
+   public int getFieldCount() {
+      return 0;
+   }
+
+   public void clear() {}
 }

@@ -1,8 +1,8 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item.ToolMaterial;
 import noppes.npcs.items.ItemNpcWeaponInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemDagger extends ItemNpcWeaponInterface {
 
@@ -11,7 +11,7 @@ public class ItemDagger extends ItemNpcWeaponInterface {
    }
 
    public void renderSpecial() {
-      GL11.glScalef(0.6F, 0.6F, 0.6F);
-      GL11.glTranslatef(0.14F, 0.22F, 0.06F);
+      GlStateManager.scale(0.6F, 0.6F, 0.6F);
+      GlStateManager.translate(0.14F, 0.22F, 0.06F);
    }
 }

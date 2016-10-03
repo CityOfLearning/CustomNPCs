@@ -1,17 +1,12 @@
 package noppes.npcs.client.renderer.blocks;
 
-import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.IBlockAccess;
 
-public abstract class BlockRendererInterface extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler {
+public abstract class BlockRendererInterface extends TileEntitySpecialRenderer {
 
    protected static final ResourceLocation Stone = new ResourceLocation("customnpcs", "textures/cache/stone.png");
    protected static final ResourceLocation Iron = new ResourceLocation("customnpcs", "textures/cache/iron_block.png");
@@ -24,23 +19,14 @@ public abstract class BlockRendererInterface extends TileEntitySpecialRenderer i
    protected static final ResourceLocation PlanksAcacia = new ResourceLocation("customnpcs", "textures/cache/planks_acacia.png");
    protected static final ResourceLocation PlanksJungle = new ResourceLocation("customnpcs", "textures/cache/planks_jungle.png");
    protected static final ResourceLocation Steel = new ResourceLocation("customnpcs", "textures/models/Steel.png");
-   protected static final RenderItem renderer = new RenderItem();
    public static float[][] colorTable = new float[][]{{1.0F, 1.0F, 1.0F}, {0.95F, 0.7F, 0.2F}, {0.9F, 0.5F, 0.85F}, {0.6F, 0.7F, 0.95F}, {0.9F, 0.9F, 0.2F}, {0.5F, 0.8F, 0.1F}, {0.95F, 0.7F, 0.8F}, {0.3F, 0.3F, 0.3F}, {0.6F, 0.6F, 0.6F}, {0.3F, 0.6F, 0.7F}, {0.7F, 0.4F, 0.9F}, {0.2F, 0.4F, 0.8F}, {0.5F, 0.4F, 0.3F}, {0.4F, 0.5F, 0.2F}, {0.8F, 0.3F, 0.3F}, {0.1F, 0.1F, 0.1F}};
 
 
-   public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
-      return false;
-   }
-
-   public boolean shouldRender3DInInventory(int modelId) {
-      return true;
-   }
-
    public boolean playerTooFar(TileEntity tile) {
       Minecraft mc = Minecraft.getMinecraft();
-      double d6 = mc.renderViewEntity.posX - (double)tile.xCoord;
-      double d7 = mc.renderViewEntity.posY - (double)tile.yCoord;
-      double d8 = mc.renderViewEntity.posZ - (double)tile.zCoord;
+      double d6 = mc.getRenderViewEntity().posX - (double)tile.getPos().getX();
+      double d7 = mc.getRenderViewEntity().posY - (double)tile.getPos().getY();
+      double d8 = mc.getRenderViewEntity().posZ - (double)tile.getPos().getZ();
       return d6 * d6 + d7 * d7 + d8 * d8 > (double)(this.specialRenderDistance() * this.specialRenderDistance());
    }
 

@@ -27,21 +27,21 @@ public class GuiNpcFollowerJob extends GuiNPCInterface2 implements ICustomScroll
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(1, "gui.name", super.guiLeft + 6, super.guiTop + 110));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 50, super.guiTop + 105, 200, 20, this.job.name));
+      this.addLabel(new GuiNpcLabel(1, "gui.name", this.guiLeft + 6, this.guiTop + 110));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 50, this.guiTop + 105, 200, 20, this.job.name));
       this.scroll = new GuiCustomScroll(this, 0);
       this.scroll.setSize(143, 208);
-      this.scroll.guiLeft = super.guiLeft + 268;
-      this.scroll.guiTop = super.guiTop + 4;
+      this.scroll.guiLeft = this.guiLeft + 268;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
       ArrayList names = new ArrayList();
-      List list = super.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, super.npc.boundingBox.expand(40.0D, 40.0D, 40.0D));
+      List list = this.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, this.npc.getEntityBoundingBox().expand(40.0D, 40.0D, 40.0D));
       Iterator var3 = list.iterator();
 
       while(var3.hasNext()) {
          EntityNPCInterface npc = (EntityNPCInterface)var3.next();
-         if(npc != super.npc && !names.contains(npc.display.name)) {
-            names.add(npc.display.name);
+         if(npc != this.npc && !names.contains(npc.display.getName())) {
+            names.add(npc.display.getName());
          }
       }
 

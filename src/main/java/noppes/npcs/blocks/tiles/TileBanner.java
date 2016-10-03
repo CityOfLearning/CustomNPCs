@@ -25,7 +25,7 @@ public class TileBanner extends TileColorable {
    }
 
    public AxisAlignedBB getRenderBoundingBox() {
-      return AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 2), (double)(super.zCoord + 1));
+      return new AxisAlignedBB((double)this.pos.getX(), (double)this.pos.getY(), (double)this.pos.getZ(), (double)(this.pos.getX() + 1), (double)(this.pos.getY() + 2), (double)(this.pos.getZ() + 1));
    }
 
    public boolean canEdit() {

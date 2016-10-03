@@ -25,9 +25,10 @@ public enum EnumPlayerPacket {
    SaveBook("SaveBook", 19),
    CompanionOpenInv("CompanionOpenInv", 20),
    RoleGet("RoleGet", 21),
-   CompanionTalentExp("CompanionTalentExp", 22);
+   CompanionTalentExp("CompanionTalentExp", 22),
+   TradeAccept("TradeAccept", 23);
    // $FF: synthetic field
-   private static final EnumPlayerPacket[] $VALUES = new EnumPlayerPacket[]{FollowerHire, FollowerExtend, Trader, FollowerState, Transport, BankUnlock, BankUpgrade, Dialog, QuestLog, QuestCompletion, CheckQuestCompletion, BankSlotOpen, FactionsGet, MailGet, MailDelete, MailSend, MailRead, MailboxOpenMail, SignSave, SaveBook, CompanionOpenInv, RoleGet, CompanionTalentExp};
+   private static final EnumPlayerPacket[] $VALUES = new EnumPlayerPacket[]{FollowerHire, FollowerExtend, Trader, FollowerState, Transport, BankUnlock, BankUpgrade, Dialog, QuestLog, QuestCompletion, CheckQuestCompletion, BankSlotOpen, FactionsGet, MailGet, MailDelete, MailSend, MailRead, MailboxOpenMail, SignSave, SaveBook, CompanionOpenInv, RoleGet, CompanionTalentExp, TradeAccept};
 
 
    private EnumPlayerPacket(String var1, int var2) {}

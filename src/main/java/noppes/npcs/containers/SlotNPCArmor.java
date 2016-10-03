@@ -5,7 +5,8 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 class SlotNPCArmor extends Slot {
 
@@ -21,8 +22,9 @@ class SlotNPCArmor extends Slot {
       return 1;
    }
 
-   public IIcon getBackgroundIconIndex() {
-      return ItemArmor.getBackgroundIcon(this.armorType);
+   @SideOnly(Side.CLIENT)
+   public String getSlotTexture() {
+      return ItemArmor.EMPTY_SLOT_NAMES[this.armorType];
    }
 
    public boolean isItemValid(ItemStack itemstack) {

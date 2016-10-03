@@ -1,22 +1,21 @@
 package noppes.npcs.constants;
 
-import noppes.npcs.constants.EnumAnimation;
 
 public enum EnumCompanionStage {
 
-   BABY("BABY", 0, 0, EnumAnimation.CRAWLING, "companion.baby"),
-   CHILD("CHILD", 1, 72000, EnumAnimation.NONE, "companion.child"),
-   TEEN("TEEN", 2, 180000, EnumAnimation.NONE, "companion.teenager"),
-   ADULT("ADULT", 3, 324000, EnumAnimation.NONE, "companion.adult"),
-   FULLGROWN("FULLGROWN", 4, 450000, EnumAnimation.NONE, "companion.fullgrown");
+   BABY("BABY", 0, 0, 7, "companion.baby"),
+   CHILD("CHILD", 1, 72000, 0, "companion.child"),
+   TEEN("TEEN", 2, 180000, 0, "companion.teenager"),
+   ADULT("ADULT", 3, 324000, 0, "companion.adult"),
+   FULLGROWN("FULLGROWN", 4, 450000, 0, "companion.fullgrown");
    public int matureAge;
-   public EnumAnimation animation;
+   public int animation;
    public String name;
    // $FF: synthetic field
    private static final EnumCompanionStage[] $VALUES = new EnumCompanionStage[]{BABY, CHILD, TEEN, ADULT, FULLGROWN};
 
 
-   private EnumCompanionStage(String var1, int var2, int age, EnumAnimation animation, String name) {
+   private EnumCompanionStage(String var1, int var2, int age, int animation, String name) {
       this.matureAge = age;
       this.animation = animation;
       this.name = name;

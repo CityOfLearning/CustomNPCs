@@ -6,16 +6,20 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NBTTags;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.api.NpcAPI;
+import noppes.npcs.api.entity.IPlayer;
+import noppes.npcs.api.entity.data.role.IRoleFollower;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumGuiType;
-import noppes.npcs.constants.EnumJobType;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleInterface;
 
-public class RoleFollower extends RoleInterface {
+public class RoleFollower extends RoleInterface implements IRoleFollower {
 
    private String ownerUUID;
    public boolean isFollowing = true;
@@ -69,8 +73,10 @@ public class RoleFollower extends RoleInterface {
 
    public boolean aiShouldExecute() {
       this.owner = this.getOwner();
-      if(!this.infiniteDays && this.owner != null && this.getDaysLeft() <= 0) {
-         this.owner.addChatMessage(new ChatComponentTranslation(NoppesStringUtils.formatText(this.dialogFarewell, new Object[]{this.owner, super.npc}), new Object[0]));
+      if(!this.infiniteDays && this.owner != null && this.getDays() <= 0) {
+         RoleEvent.FollowerFinishedEvent event = new RoleEvent.FollowerFinishedEvent(this.owner, this.npc.wrappedNPC);
+         EventHooks.onNPCRole(this.npc, event);
+         this.owner.addChatMessage(new ChatComponentTranslation(NoppesStringUtils.formatText(this.dialogFarewell, new Object[]{this.owner, this.npc}), new Object[0]));
          this.killed();
       }
 
@@ -82,20 +88,20 @@ public class RoleFollower extends RoleInterface {
          try {
             UUID ex = UUID.fromString(this.ownerUUID);
             if(ex != null) {
-               return super.npc.worldObj.getPlayerEntityByUUID(ex);
+               return this.npc.worldObj.getPlayerEntityByUUID(ex);
             }
          } catch (IllegalArgumentException var2) {
             ;
          }
 
-         return super.npc.worldObj.getPlayerEntityByName(this.ownerUUID);
+         return this.npc.worldObj.getPlayerEntityByName(this.ownerUUID);
       } else {
          return null;
       }
    }
 
    public boolean hasOwner() {
-      return this.daysHired <= 0?false:this.ownerUUID != null && !this.ownerUUID.isEmpty();
+      return !this.infiniteDays && this.daysHired <= 0?false:this.ownerUUID != null && !this.ownerUUID.isEmpty();
    }
 
    public void killed() {
@@ -105,50 +111,80 @@ public class RoleFollower extends RoleInterface {
       this.isFollowing = true;
    }
 
-   public int getDaysLeft() {
-      if(this.infiniteDays) {
-         return 100;
-      } else if(this.daysHired <= 0) {
-         return 0;
-      } else {
-         int days = (int)((super.npc.worldObj.getTotalWorldTime() - this.hiredTime) / 24000L);
-         return this.daysHired - days;
-      }
-   }
-
-   public void addDays(int days) {
-      this.daysHired = days + this.getDaysLeft();
-      this.hiredTime = super.npc.worldObj.getTotalWorldTime();
-   }
-
    public void interact(EntityPlayer player) {
       if(this.ownerUUID != null && !this.ownerUUID.isEmpty()) {
          if(player == this.owner && !this.disableGui) {
-            NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerFollower, super.npc);
+            NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerFollower, this.npc);
          }
       } else {
-         super.npc.say(player, super.npc.advanced.getInteractLine());
-         NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerFollowerHire, super.npc);
+         this.npc.say(player, this.npc.advanced.getInteractLine());
+         NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerFollowerHire, this.npc);
       }
 
    }
 
    public boolean defendOwner() {
-      return this.isFollowing() && super.npc.advanced.job == EnumJobType.Guard;
+      return this.isFollowing() && this.npc.advanced.job == 3;
    }
 
    public void delete() {}
 
    public boolean isFollowing() {
-      return this.owner != null && this.isFollowing && this.getDaysLeft() > 0;
+      return this.owner != null && this.isFollowing && this.getDays() > 0;
    }
 
    public void setOwner(EntityPlayer player) {
-      String id = player.getUniqueID().toString();
+      UUID id = player.getUniqueID();
       if(this.ownerUUID == null || id == null || !this.ownerUUID.equals(id)) {
          this.killed();
       }
 
-      this.ownerUUID = id;
+      this.ownerUUID = id.toString();
+   }
+
+   public int getDays() {
+      if(this.infiniteDays) {
+         return 100;
+      } else if(this.daysHired <= 0) {
+         return 0;
+      } else {
+         int days = (int)((this.npc.worldObj.getTotalWorldTime() - this.hiredTime) / 24000L);
+         return this.daysHired - days;
+      }
+   }
+
+   public void addDays(int days) {
+      this.daysHired = days + this.getDays();
+      this.hiredTime = this.npc.worldObj.getTotalWorldTime();
+   }
+
+   public boolean getInfinite() {
+      return this.infiniteDays;
+   }
+
+   public void setInfinite(boolean infinite) {
+      this.infiniteDays = infinite;
+   }
+
+   public boolean getGuiDisabled() {
+      return this.disableGui;
+   }
+
+   public void setGuiDisabled(boolean disabled) {
+      this.disableGui = disabled;
+   }
+
+   public IPlayer getFollowing() {
+      EntityPlayer owner = this.getOwner();
+      return owner != null?(IPlayer)NpcAPI.Instance().getIEntity(owner):null;
+   }
+
+   public void setFollowing(IPlayer player) {
+      if(player == null) {
+         this.setOwner((EntityPlayer)null);
+      } else {
+         this.setOwner(player.getMCEntity());
+      }
+
    }
 }

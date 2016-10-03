@@ -2,8 +2,8 @@ package noppes.npcs.client.model.blocks;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
-import org.lwjgl.opengl.GL11;
 
 public class ModelPedestal extends ModelBase {
 
@@ -21,12 +21,12 @@ public class ModelPedestal extends ModelBase {
 
    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
       super.render(entity, f, f1, f2, f3, f4, f5);
-      GL11.glPushMatrix();
-      GL11.glScalef(1.0F, 1.0F, 0.5F);
+      GlStateManager.pushMatrix();
+      GlStateManager.scale(1.0F, 1.0F, 0.5F);
       this.Main_Block.render(f5);
-      GL11.glScalef(1.0F, 1.0F, 1.25F);
+      GlStateManager.scale(1.0F, 1.0F, 1.25F);
       this.Front.render(f5);
-      GL11.glPopMatrix();
+      GlStateManager.popMatrix();
    }
 
    private void setRotation(ModelRenderer model, float x, float y, float z) {

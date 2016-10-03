@@ -6,7 +6,6 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.DataAI;
 import noppes.npcs.NBTTags;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
@@ -15,6 +14,7 @@ import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.entity.data.DataAI;
 
 public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 
@@ -24,11 +24,14 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 
 
    public GuiNpcPather(EntityNPCInterface npc) {
-      super.drawDefaultBackground = false;
-      super.xSize = 176;
-      super.title = "Npc Pather";
+      this.drawDefaultBackground = false;
+      this.xSize = 176;
+      this.title = "Npc Pather";
       this.setBackground("smallbg.png");
       this.ai = npc.ai;
+   }
+
+   public void initPacket() {
       Client.sendData(EnumPacketServer.MovingPathGet, new Object[0]);
    }
 
@@ -45,12 +48,12 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
       }
 
       this.scroll.setUnsortedList(list);
-      this.scroll.guiLeft = super.guiLeft + 7;
-      this.scroll.guiTop = super.guiTop + 12;
+      this.scroll.guiLeft = this.guiLeft + 7;
+      this.scroll.guiTop = this.guiTop + 12;
       this.addScroll(this.scroll);
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 6, super.guiTop + 178, 52, 20, "gui.down"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 62, super.guiTop + 178, 52, 20, "gui.up"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 118, super.guiTop + 178, 52, 20, "selectWorld.deleteButton"));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 6, this.guiTop + 178, 52, 20, "gui.down"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 62, this.guiTop + 178, 52, 20, "gui.up"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 118, this.guiTop + 178, 52, 20, "selectWorld.deleteButton"));
    }
 
    protected void actionPerformed(GuiButton guibutton) {

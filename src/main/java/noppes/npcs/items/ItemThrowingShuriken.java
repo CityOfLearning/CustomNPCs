@@ -1,7 +1,7 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import noppes.npcs.items.ItemThrowingWeapon;
-import org.lwjgl.opengl.GL11;
 
 public class ItemThrowingShuriken extends ItemThrowingWeapon {
 
@@ -10,8 +10,8 @@ public class ItemThrowingShuriken extends ItemThrowingWeapon {
    }
 
    public void renderSpecial() {
-      GL11.glScalef(0.5F, 0.5F, 0.5F);
-      GL11.glTranslatef(-0.1F, 0.3F, 0.0F);
+      GlStateManager.scale(0.5F, 0.5F, 0.5F);
+      GlStateManager.translate(-0.1F, 0.3F, 0.0F);
    }
 
    public boolean shouldRotateAroundWhenRendering() {

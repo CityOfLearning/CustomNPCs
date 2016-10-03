@@ -34,7 +34,7 @@ class SlotNpcMercenaryCurrency extends Slot {
 
             is = (ItemStack)var3.next();
          } while(item != is.getItem());
-      } while(itemstack.getHasSubtypes() && itemstack.getMetadata() != is.getMetadata());
+      } while(itemstack.getHasSubtypes() && itemstack.getItemDamage() != is.getItemDamage());
 
       return true;
    }

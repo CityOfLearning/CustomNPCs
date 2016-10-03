@@ -19,6 +19,6 @@ public class SlotValid extends Slot {
    }
 
    public boolean isItemValid(ItemStack par1ItemStack) {
-      return this.canPutIn && super.inventory.isItemValidForSlot(0, par1ItemStack);
+      return this.canPutIn && this.inventory.isItemValidForSlot(0, par1ItemStack);
    }
 }

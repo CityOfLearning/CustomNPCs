@@ -4,6 +4,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.ModelData;
 import noppes.npcs.ModelPartData;
+import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
@@ -11,31 +12,33 @@ public class EntityNPCFurryFemale extends EntityNPCInterface {
 
    public EntityNPCFurryFemale(World world) {
       super(world);
-      super.scaleX = super.scaleY = super.scaleZ = 0.9075F;
-      super.display.texture = "customnpcs:textures/entity/furryfemale/WolfBlack.png";
+      this.scaleX = this.scaleY = this.scaleZ = 0.9075F;
+      this.display.setSkinTexture("customnpcs:textures/entity/furryfemale/WolfBlack.png");
    }
 
    public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
+      this.isDead = true;
+      if(!this.worldObj.isRemote) {
          NBTTagCompound compound = new NBTTagCompound();
          this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.worldObj);
          npc.readFromNBT(compound);
          ModelData data = npc.modelData;
-         data.breasts = 2;
-         data.head.setScale(0.95F, 0.95F);
-         data.legs.setScale(0.92F, 0.92F);
-         data.arms.setScale(0.8F, 0.92F);
-         data.body.setScale(0.92F, 0.92F);
-         ModelPartData hair = data.getOrCreatePart("ears");
-         hair.playerTexture = true;
-         ModelPartData snout = data.getOrCreatePart("snout");
-         snout.playerTexture = true;
-         snout.type = 1;
-         ModelPartData tail = data.getOrCreatePart("tail");
-         tail.playerTexture = true;
-         super.worldObj.spawnEntityInWorld(npc);
+         ModelPartData ears = data.getOrCreatePart(EnumParts.EARS);
+         ears.type = 0;
+         ears.color = 6182997;
+         ModelPartData snout = data.getOrCreatePart(EnumParts.SNOUT);
+         snout.type = 2;
+         snout.color = 6182997;
+         ModelPartData tail = data.getOrCreatePart(EnumParts.TAIL);
+         tail.type = 0;
+         tail.color = 6182997;
+         data.getOrCreatePart(EnumParts.BREASTS).type = 2;
+         data.getPartConfig(EnumParts.HEAD).setScale(0.95F, 0.95F);
+         data.getPartConfig(EnumParts.LEG_LEFT).setScale(0.92F, 0.92F);
+         data.getPartConfig(EnumParts.ARM_LEFT).setScale(0.8F, 0.92F);
+         data.getPartConfig(EnumParts.BODY).setScale(0.92F, 0.92F);
+         this.worldObj.spawnEntityInWorld(npc);
       }
 
       super.onUpdate();

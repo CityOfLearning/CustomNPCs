@@ -74,7 +74,7 @@ public class RoleInnkeeper extends RoleInterface {
    }
 
    public void interact(EntityPlayer player) {
-      super.npc.say(player, super.npc.advanced.getInteractLine());
+      this.npc.say(player, this.npc.advanced.getInteractLine());
       if(this.doors.isEmpty()) {
          player.addChatMessage(new ChatComponentTranslation("No Rooms available", new Object[0]));
       }

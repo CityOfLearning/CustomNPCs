@@ -4,22 +4,27 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.EventHooks;
+import noppes.npcs.api.handler.IRecipeHandler;
+import noppes.npcs.api.handler.data.IRecipe;
 import noppes.npcs.controllers.RecipeCarpentry;
 import noppes.npcs.controllers.RecipesDefault;
 
-public class RecipeController {
+public class RecipeController implements IRecipeHandler {
 
    private static Collection prevRecipes;
    public HashMap globalRecipes = new HashMap();
@@ -36,17 +41,18 @@ public class RecipeController {
 
    public void load() {
       this.loadCategories();
-      reloadGlobalRecipes(this.globalRecipes);
+      this.reloadGlobalRecipes();
+      EventHooks.onGlobalRecipesLoaded(this);
    }
 
-   public static void reloadGlobalRecipes(HashMap globalRecipes) {
+   public void reloadGlobalRecipes() {
       List list = CraftingManager.getInstance().getRecipeList();
       if(prevRecipes != null) {
          list.removeAll(prevRecipes);
       }
 
       prevRecipes = new HashSet();
-      Iterator var2 = globalRecipes.values().iterator();
+      Iterator var2 = this.globalRecipes.values().iterator();
 
       while(var2.hasNext()) {
          RecipeCarpentry recipe = (RecipeCarpentry)var2.next();
@@ -124,27 +130,31 @@ public class RecipeController {
          NBTTagList list = new NBTTagList();
          Iterator nbttagcompound = this.globalRecipes.values().iterator();
 
-         RecipeCarpentry recipe;
+         RecipeCarpentry file;
          while(nbttagcompound.hasNext()) {
-             recipe = (RecipeCarpentry)nbttagcompound.next();
-            list.appendTag(recipe.writeNBT());
+            file = (RecipeCarpentry)nbttagcompound.next();
+            if(file.savesRecipe) {
+               list.appendTag(file.writeNBT());
+            }
          }
 
          nbttagcompound = this.anvilRecipes.values().iterator();
 
          while(nbttagcompound.hasNext()) {
-             recipe = (RecipeCarpentry)nbttagcompound.next();
-            list.appendTag(recipe.writeNBT());
+            file = (RecipeCarpentry)nbttagcompound.next();
+            if(file.savesRecipe) {
+               list.appendTag(file.writeNBT());
+            }
          }
 
          NBTTagCompound nbttagcompound1 = new NBTTagCompound();
          nbttagcompound1.setTag("Data", list);
          nbttagcompound1.setInteger("LastId", this.nextId);
          nbttagcompound1.setInteger("Version", 1);
-         File file = new File(e, "recipes.dat_new");
+         File file1 = new File(e, "recipes.dat_new");
          File file1 = new File(e, "recipes.dat_old");
          File file2 = new File(e, "recipes.dat");
-         CompressedStreamTools.writeCompressed(nbttagcompound1, new FileOutputStream(file));
+         CompressedStreamTools.writeCompressed(nbttagcompound1, new FileOutputStream(file1));
          if(file1.exists()) {
             file1.delete();
          }
@@ -154,9 +164,9 @@ public class RecipeController {
             file2.delete();
          }
 
-         file.renameTo(file2);
-         if(file.exists()) {
-            file.delete();
+         file1.renameTo(file2);
+         if(file1.exists()) {
+            file1.delete();
          }
       } catch (Exception var7) {
          var7.printStackTrace();
@@ -183,8 +193,7 @@ public class RecipeController {
       return this.globalRecipes.containsKey(Integer.valueOf(id))?(RecipeCarpentry)this.globalRecipes.get(Integer.valueOf(id)):(this.anvilRecipes.containsKey(Integer.valueOf(id))?(RecipeCarpentry)this.anvilRecipes.get(Integer.valueOf(id)):null);
    }
 
-   public RecipeCarpentry saveRecipe(NBTTagCompound compound) throws IOException {
-      RecipeCarpentry recipe = RecipeCarpentry.read(compound);
+   public RecipeCarpentry saveRecipe(RecipeCarpentry recipe) throws IOException {
       RecipeCarpentry current = this.getRecipe(recipe.id);
       if(current != null && !current.name.equals(recipe.name)) {
          while(this.containsRecipeName(recipe.name)) {
@@ -207,12 +216,13 @@ public class RecipeController {
       }
 
       this.saveCategories();
-      reloadGlobalRecipes(this.globalRecipes);
+      this.reloadGlobalRecipes();
       return recipe;
    }
 
    private int getUniqueId() {
-      return this.nextId++;
+      ++this.nextId;
+      return this.nextId;
    }
 
    private boolean containsRecipeName(String name) {
@@ -241,23 +251,52 @@ public class RecipeController {
       return true;
    }
 
-   public RecipeCarpentry removeRecipe(int id) {
+   public RecipeCarpentry delete(int id) {
       RecipeCarpentry recipe = this.getRecipe(id);
-      this.globalRecipes.remove(Integer.valueOf(recipe.id));
-      this.anvilRecipes.remove(Integer.valueOf(recipe.id));
-      this.saveCategories();
-      reloadGlobalRecipes(this.globalRecipes);
-      return recipe;
+      if(recipe == null) {
+         return null;
+      } else {
+         this.globalRecipes.remove(Integer.valueOf(recipe.id));
+         this.anvilRecipes.remove(Integer.valueOf(recipe.id));
+         this.saveCategories();
+         this.reloadGlobalRecipes();
+         recipe.id = -1;
+         return recipe;
+      }
    }
 
-   public void addRecipe(RecipeCarpentry recipeAnvil) {
-      recipeAnvil.id = this.getUniqueId();
-      if(!recipeAnvil.isGlobal) {
-         instance.anvilRecipes.put(Integer.valueOf(recipeAnvil.id), recipeAnvil);
-      } else {
-         instance.globalRecipes.put(Integer.valueOf(recipeAnvil.id), recipeAnvil);
-      }
+   public List getGlobalList() {
+      return new ArrayList(this.globalRecipes.values());
+   }
 
+   public List getCarpentryList() {
+      return new ArrayList(this.anvilRecipes.values());
+   }
+
+   public IRecipe addRecipe(String name, boolean global, ItemStack result, Object ... objects) {
+      RecipeCarpentry recipe = new RecipeCarpentry(name);
+      recipe.isGlobal = global;
+      recipe = RecipeCarpentry.createRecipe(recipe, result, objects);
+
+      try {
+         return this.saveRecipe(recipe);
+      } catch (IOException var7) {
+         var7.printStackTrace();
+         return recipe;
+      }
+   }
+
+   public IRecipe addRecipe(String name, boolean global, ItemStack result, int width, int height, ItemStack ... objects) {
+      RecipeCarpentry recipe = new RecipeCarpentry(width, height, objects, result);
+      recipe.isGlobal = global;
+      recipe.name = name;
+
+      try {
+         return this.saveRecipe(recipe);
+      } catch (IOException var9) {
+         var9.printStackTrace();
+         return recipe;
+      }
    }
 
 }

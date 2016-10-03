@@ -8,9 +8,11 @@ import noppes.npcs.CustomNpcs;
 import noppes.npcs.ModelData;
 import noppes.npcs.ModelPartData;
 import noppes.npcs.client.EntityUtil;
+import noppes.npcs.constants.EnumParts;
+import noppes.npcs.entity.EntityNPCFlying;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class EntityCustomNpc extends EntityNPCInterface {
+public class EntityCustomNpc extends EntityNPCFlying {
 
    public ModelData modelData = new ModelData();
 
@@ -35,7 +37,7 @@ public class EntityCustomNpc extends EntityNPCInterface {
    public void onUpdate() {
       super.onUpdate();
       if(this.isRemote()) {
-         ModelPartData particles = this.modelData.getPartData("particles");
+         ModelPartData particles = this.modelData.getPartData(EnumParts.PARTICLES);
          if(particles != null && !this.isKilled()) {
             CustomNpcs.proxy.spawnParticle(this, "ModelData", new Object[]{this.modelData, particles});
          }
@@ -66,19 +68,19 @@ public class EntityCustomNpc extends EntityNPCInterface {
             ((EntityNPCInterface)entity).updateHitbox();
          }
 
-         super.width = entity.width / 5.0F * (float)super.display.modelSize;
-         super.height = entity.height / 5.0F * (float)super.display.modelSize;
-         if(super.width < 0.1F) {
-            super.width = 0.1F;
+         this.width = entity.width / 5.0F * (float)this.display.getSize();
+         this.height = entity.height / 5.0F * (float)this.display.getSize();
+         if(this.width < 0.1F) {
+            this.width = 0.1F;
          }
 
-         if(super.height < 0.1F) {
-            super.height = 0.1F;
+         if(this.height < 0.1F) {
+            this.height = 0.1F;
          }
 
-         this.setPosition(super.posX, super.posY, super.posZ);
+         this.setPosition(this.posX, this.posY, this.posZ);
       } else {
-         super.baseHeight = 1.9F - this.modelData.getBodyY() + (this.modelData.head.scaleY - 1.0F) / 2.0F;
+         this.baseHeight = 1.9F - this.modelData.getBodyY() + (this.modelData.getPartConfig(EnumParts.HEAD).scaleY - 1.0F) / 2.0F;
          super.updateHitbox();
       }
 

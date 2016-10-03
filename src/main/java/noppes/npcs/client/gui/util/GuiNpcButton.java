@@ -8,13 +8,13 @@ public class GuiNpcButton extends GuiButton {
 
    protected String[] display;
    private int displayValue;
-   public int field_146127_k;
+   public int id;
 
 
    public GuiNpcButton(int i, int j, int k, String s) {
       super(i, j, k, StatCollector.translateToLocal(s));
       this.displayValue = 0;
-      this.field_146127_k = i;
+      this.id = i;
    }
 
    public GuiNpcButton(int i, int j, int k, String[] display, int val) {
@@ -26,7 +26,7 @@ public class GuiNpcButton extends GuiButton {
    public GuiNpcButton(int i, int j, int k, int l, int m, String string) {
       super(i, j, k, l, m, StatCollector.translateToLocal(string));
       this.displayValue = 0;
-      this.field_146127_k = i;
+      this.id = i;
    }
 
    public GuiNpcButton(int i, int j, int k, int l, int m, String[] display, int val) {
@@ -36,7 +36,7 @@ public class GuiNpcButton extends GuiButton {
    }
 
    public void setDisplayText(String text) {
-      super.displayString = StatCollector.translateToLocal(text);
+      this.displayString = StatCollector.translateToLocal(text);
    }
 
    public int getValue() {
@@ -44,15 +44,15 @@ public class GuiNpcButton extends GuiButton {
    }
 
    public void setEnabled(boolean bo) {
-      super.enabled = bo;
+      this.enabled = bo;
    }
 
    public void setVisible(boolean b) {
-      super.visible = b;
+      this.visible = b;
    }
 
    public boolean getVisible() {
-      return super.visible;
+      return this.visible;
    }
 
    public void setDisplay(int value) {
@@ -75,6 +75,6 @@ public class GuiNpcButton extends GuiButton {
    }
 
    public int getWidth() {
-      return super.width;
+      return this.width;
    }
 }

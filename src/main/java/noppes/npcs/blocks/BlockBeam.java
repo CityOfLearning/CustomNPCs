@@ -1,12 +1,14 @@
 package noppes.npcs.blocks;
 
 import java.util.List;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
@@ -28,14 +30,14 @@ public class BlockBeam extends BlockRotated {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      TileEntity tileentity = world.getTileEntity(x, y, z);
+   public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+      TileEntity tileentity = world.getTileEntity(pos);
       if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
+         super.setBlockBoundsBasedOnState(world, pos);
       } else {
          TileColorable tile = (TileColorable)tileentity;
          if(tile.rotation == 0) {
@@ -51,9 +53,9 @@ public class BlockBeam extends BlockRotated {
       }
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      super.onBlockPlacedBy(world, pos, state, entity, stack);
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {

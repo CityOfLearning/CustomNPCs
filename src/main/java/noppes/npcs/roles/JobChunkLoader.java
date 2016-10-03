@@ -39,22 +39,22 @@ public class JobChunkLoader extends JobInterface {
          return false;
       } else {
          this.ticks = 20;
-         List players = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(48.0D, 48.0D, 48.0D));
+         List players = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(48.0D, 48.0D, 48.0D));
          if(!players.isEmpty()) {
             this.playerLastSeen = System.currentTimeMillis();
          }
 
          if(System.currentTimeMillis() > this.playerLastSeen + 600000L) {
-            ChunkController.instance.deleteNPC(super.npc);
+            ChunkController.instance.deleteNPC(this.npc);
             this.chunks.clear();
             return false;
          } else {
-            Ticket ticket = ChunkController.instance.getTicket(super.npc);
+            Ticket ticket = ChunkController.instance.getTicket(this.npc);
             if(ticket == null) {
                return false;
             } else {
-               double x = super.npc.posX / 16.0D;
-               double z = super.npc.posZ / 16.0D;
+               double x = this.npc.posX / 16.0D;
+               double z = this.npc.posZ / 16.0D;
                ArrayList list = new ArrayList();
                list.add(new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
                list.add(new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
@@ -86,8 +86,12 @@ public class JobChunkLoader extends JobInterface {
       }
    }
 
+   public boolean aiContinueExecute() {
+      return false;
+   }
+
    public void reset() {
-      ChunkController.instance.deleteNPC(super.npc);
+      ChunkController.instance.deleteNPC(this.npc);
       this.chunks.clear();
       this.playerLastSeen = 0L;
    }

@@ -4,10 +4,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import noppes.npcs.blocks.tiles.TileNpcEntity;
 
-public class TileColorable extends TileEntity {
+public class TileColorable extends TileNpcEntity {
 
    public int color = 14;
    public int rotation;
@@ -38,12 +38,13 @@ public class TileColorable extends TileEntity {
       NBTTagCompound compound = new NBTTagCompound();
       this.writeToNBT(compound);
       compound.removeTag("Items");
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
+      compound.removeTag("ExtraData");
+      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.pos, 0, compound);
       return packet;
    }
 
    public AxisAlignedBB getRenderBoundingBox() {
-      return AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 1), (double)(super.zCoord + 1));
+      return new AxisAlignedBB((double)this.pos.getX(), (double)this.pos.getY(), (double)this.pos.getZ(), (double)(this.pos.getX() + 1), (double)(this.pos.getY() + 1), (double)(this.pos.getZ() + 1));
    }
 
    public int powerProvided() {

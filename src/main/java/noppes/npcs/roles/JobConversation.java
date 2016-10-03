@@ -27,6 +27,9 @@ public class JobConversation extends JobInterface {
    public int ticks = 100;
    public int range = 20;
    private JobConversation.ConversationLine nextLine;
+   private boolean hasStarted = false;
+   private int startedTicks = 20;
+   public int mode = 0;
 
 
    public JobConversation(EntityNPCInterface npc) {
@@ -38,6 +41,7 @@ public class JobConversation extends JobInterface {
       compound.setInteger("ConversationQuest", this.quest);
       compound.setInteger("ConversationDelay", this.generalDelay);
       compound.setInteger("ConversationRange", this.range);
+      compound.setInteger("ConversationMode", this.mode);
       NBTTagList nbttaglist = new NBTTagList();
       Iterator var3 = this.lines.keySet().iterator();
 
@@ -65,6 +69,7 @@ public class JobConversation extends JobInterface {
       this.generalDelay = compound.getInteger("ConversationDelay");
       this.questTitle = compound.getString("ConversationQuestTitle");
       this.range = compound.getInteger("ConversationRange");
+      this.mode = compound.getInteger("ConversationMode");
       NBTTagList nbttaglist = compound.getTagList("ConversationLines", 10);
       HashMap map = new HashMap();
 
@@ -88,7 +93,7 @@ public class JobConversation extends JobInterface {
    }
 
    public Quest getQuest() {
-      return super.npc.isRemote()?null:(Quest)QuestController.instance.quests.get(Integer.valueOf(this.quest));
+      return this.npc.isRemote()?null:(Quest)QuestController.instance.quests.get(Integer.valueOf(this.quest));
    }
 
    public void aiUpdateTask() {
@@ -117,7 +122,7 @@ public class JobConversation extends JobInterface {
          if(this.nextLine != null) {
             this.ticks = this.nextLine.delay;
          } else if(this.hasQuest()) {
-            List var6 = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand((double)this.range, (double)this.range, (double)this.range));
+            List var6 = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand((double)this.range, (double)this.range, (double)this.range));
             Iterator var7 = var6.iterator();
 
             while(var7.hasNext()) {
@@ -132,7 +137,18 @@ public class JobConversation extends JobInterface {
    }
 
    public boolean aiShouldExecute() {
-      if(!this.lines.isEmpty() && !super.npc.isKilled() && !super.npc.isAttacking() && this.shouldRun()) {
+      if(!this.lines.isEmpty() && !this.npc.isKilled() && !this.npc.isAttacking() && this.shouldRun()) {
+         if(!this.hasStarted && this.mode == 1) {
+            if(this.startedTicks-- > 0) {
+               return false;
+            }
+
+            this.startedTicks = 10;
+            if(this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand((double)this.range, (double)this.range, (double)this.range)).isEmpty()) {
+               return false;
+            }
+         }
+
          Iterator var1 = this.lines.values().iterator();
 
          while(var1.hasNext()) {
@@ -155,17 +171,22 @@ public class JobConversation extends JobInterface {
          return false;
       } else {
          this.npcs.clear();
-         List list = super.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, super.npc.boundingBox.expand(10.0D, 20.0D, 10.0D));
-         Iterator var2 = list.iterator();
+         List list = this.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, this.npc.getEntityBoundingBox().expand(10.0D, 10.0D, 10.0D));
+         Iterator bo = list.iterator();
 
-         while(var2.hasNext()) {
-            EntityNPCInterface npc = (EntityNPCInterface)var2.next();
-            if(!npc.isKilled() && !npc.isAttacking() && this.names.contains(npc.getCommandSenderName().toLowerCase())) {
-               this.npcs.put(npc.getCommandSenderName().toLowerCase(), npc);
+         while(bo.hasNext()) {
+            EntityNPCInterface npc = (EntityNPCInterface)bo.next();
+            if(!npc.isKilled() && !npc.isAttacking() && this.names.contains(npc.getName().toLowerCase())) {
+               this.npcs.put(npc.getName().toLowerCase(), npc);
             }
          }
 
-         return this.names.size() == this.npcs.size();
+         boolean var4 = this.names.size() == this.npcs.size();
+         if(!var4) {
+            this.ticks = 20;
+         }
+
+         return var4;
       }
    }
 
@@ -187,12 +208,16 @@ public class JobConversation extends JobInterface {
    public void resetTask() {
       this.nextLine = null;
       this.ticks = this.generalDelay;
+      this.hasStarted = false;
    }
 
-   public void aiStartExecuting() {}
+   public void aiStartExecuting() {
+      this.startedTicks = 20;
+      this.hasStarted = true;
+   }
 
    private void say(JobConversation.ConversationLine line) {
-      List inRange = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(20.0D, 20.0D, 20.0D));
+      List inRange = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand((double)this.range, (double)this.range, (double)this.range));
       EntityNPCInterface npc = (EntityNPCInterface)this.npcs.get(line.npc.toLowerCase());
       if(npc != null) {
          Iterator var4 = inRange.iterator();
@@ -208,7 +233,9 @@ public class JobConversation extends JobInterface {
    }
 
    public void reset() {
+      this.hasStarted = false;
       this.resetTask();
+      this.ticks = 60;
    }
 
    public void killed() {
@@ -232,21 +259,21 @@ public class JobConversation extends JobInterface {
 
 
       public void writeEntityToNBT(NBTTagCompound compound) {
-         compound.setString("Line", super.text);
+         compound.setString("Line", this.text);
          compound.setString("Npc", this.npc);
-         compound.setString("Sound", super.sound);
+         compound.setString("Sound", this.sound);
          compound.setInteger("Delay", this.delay);
       }
 
       public void readEntityFromNBT(NBTTagCompound compound) {
-         super.text = compound.getString("Line");
+         this.text = compound.getString("Line");
          this.npc = compound.getString("Npc");
-         super.sound = compound.getString("Sound");
+         this.sound = compound.getString("Sound");
          this.delay = compound.getInteger("Delay");
       }
 
       public boolean isEmpty() {
-         return this.npc.isEmpty() || super.text.isEmpty();
+         return this.npc.isEmpty() || this.text.isEmpty();
       }
    }
 }

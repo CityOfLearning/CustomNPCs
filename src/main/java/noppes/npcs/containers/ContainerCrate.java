@@ -17,7 +17,7 @@ public class ContainerCrate extends Container {
       this.lowerChestInventory = par2IInventory;
       this.upperChestInventory = par1IInventory;
       this.numRows = par2IInventory.getSizeInventory() / 9;
-      par2IInventory.openChest();
+      par2IInventory.openInventory((EntityPlayer)null);
       int i = (this.numRows - 4) * 18;
 
       int j;
@@ -46,12 +46,12 @@ public class ContainerCrate extends Container {
 
    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
       ItemStack itemstack = null;
-      Slot slot = (Slot)super.inventorySlots.get(par2);
+      Slot slot = (Slot)this.inventorySlots.get(par2);
       if(slot != null && slot.getHasStack()) {
          ItemStack itemstack1 = slot.getStack();
          itemstack = itemstack1.copy();
          if(par2 < this.numRows * 9) {
-            if(!this.mergeItemStack(itemstack1, this.numRows * 9, super.inventorySlots.size(), true)) {
+            if(!this.mergeItemStack(itemstack1, this.numRows * 9, this.inventorySlots.size(), true)) {
                return null;
             }
          } else if(!this.mergeItemStack(itemstack1, 0, this.numRows * 9, false)) {
@@ -70,7 +70,7 @@ public class ContainerCrate extends Container {
 
    public void onContainerClosed(EntityPlayer par1EntityPlayer) {
       super.onContainerClosed(par1EntityPlayer);
-      this.lowerChestInventory.closeChest();
+      this.lowerChestInventory.closeInventory(par1EntityPlayer);
    }
 
    public IInventory getLowerChestInventory() {

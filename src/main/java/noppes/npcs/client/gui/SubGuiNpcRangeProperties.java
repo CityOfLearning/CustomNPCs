@@ -1,7 +1,6 @@
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import noppes.npcs.DataStats;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.GuiNpcSoundSelection;
 import noppes.npcs.client.gui.util.GuiNpcButton;
@@ -10,113 +9,129 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
+import noppes.npcs.entity.data.DataRanged;
+import noppes.npcs.entity.data.DataStats;
 
 public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfieldListener {
 
+   private DataRanged ranged;
    private DataStats stats;
    private GuiNpcSoundSelection gui;
 
 
    public SubGuiNpcRangeProperties(DataStats stats) {
+      this.ranged = stats.ranged;
       this.stats = stats;
       this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.ySize = 216;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
       super.initGui();
-      int y = super.guiTop + 4;
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 85, y, 50, 18, this.stats.accuracy + ""));
-      this.addLabel(new GuiNpcLabel(1, "stats.accuracy", super.guiLeft + 5, y + 5));
+      int y = this.guiTop + 4;
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 80, y, 50, 18, this.ranged.getAccuracy() + ""));
+      this.addLabel(new GuiNpcLabel(1, "stats.accuracy", this.guiLeft + 5, y + 5));
       this.getTextField(1).numbersOnly = true;
       this.getTextField(1).setMinMaxDefault(0, 100, 90);
-      GuiNpcTextField var10001;
-      int var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(2, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.rangedRange + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(2, "stats.rangedrange", super.guiLeft + 5, y + 5));
-      this.getTextField(2).numbersOnly = true;
-      this.getTextField(2).setMinMaxDefault(1, 64, 2);
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(3, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.minDelay + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(3, "stats.mindelay", super.guiLeft + 5, y + 5));
-      this.getTextField(3).numbersOnly = true;
-      this.getTextField(3).setMinMaxDefault(1, 9999, 20);
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(4, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.maxDelay + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(4, "stats.maxdelay", super.guiLeft + 5, y + 5));
-      this.getTextField(4).numbersOnly = true;
-      this.getTextField(4).setMinMaxDefault(1, 9999, 20);
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(5, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.fireRate + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(5, "stats.burstspeed", super.guiLeft + 5, y + 5));
-      this.getTextField(5).numbersOnly = true;
-      this.getTextField(5).setMinMaxDefault(0, 30, 0);
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(6, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.burstCount + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(6, "stats.burstcount", super.guiLeft + 5, y + 5));
-      this.getTextField(6).numbersOnly = true;
-      this.getTextField(6).setMinMaxDefault(1, 100, 20);
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(7, this, super.fontRendererObj, var10006, y, 100, 20, this.stats.fireSound);
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(7, "stats.firesound:", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(7, super.guiLeft + 187, y, 60, 20, "mco.template.button.select"));
-      var10006 = super.guiLeft + 85;
-      y += 22;
-      var10001 = new GuiNpcTextField(8, this, super.fontRendererObj, var10006, y, 50, 18, this.stats.shotCount + "");
-      this.addTextField(var10001);
-      this.addLabel(new GuiNpcLabel(8, "stats.shotcount", super.guiLeft + 5, y + 5));
+      this.addTextField(new GuiNpcTextField(8, this, this.fontRendererObj, this.guiLeft + 200, y, 50, 18, this.ranged.getShotCount() + ""));
+      this.addLabel(new GuiNpcLabel(8, "stats.shotcount", this.guiLeft + 135, y + 5));
       this.getTextField(8).numbersOnly = true;
       this.getTextField(8).setMinMaxDefault(1, 10, 1);
-      GuiNpcButtonYesNo var2;
-      int var10004 = super.guiLeft + 100;
+      GuiNpcTextField var10001 = new GuiNpcTextField;
+      int var10006 = this.guiLeft + 80;
       y += 22;
-      var2 = new GuiNpcButtonYesNo(9, var10004, y, this.stats.aimWhileShooting);
+      var10001.<init>(2, this, this.fontRendererObj, var10006, y, 50, 18, this.ranged.getRange() + "");
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(2, "gui.range", this.guiLeft + 5, y + 5));
+      this.getTextField(2).numbersOnly = true;
+      this.getTextField(2).setMinMaxDefault(1, 64, 2);
+      this.addTextField(new GuiNpcTextField(9, this, this.fontRendererObj, this.guiLeft + 200, y, 30, 20, this.ranged.getMeleeRange() + ""));
+      this.addLabel(new GuiNpcLabel(16, "stats.meleerange", this.guiLeft + 135, y + 5));
+      this.getTextField(9).numbersOnly = true;
+      this.getTextField(9).setMinMaxDefault(0, this.stats.aggroRange, 5);
+      var10001 = new GuiNpcTextField;
+      var10006 = this.guiLeft + 80;
+      y += 22;
+      var10001.<init>(3, this, this.fontRendererObj, var10006, y, 50, 18, this.ranged.getDelayMin() + "");
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(3, "stats.mindelay", this.guiLeft + 5, y + 5));
+      this.getTextField(3).numbersOnly = true;
+      this.getTextField(3).setMinMaxDefault(1, 9999, 20);
+      this.addTextField(new GuiNpcTextField(4, this, this.fontRendererObj, this.guiLeft + 200, y, 50, 18, this.ranged.getDelayMax() + ""));
+      this.addLabel(new GuiNpcLabel(4, "stats.maxdelay", this.guiLeft + 135, y + 5));
+      this.getTextField(4).numbersOnly = true;
+      this.getTextField(4).setMinMaxDefault(1, 9999, 20);
+      var10001 = new GuiNpcTextField;
+      var10006 = this.guiLeft + 80;
+      y += 22;
+      var10001.<init>(6, this, this.fontRendererObj, var10006, y, 50, 18, this.ranged.getBurst() + "");
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(6, "stats.burstcount", this.guiLeft + 5, y + 5));
+      this.getTextField(6).numbersOnly = true;
+      this.getTextField(6).setMinMaxDefault(1, 100, 20);
+      this.addTextField(new GuiNpcTextField(5, this, this.fontRendererObj, this.guiLeft + 200, y, 50, 18, this.ranged.getBurstDelay() + ""));
+      this.addLabel(new GuiNpcLabel(5, "stats.burstspeed", this.guiLeft + 135, y + 5));
+      this.getTextField(5).numbersOnly = true;
+      this.getTextField(5).setMinMaxDefault(0, 30, 0);
+      var10001 = new GuiNpcTextField;
+      var10006 = this.guiLeft + 80;
+      y += 22;
+      var10001.<init>(7, this, this.fontRendererObj, var10006, y, 100, 20, this.ranged.getSound(0));
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(7, "stats.firesound", this.guiLeft + 5, y + 5));
+      this.addButton(new GuiNpcButton(7, this.guiLeft + 187, y, 60, 20, "mco.template.button.select"));
+      var10001 = new GuiNpcTextField;
+      var10006 = this.guiLeft + 80;
+      y += 22;
+      var10001.<init>(11, this, this.fontRendererObj, var10006, y, 100, 20, this.ranged.getSound(1));
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(11, "stats.hitsound", this.guiLeft + 5, y + 5));
+      this.addButton(new GuiNpcButton(11, this.guiLeft + 187, y, 60, 20, "mco.template.button.select"));
+      var10001 = new GuiNpcTextField;
+      var10006 = this.guiLeft + 80;
+      y += 22;
+      var10001.<init>(10, this, this.fontRendererObj, var10006, y, 100, 20, this.ranged.getSound(2));
+      this.addTextField(var10001);
+      this.addLabel(new GuiNpcLabel(10, "stats.groundsound", this.guiLeft + 5, y + 5));
+      this.addButton(new GuiNpcButton(10, this.guiLeft + 187, y, 60, 20, "mco.template.button.select"));
+      GuiNpcButtonYesNo var2 = new GuiNpcButtonYesNo;
+      int var10004 = this.guiLeft + 100;
+      y += 22;
+      var2.<init>(9, var10004, y, this.ranged.getHasAimAnimation());
       this.addButton(var2);
-      this.addLabel(new GuiNpcLabel(9, "stats.aimWhileShooting", super.guiLeft + 5, y + 5));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 190, super.guiTop + 190, 60, 20, "gui.done"));
+      this.addLabel(new GuiNpcLabel(9, "stats.aimWhileShooting", this.guiLeft + 5, y + 5));
+      GuiNpcButton var3 = new GuiNpcButton;
+      var10004 = this.guiLeft + 100;
+      y += 22;
+      var3.<init>(13, var10004, y, 80, 20, new String[]{"gui.no", "gui.whendistant", "gui.whenhidden"}, this.ranged.getFireType());
+      this.addButton(var3);
+      this.addLabel(new GuiNpcLabel(13, "stats.indirect", this.guiLeft + 5, y + 5));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 190, this.guiTop + 190, 60, 20, "gui.done"));
    }
 
    public void unFocused(GuiNpcTextField textfield) {
       if(textfield.id == 1) {
-         this.stats.accuracy = textfield.getInteger();
+         this.ranged.setAccuracy(textfield.getInteger());
       } else if(textfield.id == 2) {
-         this.stats.rangedRange = textfield.getInteger();
+         this.ranged.setRange(textfield.getInteger());
       } else if(textfield.id == 3) {
-         if(textfield.getInteger() > this.stats.maxDelay) {
-            this.stats.minDelay = this.stats.maxDelay;
-            textfield.setText(this.stats.minDelay + "");
-         } else {
-            this.stats.minDelay = textfield.getInteger();
-         }
+         this.ranged.setDelay(textfield.getInteger(), this.ranged.getDelayMax());
+         this.initGui();
       } else if(textfield.id == 4) {
-         if(textfield.getInteger() < this.stats.minDelay) {
-            this.stats.maxDelay = this.stats.minDelay;
-            textfield.setText(this.stats.maxDelay + "");
-         } else {
-            this.stats.maxDelay = textfield.getInteger();
-         }
+         this.ranged.setDelay(this.ranged.getDelayMin(), textfield.getInteger());
+         this.initGui();
       } else if(textfield.id == 5) {
-         this.stats.fireRate = textfield.getInteger();
+         this.ranged.setBurstDelay(textfield.getInteger());
       } else if(textfield.id == 6) {
-         this.stats.burstCount = textfield.getInteger();
+         this.ranged.setBurst(textfield.getInteger());
       } else if(textfield.id == 7) {
-         this.stats.fireSound = textfield.getText();
+         this.ranged.setSound(0, textfield.getText());
       } else if(textfield.id == 8) {
-         this.stats.shotCount = textfield.getInteger();
+         this.ranged.setShotCount(textfield.getInteger());
+      } else if(textfield.id == 9) {
+         this.ranged.setMeleeRange(textfield.getInteger());
       }
 
    }
@@ -129,13 +144,21 @@ public class SubGuiNpcRangeProperties extends SubGuiInterface implements ITextfi
    protected void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 7) {
-         NoppesUtil.openGUI(super.player, this.gui = new GuiNpcSoundSelection(super.npc, super.parent, this.getTextField(7).getText()));
+         NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this.parent, this.getTextField(7).getText()));
       }
 
-      if(id == 66) {
+      if(id == 8) {
+         NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this.parent, this.getTextField(7).getText()));
+      }
+
+      if(id == 10) {
+         NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this.parent, this.getTextField(7).getText()));
+      } else if(id == 66) {
          this.close();
       } else if(id == 9) {
-         this.stats.aimWhileShooting = ((GuiNpcButtonYesNo)guibutton).getBoolean();
+         this.ranged.setHasAimAnimation(((GuiNpcButtonYesNo)guibutton).getBoolean());
+      } else if(id == 13) {
+         this.ranged.setFireType(((GuiNpcButton)guibutton).getValue());
       }
 
    }

@@ -10,22 +10,22 @@ public class EntityNpcCrystal extends EntityNPCInterface {
 
    public EntityNpcCrystal(World world) {
       super(world);
-      super.scaleX = 0.7F;
-      super.scaleY = 0.7F;
-      super.scaleZ = 0.7F;
-      super.display.texture = "customnpcs:textures/entity/crystal/EnderCrystal.png";
+      this.scaleX = 0.7F;
+      this.scaleY = 0.7F;
+      this.scaleZ = 0.7F;
+      this.display.setSkinTexture("customnpcs:textures/entity/crystal/EnderCrystal.png");
    }
 
    public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
+      this.isDead = true;
+      if(!this.worldObj.isRemote) {
          NBTTagCompound compound = new NBTTagCompound();
          this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.worldObj);
          npc.readFromNBT(compound);
          ModelData data = npc.modelData;
          data.setEntityClass(EntityNpcCrystal.class);
-         super.worldObj.spawnEntityInWorld(npc);
+         this.worldObj.spawnEntityInWorld(npc);
       }
 
       super.onUpdate();

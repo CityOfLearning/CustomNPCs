@@ -3,6 +3,7 @@ package noppes.npcs.client.fx;
 import net.minecraft.client.particle.EntityPortalFX;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.MathHelper;
 
 public class EntityElementalStaffFX extends EntityPortalFX {
@@ -21,35 +22,35 @@ public class EntityElementalStaffFX extends EntityPortalFX {
       this.z = d2;
       float[] colors;
       if(color <= 15) {
-         colors = EntitySheep.fleeceColorTable[color];
+         colors = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(color));
       } else {
          colors = new float[]{(float)(color >> 16 & 255) / 255.0F, (float)(color >> 8 & 255) / 255.0F, (float)(color & 255) / 255.0F};
       }
 
-      super.particleRed = colors[0];
-      super.particleGreen = colors[1];
-      super.particleBlue = colors[2];
-      super.particleMaxAge = (int)(16.0D / (Math.random() * 0.8D + 0.2D));
-      super.noClip = false;
+      this.particleRed = colors[0];
+      this.particleGreen = colors[1];
+      this.particleBlue = colors[2];
+      this.particleMaxAge = (int)(16.0D / (Math.random() * 0.8D + 0.2D));
+      this.noClip = false;
    }
 
    public void onUpdate() {
       if(this.player.isDead) {
          this.setDead();
       } else {
-         super.prevPosX = super.posX;
-         super.prevPosY = super.posY;
-         super.prevPosZ = super.posZ;
-         float var1 = (float)super.particleAge / (float)super.particleMaxAge;
+         this.prevPosX = this.posX;
+         this.prevPosY = this.posY;
+         this.prevPosZ = this.posZ;
+         float var1 = (float)this.particleAge / (float)this.particleMaxAge;
          float var2 = var1;
          var1 = -var1 + var1 * var1 * 2.0F;
          var1 = 1.0F - var1;
          double dx = (double)(-MathHelper.sin((float)((double)(this.player.rotationYaw / 180.0F) * 3.141592653589793D)) * MathHelper.cos((float)((double)(this.player.rotationPitch / 180.0F) * 3.141592653589793D)));
          double dz = (double)(MathHelper.cos((float)((double)(this.player.rotationYaw / 180.0F) * 3.141592653589793D)) * MathHelper.cos((float)((double)(this.player.rotationPitch / 180.0F) * 3.141592653589793D)));
-         super.posX = this.player.posX + this.x + dx + super.motionX * (double)var1;
-         super.posY = this.player.posY + this.y + super.motionY * (double)var1 + (double)(1.0F - var2) - (double)(this.player.rotationPitch / 40.0F);
-         super.posZ = this.player.posZ + this.z + dz + super.motionZ * (double)var1;
-         if(super.particleAge++ >= super.particleMaxAge) {
+         this.posX = this.player.posX + this.x + dx + this.motionX * (double)var1;
+         this.posY = this.player.posY + this.y + this.motionY * (double)var1 + (double)(1.0F - var2) - (double)(this.player.rotationPitch / 40.0F);
+         this.posZ = this.player.posZ + this.z + dz + this.motionZ * (double)var1;
+         if(this.particleAge++ >= this.particleMaxAge) {
             this.setDead();
          }
 

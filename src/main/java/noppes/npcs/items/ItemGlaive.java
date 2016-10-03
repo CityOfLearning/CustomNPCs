@@ -1,8 +1,8 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item.ToolMaterial;
 import noppes.npcs.items.ItemNpcWeaponInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemGlaive extends ItemNpcWeaponInterface {
 
@@ -11,6 +11,6 @@ public class ItemGlaive extends ItemNpcWeaponInterface {
    }
 
    public void renderSpecial() {
-      GL11.glTranslatef(0.03F, -0.4F, 0.08F);
+      GlStateManager.translate(0.03F, -0.4F, 0.08F);
    }
 }

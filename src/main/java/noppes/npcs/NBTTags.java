@@ -1,10 +1,12 @@
 package noppes.npcs;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import net.minecraft.item.ItemStack;
@@ -12,6 +14,10 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagDouble;
 import net.minecraft.nbt.NBTTagList;
+import noppes.npcs.api.IItemStack;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
+import noppes.npcs.controllers.IScriptHandler;
+import noppes.npcs.controllers.ScriptContainer;
 
 public class NBTTags {
 
@@ -25,6 +31,24 @@ public class NBTTags {
             list.put(Integer.valueOf(nbttagcompound.getByte("Slot") & 255), ItemStack.loadItemStackFromNBT(nbttagcompound));
          } catch (ClassCastException var5) {
             list.put(Integer.valueOf(nbttagcompound.getInteger("Slot")), ItemStack.loadItemStackFromNBT(nbttagcompound));
+         }
+      }
+
+      return list;
+   }
+
+   public static Map getIItemStackMap(NBTTagList tagList) {
+      HashMap list = new HashMap();
+
+      for(int i = 0; i < tagList.tagCount(); ++i) {
+         NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+         ItemStack item = ItemStack.loadItemStackFromNBT(nbttagcompound);
+         if(item != null) {
+            try {
+               list.put(Integer.valueOf(nbttagcompound.getByte("Slot") & 255), new ItemStackWrapper(item));
+            } catch (ClassCastException var6) {
+               list.put(Integer.valueOf(nbttagcompound.getInteger("Slot")), new ItemStackWrapper(item));
+            }
          }
       }
 
@@ -88,6 +112,17 @@ public class NBTTags {
 
    public static HashSet getIntegerSet(NBTTagList tagList) {
       HashSet list = new HashSet();
+
+      for(int i = 0; i < tagList.tagCount(); ++i) {
+         NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+         list.add(Integer.valueOf(nbttagcompound.getInteger("Integer")));
+      }
+
+      return list;
+   }
+
+   public static List getIntegerList(NBTTagList tagList) {
+      ArrayList list = new ArrayList();
 
       for(int i = 0; i < tagList.tagCount(); ++i) {
          NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
@@ -214,6 +249,28 @@ public class NBTTags {
       }
    }
 
+   public static NBTTagList nbtIItemStackMap(Map inventory) {
+      NBTTagList nbttaglist = new NBTTagList();
+      if(inventory == null) {
+         return nbttaglist;
+      } else {
+         Iterator var2 = inventory.keySet().iterator();
+
+         while(var2.hasNext()) {
+            int slot = ((Integer)var2.next()).intValue();
+            IItemStack item = (IItemStack)inventory.get(Integer.valueOf(slot));
+            if(item != null) {
+               NBTTagCompound nbttagcompound = new NBTTagCompound();
+               nbttagcompound.setByte("Slot", (byte)slot);
+               item.getMCItemStack().writeToNBT(nbttagcompound);
+               nbttaglist.appendTag(nbttagcompound);
+            }
+         }
+
+         return nbttaglist;
+      }
+   }
+
    public static NBTTagList nbtItemStackArray(ItemStack[] inventory) {
       NBTTagList nbttaglist = new NBTTagList();
       if(inventory == null) {
@@ -254,7 +311,7 @@ public class NBTTags {
       }
    }
 
-   public static NBTTagList nbtIntegerIntegerMap(HashMap lines) {
+   public static NBTTagList nbtIntegerIntegerMap(Map lines) {
       NBTTagList nbttaglist = new NBTTagList();
       if(lines == null) {
          return nbttaglist;
@@ -292,7 +349,7 @@ public class NBTTags {
       }
    }
 
-   public static NBTTagList nbtIntegerSet(HashSet set) {
+   public static NBTTagList nbtIntegerCollection(Collection set) {
       NBTTagList nbttaglist = new NBTTagList();
       if(set == null) {
          return nbttaglist;
@@ -456,5 +513,62 @@ public class NBTTags {
       }
 
       return compound;
+   }
+
+   public static List GetScript(NBTTagList list, IScriptHandler handler) {
+      ArrayList scripts = new ArrayList();
+
+      for(int i = 0; i < list.tagCount(); ++i) {
+         NBTTagCompound compoundd = list.getCompoundTagAt(i);
+         ScriptContainer script = new ScriptContainer(handler);
+         script.readFromNBT(compoundd);
+         scripts.add(script);
+      }
+
+      return scripts;
+   }
+
+   public static NBTTagList NBTScript(List scripts) {
+      NBTTagList list = new NBTTagList();
+      Iterator var2 = scripts.iterator();
+
+      while(var2.hasNext()) {
+         ScriptContainer script = (ScriptContainer)var2.next();
+         NBTTagCompound compound = new NBTTagCompound();
+         script.writeToNBT(compound);
+         list.appendTag(compound);
+      }
+
+      return list;
+   }
+
+   public static Map GetLongStringMap(NBTTagList tagList) {
+      HashMap list = new HashMap();
+
+      for(int i = 0; i < tagList.tagCount(); ++i) {
+         NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
+         list.put(Long.valueOf(nbttagcompound.getLong("Long")), nbttagcompound.getString("String"));
+      }
+
+      return list;
+   }
+
+   public static NBTTagList NBTLongStringMap(Map map) {
+      NBTTagList nbttaglist = new NBTTagList();
+      if(map == null) {
+         return nbttaglist;
+      } else {
+         Iterator var2 = map.keySet().iterator();
+
+         while(var2.hasNext()) {
+            long slot = ((Long)var2.next()).longValue();
+            NBTTagCompound nbttagcompound = new NBTTagCompound();
+            nbttagcompound.setLong("Long", slot);
+            nbttagcompound.setString("String", (String)map.get(Long.valueOf(slot)));
+            nbttaglist.appendTag(nbttagcompound);
+         }
+
+         return nbttaglist;
+      }
    }
 }

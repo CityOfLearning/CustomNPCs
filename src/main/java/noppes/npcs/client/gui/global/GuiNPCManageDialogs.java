@@ -8,11 +8,13 @@ import noppes.npcs.client.Client;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.GuiNpcSoundSelection;
 import noppes.npcs.client.gui.SubGuiNpcAvailability;
-import noppes.npcs.client.gui.SubGuiNpcDialogExtra;
-import noppes.npcs.client.gui.SubGuiNpcDialogOptions;
+import noppes.npcs.client.gui.SubGuiNpcCommand;
 import noppes.npcs.client.gui.SubGuiNpcFactionOptions;
 import noppes.npcs.client.gui.SubGuiNpcTextArea;
 import noppes.npcs.client.gui.global.GuiNPCQuestSelection;
+import noppes.npcs.client.gui.global.SubGuiNpcDialogExtra;
+import noppes.npcs.client.gui.global.SubGuiNpcDialogOption;
+import noppes.npcs.client.gui.global.SubGuiNpcDialogOptions;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
@@ -47,16 +49,16 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 358, super.guiTop + 8, 58, 20, this.categorySelection?"dialog.dialogs":"gui.categories"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 358, super.guiTop + 61, 58, 20, "gui.remove"));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 358, this.guiTop + 8, 58, 20, this.categorySelection?"dialog.dialogs":"gui.categories"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 358, this.guiTop + 38, 58, 20, "gui.add"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 358, this.guiTop + 61, 58, 20, "gui.remove"));
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
          this.scroll.setSize(143, 208);
       }
 
-      this.scroll.guiLeft = super.guiLeft + 214;
-      this.scroll.guiTop = super.guiTop + 4;
+      this.scroll.guiLeft = this.guiLeft + 214;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
       if(this.categorySelection && this.category.id >= 0) {
          this.categoryGuiInit();
@@ -69,28 +71,28 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
    }
 
    private void dialogGuiInit() {
-      this.addLabel(new GuiNpcLabel(1, "gui.title", super.guiLeft + 4, super.guiTop + 8));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 36, super.guiTop + 3, 140, 20, this.dialog.title));
-      this.addLabel(new GuiNpcLabel(0, "ID", super.guiLeft + 178, super.guiTop + 4));
-      this.addLabel(new GuiNpcLabel(2, this.dialog.id + "", super.guiLeft + 178, super.guiTop + 14));
-      this.addLabel(new GuiNpcLabel(3, "dialog.dialogtext", super.guiLeft + 4, super.guiTop + 30));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 120, super.guiTop + 25, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(4, "availability.options", super.guiLeft + 4, super.guiTop + 51));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 120, super.guiTop + 46, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(5, "faction.options", super.guiLeft + 4, super.guiTop + 72));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 120, super.guiTop + 67, 50, 20, "selectServer.edit"));
-      this.addLabel(new GuiNpcLabel(6, "dialog.options", super.guiLeft + 4, super.guiTop + 93));
-      this.addButton(new GuiNpcButton(6, super.guiLeft + 120, super.guiTop + 89, 50, 20, "selectServer.edit"));
-      this.addButton(new GuiNpcButton(7, super.guiLeft + 4, super.guiTop + 114, 144, 20, "availability.selectquest"));
-      this.addButton(new GuiNpcButton(8, super.guiLeft + 150, super.guiTop + 114, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(9, "gui.selectSound", super.guiLeft + 4, super.guiTop + 138));
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 148, 144, 20, this.dialog.sound));
-      this.addButton(new GuiNpcButton(9, super.guiLeft + 150, super.guiTop + 148, 60, 20, "mco.template.button.select"));
-      this.addButton(new GuiNpcButton(10, super.guiLeft + 4, super.guiTop + 172, 120, 20, "gui.showmore"));
+      this.addLabel(new GuiNpcLabel(1, "gui.title", this.guiLeft + 4, this.guiTop + 8));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 36, this.guiTop + 3, 140, 20, this.dialog.title));
+      this.addLabel(new GuiNpcLabel(0, "ID", this.guiLeft + 178, this.guiTop + 4));
+      this.addLabel(new GuiNpcLabel(2, this.dialog.id + "", this.guiLeft + 178, this.guiTop + 14));
+      this.addLabel(new GuiNpcLabel(3, "dialog.dialogtext", this.guiLeft + 4, this.guiTop + 30));
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 120, this.guiTop + 25, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(4, "availability.options", this.guiLeft + 4, this.guiTop + 51));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 120, this.guiTop + 46, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(5, "faction.options", this.guiLeft + 4, this.guiTop + 72));
+      this.addButton(new GuiNpcButton(5, this.guiLeft + 120, this.guiTop + 67, 50, 20, "selectServer.edit"));
+      this.addLabel(new GuiNpcLabel(6, "dialog.options", this.guiLeft + 4, this.guiTop + 93));
+      this.addButton(new GuiNpcButton(6, this.guiLeft + 120, this.guiTop + 89, 50, 20, "selectServer.edit"));
+      this.addButton(new GuiNpcButton(7, this.guiLeft + 4, this.guiTop + 114, 144, 20, "availability.selectquest"));
+      this.addButton(new GuiNpcButton(8, this.guiLeft + 150, this.guiTop + 114, 20, 20, "X"));
+      this.addLabel(new GuiNpcLabel(9, "gui.selectSound", this.guiLeft + 4, this.guiTop + 138));
+      this.addTextField(new GuiNpcTextField(2, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 148, 144, 20, this.dialog.sound));
+      this.addButton(new GuiNpcButton(9, this.guiLeft + 150, this.guiTop + 148, 60, 20, "mco.template.button.select"));
+      this.addButton(new GuiNpcButton(10, this.guiLeft + 4, this.guiTop + 172, 120, 20, "gui.extraoptions"));
    }
 
    private void categoryGuiInit() {
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 8, super.guiTop + 8, 160, 16, this.category.title));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 8, this.guiTop + 8, 160, 16, this.category.title));
    }
 
    public void elementClicked() {
@@ -169,7 +171,7 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
       }
 
       if(id == 7 && this.dialog.id >= 0) {
-         NoppesUtil.openGUI(super.player, new GuiNPCQuestSelection(super.npc, this, this.dialog.quest));
+         NoppesUtil.openGUI(this.player, new GuiNPCQuestSelection(this.npc, this, this.dialog.quest));
       }
 
       if(id == 8 && this.dialog.id >= 0) {
@@ -178,7 +180,7 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
       }
 
       if(id == 9 && this.dialog.id >= 0) {
-         NoppesUtil.openGUI(super.player, this.gui = new GuiNpcSoundSelection(super.npc, this, this.getTextField(2).getText()));
+         NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this, this.getTextField(2).getText()));
       }
 
       if(id == 10) {
@@ -254,6 +256,14 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
       if(subgui instanceof SubGuiNpcTextArea) {
          SubGuiNpcTextArea gui = (SubGuiNpcTextArea)subgui;
          this.dialog.text = gui.text;
+      }
+
+      if(subgui instanceof SubGuiNpcDialogOption) {
+         this.setSubGui(new SubGuiNpcDialogOptions(this.dialog));
+      }
+
+      if(subgui instanceof SubGuiNpcCommand) {
+         this.dialog.command = ((SubGuiNpcCommand)subgui).command;
       }
 
    }

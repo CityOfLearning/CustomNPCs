@@ -2,7 +2,7 @@ package noppes.npcs.client.gui.player;
 
 import java.util.Iterator;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -17,7 +17,6 @@ import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerNPCFollower;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleFollower;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData {
 
@@ -30,16 +29,16 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
       super(npc, container);
       this.npc = npc;
       this.role = (RoleFollower)npc.roleInterface;
-      super.closeOnEsc = true;
+      this.closeOnEsc = true;
       NoppesUtilPlayer.sendData(EnumPlayerPacket.RoleGet, new Object[0]);
    }
 
    public void initGui() {
       super.initGui();
-      super.buttonList.clear();
-      this.addButton(new GuiNpcButton(4, super.field_147003_i + 100, super.field_147009_r + 110, 50, 20, new String[]{StatCollector.translateToLocal("follower.waiting"), StatCollector.translateToLocal("follower.following")}, this.role.isFollowing?1:0));
+      this.buttonList.clear();
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 100, this.guiTop + 110, 50, 20, new String[]{StatCollector.translateToLocal("follower.waiting"), StatCollector.translateToLocal("follower.following")}, this.role.isFollowing?1:0));
       if(!this.role.infiniteDays) {
-         this.addButton(new GuiNpcButton(5, super.field_147003_i + 8, super.field_147009_r + 30, 50, 20, StatCollector.translateToLocal("follower.hire")));
+         this.addButton(new GuiNpcButton(5, this.guiLeft + 8, this.guiTop + 30, 50, 20, StatCollector.translateToLocal("follower.hire")));
       }
 
    }
@@ -58,23 +57,23 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
    }
 
    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-      super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.health") + ": " + this.npc.getHealth() + "/" + this.npc.getMaxHealth(), 62, 70, CustomNpcResourceListener.DefaultTextColor);
+      this.fontRendererObj.drawString(StatCollector.translateToLocal("follower.health") + ": " + this.npc.getHealth() + "/" + this.npc.getMaxHealth(), 62, 70, CustomNpcResourceListener.DefaultTextColor);
       if(!this.role.infiniteDays) {
-         if(this.role.getDaysLeft() <= 1) {
-            super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + StatCollector.translateToLocal("follower.lastday"), 62, 94, CustomNpcResourceListener.DefaultTextColor);
+         if(this.role.getDays() <= 1) {
+            this.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + StatCollector.translateToLocal("follower.lastday"), 62, 94, CustomNpcResourceListener.DefaultTextColor);
          } else {
-            super.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + (this.role.getDaysLeft() - 1), 62, 94, CustomNpcResourceListener.DefaultTextColor);
+            this.fontRendererObj.drawString(StatCollector.translateToLocal("follower.daysleft") + ": " + (this.role.getDays() - 1), 62, 94, CustomNpcResourceListener.DefaultTextColor);
          }
       }
 
    }
 
    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      int l = super.field_147003_i;
-      int i1 = super.field_147009_r;
-      this.drawTexturedModalRect(l, i1, 0, 0, super.xSize, super.ySize);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.resource);
+      int l = this.guiLeft;
+      int i1 = this.guiTop;
+      this.drawTexturedModalRect(l, i1, 0, 0, this.xSize, this.ySize);
       int index = 0;
       if(!this.role.infiniteDays) {
          Iterator var7 = this.role.inventory.items.keySet().iterator();
@@ -89,16 +88,16 @@ public class GuiNpcFollower extends GuiContainerNPCInterface implements IGuiData
                }
 
                int yOffset = index * 20;
-               int x = super.field_147003_i + 68;
-               int y = super.field_147009_r + yOffset + 4;
-               GL11.glEnable('\u803a');
+               int x = this.guiLeft + 68;
+               int y = this.guiTop + yOffset + 4;
+               GlStateManager.enableRescaleNormal();
                RenderHelper.enableGUIStandardItemLighting();
-               GuiScreen.itemRender.renderItemIntoGUI(super.fontRendererObj, super.mc.renderEngine, itemstack, x + 11, y);
-               GuiScreen.itemRender.renderItemOverlayIntoGUI(super.fontRendererObj, super.mc.renderEngine, itemstack, x + 11, y);
+               this.itemRender.renderItemAndEffectIntoGUI(itemstack, x + 11, y);
+               this.itemRender.renderItemOverlays(this.fontRendererObj, itemstack, x + 11, y);
                RenderHelper.disableStandardItemLighting();
-               GL11.glDisable('\u803a');
+               GlStateManager.disableRescaleNormal();
                String daysS = days + " " + (days == 1?StatCollector.translateToLocal("follower.day"):StatCollector.translateToLocal("follower.days"));
-               super.fontRendererObj.drawString(" = " + daysS, x + 27, y + 4, CustomNpcResourceListener.DefaultTextColor);
+               this.fontRendererObj.drawString(" = " + daysS, x + 27, y + 4, CustomNpcResourceListener.DefaultTextColor);
                ++index;
             }
          }

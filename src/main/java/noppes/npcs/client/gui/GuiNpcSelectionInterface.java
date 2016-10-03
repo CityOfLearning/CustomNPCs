@@ -1,5 +1,6 @@
 package noppes.npcs.client.gui;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -31,8 +32,8 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
       super(npc);
       this.root = AssetsBrowser.getRoot(sound);
       this.assets = new AssetsBrowser(this.root, this.getExtension());
-      super.drawDefaultBackground = false;
-      super.title = "";
+      this.drawDefaultBackground = false;
+      this.title = "";
       this.parent = parent;
    }
 
@@ -40,7 +41,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
       super.initGui();
       this.dataFolder.clear();
       String ss = "Current Folder: /assets" + this.root;
-      this.addLabel(new GuiNpcLabel(0, ss, super.width / 2 - super.fontRendererObj.getStringWidth(ss) / 2, 20, 16777215));
+      this.addLabel(new GuiNpcLabel(0, ss, this.width / 2 - this.fontRendererObj.getStringWidth(ss) / 2, 20, 16777215));
       Vector list = new Vector();
       if(!this.assets.isRoot) {
          list.add(this.up);
@@ -66,8 +67,8 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
       Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
       this.slot = new GuiNPCStringSlot(list, this, false, 18);
       this.slot.registerScrollButtons(4, 5);
-      this.addButton(new GuiNpcButton(2, super.width / 2 - 100, super.height - 44, 98, 20, "gui.back"));
-      this.addButton(new GuiNpcButton(3, super.width / 2 + 2, super.height - 44, 98, 20, "gui.up"));
+      this.addButton(new GuiNpcButton(2, this.width / 2 - 100, this.height - 44, 98, 20, "gui.back"));
+      this.addButton(new GuiNpcButton(3, this.width / 2 + 2, this.height - 44, 98, 20, "gui.up"));
       this.getButton(3).enabled = !this.assets.isRoot;
    }
 
@@ -87,6 +88,11 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 
    }
 
+   public void handleMouseInput() throws IOException {
+      this.slot.handleMouseInput();
+      super.handleMouseInput();
+   }
+
    public void doubleClicked() {
       if(this.slot.selected.equals(this.up)) {
          this.root = this.root.substring(0, this.root.lastIndexOf("/"));
@@ -98,7 +104,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
          this.initGui();
       } else {
          this.close();
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
       }
 
    }
@@ -107,7 +113,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
       int id = guibutton.id;
       if(id == 2) {
          this.close();
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
       }
 
       if(id == 3) {

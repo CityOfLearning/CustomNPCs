@@ -1,12 +1,16 @@
 package noppes.npcs.blocks;
 
 import java.util.List;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileTable;
@@ -27,13 +31,25 @@ public class BlockTable extends BlockRotated {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int getMetaFromState(IBlockState state) {
+      return this.damageDropped(state);
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
+   public IBlockState getStateFromMeta(int meta) {
+      return this.getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta));
+   }
+
+   protected BlockState createBlockState() {
+      return new BlockState(this, new IProperty[]{DAMAGE});
+   }
+
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
+   }
+
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      super.onBlockPlacedBy(world, pos, state, entity, stack);
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {

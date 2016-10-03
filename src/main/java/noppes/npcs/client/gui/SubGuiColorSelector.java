@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
-import org.lwjgl.opengl.GL11;
 
 public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldListener {
 
@@ -23,19 +23,19 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 
 
    public SubGuiColorSelector(int color) {
-      super.xSize = 176;
-      super.ySize = 222;
+      this.xSize = 176;
+      this.ySize = 222;
       this.color = color;
       this.setBackground("smallbg.png");
    }
 
    public void initGui() {
       super.initGui();
-      this.colorX = super.guiLeft + 30;
-      this.colorY = super.guiTop + 50;
-      this.addTextField(this.textfield = new GuiNpcTextField(0, this, super.guiLeft + 53, super.guiTop + 20, 70, 20, this.getColor()));
+      this.colorX = this.guiLeft + 30;
+      this.colorY = this.guiTop + 50;
+      this.addTextField(this.textfield = new GuiNpcTextField(0, this, this.guiLeft + 53, this.guiTop + 20, 70, 20, this.getColor()));
       this.textfield.setTextColor(this.color);
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 112, super.guiTop + 198, 60, 20, "gui.done"));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 112, this.guiTop + 198, 60, 20, "gui.done"));
    }
 
    public String getColor() {
@@ -76,8 +76,8 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
 
    public void drawScreen(int par1, int par2, float par3) {
       super.drawScreen(par1, par2, par3);
-      super.mc.getTextureManager().bindTexture(resource);
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.getTextureManager().bindTexture(resource);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
       this.drawTexturedModalRect(this.colorX, this.colorY, 0, 0, 120, 120);
    }
 
@@ -87,9 +87,9 @@ public class SubGuiColorSelector extends SubGuiInterface implements ITextfieldLi
          InputStream stream = null;
 
          try {
-            IResource e = super.mc.getResourceManager().getResource(resource);
+            IResource e = this.mc.getResourceManager().getResource(resource);
             BufferedImage bufferedimage = ImageIO.read(stream = e.getInputStream());
-            this.color = bufferedimage.getRGB((i - super.guiLeft - 30) * 4, (j - super.guiTop - 50) * 4) & 16777215;
+            this.color = bufferedimage.getRGB((i - this.guiLeft - 30) * 4, (j - this.guiTop - 50) * 4) & 16777215;
             this.textfield.setTextColor(this.color);
             this.textfield.setText(this.getColor());
          } catch (IOException var15) {

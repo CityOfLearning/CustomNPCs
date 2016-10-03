@@ -5,7 +5,9 @@ import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesUtilServer;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerTransportData;
@@ -52,12 +54,12 @@ public class RoleTransporter extends RoleInterface {
             if(loc.type != 0) {
                return false;
             } else {
-               List inRange = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(6.0D, 6.0D, 6.0D));
+               List inRange = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(6.0D, 6.0D, 6.0D));
                Iterator var3 = inRange.iterator();
 
                while(var3.hasNext()) {
                   EntityPlayer player = (EntityPlayer)var3.next();
-                  if(super.npc.canSee(player)) {
+                  if(this.npc.canSee(player)) {
                      this.unlock(player, loc);
                   }
                }
@@ -68,8 +70,6 @@ public class RoleTransporter extends RoleInterface {
       }
    }
 
-   public void aiStartExecuting() {}
-
    public void interact(EntityPlayer player) {
       if(this.hasTransport()) {
          TransportLocation loc = this.getLocation();
@@ -77,7 +77,7 @@ public class RoleTransporter extends RoleInterface {
             this.unlock(player, loc);
          }
 
-         NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerTransporter, super.npc);
+         NoppesUtilServer.sendOpenGui(player, EnumGuiType.PlayerTransporter, this.npc);
       }
 
    }
@@ -85,13 +85,16 @@ public class RoleTransporter extends RoleInterface {
    private void unlock(EntityPlayer player, TransportLocation loc) {
       PlayerTransportData data = PlayerDataController.instance.getPlayerData(player).transportData;
       if(!data.transports.contains(Integer.valueOf(this.transportId))) {
-         data.transports.add(Integer.valueOf(this.transportId));
-         player.addChatMessage(new ChatComponentTranslation("transporter.unlock", new Object[]{loc.name}));
+         RoleEvent.TransporterUnlockedEvent event = new RoleEvent.TransporterUnlockedEvent(player, this.npc.wrappedNPC);
+         if(!EventHooks.onNPCRole(this.npc, event)) {
+            data.transports.add(Integer.valueOf(this.transportId));
+            player.addChatMessage(new ChatComponentTranslation("transporter.unlock", new Object[]{loc.name}));
+         }
       }
    }
 
    public TransportLocation getLocation() {
-      return super.npc.isRemote()?null:TransportController.getInstance().getTransport(this.transportId);
+      return this.npc.isRemote()?null:TransportController.getInstance().getTransport(this.transportId);
    }
 
    public boolean hasTransport() {

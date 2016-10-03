@@ -1,12 +1,16 @@
 package noppes.npcs;
 
-import cpw.mods.fml.common.network.IGuiHandler;
+import net.minecraft.block.Block;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.PacketHandlerPlayer;
@@ -34,6 +38,7 @@ import noppes.npcs.containers.ContainerNPCTraderSetup;
 import noppes.npcs.containers.ContainerNpcItemGiver;
 import noppes.npcs.containers.ContainerNpcQuestReward;
 import noppes.npcs.containers.ContainerNpcQuestTypeItem;
+import noppes.npcs.containers.ContainerTradingBlock;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class CommonProxy implements IGuiHandler {
@@ -47,6 +52,8 @@ public class CommonProxy implements IGuiHandler {
       CustomNpcs.ChannelPlayer.register(new PacketHandlerPlayer());
    }
 
+   public void postload() {}
+
    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
       if(ID > EnumGuiType.values().length) {
          return null;
@@ -58,7 +65,7 @@ public class CommonProxy implements IGuiHandler {
    }
 
    public Container getContainer(EnumGuiType gui, EntityPlayer player, int x, int y, int z, EntityNPCInterface npc) {
-      return (Container)(gui == EnumGuiType.MainMenuInv?new ContainerNPCInv(npc, player):(gui == EnumGuiType.PlayerBankSmall?new ContainerNPCBankSmall(player, x, y):(gui == EnumGuiType.PlayerBankUnlock?new ContainerNPCBankUnlock(player, x, y):(gui == EnumGuiType.PlayerBankUprade?new ContainerNPCBankUpgrade(player, x, y):(gui == EnumGuiType.PlayerBankLarge?new ContainerNPCBankLarge(player, x, y):(gui == EnumGuiType.PlayerFollowerHire?new ContainerNPCFollowerHire(npc, player):(gui == EnumGuiType.PlayerFollower?new ContainerNPCFollower(npc, player):(gui == EnumGuiType.PlayerTrader?new ContainerNPCTrader(npc, player):(gui == EnumGuiType.PlayerAnvil?new ContainerCarpentryBench(player.inventory, player.worldObj, x, y, z):(gui == EnumGuiType.SetupItemGiver?new ContainerNpcItemGiver(npc, player):(gui == EnumGuiType.SetupTrader?new ContainerNPCTraderSetup(npc, player):(gui == EnumGuiType.SetupFollower?new ContainerNPCFollowerSetup(npc, player):(gui == EnumGuiType.QuestReward?new ContainerNpcQuestReward(player):(gui == EnumGuiType.QuestItem?new ContainerNpcQuestTypeItem(player):(gui == EnumGuiType.ManageRecipes?new ContainerManageRecipes(player, x):(gui == EnumGuiType.ManageBanks?new ContainerManageBanks(player):(gui == EnumGuiType.MerchantAdd?new ContainerMerchantAdd(player, ServerEventsHandler.Merchant, player.worldObj):(gui == EnumGuiType.Crate?new ContainerCrate(player.inventory, (TileNpcContainer)player.worldObj.getTileEntity(x, y, z)):(gui == EnumGuiType.PlayerMailman?new ContainerMail(player, x == 1, y == 1):(gui == EnumGuiType.CompanionInv?new ContainerNPCCompanion(npc, player):null))))))))))))))))))));
+      return (Container)(gui == EnumGuiType.MainMenuInv?new ContainerNPCInv(npc, player):(gui == EnumGuiType.PlayerBankSmall?new ContainerNPCBankSmall(player, x, y):(gui == EnumGuiType.PlayerBankUnlock?new ContainerNPCBankUnlock(player, x, y):(gui == EnumGuiType.PlayerBankUprade?new ContainerNPCBankUpgrade(player, x, y):(gui == EnumGuiType.PlayerBankLarge?new ContainerNPCBankLarge(player, x, y):(gui == EnumGuiType.PlayerFollowerHire?new ContainerNPCFollowerHire(npc, player):(gui == EnumGuiType.PlayerFollower?new ContainerNPCFollower(npc, player):(gui == EnumGuiType.PlayerTrader?new ContainerNPCTrader(npc, player):(gui == EnumGuiType.PlayerAnvil?new ContainerCarpentryBench(player.inventory, player.worldObj, new BlockPos(x, y, z)):(gui == EnumGuiType.SetupItemGiver?new ContainerNpcItemGiver(npc, player):(gui == EnumGuiType.SetupTrader?new ContainerNPCTraderSetup(npc, player):(gui == EnumGuiType.SetupFollower?new ContainerNPCFollowerSetup(npc, player):(gui == EnumGuiType.QuestReward?new ContainerNpcQuestReward(player):(gui == EnumGuiType.QuestItem?new ContainerNpcQuestTypeItem(player):(gui == EnumGuiType.ManageRecipes?new ContainerManageRecipes(player, x):(gui == EnumGuiType.ManageBanks?new ContainerManageBanks(player):(gui == EnumGuiType.MerchantAdd?new ContainerMerchantAdd(player, ServerEventsHandler.Merchant, player.worldObj):(gui == EnumGuiType.Crate?new ContainerCrate(player.inventory, (TileNpcContainer)player.worldObj.getTileEntity(new BlockPos(x, y, z))):(gui == EnumGuiType.PlayerMailman?new ContainerMail(player, x == 1, y == 1):(gui == EnumGuiType.CompanionInv?new ContainerNPCCompanion(npc, player):(gui == EnumGuiType.TradingBlock?new ContainerTradingBlock(player, new BlockPos(x, y, z)):null)))))))))))))))))))));
    }
 
    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -83,11 +90,19 @@ public class CommonProxy implements IGuiHandler {
       return null;
    }
 
-   public void registerItem(Item item) {}
-
    public ModelBiped getSkirtModel() {
       return null;
    }
 
-   public void spawnParticle(String particle, double x, double y, double z, double motionX, double motionY, double motionZ, float scale) {}
+   public void spawnParticle(EnumParticleTypes type, double x, double y, double z, double motionX, double motionY, double motionZ, float scale) {}
+
+   public void registerItem(Item item, String name, int meta) {}
+
+   public void registerBlock(Block block, String name, int meta, Class itemclass, boolean seperateMetadata) {
+      GameRegistry.registerBlock(block, itemclass, name);
+   }
+
+   public void registerBlock(Block block, String name, int meta, Class itemclass) {
+      this.registerBlock(block, name, meta, itemclass, false);
+   }
 }

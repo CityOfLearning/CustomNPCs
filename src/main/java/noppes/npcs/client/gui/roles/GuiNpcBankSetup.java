@@ -23,8 +23,11 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 
    public GuiNpcBankSetup(EntityNPCInterface npc) {
       super(npc);
-      Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
       this.role = (RoleBank)npc.roleInterface;
+   }
+
+   public void initPacket() {
+      Client.sendData(EnumPacketServer.BanksGet, new Object[0]);
    }
 
    public void initGui() {
@@ -34,8 +37,8 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
       }
 
       this.scroll.setSize(200, 152);
-      this.scroll.guiLeft = super.guiLeft + 85;
-      this.scroll.guiTop = super.guiTop + 20;
+      this.scroll.guiLeft = this.guiLeft + 85;
+      this.scroll.guiTop = this.guiTop + 20;
       this.addScroll(this.scroll);
    }
 

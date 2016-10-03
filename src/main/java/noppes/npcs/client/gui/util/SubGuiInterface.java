@@ -30,8 +30,4 @@ public class SubGuiInterface extends GuiNPCInterface {
    public GuiScreen getParent() {
       return this.parent instanceof SubGuiInterface?((SubGuiInterface)this.parent).getParent():this.parent;
    }
-
-   public void drawScreen(int i, int j, float f) {
-      super.drawScreen(i, j, f);
-   }
 }

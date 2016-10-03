@@ -25,12 +25,12 @@ public class RolePostman extends RoleInterface {
    }
 
    public boolean aiShouldExecute() {
-      if(super.npc.ticksExisted % 20 != 0) {
+      if(this.npc.ticksExisted % 20 != 0) {
          return false;
       } else {
-         this.toCheck = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(10.0D, 10.0D, 10.0D));
+         this.toCheck = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(10.0D, 10.0D, 10.0D));
          this.toCheck.removeAll(this.recentlyChecked);
-         List listMax = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand(20.0D, 20.0D, 20.0D));
+         List listMax = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand(20.0D, 20.0D, 20.0D));
          this.recentlyChecked.retainAll(listMax);
          this.recentlyChecked.addAll(this.toCheck);
          Iterator var2 = this.toCheck.iterator();
@@ -44,6 +44,10 @@ public class RolePostman extends RoleInterface {
 
          return false;
       }
+   }
+
+   public boolean aiContinueExecute() {
+      return false;
    }
 
    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound) {

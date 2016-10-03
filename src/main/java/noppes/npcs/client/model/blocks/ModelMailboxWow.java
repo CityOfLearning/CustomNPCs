@@ -13,8 +13,8 @@ public class ModelMailboxWow extends ModelBase {
 
 
    public ModelMailboxWow() {
-      super.textureWidth = 128;
-      super.textureHeight = 64;
+      this.textureWidth = 128;
+      this.textureHeight = 64;
       this.Shape4 = new ModelRenderer(this, 59, 0);
       this.Shape4.addBox(0.0F, 0.0F, 0.0F, 8, 6, 0);
       this.Shape4.setRotationPoint(-4.0F, -4.0F, 0.0F);

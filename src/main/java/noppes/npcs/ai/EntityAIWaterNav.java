@@ -1,6 +1,7 @@
 package noppes.npcs.ai;
 
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.pathfinding.PathNavigateGround;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityAIWaterNav extends EntityAIBase {
@@ -10,11 +11,11 @@ public class EntityAIWaterNav extends EntityAIBase {
 
    public EntityAIWaterNav(EntityNPCInterface par1EntityNPCInterface) {
       this.theEntity = par1EntityNPCInterface;
-      par1EntityNPCInterface.getNavigator().setCanSwim(true);
+      ((PathNavigateGround)par1EntityNPCInterface.getNavigator()).setCanSwim(true);
    }
 
    public boolean shouldExecute() {
-      if(this.theEntity.isInWater() || this.theEntity.handleLavaMovement()) {
+      if(this.theEntity.isInWater() || this.theEntity.isInLava()) {
          if(this.theEntity.ai.canSwim) {
             return true;
          }

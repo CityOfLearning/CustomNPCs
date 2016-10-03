@@ -3,9 +3,10 @@ package noppes.npcs.roles;
 import java.util.HashMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.api.entity.data.INPCRole;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public abstract class RoleInterface {
+public abstract class RoleInterface implements INPCRole {
 
    public EntityNPCInterface npc;
    public HashMap dataString = new HashMap();
@@ -42,4 +43,8 @@ public abstract class RoleInterface {
    }
 
    public void clientUpdate() {}
+
+   public int getType() {
+      return this.npc.advanced.role;
+   }
 }

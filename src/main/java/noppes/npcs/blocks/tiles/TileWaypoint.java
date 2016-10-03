@@ -5,17 +5,18 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.constants.EnumQuestType;
+import noppes.npcs.api.constants.EnumQuestType;
+import noppes.npcs.blocks.tiles.TileNpcEntity;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerQuestData;
 import noppes.npcs.controllers.QuestData;
 import noppes.npcs.quests.QuestLocation;
 
-public class TileWaypoint extends TileEntity {
+public class TileWaypoint extends TileNpcEntity implements ITickable {
 
    public String name = "";
    private int ticks = 10;
@@ -24,8 +25,8 @@ public class TileWaypoint extends TileEntity {
    public int range = 10;
 
 
-   public void updateEntity() {
-      if(!super.worldObj.isRemote && !this.name.isEmpty()) {
+   public void update() {
+      if(!this.worldObj.isRemote && !this.name.isEmpty()) {
          --this.ticks;
          if(this.ticks <= 0) {
             this.ticks = 10;
@@ -44,11 +45,11 @@ public class TileWaypoint extends TileEntity {
 
                   while(var5.hasNext()) {
                      QuestData data = (QuestData)var5.next();
-                     if(data.quest.type == EnumQuestType.Location) {
+                     if(data.quest.type == EnumQuestType.LOCATION) {
                         QuestLocation quest = (QuestLocation)data.quest.questInterface;
                         if(quest.setFound(data, this.name)) {
                            player.addChatMessage(new ChatComponentTranslation(this.name + " " + StatCollector.translateToLocal("quest.found"), new Object[0]));
-                           playerdata.checkQuestCompletion(player, EnumQuestType.Location);
+                           playerdata.checkQuestCompletion(player, EnumQuestType.LOCATION);
                         }
                      }
                   }
@@ -60,7 +61,7 @@ public class TileWaypoint extends TileEntity {
    }
 
    private List getPlayerList(int x, int y, int z) {
-      return super.worldObj.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 1), (double)(super.zCoord + 1)).expand((double)x, (double)y, (double)z));
+      return this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, (new AxisAlignedBB(this.pos, this.pos.add(1, 1, 1))).expand((double)x, (double)y, (double)z));
    }
 
    public void readFromNBT(NBTTagCompound compound) {

@@ -1,0 +1,10 @@
+package noppes.npcs.ai;
+
+import net.minecraft.entity.ai.EntityAIBase;
+
+public class EntityAIAbilities extends EntityAIBase {
+
+   public boolean shouldExecute() {
+      return false;
+   }
+}

@@ -1,58 +1,56 @@
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.BlockChair;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileCouchWool;
+import noppes.npcs.client.renderer.ITileRenderer;
 
-public class BlockCouchWool extends BlockContainer {
+public class BlockCouchWool extends BlockContainer implements ITileRenderer {
 
-   public int renderId = -1;
+   public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 5);
+   private TileColorable renderTile;
 
 
    public BlockCouchWool() {
       super(Material.wood);
    }
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
+   public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
       ItemStack item = player.inventory.getCurrentItem();
       if(item != null && item.getItem() == Items.dye) {
-         int meta = par1World.getBlockMetadata(i, j, k);
-         if(meta >= 7) {
-            --j;
-         }
-
-         TileColorable tile = (TileColorable)par1World.getTileEntity(i, j, k);
-         int color = BlockColored.func_150031_c(item.getMetadata());
+         TileColorable tile = (TileColorable)par1World.getTileEntity(pos);
+         int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
          if(tile.color != color) {
             NoppesUtilServer.consumeItemStack(1, player);
             tile.color = color;
-            par1World.markBlockForUpdate(i, j, k);
+            par1World.markBlockForUpdate(pos);
          }
 
          return true;
       } else {
-         return BlockChair.MountBlock(par1World, i, j, k, player);
+         return BlockChair.MountBlock(par1World, pos, player);
       }
    }
 
@@ -65,102 +63,124 @@ public class BlockCouchWool extends BlockContainer {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int getMetaFromState(IBlockState state) {
+      return this.damageDropped(state);
    }
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int x, int y, int z) {
-      return AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)y + 0.5D, (double)(z + 1));
+   public IBlockState getStateFromMeta(int meta) {
+      return this.getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta));
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+   protected BlockState createBlockState() {
+      return new BlockState(this, new IProperty[]{DAMAGE});
+   }
+
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
+   }
+
+   public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+      return new AxisAlignedBB((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), (double)(pos.getX() + 1), (double)pos.getY() + 0.5D, (double)(pos.getZ() + 1));
+   }
+
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
       l %= 4;
-      TileCouchWool tile = (TileCouchWool)par1World.getTileEntity(par2, par3, par4);
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      TileCouchWool tile = (TileCouchWool)world.getTileEntity(pos);
       tile.rotation = l;
-      tile.color = 15 - par6ItemStack.getMetadata();
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-      this.updateModel(par1World, par2, par3, par4, tile);
-      this.onNeighborBlockChange(par1World, par2 + 1, par3, par4, this);
-      this.onNeighborBlockChange(par1World, par2 - 1, par3, par4, this);
-      this.onNeighborBlockChange(par1World, par2, par3, par4 + 1, this);
-      this.onNeighborBlockChange(par1World, par2, par3, par4 - 1, this);
-      this.updateModel(par1World, par2, par3, par4, tile);
-      par1World.markBlockForUpdate(par2, par3, par4);
+      tile.color = 15 - stack.getItemDamage();
+      this.updateModel(world, pos, tile);
+      this.onNeighborBlockChange(world, pos.east(), state, this);
+      this.onNeighborBlockChange(world, pos.west(), state, this);
+      this.onNeighborBlockChange(world, pos.north(), state, this);
+      this.onNeighborBlockChange(world, pos.south(), state, this);
+      this.updateModel(world, pos, tile);
+      world.markBlockForUpdate(pos);
    }
 
-   public void onNeighborBlockChange(World worldObj, int x, int y, int z, Block block) {
+   public void onNeighborBlockChange(World worldObj, BlockPos pos, IBlockState state, Block block) {
       if(!worldObj.isRemote && block == this) {
-         TileEntity tile = worldObj.getTileEntity(x, y, z);
+         TileEntity tile = worldObj.getTileEntity(pos);
          if(tile != null && tile instanceof TileCouchWool) {
-            this.updateModel(worldObj, x, y, z, (TileCouchWool)tile);
-            worldObj.markBlockForUpdate(x, y, z);
+            this.updateModel(worldObj, pos, (TileCouchWool)tile);
+            worldObj.markBlockForUpdate(pos);
          }
       }
    }
 
-   private void updateModel(World world, int x, int y, int z, TileCouchWool tile) {
+   private void updateModel(World world, BlockPos pos, TileCouchWool tile) {
       if(!world.isRemote) {
          int meta = tile.getBlockMetadata();
          if(tile.rotation == 0) {
-            tile.hasCornerLeft = this.compareCornerTiles(tile, x, y, z - 1, world, meta, true);
-            tile.hasCornerRight = this.compareCornerTiles(tile, x, y, z - 1, world, meta, false);
-            tile.hasLeft = this.compareTiles(tile, x - 1, y, z, world, meta);
-            tile.hasRight = this.compareTiles(tile, x + 1, y, z, world, meta);
+            tile.hasCornerLeft = this.compareCornerTiles(tile, pos.north(), world, meta, true);
+            tile.hasCornerRight = this.compareCornerTiles(tile, pos.north(), world, meta, false);
+            tile.hasLeft = this.compareTiles(tile, pos.west(), world, meta);
+            tile.hasRight = this.compareTiles(tile, pos.east(), world, meta);
          } else if(tile.rotation == 2) {
-            tile.hasCornerLeft = this.compareCornerTiles(tile, x, y, z + 1, world, meta, true);
-            tile.hasCornerRight = this.compareCornerTiles(tile, x, y, z + 1, world, meta, false);
-            tile.hasLeft = this.compareTiles(tile, x + 1, y, z, world, meta);
-            tile.hasRight = this.compareTiles(tile, x - 1, y, z, world, meta);
+            tile.hasCornerLeft = this.compareCornerTiles(tile, pos.south(), world, meta, true);
+            tile.hasCornerRight = this.compareCornerTiles(tile, pos.south(), world, meta, false);
+            tile.hasLeft = this.compareTiles(tile, pos.east(), world, meta);
+            tile.hasRight = this.compareTiles(tile, pos.west(), world, meta);
          } else if(tile.rotation == 1) {
-            tile.hasCornerLeft = this.compareCornerTiles(tile, x + 1, y, z, world, meta, true);
-            tile.hasCornerRight = this.compareCornerTiles(tile, x + 1, y, z, world, meta, false);
-            tile.hasLeft = this.compareTiles(tile, x, y, z - 1, world, meta);
-            tile.hasRight = this.compareTiles(tile, x, y, z + 1, world, meta);
+            tile.hasCornerLeft = this.compareCornerTiles(tile, pos.east(), world, meta, true);
+            tile.hasCornerRight = this.compareCornerTiles(tile, pos.east(), world, meta, false);
+            tile.hasLeft = this.compareTiles(tile, pos.north(), world, meta);
+            tile.hasRight = this.compareTiles(tile, pos.south(), world, meta);
          } else if(tile.rotation == 3) {
-            tile.hasCornerLeft = this.compareCornerTiles(tile, x - 1, y, z, world, meta, true);
-            tile.hasCornerRight = this.compareCornerTiles(tile, x - 1, y, z, world, meta, false);
-            tile.hasLeft = this.compareTiles(tile, x, y, z + 1, world, meta);
-            tile.hasRight = this.compareTiles(tile, x, y, z - 1, world, meta);
+            tile.hasCornerLeft = this.compareCornerTiles(tile, pos.west(), world, meta, true);
+            tile.hasCornerRight = this.compareCornerTiles(tile, pos.west(), world, meta, false);
+            tile.hasLeft = this.compareTiles(tile, pos.south(), world, meta);
+            tile.hasRight = this.compareTiles(tile, pos.north(), world, meta);
          }
 
       }
    }
 
-   private boolean compareCornerTiles(TileCouchWool tile, int x, int y, int z, World world, int meta, boolean isLeft) {
-      int meta2 = world.getBlockMetadata(x, y, z);
-      if(meta2 != meta) {
+   private boolean compareCornerTiles(TileCouchWool tile, BlockPos pos, World world, int meta, boolean isLeft) {
+      IBlockState state = world.getBlockState(pos);
+      if(state.getBlock() != this) {
          return false;
       } else {
-         TileEntity tile2 = world.getTileEntity(x, y, z);
-         int rotation = (tile.rotation + (!isLeft?1:3)) % 4;
-         return tile2 != null & tile2 instanceof TileCouchWool && ((TileCouchWool)tile2).rotation == rotation;
+         int meta2 = ((Integer)state.getValue(DAMAGE)).intValue();
+         if(meta2 != meta) {
+            return false;
+         } else {
+            TileEntity tile2 = world.getTileEntity(pos);
+            int rotation = (tile.rotation + (!isLeft?1:3)) % 4;
+            return tile2 != null & tile2 instanceof TileCouchWool && ((TileCouchWool)tile2).rotation == rotation;
+         }
       }
    }
 
-   private boolean compareTiles(TileCouchWool tile, int x, int y, int z, World world, int meta) {
-      int meta2 = world.getBlockMetadata(x, y, z);
-      if(meta2 != meta) {
+   private boolean compareTiles(TileCouchWool tile, BlockPos pos, World world, int meta) {
+      IBlockState state = world.getBlockState(pos);
+      if(state.getBlock() != this) {
          return false;
       } else {
-         TileEntity tile2 = world.getTileEntity(x, y, z);
-         if(tile2 != null && tile2 instanceof TileCouchWool) {
-            TileCouchWool couch = (TileCouchWool)tile2;
-            int rotation = couch.rotation;
-            if(tile.rotation == rotation) {
-               return true;
-            } else {
-               if(couch.hasCornerLeft) {
-                  rotation += 3;
-               } else if(couch.hasCornerRight) {
-                  ++rotation;
-               }
-
-               rotation %= 4;
-               return tile.rotation == rotation;
-            }
-         } else {
+         int meta2 = ((Integer)state.getValue(DAMAGE)).intValue();
+         if(meta2 != meta) {
             return false;
+         } else {
+            TileEntity tile2 = world.getTileEntity(pos);
+            if(tile2 != null && tile2 instanceof TileCouchWool) {
+               TileCouchWool couch = (TileCouchWool)tile2;
+               int rotation = couch.rotation;
+               if(tile.rotation == rotation) {
+                  return true;
+               } else {
+                  if(couch.hasCornerLeft) {
+                     rotation += 3;
+                  } else if(couch.hasCornerRight) {
+                     ++rotation;
+                  }
+
+                  rotation %= 4;
+                  return tile.rotation == rotation;
+               }
+            } else {
+               return false;
+            }
          }
       }
    }
@@ -169,23 +189,20 @@ public class BlockCouchWool extends BlockContainer {
       return false;
    }
 
-   public boolean renderAsNormalBlock() {
+   public boolean isFullCube() {
       return false;
-   }
-
-   public int getRenderType() {
-      return this.renderId;
-   }
-
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {}
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int p_149691_1_, int meta) {
-      return Blocks.planks.getIcon(p_149691_1_, meta);
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {
       return new TileCouchWool();
    }
+
+   public TileColorable getTile() {
+      if(this.renderTile == null) {
+         this.renderTile = (TileColorable)this.createNewTileEntity((World)null, 0);
+      }
+
+      return this.renderTile;
+   }
+
 }

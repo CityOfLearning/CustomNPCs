@@ -1,13 +1,13 @@
 package noppes.npcs.client.model.part.tails;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import noppes.npcs.client.model.ModelMPM;
-import noppes.npcs.client.model.util.ModelPlaneRenderer;
+import noppes.npcs.client.model.ModelPlaneRenderer;
 
 public class ModelDragonTail extends ModelRenderer {
 
-   public ModelDragonTail(ModelMPM base) {
+   public ModelDragonTail(ModelBiped base) {
       super(base);
       byte x = 52;
       byte y = 16;

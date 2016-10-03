@@ -5,11 +5,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.client.gui.util.ICustomScrollListener;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiCustomScroll extends GuiScreen {
 
@@ -42,8 +42,8 @@ public class GuiCustomScroll extends GuiScreen {
       this.isSorted = true;
       this.visible = true;
       this.selectable = true;
-      super.width = 176;
-      super.height = 166;
+      this.width = 176;
+      this.height = 166;
       this.xSize = 176;
       this.ySize = 159;
       this.selected = -1;
@@ -82,24 +82,24 @@ public class GuiCustomScroll extends GuiScreen {
    public void drawScreen(int i, int j, float f, int mouseScrolled) {
       if(this.visible) {
          this.drawGradientRect(this.guiLeft, this.guiTop, this.xSize + this.guiLeft, this.ySize + this.guiTop, -1072689136, -804253680);
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-         super.mc.renderEngine.bindTexture(resource);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+         this.mc.renderEngine.bindTexture(resource);
          if(this.scrollHeight < this.ySize - 8) {
             this.drawScrollBar();
          }
 
-         GL11.glPushMatrix();
-         GL11.glRotatef(180.0F, 1.0F, 0.0F, 0.0F);
-         GL11.glPopMatrix();
-         GL11.glPushMatrix();
-         GL11.glTranslatef((float)this.guiLeft, (float)this.guiTop, 0.0F);
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.pushMatrix();
+         GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+         GlStateManager.popMatrix();
+         GlStateManager.pushMatrix();
+         GlStateManager.translate((float)this.guiLeft, (float)this.guiTop, 0.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          if(this.selectable) {
             this.hover = this.getMouseOver(i, j);
          }
 
          this.drawItems();
-         GL11.glPopMatrix();
+         GlStateManager.popMatrix();
          if(this.scrollHeight < this.ySize - 8) {
             i -= this.guiLeft;
             j -= this.guiTop;
@@ -152,32 +152,34 @@ public class GuiCustomScroll extends GuiScreen {
             String displayString = StatCollector.translateToLocal((String)this.list.get(i));
             String text = "";
             float maxWidth = (float)(this.xSize + xOffset - 8) * 0.8F;
-            if((float)super.fontRendererObj.getStringWidth(displayString) > maxWidth) {
+            if((float)this.fontRendererObj.getStringWidth(displayString) > maxWidth) {
                for(int h = 0; h < displayString.length(); ++h) {
                   char c = displayString.charAt(h);
                   text = text + c;
-                  if((float)super.fontRendererObj.getStringWidth(text) > maxWidth) {
+                  if((float)this.fontRendererObj.getStringWidth(text) > maxWidth) {
                      break;
                   }
                }
 
-               text = text + "...";
+               if(displayString.length() > text.length()) {
+                  text = text + "...";
+               }
             } else {
                text = displayString;
             }
 
             if((!this.multipleSelection || !this.selectedList.contains(text)) && (this.multipleSelection || this.selected != i)) {
                if(i == this.hover) {
-                  super.fontRendererObj.drawString(text, j, k, '\uff00');
+                  this.fontRendererObj.drawString(text, j, k, '\uff00');
                } else {
-                  super.fontRendererObj.drawString(text, j, k, 16777215);
+                  this.fontRendererObj.drawString(text, j, k, 16777215);
                }
             } else {
                this.drawVerticalLine(j - 2, k - 4, k + 10, -1);
                this.drawVerticalLine(j + this.xSize - 18 + xOffset, k - 4, k + 10, -1);
                this.drawHorizontalLine(j - 2, j + this.xSize - 18 + xOffset, k - 3, -1);
                this.drawHorizontalLine(j - 2, j + this.xSize - 18 + xOffset, k + 10, -1);
-               super.fontRendererObj.drawString(text, j, k, 16777215);
+               this.fontRendererObj.drawString(text, j, k, 16777215);
             }
          }
       }
@@ -297,6 +299,22 @@ public class GuiCustomScroll extends GuiScreen {
    public GuiCustomScroll setUnselectable() {
       this.selectable = false;
       return this;
+   }
+
+   public void scrollTo(String name) {
+      int i = this.list.indexOf(name);
+      if(i >= 0 && this.scrollHeight < this.ySize - 8) {
+         int pos = (int)(1.0F * (float)i / (float)this.list.size() * (float)this.listHeight);
+         if(pos > this.maxScrollY) {
+            pos = this.maxScrollY;
+         }
+
+         this.scrollY = pos;
+      }
+   }
+
+   public boolean isMouseOver(int x, int y) {
+      return x >= this.guiLeft && x <= this.guiLeft + this.xSize && y >= this.guiTop && y <= this.guiTop + this.ySize;
    }
 
 }

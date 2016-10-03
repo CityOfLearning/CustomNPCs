@@ -34,4 +34,8 @@ public class EntityAIJob extends EntityAIBase {
       }
 
    }
+
+   public int getMutexBits() {
+      return this.npc.jobInterface == null?super.getMutexBits():this.npc.jobInterface.getMutexBits();
+   }
 }

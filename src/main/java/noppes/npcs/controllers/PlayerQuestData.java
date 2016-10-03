@@ -6,10 +6,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
+import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumQuestCompletion;
-import noppes.npcs.constants.EnumQuestType;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.controllers.QuestController;
 import noppes.npcs.controllers.QuestData;
@@ -99,7 +100,7 @@ public class PlayerQuestData {
 
          data = (QuestData)var3.next();
          quest = data.quest;
-      } while(quest == null || quest.completion != EnumQuestCompletion.Npc || !quest.completerNpc.equals(npc.getCommandSenderName()) || !quest.questInterface.isCompleted(player));
+      } while(quest == null || quest.completion != EnumQuestCompletion.Npc || !quest.completerNpc.equals(npc.getName()) || !quest.questInterface.isCompleted(player));
 
       return data;
    }
@@ -121,6 +122,7 @@ public class PlayerQuestData {
 
                   data.isCompleted = true;
                   bo = true;
+                  EventHooks.onQuestFinished(player, data.quest);
                }
             } else {
                data.isCompleted = false;

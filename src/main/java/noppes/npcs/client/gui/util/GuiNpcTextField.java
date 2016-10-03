@@ -22,7 +22,7 @@ public class GuiNpcTextField extends GuiTextField {
 
 
    public GuiNpcTextField(int id, GuiScreen parent, FontRenderer fontRenderer, int i, int j, int k, int l, String s) {
-      super(fontRenderer, i, j, k, l);
+      super(id, fontRenderer, i, j, k, l);
       this.enabled = true;
       this.inMenu = true;
       this.numbersOnly = false;
@@ -32,7 +32,7 @@ public class GuiNpcTextField extends GuiTextField {
       this.canEdit = true;
       this.allowedSpecialChars = new int[]{14, 211, 203, 205};
       this.setMaxStringLength(500);
-      this.setText(s);
+      this.setText(s == null?"":s);
       this.id = id;
       if(parent instanceof ITextfieldListener) {
          this.listener = (ITextfieldListener)parent;
@@ -49,7 +49,7 @@ public class GuiNpcTextField extends GuiTextField {
    }
 
    private boolean charAllowed(char c, int i) {
-      if(this.numbersOnly && !Character.isDigit(c)) {
+      if(this.numbersOnly && !Character.isDigit(c) && (c != 45 || this.getText().length() != 0)) {
          int[] var3 = this.allowedSpecialChars;
          int var4 = var3.length;
 
@@ -139,11 +139,12 @@ public class GuiNpcTextField extends GuiTextField {
    }
 
    public static void unfocus() {
-      if(activeTextfield != null) {
-         activeTextfield.unFocused();
+      GuiNpcTextField prev = activeTextfield;
+      activeTextfield = null;
+      if(prev != null) {
+         prev.unFocused();
       }
 
-      activeTextfield = null;
    }
 
    public void drawTextBox(int mousX, int mousY) {

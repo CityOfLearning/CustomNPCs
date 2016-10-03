@@ -4,7 +4,6 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.constants.EnumAnimation;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class ModelPonyArmor extends ModelBase {
@@ -83,11 +82,11 @@ public class ModelPonyArmor extends ModelBase {
 
    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
       EntityNPCInterface npc = (EntityNPCInterface)entity;
-      if(!super.isRiding) {
-         super.isRiding = npc.currentAnimation == EnumAnimation.SITTING;
+      if(!this.isRiding) {
+         this.isRiding = npc.currentAnimation == 1;
       }
 
-      if(this.isSneak && (npc.currentAnimation == EnumAnimation.CRAWLING || npc.currentAnimation == EnumAnimation.LYING)) {
+      if(this.isSneak && (npc.currentAnimation == 7 || npc.currentAnimation == 2)) {
          this.isSneak = false;
       }
 

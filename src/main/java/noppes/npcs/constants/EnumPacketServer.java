@@ -1,137 +1,180 @@
 package noppes.npcs.constants;
 
+import noppes.npcs.CustomNpcs;
+import noppes.npcs.CustomNpcsPermissions;
 
 public enum EnumPacketServer {
 
-   Delete("Delete", 0, "npc.delete", true),
-   RemoteMainMenu("RemoteMainMenu", 1, "npc.gui"),
-   NpcMenuClose("NpcMenuClose", 2, "npc.gui", true),
-   RemoteDelete("RemoteDelete", 3, "npc.delete", true),
-   RemoteFreeze("RemoteFreeze", 4, "npc.freeze"),
-   RemoteReset("RemoteReset", 5, "npc.reset"),
-   SpawnMob("SpawnMob", 6, "spawner.mob"),
-   MobSpawner("MobSpawner", 7, "spawner.create"),
-   MainmenuAISave("MainmenuAISave", 8, "npc.ai", true),
+   Delete("Delete", 0, CustomNpcsPermissions.NPC_DELETE, true),
+   RemoteMainMenu("RemoteMainMenu", 1, CustomNpcsPermissions.NPC_GUI),
+   NpcMenuClose("NpcMenuClose", 2, CustomNpcsPermissions.NPC_GUI, true),
+   RemoteDelete("RemoteDelete", 3, CustomNpcsPermissions.NPC_DELETE, true),
+   RemoteFreeze("RemoteFreeze", 4, CustomNpcsPermissions.NPC_FREEZE),
+   RemoteReset("RemoteReset", 5, CustomNpcsPermissions.NPC_RESET),
+   SpawnMob("SpawnMob", 6, CustomNpcsPermissions.SPAWNER_MOB),
+   MobSpawner("MobSpawner", 7, CustomNpcsPermissions.SPAWNER_CREATE),
+   MainmenuAISave("MainmenuAISave", 8, CustomNpcsPermissions.NPC_ADVANCED, true),
    MainmenuAIGet("MainmenuAIGet", 9, true),
-   MainmenuInvSave("MainmenuInvSave", 10, "npc.inventory", true),
+   MainmenuInvSave("MainmenuInvSave", 10, CustomNpcsPermissions.NPC_INVENTORY, true),
    MainmenuInvGet("MainmenuInvGet", 11, true),
-   MainmenuStatsSave("MainmenuStatsSave", 12, "npc.stats", true),
+   MainmenuStatsSave("MainmenuStatsSave", 12, CustomNpcsPermissions.NPC_STATS, true),
    MainmenuStatsGet("MainmenuStatsGet", 13, true),
-   MainmenuDisplaySave("MainmenuDisplaySave", 14, "npc.display", true),
+   MainmenuDisplaySave("MainmenuDisplaySave", 14, CustomNpcsPermissions.NPC_DISPLAY, true),
    MainmenuDisplayGet("MainmenuDisplayGet", 15, true),
-   ModelDataSave("ModelDataSave", 16, "npc.display", true),
-   MainmenuAdvancedSave("MainmenuAdvancedSave", 17, "npc.advanced", true),
+   ModelDataSave("ModelDataSave", 16, CustomNpcsPermissions.NPC_DISPLAY, true),
+   MainmenuAdvancedSave("MainmenuAdvancedSave", 17, CustomNpcsPermissions.NPC_ADVANCED, true),
    MainmenuAdvancedGet("MainmenuAdvancedGet", 18, true),
-   DialogNpcSet("DialogNpcSet", 19, "npc.advanced"),
-   DialogNpcRemove("DialogNpcRemove", 20, "npc.advanced", true),
-   FactionSet("FactionSet", 21, "npc.advanced", true),
-   TransportSave("TransportSave", 22, "npc.advanced", true),
-   TransformSave("TransformSave", 23, "npc.advanced", true),
+   DialogNpcSet("DialogNpcSet", 19, CustomNpcsPermissions.NPC_ADVANCED),
+   DialogNpcRemove("DialogNpcRemove", 20, CustomNpcsPermissions.NPC_ADVANCED, true),
+   FactionSet("FactionSet", 21, CustomNpcsPermissions.NPC_ADVANCED, true),
+   TransportSave("TransportSave", 22, CustomNpcsPermissions.NPC_ADVANCED, true),
+   TransformSave("TransformSave", 23, CustomNpcsPermissions.NPC_ADVANCED, true),
    TransformGet("TransformGet", 24, true),
-   TransformLoad("TransformLoad", 25, "npc.advanced", true),
-   TraderMarketSave("TraderMarketSave", 26, "npc.advanced", true),
-   JobSave("JobSave", 27, "npc.advanced", true),
+   TransformLoad("TransformLoad", 25, CustomNpcsPermissions.NPC_ADVANCED, true),
+   TraderMarketSave("TraderMarketSave", 26, CustomNpcsPermissions.NPC_ADVANCED, true),
+   JobSave("JobSave", 27, CustomNpcsPermissions.NPC_ADVANCED, true),
    JobGet("JobGet", 28, true),
-   RoleSave("RoleSave", 29, "npc.advanced", true),
+   RoleSave("RoleSave", 29, CustomNpcsPermissions.NPC_ADVANCED, true),
    RoleGet("RoleGet", 30, true),
-   JobSpawnerAdd("JobSpawnerAdd", 31, "npc.advanced", true),
-   JobSpawnerRemove("JobSpawnerRemove", 32, "npc.advanced", true),
-   RoleCompanionUpdate("RoleCompanionUpdate", 33, "npc.advanced", true),
-   LinkedSet("LinkedSet", 34, "npc.advanced", true),
-   ClonePreSave("ClonePreSave", 35, "npc.clone"),
-   CloneSave("CloneSave", 36, "npc.clone"),
-   CloneRemove("CloneRemove", 37, "npc.clone"),
+   JobSpawnerAdd("JobSpawnerAdd", 31, CustomNpcsPermissions.NPC_ADVANCED, true),
+   JobSpawnerRemove("JobSpawnerRemove", 32, CustomNpcsPermissions.NPC_ADVANCED, true),
+   RoleCompanionUpdate("RoleCompanionUpdate", 33, CustomNpcsPermissions.NPC_ADVANCED, true),
+   LinkedSet("LinkedSet", 34, CustomNpcsPermissions.NPC_ADVANCED, true),
+   ClonePreSave("ClonePreSave", 35, CustomNpcsPermissions.NPC_CLONE),
+   CloneSave("CloneSave", 36, CustomNpcsPermissions.NPC_CLONE),
+   CloneRemove("CloneRemove", 37, CustomNpcsPermissions.NPC_CLONE),
    CloneList("CloneList", 38),
    LinkedGetAll("LinkedGetAll", 39),
-   LinkedRemove("LinkedRemove", 40, "global.linked"),
-   LinkedAdd("LinkedAdd", 41, "global.linked"),
-   ScriptDataSave("ScriptDataSave", 42, "customnpcs.scripter", true),
-   ScriptDataGet("ScriptDataGet", 43, true),
-   PlayerDataRemove("PlayerDataRemove", 44, "global.playerdata"),
-   BankSave("BankSave", 45, "global.bank"),
-   BanksGet("BanksGet", 46),
-   BankGet("BankGet", 47),
-   BankRemove("BankRemove", 48, "global.bank"),
-   DialogCategorySave("DialogCategorySave", 49, "global.dialog"),
-   DialogCategoriesGet("DialogCategoriesGet", 50),
-   DialogsGetFromDialog("DialogsGetFromDialog", 51),
-   DialogCategoryRemove("DialogCategoryRemove", 52, "global.dialog"),
-   DialogCategoryGet("DialogCategoryGet", 53),
-   DialogSave("DialogSave", 54, "global.dialog"),
-   DialogsGet("DialogsGet", 55),
-   DialogGet("DialogGet", 56),
-   DialogRemove("DialogRemove", 57, "global.dialog"),
-   TransportCategoryRemove("TransportCategoryRemove", 58, "global.transport"),
-   TransportGetLocation("TransportGetLocation", 59, true),
-   TransportRemove("TransportRemove", 60, "global.transport"),
-   TransportsGet("TransportsGet", 61),
-   TransportCategorySave("TransportCategorySave", 62, "global.transport"),
-   TransportCategoriesGet("TransportCategoriesGet", 63),
-   FactionRemove("FactionRemove", 64, "global.faction"),
-   FactionSave("FactionSave", 65, "global.faction"),
-   FactionsGet("FactionsGet", 66),
-   FactionGet("FactionGet", 67),
-   QuestCategorySave("QuestCategorySave", 68, "global.quest"),
-   QuestCategoriesGet("QuestCategoriesGet", 69),
-   QuestRemove("QuestRemove", 70, "global.quest"),
-   QuestCategoryRemove("QuestCategoryRemove", 71, "global.quest"),
-   QuestRewardSave("QuestRewardSave", 72, "global.quest"),
-   QuestSave("QuestSave", 73, "global.quest"),
-   QuestsGetFromQuest("QuestsGetFromQuest", 74),
-   QuestsGet("QuestsGet", 75),
-   QuestDialogGetTitle("QuestDialogGetTitle", 76, "global.quest"),
-   RecipeSave("RecipeSave", 77, "global.recipe"),
-   RecipeRemove("RecipeRemove", 78, "global.recipe"),
-   NaturalSpawnSave("NaturalSpawnSave", 79, "global.naturalspawn"),
-   NaturalSpawnGet("NaturalSpawnGet", 80),
-   NaturalSpawnRemove("NaturalSpawnRemove", 81, "global.naturalspawn"),
-   MerchantUpdate("MerchantUpdate", 82, "villager"),
-   PlayerRider("PlayerRider", 83, "mounter"),
-   SpawnRider("SpawnRider", 84, "mounter"),
-   MovingPathSave("MovingPathSave", 85, "pather", true),
-   MovingPathGet("MovingPathGet", 86, true),
-   DialogNpcGet("DialogNpcGet", 87),
-   RecipesGet("RecipesGet", 88),
-   RecipeGet("RecipeGet", 89),
-   QuestOpenGui("QuestOpenGui", 90),
-   PlayerDataGet("PlayerDataGet", 91),
-   RemoteNpcsGet("RemoteNpcsGet", 92),
-   RemoteTpToNpc("RemoteTpToNpc", 93),
-   QuestGet("QuestGet", 94),
-   QuestCategoryGet("QuestCategoryGet", 95),
-   SaveTileEntity("SaveTileEntity", 96),
-   NaturalSpawnGetAll("NaturalSpawnGetAll", 97),
-   MailOpenSetup("MailOpenSetup", 98),
-   DimensionsGet("DimensionsGet", 99),
-   DimensionTeleport("DimensionTeleport", 100),
-   GetTileEntity("GetTileEntity", 101),
-   Gui("Gui", 102);
-   public String permission;
+   LinkedRemove("LinkedRemove", 40, CustomNpcsPermissions.GLOBAL_LINKED),
+   LinkedAdd("LinkedAdd", 41, CustomNpcsPermissions.GLOBAL_LINKED),
+   PlayerDataRemove("PlayerDataRemove", 42, CustomNpcsPermissions.GLOBAL_PLAYERDATA),
+   BankSave("BankSave", 43, CustomNpcsPermissions.GLOBAL_BANK),
+   BanksGet("BanksGet", 44),
+   BankGet("BankGet", 45),
+   BankRemove("BankRemove", 46, CustomNpcsPermissions.GLOBAL_BANK),
+   DialogCategorySave("DialogCategorySave", 47, CustomNpcsPermissions.GLOBAL_DIALOG),
+   DialogCategoriesGet("DialogCategoriesGet", 48),
+   DialogsGetFromDialog("DialogsGetFromDialog", 49),
+   DialogCategoryRemove("DialogCategoryRemove", 50, CustomNpcsPermissions.GLOBAL_DIALOG),
+   DialogCategoryGet("DialogCategoryGet", 51),
+   DialogSave("DialogSave", 52, CustomNpcsPermissions.GLOBAL_DIALOG),
+   DialogsGet("DialogsGet", 53),
+   DialogGet("DialogGet", 54),
+   DialogRemove("DialogRemove", 55, CustomNpcsPermissions.GLOBAL_DIALOG),
+   TransportCategoryRemove("TransportCategoryRemove", 56, CustomNpcsPermissions.GLOBAL_TRANSPORT),
+   TransportGetLocation("TransportGetLocation", 57, true),
+   TransportRemove("TransportRemove", 58, CustomNpcsPermissions.GLOBAL_TRANSPORT),
+   TransportsGet("TransportsGet", 59),
+   TransportCategorySave("TransportCategorySave", 60, CustomNpcsPermissions.GLOBAL_TRANSPORT),
+   TransportCategoriesGet("TransportCategoriesGet", 61),
+   FactionRemove("FactionRemove", 62, CustomNpcsPermissions.GLOBAL_FACTION),
+   FactionSave("FactionSave", 63, CustomNpcsPermissions.GLOBAL_FACTION),
+   FactionsGet("FactionsGet", 64),
+   FactionGet("FactionGet", 65),
+   QuestCategorySave("QuestCategorySave", 66, CustomNpcsPermissions.GLOBAL_QUEST),
+   QuestCategoriesGet("QuestCategoriesGet", 67),
+   QuestRemove("QuestRemove", 68, CustomNpcsPermissions.GLOBAL_QUEST),
+   QuestCategoryRemove("QuestCategoryRemove", 69, CustomNpcsPermissions.GLOBAL_QUEST),
+   QuestRewardSave("QuestRewardSave", 70, CustomNpcsPermissions.GLOBAL_QUEST),
+   QuestSave("QuestSave", 71, CustomNpcsPermissions.GLOBAL_QUEST),
+   QuestsGetFromQuest("QuestsGetFromQuest", 72),
+   QuestsGet("QuestsGet", 73),
+   QuestDialogGetTitle("QuestDialogGetTitle", 74, CustomNpcsPermissions.GLOBAL_QUEST),
+   RecipeSave("RecipeSave", 75, CustomNpcsPermissions.GLOBAL_RECIPE),
+   RecipeRemove("RecipeRemove", 76, CustomNpcsPermissions.GLOBAL_RECIPE),
+   NaturalSpawnSave("NaturalSpawnSave", 77, CustomNpcsPermissions.GLOBAL_NATURALSPAWN),
+   NaturalSpawnGet("NaturalSpawnGet", 78),
+   NaturalSpawnRemove("NaturalSpawnRemove", 79, CustomNpcsPermissions.GLOBAL_NATURALSPAWN),
+   MerchantUpdate("MerchantUpdate", 80, CustomNpcsPermissions.EDIT_VILLAGER),
+   PlayerRider("PlayerRider", 81, CustomNpcsPermissions.TOOL_MOUNTER),
+   SpawnRider("SpawnRider", 82, CustomNpcsPermissions.TOOL_MOUNTER),
+   MovingPathSave("MovingPathSave", 83, CustomNpcsPermissions.TOOL_PATHER, true),
+   MovingPathGet("MovingPathGet", 84, true),
+   DoorSave("DoorSave", 85, CustomNpcsPermissions.TOOL_SCRIPTER),
+   DoorGet("DoorGet", 86),
+   ScriptDataSave("ScriptDataSave", 87, CustomNpcsPermissions.TOOL_SCRIPTER, true),
+   ScriptDataGet("ScriptDataGet", 88, true),
+   ScriptBlockDataSave("ScriptBlockDataSave", 89, CustomNpcsPermissions.TOOL_SCRIPTER, false),
+   ScriptBlockDataGet("ScriptBlockDataGet", 90, false),
+   ScriptDoorDataSave("ScriptDoorDataSave", 91, CustomNpcsPermissions.TOOL_SCRIPTER, false),
+   ScriptDoorDataGet("ScriptDoorDataGet", 92, false),
+   DialogNpcGet("DialogNpcGet", 93),
+   RecipesGet("RecipesGet", 94),
+   RecipeGet("RecipeGet", 95),
+   QuestOpenGui("QuestOpenGui", 96),
+   PlayerDataGet("PlayerDataGet", 97),
+   RemoteNpcsGet("RemoteNpcsGet", 98, CustomNpcsPermissions.NPC_GUI),
+   RemoteTpToNpc("RemoteTpToNpc", 99),
+   QuestGet("QuestGet", 100),
+   QuestCategoryGet("QuestCategoryGet", 101),
+   SaveTileEntity("SaveTileEntity", 102),
+   NaturalSpawnGetAll("NaturalSpawnGetAll", 103),
+   MailOpenSetup("MailOpenSetup", 104),
+   DimensionsGet("DimensionsGet", 105),
+   DimensionTeleport("DimensionTeleport", 106),
+   GetTileEntity("GetTileEntity", 107),
+   Gui("Gui", 108),
+   SchematicsTile("SchematicsTile", 109),
+   SchematicsSet("SchematicsSet", 110),
+   SchematicsTileSave("SchematicsTileSave", 111),
+   SchematicStore("SchematicStore", 112),
+   SceneStart("SceneStart", 113, CustomNpcsPermissions.SCENES),
+   SceneReset("SceneReset", 114, CustomNpcsPermissions.SCENES);
+   public CustomNpcsPermissions.Permission permission;
    public boolean needsNpc;
+   private boolean exempt;
    // $FF: synthetic field
-   private static final EnumPacketServer[] $VALUES = new EnumPacketServer[]{Delete, RemoteMainMenu, NpcMenuClose, RemoteDelete, RemoteFreeze, RemoteReset, SpawnMob, MobSpawner, MainmenuAISave, MainmenuAIGet, MainmenuInvSave, MainmenuInvGet, MainmenuStatsSave, MainmenuStatsGet, MainmenuDisplaySave, MainmenuDisplayGet, ModelDataSave, MainmenuAdvancedSave, MainmenuAdvancedGet, DialogNpcSet, DialogNpcRemove, FactionSet, TransportSave, TransformSave, TransformGet, TransformLoad, TraderMarketSave, JobSave, JobGet, RoleSave, RoleGet, JobSpawnerAdd, JobSpawnerRemove, RoleCompanionUpdate, LinkedSet, ClonePreSave, CloneSave, CloneRemove, CloneList, LinkedGetAll, LinkedRemove, LinkedAdd, ScriptDataSave, ScriptDataGet, PlayerDataRemove, BankSave, BanksGet, BankGet, BankRemove, DialogCategorySave, DialogCategoriesGet, DialogsGetFromDialog, DialogCategoryRemove, DialogCategoryGet, DialogSave, DialogsGet, DialogGet, DialogRemove, TransportCategoryRemove, TransportGetLocation, TransportRemove, TransportsGet, TransportCategorySave, TransportCategoriesGet, FactionRemove, FactionSave, FactionsGet, FactionGet, QuestCategorySave, QuestCategoriesGet, QuestRemove, QuestCategoryRemove, QuestRewardSave, QuestSave, QuestsGetFromQuest, QuestsGet, QuestDialogGetTitle, RecipeSave, RecipeRemove, NaturalSpawnSave, NaturalSpawnGet, NaturalSpawnRemove, MerchantUpdate, PlayerRider, SpawnRider, MovingPathSave, MovingPathGet, DialogNpcGet, RecipesGet, RecipeGet, QuestOpenGui, PlayerDataGet, RemoteNpcsGet, RemoteTpToNpc, QuestGet, QuestCategoryGet, SaveTileEntity, NaturalSpawnGetAll, MailOpenSetup, DimensionsGet, DimensionTeleport, GetTileEntity, Gui};
+   private static final EnumPacketServer[] $VALUES = new EnumPacketServer[]{Delete, RemoteMainMenu, NpcMenuClose, RemoteDelete, RemoteFreeze, RemoteReset, SpawnMob, MobSpawner, MainmenuAISave, MainmenuAIGet, MainmenuInvSave, MainmenuInvGet, MainmenuStatsSave, MainmenuStatsGet, MainmenuDisplaySave, MainmenuDisplayGet, ModelDataSave, MainmenuAdvancedSave, MainmenuAdvancedGet, DialogNpcSet, DialogNpcRemove, FactionSet, TransportSave, TransformSave, TransformGet, TransformLoad, TraderMarketSave, JobSave, JobGet, RoleSave, RoleGet, JobSpawnerAdd, JobSpawnerRemove, RoleCompanionUpdate, LinkedSet, ClonePreSave, CloneSave, CloneRemove, CloneList, LinkedGetAll, LinkedRemove, LinkedAdd, PlayerDataRemove, BankSave, BanksGet, BankGet, BankRemove, DialogCategorySave, DialogCategoriesGet, DialogsGetFromDialog, DialogCategoryRemove, DialogCategoryGet, DialogSave, DialogsGet, DialogGet, DialogRemove, TransportCategoryRemove, TransportGetLocation, TransportRemove, TransportsGet, TransportCategorySave, TransportCategoriesGet, FactionRemove, FactionSave, FactionsGet, FactionGet, QuestCategorySave, QuestCategoriesGet, QuestRemove, QuestCategoryRemove, QuestRewardSave, QuestSave, QuestsGetFromQuest, QuestsGet, QuestDialogGetTitle, RecipeSave, RecipeRemove, NaturalSpawnSave, NaturalSpawnGet, NaturalSpawnRemove, MerchantUpdate, PlayerRider, SpawnRider, MovingPathSave, MovingPathGet, DoorSave, DoorGet, ScriptDataSave, ScriptDataGet, ScriptBlockDataSave, ScriptBlockDataGet, ScriptDoorDataSave, ScriptDoorDataGet, DialogNpcGet, RecipesGet, RecipeGet, QuestOpenGui, PlayerDataGet, RemoteNpcsGet, RemoteTpToNpc, QuestGet, QuestCategoryGet, SaveTileEntity, NaturalSpawnGetAll, MailOpenSetup, DimensionsGet, DimensionTeleport, GetTileEntity, Gui, SchematicsTile, SchematicsSet, SchematicsTileSave, SchematicStore, SceneStart, SceneReset};
 
 
    private EnumPacketServer(String var1, int var2) {
       this.needsNpc = false;
+      this.exempt = false;
    }
 
-   private EnumPacketServer(String var1, int var2, String permission, boolean npc) {
+   private EnumPacketServer(String var1, int var2, CustomNpcsPermissions.Permission permission, boolean npc) {
       this(var1, var2, permission);
    }
 
    private EnumPacketServer(String var1, int var2, boolean npc) {
       this.needsNpc = false;
+      this.exempt = false;
       this.needsNpc = npc;
    }
 
-   private EnumPacketServer(String var1, int var2, String permission) {
+   private EnumPacketServer(String var1, int var2, CustomNpcsPermissions.Permission permission) {
       this.needsNpc = false;
-      this.permission = "customnpcs." + permission;
+      this.exempt = false;
+      this.permission = permission;
    }
 
    public boolean hasPermission() {
-      return this.permission != null && !this.permission.isEmpty();
+      return this.permission != null;
    }
 
+   public void exempt() {
+      this.exempt = true;
+   }
+
+   public boolean isExempt() {
+      return CustomNpcs.OpsOnly || this.exempt;
+   }
+
+   static {
+      GetTileEntity.exempt();
+      ScriptBlockDataGet.exempt();
+      ScriptDoorDataGet.exempt();
+      DialogCategoriesGet.exempt();
+      DialogsGetFromDialog.exempt();
+      DialogsGet.exempt();
+      QuestsGetFromQuest.exempt();
+      QuestCategoriesGet.exempt();
+      QuestsGet.exempt();
+      FactionsGet.exempt();
+      DialogGet.exempt();
+      QuestGet.exempt();
+      FactionGet.exempt();
+      SceneStart.exempt();
+      SceneReset.exempt();
+   }
 }

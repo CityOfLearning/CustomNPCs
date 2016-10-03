@@ -3,6 +3,7 @@ package noppes.npcs.client.gui.player;
 import java.util.HashMap;
 import java.util.Vector;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.NoppesUtilPlayer;
@@ -14,7 +15,6 @@ import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public class GuiTransportSelection extends GuiNPCInterface implements ITopButtonListener, IScrollData {
 
@@ -27,16 +27,16 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 
    public GuiTransportSelection(EntityNPCInterface npc) {
       super(npc);
-      super.drawDefaultBackground = false;
-      super.title = "";
+      this.drawDefaultBackground = false;
+      this.title = "";
    }
 
    public void initGui() {
       super.initGui();
-      this.guiLeft = (super.width - this.xSize) / 2;
-      this.guiTop = (super.height - 222) / 2;
+      this.guiLeft = (this.width - this.xSize) / 2;
+      this.guiTop = (this.height - 222) / 2;
       String name = "";
-      this.addLabel(new GuiNpcLabel(0, name, this.guiLeft + (this.xSize - super.fontRendererObj.getStringWidth(name)) / 2, this.guiTop + 10));
+      this.addLabel(new GuiNpcLabel(0, name, this.guiLeft + (this.xSize - this.fontRendererObj.getStringWidth(name)) / 2, this.guiTop + 10));
       this.addButton(new GuiNpcButton(0, this.guiLeft + 10, this.guiTop + 192, 156, 20, StatCollector.translateToLocal("transporter.travel")));
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
@@ -50,8 +50,8 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
 
    public void drawScreen(int i, int j, float f) {
       this.drawDefaultBackground();
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.resource);
       this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 176, 222);
       super.drawScreen(i, j, f);
    }
@@ -59,7 +59,7 @@ public class GuiTransportSelection extends GuiNPCInterface implements ITopButton
    protected void actionPerformed(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
       String sel = this.scroll.getSelected();
-      if(button.field_146127_k == 0 && sel != null) {
+      if(button.id == 0 && sel != null) {
          this.close();
          NoppesUtilPlayer.sendData(EnumPlayerPacket.Transport, new Object[]{sel});
       }

@@ -16,18 +16,15 @@ public class TilePedestal extends TileNpcContainer {
       return 1;
    }
 
-   public int getInventoryStackLimit() {
-      return 1;
-   }
-
    public AxisAlignedBB getRenderBoundingBox() {
-      return AxisAlignedBB.getBoundingBox((double)super.xCoord, (double)super.yCoord, (double)super.zCoord, (double)(super.xCoord + 1), (double)(super.yCoord + 2), (double)(super.zCoord + 1));
+      return new AxisAlignedBB((double)this.pos.getX(), (double)this.pos.getY(), (double)this.pos.getZ(), (double)(this.pos.getX() + 1), (double)(this.pos.getY() + 2), (double)(this.pos.getZ() + 1));
    }
 
    public Packet getDescriptionPacket() {
       NBTTagCompound compound = new NBTTagCompound();
       this.writeToNBT(compound);
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
+      compound.removeTag("ExtraData");
+      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.pos, 0, compound);
       return packet;
    }
 

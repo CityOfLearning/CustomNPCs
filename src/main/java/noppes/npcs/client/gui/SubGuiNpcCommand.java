@@ -15,21 +15,21 @@ public class SubGuiNpcCommand extends SubGuiInterface implements ITextfieldListe
    public SubGuiNpcCommand(String command) {
       this.command = command;
       this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.ySize = 216;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
       super.initGui();
-      this.addTextField(new GuiNpcTextField(4, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 84, 248, 20, this.command));
+      this.addTextField(new GuiNpcTextField(4, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 84, 248, 20, this.command));
       this.getTextField(4).setMaxStringLength(32767);
-      this.addLabel(new GuiNpcLabel(4, "advMode.command", super.guiLeft + 4, super.guiTop + 110));
-      this.addLabel(new GuiNpcLabel(5, "advMode.nearestPlayer", super.guiLeft + 4, super.guiTop + 125));
-      this.addLabel(new GuiNpcLabel(6, "advMode.randomPlayer", super.guiLeft + 4, super.guiTop + 140));
-      this.addLabel(new GuiNpcLabel(7, "advMode.allPlayers", super.guiLeft + 4, super.guiTop + 155));
-      this.addLabel(new GuiNpcLabel(8, "dialog.commandoptionplayer", super.guiLeft + 4, super.guiTop + 170));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 82, super.guiTop + 190, 98, 20, "gui.done"));
+      this.addLabel(new GuiNpcLabel(4, "advMode.command", this.guiLeft + 4, this.guiTop + 110));
+      this.addLabel(new GuiNpcLabel(5, "advMode.nearestPlayer", this.guiLeft + 4, this.guiTop + 125));
+      this.addLabel(new GuiNpcLabel(6, "advMode.randomPlayer", this.guiLeft + 4, this.guiTop + 140));
+      this.addLabel(new GuiNpcLabel(7, "advMode.allPlayers", this.guiLeft + 4, this.guiTop + 155));
+      this.addLabel(new GuiNpcLabel(8, "dialog.commandoptionplayer", this.guiLeft + 4, this.guiTop + 170));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 82, this.guiTop + 190, 98, 20, "gui.done"));
    }
 
    protected void actionPerformed(GuiButton guibutton) {

@@ -5,7 +5,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import noppes.npcs.constants.EnumRoleType;
 import noppes.npcs.controllers.PlayerBankData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerDialogData;
@@ -43,7 +42,7 @@ public class PlayerData implements IExtendedEntityProperties {
    public void loadNBTData(NBTTagCompound compound) {
       NBTTagCompound data = PlayerDataController.instance.loadPlayerData(this.player.getPersistentID().toString());
       if(data.hasNoTags()) {
-         data = PlayerDataController.instance.loadPlayerDataOld(this.player.getCommandSenderName());
+         data = PlayerDataController.instance.loadPlayerDataOld(this.player.getName());
       }
 
       this.setNBT(data);
@@ -57,23 +56,31 @@ public class PlayerData implements IExtendedEntityProperties {
       this.factionData.loadNBTData(data);
       this.itemgiverData.loadNBTData(data);
       this.mailData.loadNBTData(data);
-      this.playername = data.getString("PlayerName");
-      this.uuid = data.getString("UUID");
+      if(this.player != null) {
+         this.playername = this.player.getName();
+         this.uuid = this.player.getPersistentID().toString();
+      } else {
+         this.playername = data.getString("PlayerName");
+         this.uuid = data.getString("UUID");
+      }
+
       this.companionID = data.getInteger("PlayerCompanionId");
       if(data.hasKey("PlayerCompanion") && !this.hasCompanion()) {
          EntityCustomNpc npc = new EntityCustomNpc(this.player.worldObj);
          npc.readEntityFromNBT(data.getCompoundTag("PlayerCompanion"));
          npc.setPosition(this.player.posX, this.player.posY, this.player.posZ);
-         this.setCompanion(npc);
-         ((RoleCompanion)npc.roleInterface).setSitting(false);
-         this.player.worldObj.spawnEntityInWorld(npc);
+         if(npc.advanced.role == 6) {
+            this.setCompanion(npc);
+            ((RoleCompanion)npc.roleInterface).setSitting(false);
+            this.player.worldObj.spawnEntityInWorld(npc);
+         }
       }
 
    }
 
    public NBTTagCompound getNBT() {
       if(this.player != null) {
-         this.playername = this.player.getCommandSenderName();
+         this.playername = this.player.getName();
          this.uuid = this.player.getPersistentID().toString();
       }
 
@@ -105,7 +112,7 @@ public class PlayerData implements IExtendedEntityProperties {
    }
 
    public void setCompanion(EntityNPCInterface npc) {
-      if(npc == null || npc.advanced.role == EnumRoleType.Companion) {
+      if(npc == null || npc.advanced.role == 6) {
          ++this.companionID;
          this.activeCompanion = npc;
          if(npc != null) {
@@ -113,6 +120,24 @@ public class PlayerData implements IExtendedEntityProperties {
          }
 
          this.saveNBTData((NBTTagCompound)null);
+      }
+   }
+
+   public void updateCompanion(World world) {
+      if(this.hasCompanion() && world != this.activeCompanion.worldObj) {
+         RoleCompanion role = (RoleCompanion)this.activeCompanion.roleInterface;
+         role.owner = this.player;
+         if(role.isFollowing()) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            this.activeCompanion.writeToNBTOptional(nbt);
+            this.activeCompanion.isDead = true;
+            EntityCustomNpc npc = new EntityCustomNpc(world);
+            npc.readEntityFromNBT(nbt);
+            npc.setPosition(this.player.posX, this.player.posY, this.player.posZ);
+            this.setCompanion(npc);
+            ((RoleCompanion)npc.roleInterface).setSitting(false);
+            world.spawnEntityInWorld(npc);
+         }
       }
    }
 }

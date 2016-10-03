@@ -1,10 +1,9 @@
 package noppes.npcs.ai.selector;
 
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
+import com.google.common.base.Predicate;
 import noppes.npcs.entity.EntityNPCInterface;
 
-public class NPCInteractSelector implements IEntitySelector {
+public class NPCInteractSelector implements Predicate {
 
    private EntityNPCInterface npc;
 
@@ -13,12 +12,11 @@ public class NPCInteractSelector implements IEntitySelector {
       this.npc = npc;
    }
 
-   public boolean isEntityApplicable(Entity entity) {
-      if(entity != this.npc && entity instanceof EntityNPCInterface && this.npc.isEntityAlive()) {
-         EntityNPCInterface selected = (EntityNPCInterface)entity;
-         return !selected.isAttacking() && !this.npc.getFaction().isAggressiveToNpc(selected) && this.npc.ai.stopAndInteract;
-      } else {
-         return false;
-      }
+   public boolean isEntityApplicable(EntityNPCInterface entity) {
+      return entity != this.npc && this.npc.isEntityAlive()?!entity.isAttacking() && !this.npc.getFaction().isAggressiveToNpc(entity) && this.npc.ai.stopAndInteract:false;
+   }
+
+   public boolean apply(Object ob) {
+      return !(ob instanceof EntityNPCInterface)?false:this.isEntityApplicable((EntityNPCInterface)ob);
    }
 }

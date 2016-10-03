@@ -10,8 +10,8 @@ public class ModelWallBannerFlag extends ModelBase {
 
 
    public ModelWallBannerFlag() {
-      super.textureWidth = 32;
-      super.textureHeight = 32;
+      this.textureWidth = 32;
+      this.textureHeight = 32;
       this.Flag = new ModelRenderer(this, 0, 0);
       this.Flag.addBox(0.0F, 0.0F, 0.0F, 15, 27, 0);
       this.Flag.setRotationPoint(-7.5F, -7.0F, 4.5F);

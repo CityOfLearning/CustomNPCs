@@ -1,8 +1,8 @@
 package noppes.npcs.client.model.part.legs;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-import noppes.npcs.client.model.ModelMPM;
 
 public class ModelDigitigradeLegs extends ModelRenderer {
 
@@ -14,14 +14,10 @@ public class ModelDigitigradeLegs extends ModelRenderer {
    private ModelRenderer leftleg2;
    private ModelRenderer leftleglow;
    private ModelRenderer leftfoot;
-   public boolean isRiding = false;
-   public boolean isSneaking = false;
-   public boolean isSleeping = false;
-   public boolean isCrawling = false;
-   private ModelMPM base;
+   private ModelBiped base;
 
 
-   public ModelDigitigradeLegs(ModelMPM base) {
+   public ModelDigitigradeLegs(ModelBiped base) {
       super(base);
       this.base = base;
       this.rightleg = new ModelRenderer(base, 0, 16);

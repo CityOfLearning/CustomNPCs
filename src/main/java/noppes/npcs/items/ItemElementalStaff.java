@@ -5,6 +5,7 @@ import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
@@ -20,12 +21,8 @@ public class ItemElementalStaff extends ItemStaff {
    }
 
    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-      float[] color = EntitySheep.fleeceColorTable[par1ItemStack.getMetadata()];
+      float[] color = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(par1ItemStack.getItemDamage()));
       return (new Color(color[0], color[1], color[2])).getRGB();
-   }
-
-   public boolean requiresMultipleRenderPasses() {
-      return true;
    }
 
    public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
@@ -36,10 +33,10 @@ public class ItemElementalStaff extends ItemStaff {
    }
 
    public ItemStack getProjectile(ItemStack stack) {
-      return new ItemStack(CustomItems.orb, 1, stack.getMetadata());
+      return new ItemStack(CustomItems.orb, 1, stack.getItemDamage());
    }
 
    public void spawnParticle(ItemStack stack, EntityPlayer player) {
-      CustomNpcs.proxy.spawnParticle(player, "Spell", new Object[]{Integer.valueOf(stack.getMetadata()), Integer.valueOf(4)});
+      CustomNpcs.proxy.spawnParticle(player, "Spell", new Object[]{Integer.valueOf(stack.getItemDamage()), Integer.valueOf(4)});
    }
 }

@@ -1,0 +1,19 @@
+{
+	"parent": "builtin/generated",
+	"textures": {
+		"layer0": "customnpcs:items/npcIronDagger"
+	},
+	"display": {
+		"thirdperson": {
+			"rotation": [180, 90, -45],
+			"translation": [0, 0.75, -2.7],
+			"scale": [0.8, 0.8, 0.8]
+		},
+		"firstperson": {
+			"rotation": [0, 45, 60],
+			"translation": [0, 3, 2],
+			"scale": [1.5, 1.5, 1.5]
+		}
+	}
+}
+

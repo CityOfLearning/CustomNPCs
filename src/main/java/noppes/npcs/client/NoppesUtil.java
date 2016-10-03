@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Vector;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.util.Util.EnumOS;
 import noppes.npcs.CustomNpcs;
@@ -53,14 +55,13 @@ public class NoppesUtil {
       double posZ = buffer.readDouble();
       float height = buffer.readFloat();
       float width = buffer.readFloat();
-      float yOffset = buffer.readFloat();
       String particle = Server.readString(buffer);
       WorldClient worldObj = Minecraft.getMinecraft().theWorld;
       Random rand = worldObj.rand;
       if(particle.equals("heal")) {
          for(int k = 0; k < 6; ++k) {
-            worldObj.spawnParticle("instantSpell", posX + (rand.nextDouble() - 0.5D) * (double)width, posY + rand.nextDouble() * (double)height - (double)yOffset, posZ + (rand.nextDouble() - 0.5D) * (double)width, 0.0D, 0.0D, 0.0D);
-            worldObj.spawnParticle("spell", posX + (rand.nextDouble() - 0.5D) * (double)width, posY + rand.nextDouble() * (double)height - (double)yOffset, posZ + (rand.nextDouble() - 0.5D) * (double)width, 0.0D, 0.0D, 0.0D);
+            worldObj.spawnParticle(EnumParticleTypes.SPELL_INSTANT, posX + (rand.nextDouble() - 0.5D) * (double)width, posY + rand.nextDouble() * (double)height, posZ + (rand.nextDouble() - 0.5D) * (double)width, 0.0D, 0.0D, 0.0D, new int[0]);
+            worldObj.spawnParticle(EnumParticleTypes.SPELL, posX + (rand.nextDouble() - 0.5D) * (double)width, posY + rand.nextDouble() * (double)height, posZ + (rand.nextDouble() - 0.5D) * (double)width, 0.0D, 0.0D, 0.0D, new int[0]);
          }
       }
 
@@ -211,22 +212,8 @@ public class NoppesUtil {
 
    }
 
-   public static void saveRedstoneBlock(EntityPlayer player, NBTTagCompound compound) {
-      int x = compound.getInteger("x");
-      int y = compound.getInteger("y");
-      int z = compound.getInteger("z");
-      TileEntity tile = player.worldObj.getTileEntity(x, y, z);
-      tile.readFromNBT(compound);
-      CustomNpcs.proxy.openGui(x, y, z, EnumGuiType.RedstoneBlock, player);
-   }
-
-   public static void saveWayPointBlock(EntityPlayer player, NBTTagCompound compound) {
-      int x = compound.getInteger("x");
-      int y = compound.getInteger("y");
-      int z = compound.getInteger("z");
-      TileEntity tile = player.worldObj.getTileEntity(x, y, z);
-      tile.readFromNBT(compound);
-      CustomNpcs.proxy.openGui(x, y, z, EnumGuiType.Waypoint, player);
+   public static void clickSound() {
+      Minecraft.getMinecraft().getSoundHandler().playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
    }
 
 }

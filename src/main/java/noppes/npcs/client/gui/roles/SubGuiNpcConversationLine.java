@@ -20,19 +20,19 @@ public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextf
       this.line = line;
       this.sound = sound;
       this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.ySize = 216;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "Line", super.guiLeft + 4, super.guiTop + 10));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 22, 200, 20, this.line));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 4, super.guiTop + 55, 90, 20, "Select Sound"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 96, super.guiTop + 55, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(1, this.sound, super.guiLeft + 4, super.guiTop + 81));
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 162, super.guiTop + 192, 90, 20, "gui.done"));
+      this.addLabel(new GuiNpcLabel(0, "Line", this.guiLeft + 4, this.guiTop + 10));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 22, 200, 20, this.line));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 4, this.guiTop + 55, 90, 20, "Select Sound"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 96, this.guiTop + 55, 20, 20, "X"));
+      this.addLabel(new GuiNpcLabel(1, this.sound, this.guiLeft + 4, this.guiTop + 81));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 162, this.guiTop + 192, 90, 20, "gui.done"));
    }
 
    public void unFocused(GuiNpcTextField textfield) {
@@ -46,7 +46,7 @@ public class SubGuiNpcConversationLine extends SubGuiInterface implements ITextf
    protected void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 1) {
-         NoppesUtil.openGUI(super.player, this.gui = new GuiNpcSoundSelection(super.npc, super.parent, this.sound));
+         NoppesUtil.openGUI(this.player, this.gui = new GuiNpcSoundSelection(this.parent, this.sound));
       }
 
       if(id == 2) {

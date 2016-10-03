@@ -5,8 +5,12 @@ import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
+import noppes.npcs.client.model.ModelWrapper;
 
 public class NPCRendererHelper {
+
+   private static final ModelWrapper wrapper = new ModelWrapper();
+
 
    public static ModelBase getMainModel(RendererLivingEntity render) {
       return render.mainModel;
@@ -17,23 +21,32 @@ public class NPCRendererHelper {
       return location.toString();
    }
 
-   public static int shouldRenderPass(EntityLivingBase entity, int par2, float par3, RendererLivingEntity renderEntity) {
-      return renderEntity.shouldRenderPass(entity, par2, par3);
+   public static void preRenderCallback(EntityLivingBase entity, float f, RendererLivingEntity render) {
+      render.preRenderCallback(entity, f);
    }
 
-   public static void preRenderCallback(EntityLivingBase entity, float f, RendererLivingEntity renderEntity) {
-      renderEntity.preRenderCallback(entity, f);
-   }
+   public static void RenderModel(EntityLivingBase entity, float f, float f2, float f3, float f4, float f5, float f6, RendererLivingEntity render, ModelBase main, ResourceLocation resource) {
+      if(!(main instanceof ModelWrapper)) {
+         wrapper.wrapped = main;
+         wrapper.texture = resource;
+         render.mainModel = wrapper;
+      }
 
-   public static ModelBase getPassModel(RendererLivingEntity render) {
-      return render.renderPassModel;
+      try {
+         render.renderModel(entity, f, f2, f3, f4, f5, f6);
+      } catch (Exception var11) {
+         ;
+      }
+
+      render.mainModel = main;
    }
 
    public static float handleRotationFloat(EntityLivingBase entity, float par2, RendererLivingEntity renderEntity) {
       return renderEntity.handleRotationFloat(entity, par2);
    }
 
-   public static void renderEquippedItems(EntityLivingBase entity, float f, RendererLivingEntity renderEntity) {
-      renderEntity.renderEquippedItems(entity, f);
+   public static void DrawLayers(EntityLivingBase entity, float p_177093_2_, float p_177093_3_, float p_177093_4_, float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_, RendererLivingEntity renderEntity) {
+      renderEntity.renderLayers(entity, p_177093_2_, p_177093_3_, p_177093_4_, p_177093_5_, p_177093_6_, p_177093_7_, p_177093_8_);
    }
+
 }

@@ -1,7 +1,11 @@
 package noppes.npcs.blocks;
 
 import java.util.List;
-import net.minecraft.block.Block;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +15,8 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -21,20 +27,24 @@ import noppes.npcs.blocks.tiles.TileWeaponRack;
 
 public class BlockWeaponRack extends BlockTrigger {
 
+   public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
+   public static final PropertyBool IS_TOP = PropertyBool.create("istop");
+
+
    public BlockWeaponRack() {
       super(Blocks.planks);
+      this.setDefaultState(this.blockState.getBaseState().withProperty(IS_TOP, Boolean.valueOf(false)));
    }
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
+   public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
       if(par1World.isRemote) {
          return true;
       } else {
-         int meta = par1World.getBlockMetadata(i, j, k);
-         if(meta >= 7) {
-            --j;
+         if(((Boolean)state.getValue(IS_TOP)).booleanValue()) {
+            pos = pos.down();
          }
 
-         TileWeaponRack tile = (TileWeaponRack)par1World.getTileEntity(i, j, k);
+         TileWeaponRack tile = (TileWeaponRack)par1World.getTileEntity(pos);
          float hit = hitX;
          if(tile.rotation == 2) {
             hit = 1.0F - hitX;
@@ -54,8 +64,8 @@ public class BlockWeaponRack extends BlockTrigger {
          if(item == null && weapon != null) {
             tile.setInventorySlotContents(selected, (ItemStack)null);
             player.inventory.setInventorySlotContents(player.inventory.currentItem, weapon);
-            par1World.markBlockForUpdate(i, j, k);
-            this.updateSurrounding(par1World, i, j, k);
+            par1World.markBlockForUpdate(pos);
+            this.updateSurrounding(par1World, pos);
          } else {
             if(item == null || item.getItem() == null || item.getItem() instanceof ItemBlock) {
                return true;
@@ -64,8 +74,8 @@ public class BlockWeaponRack extends BlockTrigger {
             if(item != null && weapon == null) {
                tile.setInventorySlotContents(selected, item);
                player.inventory.setInventorySlotContents(player.inventory.currentItem, (ItemStack)null);
-               par1World.markBlockForUpdate(i, j, k);
-               this.updateSurrounding(par1World, i, j, k);
+               par1World.markBlockForUpdate(pos);
+               this.updateSurrounding(par1World, pos);
             }
          }
 
@@ -82,38 +92,57 @@ public class BlockWeaponRack extends BlockTrigger {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public int damageDropped(int par1) {
-      return par1 % 7;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      if(!par1World.isAirBlock(par2, par3 + 1, par4)) {
-         par1World.setBlockToAir(par2, par3, par4);
+   public int getMetaFromState(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue() + (((Boolean)state.getValue(IS_TOP)).booleanValue()?7:0);
+   }
+
+   public IBlockState getStateFromMeta(int meta) {
+      return this.getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta % 7)).withProperty(IS_TOP, Boolean.valueOf(meta >= 7));
+   }
+
+   protected BlockState createBlockState() {
+      return new BlockState(this, new IProperty[]{DAMAGE, IS_TOP});
+   }
+
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      if(!world.isAirBlock(pos.up())) {
+         world.setBlockToAir(pos);
       } else {
-         int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+         world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())).withProperty(IS_TOP, Boolean.valueOf(false)), 2);
+         world.setBlockState(pos.up(), state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())).withProperty(IS_TOP, Boolean.valueOf(true)), 2);
+         int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
          l %= 4;
-         TileColorable tile = (TileColorable)par1World.getTileEntity(par2, par3, par4);
+         TileColorable tile = (TileColorable)world.getTileEntity(pos);
          tile.rotation = l;
-         par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-         par1World.setBlock(par2, par3 + 1, par4, this, par6ItemStack.getMetadata() + 7, 2);
       }
 
    }
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-      this.setBlockBoundsBasedOnState(world, x, y, z);
-      return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+   public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+      this.setBlockBoundsBasedOnState(world, pos);
+      return super.getCollisionBoundingBox(world, pos, state);
    }
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      int meta = world.getBlockMetadata(x, y, z);
-      if(meta >= 7) {
-         --y;
+   public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+      boolean isTop = false;
+
+      try {
+         isTop = ((Boolean)world.getBlockState(pos).getValue(IS_TOP)).booleanValue();
+      } catch (IllegalArgumentException var10) {
+         ;
       }
 
-      TileEntity tileentity = world.getTileEntity(x, y, z);
+      if(isTop) {
+         pos = pos.down();
+      }
+
+      TileEntity tileentity = world.getTileEntity(pos);
       if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
+         super.setBlockBoundsBasedOnState(world, pos);
       } else {
          TileColorable tile = (TileColorable)tileentity;
          float xStart = 0.0F;
@@ -130,7 +159,7 @@ public class BlockWeaponRack extends BlockTrigger {
             xEnd = 0.3F;
          }
 
-         if(meta >= 7) {
+         if(isTop) {
             this.setBlockBounds(xStart, -1.0F, zStart, xEnd, 0.8F, zEnd);
          } else {
             this.setBlockBounds(xStart, 0.0F, zStart, xEnd, 1.8F, zEnd);
@@ -143,21 +172,22 @@ public class BlockWeaponRack extends BlockTrigger {
       return var2 < 7?new TileWeaponRack():null;
    }
 
-   public void onBlockHarvested(World p_149681_1_, int p_149681_2_, int p_149681_3_, int p_149681_4_, int p_149681_5_, EntityPlayer p_149681_6_) {
-      if(p_149681_5_ >= 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ - 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ - 1, p_149681_4_);
-      } else if(p_149681_5_ < 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ + 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ + 1, p_149681_4_);
+   public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+      if(((Boolean)state.getValue(IS_TOP)).booleanValue() && world.getBlockState(pos.down()).getBlock() == this) {
+         world.setBlockToAir(pos.down());
+      } else if(!((Boolean)state.getValue(IS_TOP)).booleanValue() && world.getBlockState(pos.up()).getBlock() == this) {
+         world.setBlockToAir(pos.up());
       }
 
    }
 
-   public void breakBlock(World world, int x, int y, int z, Block block, int p_149749_6_) {
-      TileNpcContainer tile = (TileNpcContainer)world.getTileEntity(x, y, z);
+   public void breakBlock(World world, BlockPos pos, IBlockState state) {
+      TileNpcContainer tile = (TileNpcContainer)world.getTileEntity(pos);
       if(tile != null) {
-         tile.dropItems(world, x, y, z);
-         world.updateNeighborsAboutBlockChange(x, y, z, block);
-         super.breakBlock(world, x, y, z, block, p_149749_6_);
+         tile.dropItems(world, pos);
+         world.updateComparatorOutputLevel(pos, state.getBlock());
+         super.breakBlock(world, pos, state);
       }
    }
+
 }

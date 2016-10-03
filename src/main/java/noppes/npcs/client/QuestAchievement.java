@@ -18,7 +18,7 @@ public class QuestAchievement extends Achievement {
       this.message = message;
    }
 
-   public IChatComponent getStatName() {
+   public IChatComponent createChatComponent() {
       return new ChatComponentText(this.message);
    }
 

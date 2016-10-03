@@ -2,7 +2,6 @@ package noppes.npcs.ai;
 
 import java.util.Iterator;
 import java.util.List;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -16,7 +15,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 public class EntityAIWander extends EntityAIBase {
 
    private EntityNPCInterface entity;
-   public final IEntitySelector selector;
+   public final NPCInteractSelector selector;
    private double xPosition;
    private double yPosition;
    private double zPosition;
@@ -48,6 +47,10 @@ public class EntityAIWander extends EntityAIBase {
 
             this.xPosition = vec.xCoord;
             this.yPosition = vec.yCoord;
+            if(this.entity.canFly()) {
+               this.yPosition = this.entity.getStartYPos() + (double)this.entity.getRNG().nextFloat() * 0.75D * (double)this.entity.ai.walkingRange;
+            }
+
             this.zPosition = vec.zCoord;
          }
 
@@ -65,7 +68,7 @@ public class EntityAIWander extends EntityAIBase {
    }
 
    private EntityNPCInterface getNearbyNPC() {
-      List list = this.entity.worldObj.getEntitiesWithinAABBExcludingEntity(this.entity, this.entity.boundingBox.expand((double)this.entity.ai.walkingRange, this.entity.ai.walkingRange > 7?7.0D:(double)this.entity.ai.walkingRange, (double)this.entity.ai.walkingRange), this.selector);
+      List list = this.entity.worldObj.getEntitiesInAABBexcluding(this.entity, this.entity.getEntityBoundingBox().expand((double)this.entity.ai.walkingRange, this.entity.ai.walkingRange > 7?7.0D:(double)this.entity.ai.walkingRange, (double)this.entity.ai.walkingRange), this.selector);
       Iterator ita = list.iterator();
 
       while(ita.hasNext()) {
@@ -96,7 +99,7 @@ public class EntityAIWander extends EntityAIBase {
                range = CustomNpcs.NpcNavRange;
             }
 
-            Vec3 start = Vec3.createVectorHelper((double)this.entity.getStartXPos(), this.entity.getStartYPos(), (double)this.entity.getStartZPos());
+            Vec3 start = new Vec3((double)this.entity.getStartXPos(), this.entity.getStartYPos(), (double)this.entity.getStartZPos());
             return RandomPositionGeneratorAlt.findRandomTargetBlockTowards(this.entity, range / 2, range / 2 > 7?7:range / 2, start);
          } else {
             return RandomPositionGeneratorAlt.findRandomTarget(this.entity, range, range / 2 > 7?7:range / 2);
@@ -107,7 +110,7 @@ public class EntityAIWander extends EntityAIBase {
    }
 
    public boolean continueExecuting() {
-      return this.nearbyNPC != null && !this.selector.isEntityApplicable(this.nearbyNPC)?false:!this.entity.getNavigator().noPath() && this.entity.isEntityAlive() && !this.entity.isInteracting();
+      return this.nearbyNPC != null && (!this.selector.apply(this.nearbyNPC) || this.entity.isInRange(this.nearbyNPC, (double)this.entity.width))?false:!this.entity.getNavigator().noPath() && this.entity.isEntityAlive() && !this.entity.isInteracting();
    }
 
    public void startExecuting() {
@@ -115,7 +118,7 @@ public class EntityAIWander extends EntityAIBase {
    }
 
    public void resetTask() {
-      if(this.nearbyNPC != null && this.entity.getDistanceSqToEntity(this.nearbyNPC) < 12.0D) {
+      if(this.nearbyNPC != null && this.entity.isInRange(this.nearbyNPC, 3.5D)) {
          Line line = new Line(".........");
          line.hideText = true;
          if(this.entity.getRNG().nextBoolean()) {

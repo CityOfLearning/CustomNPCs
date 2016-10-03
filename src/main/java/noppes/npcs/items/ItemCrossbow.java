@@ -1,30 +1,34 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.entity.EntityProjectile;
 import noppes.npcs.items.ItemNpcInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemCrossbow extends ItemNpcInterface {
 
    public ItemCrossbow(int par1) {
       super(par1);
-      this.setMaxDurability(129);
+      this.setMaxDamage(129);
       this.setCreativeTab(CustomItems.tabWeapon);
    }
 
    public void onPlayerStoppedUsing(ItemStack stack, World par2World, EntityPlayer player, int count) {
-      if(!player.worldObj.isRemote) {
-         if(stack.stackTagCompound.getInteger("IsLoaded") == 1 || player.capabilities.isCreativeMode) {
-            if(stack.stackTagCompound.getInteger("Reloading") == 1 && !player.capabilities.isCreativeMode) {
-               stack.stackTagCompound.setInteger("Reloading", 0);
+      if(!player.worldObj.isRemote && (stack.hasTagCompound() || player.capabilities.isCreativeMode)) {
+         NBTTagCompound compound = stack.getTagCompound();
+         if(compound == null) {
+            stack.setTagCompound(compound = new NBTTagCompound());
+         }
+
+         if(compound.getInteger("IsLoaded") == 1 || player.capabilities.isCreativeMode) {
+            if(compound.getInteger("Reloading") == 1 && !player.capabilities.isCreativeMode) {
+               compound.setInteger("Reloading", 0);
                return;
             }
 
@@ -38,9 +42,9 @@ public class ItemCrossbow extends ItemNpcInterface {
                this.consumeItem(player, CustomItems.crossbowBolt);
             }
 
-            player.worldObj.playSoundAtEntity(player, "random.bow", 0.9F, Item.itemRand.nextFloat() * 0.3F + 0.8F);
+            player.worldObj.playSoundAtEntity(player, "random.bow", 0.9F, itemRand.nextFloat() * 0.3F + 0.8F);
             player.worldObj.spawnEntityInWorld(projectile);
-            stack.stackTagCompound.setInteger("IsLoaded", 0);
+            compound.setInteger("IsLoaded", 0);
          }
 
       }
@@ -49,10 +53,10 @@ public class ItemCrossbow extends ItemNpcInterface {
    public void onUsingTick(ItemStack stack, EntityPlayer player, int count) {
       if(!player.worldObj.isRemote) {
          int ticks = this.getMaxItemUseDuration(stack) - count;
-         if(!player.capabilities.isCreativeMode && stack.stackTagCompound.getInteger("Reloading") == 1 && this.hasItem(player, CustomItems.crossbowBolt)) {
-            if(ticks == 20) {
+         if(!player.capabilities.isCreativeMode && stack.hasTagCompound()) {
+            if(stack.getTagCompound().getInteger("Reloading") == 1 && this.hasItem(player, CustomItems.crossbowBolt) && ticks == 20) {
                player.worldObj.playSoundAtEntity(player, "random.click", 1.0F, 1.0F);
-               stack.stackTagCompound.setInteger("IsLoaded", 1);
+               stack.getTagCompound().setInteger("IsLoaded", 1);
             }
 
          }
@@ -60,19 +64,21 @@ public class ItemCrossbow extends ItemNpcInterface {
    }
 
    public void renderSpecial() {
-      GL11.glRotatef(96.0F, 1.0F, 0.0F, 0.0F);
-      GL11.glRotatef(-10.0F, 0.0F, 1.0F, 0.0F);
-      GL11.glScalef(0.8F, 0.8F, 0.8F);
-      GL11.glTranslatef(0.5F, -0.7F, -0.4F);
+      GlStateManager.rotate(96.0F, 1.0F, 0.0F, 0.0F);
+      GlStateManager.rotate(-10.0F, 0.0F, 1.0F, 0.0F);
+      GlStateManager.scale(0.8F, 0.8F, 0.8F);
+      GlStateManager.translate(0.5F, -0.7F, -0.4F);
    }
 
    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
-      if(stack.stackTagCompound == null) {
-         stack.stackTagCompound = new NBTTagCompound();
+      NBTTagCompound compound = stack.getTagCompound();
+      if(compound == null) {
+         compound = new NBTTagCompound();
       }
 
-      if(!player.capabilities.isCreativeMode && this.hasItem(player, CustomItems.crossbowBolt) && stack.stackTagCompound.getInteger("IsLoaded") == 0) {
-         stack.stackTagCompound.setInteger("Reloading", 1);
+      if(!player.capabilities.isCreativeMode && this.hasItem(player, CustomItems.crossbowBolt) && compound.getInteger("IsLoaded") == 0) {
+         compound.setInteger("Reloading", 1);
+         stack.setTagCompound(compound);
       }
 
       player.setItemInUse(stack, this.getMaxItemUseDuration(stack));
@@ -84,6 +90,6 @@ public class ItemCrossbow extends ItemNpcInterface {
    }
 
    public EnumAction getItemUseAction(ItemStack stack) {
-      return stack.stackTagCompound != null && stack.stackTagCompound.getInteger("Reloading") != 0?EnumAction.block:EnumAction.bow;
+      return stack.getTagCompound() != null && stack.getTagCompound().getInteger("Reloading") != 0?EnumAction.BLOCK:EnumAction.BOW;
    }
 }

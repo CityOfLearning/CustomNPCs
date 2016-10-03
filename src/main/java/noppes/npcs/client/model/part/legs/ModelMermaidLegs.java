@@ -7,17 +7,17 @@ import net.minecraft.util.MathHelper;
 
 public class ModelMermaidLegs extends ModelRenderer {
 
-   ModelRenderer top;
-   ModelRenderer middle;
-   ModelRenderer bottom;
-   ModelRenderer fin1;
-   ModelRenderer fin2;
+   private ModelRenderer top;
+   private ModelRenderer middle;
+   private ModelRenderer bottom;
+   private ModelRenderer fin1;
+   private ModelRenderer fin2;
 
 
    public ModelMermaidLegs(ModelBase base) {
       super(base);
-      super.textureWidth = 64.0F;
-      super.textureHeight = 32.0F;
+      this.textureWidth = 64.0F;
+      this.textureHeight = 32.0F;
       this.top = new ModelRenderer(base, 0, 16);
       this.top.addBox(-2.0F, -2.5F, -2.0F, 8, 9, 4);
       this.top.setRotationPoint(-2.0F, 14.0F, 1.0F);
@@ -46,7 +46,7 @@ public class ModelMermaidLegs extends ModelRenderer {
    }
 
    public void render(float f5) {
-      if(!super.isHidden && super.showModel) {
+      if(!this.isHidden && this.showModel) {
          this.top.render(f5);
       }
    }

@@ -43,11 +43,11 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2 implements IGuiData, I
          this.scroll.setSize(143, 208);
       }
 
-      this.scroll.guiLeft = super.guiLeft + 214;
-      this.scroll.guiTop = super.guiTop + 4;
+      this.scroll.guiLeft = this.guiLeft + 214;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 358, super.guiTop + 38, 58, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 358, super.guiTop + 61, 58, 20, "gui.remove"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 358, this.guiTop + 38, 58, 20, "gui.add"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 358, this.guiTop + 61, 58, 20, "gui.remove"));
       if(this.spawn.id >= 0) {
          this.showSpawn();
       }
@@ -55,15 +55,17 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2 implements IGuiData, I
    }
 
    private void showSpawn() {
-      this.addLabel(new GuiNpcLabel(1, "gui.title", super.guiLeft + 4, super.guiTop + 8));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 60, super.guiTop + 3, 140, 20, this.spawn.name));
-      this.addLabel(new GuiNpcLabel(3, "spawning.biomes", super.guiLeft + 4, super.guiTop + 30));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 120, super.guiTop + 25, 50, 20, "selectServer.edit"));
-      this.addSlider(new GuiNpcSlider(this, 4, super.guiLeft + 4, super.guiTop + 47, 180, 20, (float)this.spawn.itemWeight / 100.0F));
-      int y = super.guiTop + 70;
-      this.addButton(new GuiNpcButton(25, super.guiLeft + 14, y, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(5, "1:", super.guiLeft + 4, y + 5));
-      this.addButton(new GuiNpcButton(5, super.guiLeft + 36, y, 170, 20, this.getTitle(this.spawn.compound1)));
+      this.addLabel(new GuiNpcLabel(1, "gui.title", this.guiLeft + 4, this.guiTop + 8));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 60, this.guiTop + 3, 140, 20, this.spawn.name));
+      this.addLabel(new GuiNpcLabel(3, "spawning.biomes", this.guiLeft + 4, this.guiTop + 30));
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 120, this.guiTop + 25, 50, 20, "selectServer.edit"));
+      this.addSlider(new GuiNpcSlider(this, 4, this.guiLeft + 4, this.guiTop + 47, 180, 20, (float)this.spawn.itemWeight / 100.0F));
+      int y = this.guiTop + 70;
+      this.addButton(new GuiNpcButton(25, this.guiLeft + 14, y, 20, 20, "X"));
+      this.addLabel(new GuiNpcLabel(5, "1:", this.guiLeft + 4, y + 5));
+      this.addButton(new GuiNpcButton(5, this.guiLeft + 36, y, 170, 20, this.getTitle(this.spawn.compound1)));
+      this.addLabel(new GuiNpcLabel(26, "spawn.type", this.guiLeft + 4, this.guiTop + 100));
+      this.addButton(new GuiNpcButton(27, this.guiLeft + 70, this.guiTop + 93, 120, 20, new String[]{"spawn.allday", "spawn.dark"}, this.spawn.type));
    }
 
    private String getTitle(NBTTagCompound compound) {
@@ -102,6 +104,10 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2 implements IGuiData, I
       if(id == 25) {
          this.spawn.compound1 = new NBTTagCompound();
          this.initGui();
+      }
+
+      if(id == 27) {
+         this.spawn.type = ((GuiNpcButton)guibutton).getValue();
       }
 
    }

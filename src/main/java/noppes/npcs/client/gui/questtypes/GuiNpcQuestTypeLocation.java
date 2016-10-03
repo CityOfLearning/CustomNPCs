@@ -18,23 +18,23 @@ public class GuiNpcQuestTypeLocation extends SubGuiInterface implements ITextfie
 
 
    public GuiNpcQuestTypeLocation(EntityNPCInterface npc, Quest q, GuiScreen parent) {
-      super.npc = npc;
+      this.npc = npc;
       this.parent = parent;
-      super.title = "Quest Location Setup";
+      this.title = "Quest Location Setup";
       this.quest = (QuestLocation)q.questInterface;
       this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.ySize = 216;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "Fill in the name of your Location Quest Block", super.guiLeft + 4, super.guiTop + 50));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 70, 180, 20, this.quest.location));
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 92, 180, 20, this.quest.location2));
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 114, 180, 20, this.quest.location3));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 150, super.guiTop + 190, 98, 20, "gui.back"));
+      this.addLabel(new GuiNpcLabel(0, "Fill in the name of your Location Quest Block", this.guiLeft + 4, this.guiTop + 50));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 70, 180, 20, this.quest.location));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 92, 180, 20, this.quest.location2));
+      this.addTextField(new GuiNpcTextField(2, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 114, 180, 20, this.quest.location3));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 150, this.guiTop + 190, 98, 20, "gui.back"));
    }
 
    protected void actionPerformed(GuiButton guibutton) {

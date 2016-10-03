@@ -6,12 +6,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.api.entity.data.role.IJobBard;
+import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.constants.EnumBardInstrument;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobInterface;
 
-public class JobBard extends JobInterface {
+public class JobBard extends JobInterface implements IJobBard {
 
    public int minRange = 2;
    public int maxRange = 64;
@@ -27,8 +29,8 @@ public class JobBard extends JobInterface {
       this.instrument = EnumBardInstrument.Banjo;
       this.ticks = 0L;
       if(CustomItems.banjo != null) {
-         super.mainhand = new ItemStack(CustomItems.banjo);
-         super.overrideMainHand = super.overrideOffHand = true;
+         this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.banjo));
+         this.overrideMainHand = this.overrideOffHand = true;
       }
 
    }
@@ -55,31 +57,31 @@ public class JobBard extends JobInterface {
    public void setInstrument(int i) {
       if(CustomItems.banjo != null) {
          this.instrument = EnumBardInstrument.values()[i];
-         super.overrideMainHand = super.overrideOffHand = this.instrument != EnumBardInstrument.None;
-         switch(this.instrument) {
-         case None:
-            super.mainhand = null;
-            super.offhand = null;
+         this.overrideMainHand = this.overrideOffHand = this.instrument != EnumBardInstrument.None;
+         switch(null.$SwitchMap$noppes$npcs$constants$EnumBardInstrument[this.instrument.ordinal()]) {
+         case 1:
+            this.mainhand = null;
+            this.offhand = null;
             break;
-         case Banjo:
-            super.mainhand = new ItemStack(CustomItems.banjo);
-            super.offhand = null;
+         case 2:
+            this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.banjo));
+            this.offhand = null;
             break;
-         case Violin:
-            super.mainhand = new ItemStack(CustomItems.violin);
-            super.offhand = new ItemStack(CustomItems.violinbow);
+         case 3:
+            this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.violin));
+            this.offhand = new ItemStackWrapper(new ItemStack(CustomItems.violinbow));
             break;
-         case Guitar:
-            super.mainhand = new ItemStack(CustomItems.guitar);
-            super.offhand = null;
+         case 4:
+            this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.guitar));
+            this.offhand = null;
             break;
-         case Harp:
-            super.mainhand = new ItemStack(CustomItems.harp);
-            super.offhand = null;
+         case 5:
+            this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.harp));
+            this.offhand = null;
             break;
-         case FrenchHorn:
-            super.mainhand = new ItemStack(CustomItems.frenchHorn);
-            super.offhand = null;
+         case 6:
+            this.mainhand = new ItemStackWrapper(new ItemStack(CustomItems.frenchHorn));
+            this.offhand = null;
          }
 
       }
@@ -90,29 +92,29 @@ public class JobBard extends JobInterface {
    }
 
    public void onLivingUpdate() {
-      if(super.npc.isRemote()) {
+      if(this.npc.isRemote()) {
          ++this.ticks;
          if(this.ticks % 10L == 0L) {
             if(!this.song.isEmpty()) {
                List list;
                if(!MusicController.Instance.isPlaying(this.song)) {
-                  list = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand((double)this.minRange, (double)(this.minRange / 2), (double)this.minRange));
+                  list = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand((double)this.minRange, (double)(this.minRange / 2), (double)this.minRange));
                   if(!list.contains(CustomNpcs.proxy.getPlayer())) {
                      return;
                   }
 
                   if(this.isStreamer) {
-                     MusicController.Instance.playStreaming(this.song, super.npc);
+                     MusicController.Instance.playStreaming(this.song, this.npc);
                   } else {
-                     MusicController.Instance.playMusic(this.song, super.npc);
+                     MusicController.Instance.playMusic(this.song, this.npc);
                   }
-               } else if(MusicController.Instance.playingEntity != super.npc) {
+               } else if(MusicController.Instance.playingEntity != this.npc) {
                   EntityPlayer list1 = CustomNpcs.proxy.getPlayer();
-                  if(super.npc.getDistanceSqToEntity(list1) < MusicController.Instance.playingEntity.getDistanceSqToEntity(list1)) {
-                     MusicController.Instance.playingEntity = super.npc;
+                  if(this.npc.getDistanceSqToEntity(list1) < MusicController.Instance.playingEntity.getDistanceSqToEntity(list1)) {
+                     MusicController.Instance.playingEntity = this.npc;
                   }
                } else if(this.hasOffRange) {
-                  list = super.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, super.npc.boundingBox.expand((double)this.maxRange, (double)(this.maxRange / 2), (double)this.maxRange));
+                  list = this.npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.npc.getEntityBoundingBox().expand((double)this.maxRange, (double)(this.maxRange / 2), (double)this.maxRange));
                   if(!list.contains(CustomNpcs.proxy.getPlayer())) {
                      MusicController.Instance.stopMusic();
                   }
@@ -128,9 +130,18 @@ public class JobBard extends JobInterface {
    }
 
    public void delete() {
-      if(super.npc.worldObj.isRemote && this.hasOffRange && MusicController.Instance.isPlaying(this.song)) {
+      if(this.npc.worldObj.isRemote && this.hasOffRange && MusicController.Instance.isPlaying(this.song)) {
          MusicController.Instance.stopMusic();
       }
 
+   }
+
+   public String getSong() {
+      return this.song;
+   }
+
+   public void setSong(String song) {
+      this.song = song;
+      this.npc.updateClient = true;
    }
 }

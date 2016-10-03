@@ -16,6 +16,6 @@ public class CompanionTrader extends CompanionJobInterface {
    public void setNBT(NBTTagCompound compound) {}
 
    public void interact(EntityPlayer player) {
-      NoppesUtilServer.sendOpenGui(player, EnumGuiType.CompanionTrader, super.npc);
+      NoppesUtilServer.sendOpenGui(player, EnumGuiType.CompanionTrader, this.npc);
    }
 }

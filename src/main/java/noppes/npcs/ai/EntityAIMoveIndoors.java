@@ -3,7 +3,7 @@ package noppes.npcs.ai;
 import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import noppes.npcs.constants.AiMutex;
@@ -24,11 +24,9 @@ public class EntityAIMoveIndoors extends EntityAIBase {
    }
 
    public boolean shouldExecute() {
-      int x = MathHelper.floor_double(this.theCreature.posX);
-      int y = (int)this.theCreature.boundingBox.minY;
-      int z = MathHelper.floor_double(this.theCreature.posZ);
-      if((!this.theCreature.worldObj.isDaytime() || this.theCreature.worldObj.isRaining()) && !this.theCreature.worldObj.provider.hasNoSky) {
-         if(!this.theWorld.canBlockSeeTheSky(x, y, z) && this.theWorld.getFullBlockLightValue(x, y, z) > 8) {
+      if((!this.theCreature.worldObj.isDaytime() || this.theCreature.worldObj.isRaining()) && !this.theCreature.worldObj.provider.getHasNoSky()) {
+         BlockPos pos = new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ);
+         if(!this.theWorld.canSeeSky(pos) && this.theWorld.getLight(pos) > 8) {
             return false;
          } else {
             Vec3 var1 = this.findPossibleShelter();
@@ -55,14 +53,13 @@ public class EntityAIMoveIndoors extends EntityAIBase {
    }
 
    private Vec3 findPossibleShelter() {
-      Random var1 = this.theCreature.getRNG();
+      Random random = this.theCreature.getRNG();
+      BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ);
 
-      for(int var2 = 0; var2 < 10; ++var2) {
-         int var3 = MathHelper.floor_double(this.theCreature.posX + (double)var1.nextInt(20) - 10.0D);
-         int var4 = MathHelper.floor_double(this.theCreature.boundingBox.minY + (double)var1.nextInt(6) - 3.0D);
-         int var5 = MathHelper.floor_double(this.theCreature.posZ + (double)var1.nextInt(20) - 10.0D);
-         if(!this.theWorld.canBlockSeeTheSky(var3, var4, var5) && this.theWorld.getFullBlockLightValue(var3, var4, var5) > 8) {
-            return Vec3.createVectorHelper((double)var3, (double)var4, (double)var5);
+      for(int i = 0; i < 10; ++i) {
+         BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
+         if(!this.theWorld.canSeeSky(blockpos1) && this.theCreature.getBlockPathWeight(blockpos1) < 0.0F) {
+            return new Vec3((double)blockpos1.getX(), (double)blockpos1.getY(), (double)blockpos1.getZ());
          }
       }
 

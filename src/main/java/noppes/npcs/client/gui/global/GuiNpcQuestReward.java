@@ -1,6 +1,7 @@
 package noppes.npcs.client.gui.global;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.global.GuiNPCManageQuest;
@@ -12,7 +13,6 @@ import noppes.npcs.client.gui.util.ITextfieldListener;
 import noppes.npcs.containers.ContainerNpcQuestReward;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNpcQuestReward extends GuiContainerNPCInterface implements ITextfieldListener {
 
@@ -28,11 +28,11 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(0, "quest.randomitem", super.field_147003_i + 4, super.field_147009_r + 4));
-      this.addButton(new GuiNpcButton(0, super.field_147003_i + 4, super.field_147009_r + 14, 60, 20, new String[]{"gui.no", "gui.yes"}, this.quest.randomReward?1:0));
-      this.addButton(new GuiNpcButton(5, super.field_147003_i, super.field_147009_r + super.ySize, 98, 20, "gui.back"));
-      this.addLabel(new GuiNpcLabel(1, "quest.exp", super.field_147003_i + 4, super.field_147009_r + 45));
-      this.addTextField(new GuiNpcTextField(0, this, super.fontRendererObj, super.field_147003_i + 4, super.field_147009_r + 55, 60, 20, this.quest.rewardExp + ""));
+      this.addLabel(new GuiNpcLabel(0, "quest.randomitem", this.guiLeft + 4, this.guiTop + 4));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 4, this.guiTop + 14, 60, 20, new String[]{"gui.no", "gui.yes"}, this.quest.randomReward?1:0));
+      this.addButton(new GuiNpcButton(5, this.guiLeft, this.guiTop + this.ySize, 98, 20, "gui.back"));
+      this.addLabel(new GuiNpcLabel(1, "quest.exp", this.guiLeft + 4, this.guiTop + 45));
+      this.addTextField(new GuiNpcTextField(0, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 55, 60, 20, this.quest.rewardExp + ""));
       this.getTextField(0).numbersOnly = true;
       this.getTextField(0).setMinMaxDefault(0, 99999, 0);
    }
@@ -40,7 +40,7 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
    public void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 5) {
-         NoppesUtil.openGUI(super.player, GuiNPCManageQuest.Instance);
+         NoppesUtil.openGUI(this.player, GuiNPCManageQuest.Instance);
       }
 
       if(id == 0) {
@@ -52,11 +52,11 @@ public class GuiNpcQuestReward extends GuiContainerNPCInterface implements IText
    public void onGuiClosed() {}
 
    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      int l = (super.width - super.xSize) / 2;
-      int i1 = (super.height - super.ySize) / 2;
-      this.drawTexturedModalRect(l, i1, 0, 0, super.xSize, super.ySize);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.resource);
+      int l = (this.width - this.xSize) / 2;
+      int i1 = (this.height - this.ySize) / 2;
+      this.drawTexturedModalRect(l, i1, 0, 0, this.xSize, this.ySize);
       super.drawGuiContainerBackgroundLayer(f, i, j);
    }
 

@@ -10,6 +10,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
+import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.controllers.QuestCategory;
 import noppes.npcs.util.NBTJsonUtil;
@@ -103,7 +104,7 @@ public class QuestController {
                category.quests.put(Integer.valueOf(e.id), e);
                e.category = category;
             } catch (Exception var8) {
-               ;
+               LogWriter.error("Error loading: " + file.getAbsolutePath(), var8);
             }
          }
       }
@@ -112,8 +113,6 @@ public class QuestController {
    }
 
    private void loadCategoriesOld(File file) throws Exception {
-      HashMap categories = new HashMap();
-      HashMap quests = new HashMap();
       NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
       this.lastUsedCatID = nbttagcompound1.getInteger("lastID");
       this.lastUsedQuestID = nbttagcompound1.getInteger("lastQuestID");
@@ -122,22 +121,24 @@ public class QuestController {
          for(int i = 0; i < list.tagCount(); ++i) {
             QuestCategory category = new QuestCategory();
             category.readNBT(list.getCompoundTagAt(i));
-            categories.put(Integer.valueOf(category.id), category);
+            this.categories.put(Integer.valueOf(category.id), category);
+            this.saveCategory(category);
             Iterator ita = category.quests.entrySet().iterator();
 
             while(ita.hasNext()) {
                Entry entry = (Entry)ita.next();
-               if(quests.containsKey(Integer.valueOf(((Quest)entry.getValue()).id))) {
+               Quest quest = (Quest)entry.getValue();
+               quest.id = ((Integer)entry.getKey()).intValue();
+               quest.category = category;
+               if(this.quests.containsKey(Integer.valueOf(quest.id))) {
                   ita.remove();
                } else {
-                  quests.put(Integer.valueOf(((Quest)entry.getValue()).id), entry.getValue());
+                  this.saveQuest(category.id, quest);
                }
             }
          }
       }
 
-      this.quests = quests;
-      this.categories = categories;
    }
 
    public void removeCategory(int category) {
@@ -158,6 +159,7 @@ public class QuestController {
    }
 
    public void saveCategory(QuestCategory category) {
+      category.title = NoppesStringUtils.cleanFileName(category.title);
       if(this.categories.containsKey(Integer.valueOf(category.id))) {
          QuestCategory dir = (QuestCategory)this.categories.get(Integer.valueOf(category.id));
          if(!dir.title.equals(category.title)) {

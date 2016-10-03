@@ -1,17 +1,14 @@
 package noppes.npcs.items;
 
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemArmor.ArmorMaterial;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IIcon;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.CustomItems;
+import noppes.npcs.CustomNpcs;
 
 public class ItemNpcArmorColorable extends ItemArmor {
 
@@ -25,7 +22,7 @@ public class ItemNpcArmorColorable extends ItemArmor {
    }
 
    public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-      return type != null?"customnpcs:textures/gui/invisible.png":(super.armorType == 2?"customnpcs:textures/armor/" + this.texture + "_2.png":"customnpcs:textures/armor/" + this.texture + "_1.png");
+      return type != null?"customnpcs:textures/gui/invisible.png":(this.armorType == 2?"customnpcs:textures/armor/" + this.texture + "_2.png":"customnpcs:textures/armor/" + this.texture + "_1.png");
    }
 
    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
@@ -54,7 +51,7 @@ public class ItemNpcArmorColorable extends ItemArmor {
 
    }
 
-   public void func_82813_b(ItemStack par1ItemStack, int par2) {
+   public void setColor(ItemStack par1ItemStack, int par2) {
       NBTTagCompound nbttagcompound = par1ItemStack.getTagCompound();
       if(nbttagcompound == null) {
          nbttagcompound = new NBTTagCompound();
@@ -69,27 +66,13 @@ public class ItemNpcArmorColorable extends ItemArmor {
       nbttagcompound1.setInteger("color", par2);
    }
 
-   @SideOnly(Side.CLIENT)
-   public IIcon getIconFromDamageForRenderPass(int par1, int par2) {
-      return this.getIconFromDamage(par1);
-   }
-
-   @SideOnly(Side.CLIENT)
-   public boolean requiresMultipleRenderPasses() {
-      return true;
-   }
-
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {
-      super.itemIcon = par1IconRegister.registerIcon(this.getIconString());
-   }
-
    public boolean hasColor(ItemStack par1ItemStack) {
       return !par1ItemStack.hasTagCompound()?false:(!par1ItemStack.getTagCompound().hasKey("display", 10)?false:par1ItemStack.getTagCompound().getCompoundTag("display").hasKey("color", 3));
    }
 
    public Item setUnlocalizedName(String name) {
       GameRegistry.registerItem(this, name);
+      CustomNpcs.proxy.registerItem(this, name, 0);
       return super.setUnlocalizedName(name);
    }
 }

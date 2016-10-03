@@ -1,19 +1,16 @@
 package noppes.npcs.client.gui.util;
 
-import net.minecraft.client.Minecraft;
+import java.io.IOException;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcMenu;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface {
 
-   public EntityPlayer player;
-   public EntityNPCInterface npc;
    private ResourceLocation background;
    private final ResourceLocation defaultBackground;
    private GuiNpcMenu menu;
@@ -29,11 +26,9 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
       this.background = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
       this.defaultBackground = new ResourceLocation("customnpcs", "textures/gui/menubg.png");
       this.menuYOffset = 0;
-      this.player = Minecraft.getMinecraft().thePlayer;
-      this.npc = npc;
-      super.xSize = 420;
+      this.xSize = 420;
       this.menu = new GuiNpcMenu(this, activeMenu, npc);
-      super.title = "";
+      this.title = "";
    }
 
    public void setBackground(String texture) {
@@ -46,10 +41,10 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
 
    public void initGui() {
       super.initGui();
-      this.menu.initGui(super.field_147003_i, super.field_147009_r + this.menuYOffset, super.xSize);
+      this.menu.initGui(this.guiLeft, this.guiTop + this.menuYOffset, this.xSize);
    }
 
-   protected void mouseClicked(int i, int j, int k) {
+   protected void mouseClicked(int i, int j, int k) throws IOException {
       super.mouseClicked(i, j, k);
       if(!this.hasSubGui()) {
          this.menu.mouseClicked(i, j, k);
@@ -60,18 +55,18 @@ public abstract class GuiContainerNPCInterface2 extends GuiContainerNPCInterface
    public void delete() {
       this.npc.delete();
       this.displayGuiScreen((GuiScreen)null);
-      super.mc.setIngameFocus();
+      this.mc.setIngameFocus();
    }
 
    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
       this.drawDefaultBackground();
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.background);
-      this.drawTexturedModalRect(super.field_147003_i, super.field_147009_r, 0, 0, 256, 256);
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.defaultBackground);
-      this.drawTexturedModalRect(super.field_147003_i + super.xSize - 200, super.field_147009_r, 26, 0, 200, 220);
-      this.menu.drawElements(super.fontRendererObj, i, j, super.mc, f);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.background);
+      this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, 256, 256);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.defaultBackground);
+      this.drawTexturedModalRect(this.guiLeft + this.xSize - 200, this.guiTop, 26, 0, 200, 220);
+      this.menu.drawElements(this.fontRendererObj, i, j, this.mc, f);
       super.drawGuiContainerBackgroundLayer(f, i, j);
    }
 }

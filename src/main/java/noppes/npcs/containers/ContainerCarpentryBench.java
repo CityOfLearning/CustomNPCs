@@ -8,11 +8,13 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
-import net.minecraft.inventory.SlotCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
+import noppes.npcs.blocks.BlockCarpentryBench;
+import noppes.npcs.containers.SlotNpcCrafting;
 import noppes.npcs.controllers.RecipeCarpentry;
 import noppes.npcs.controllers.RecipeController;
 
@@ -22,18 +24,14 @@ public class ContainerCarpentryBench extends Container {
    public IInventory craftResult = new InventoryCraftResult();
    private EntityPlayer player;
    private World worldObj;
-   private int posX;
-   private int posY;
-   private int posZ;
+   private BlockPos pos;
 
 
-   public ContainerCarpentryBench(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5) {
+   public ContainerCarpentryBench(InventoryPlayer par1InventoryPlayer, World par2World, BlockPos pos) {
       this.worldObj = par2World;
-      this.posX = par3;
-      this.posY = par4;
-      this.posZ = par5;
+      this.pos = pos;
       this.player = par1InventoryPlayer.player;
-      this.addSlotToContainer(new SlotCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 133, 41));
+      this.addSlotToContainer(new SlotNpcCrafting(par1InventoryPlayer.player, this.craftMatrix, this.craftResult, 0, 133, 41));
 
       int var6;
       int var7;
@@ -56,8 +54,8 @@ public class ContainerCarpentryBench extends Container {
       this.onCraftMatrixChanged(this.craftMatrix);
    }
 
-   public int getMetadata() {
-      return this.worldObj.getBlockMetadata(this.posX, this.posY, this.posZ);
+   public int getType() {
+      return ((Integer)this.worldObj.getBlockState(this.pos).getValue(BlockCarpentryBench.TYPE)).intValue();
    }
 
    public void onCraftMatrixChanged(IInventory par1IInventory) {
@@ -70,7 +68,7 @@ public class ContainerCarpentryBench extends Container {
 
          this.craftResult.setInventorySlotContents(0, item);
          EntityPlayerMP plmp = (EntityPlayerMP)this.player;
-         plmp.playerNetServerHandler.sendPacket(new S2FPacketSetSlot(super.windowId, 0, item));
+         plmp.playerNetServerHandler.sendPacket(new S2FPacketSetSlot(this.windowId, 0, item));
       }
 
    }
@@ -79,7 +77,7 @@ public class ContainerCarpentryBench extends Container {
       super.onContainerClosed(par1EntityPlayer);
       if(!this.worldObj.isRemote) {
          for(int var2 = 0; var2 < 16; ++var2) {
-            ItemStack var3 = this.craftMatrix.getStackInSlotOnClosing(var2);
+            ItemStack var3 = this.craftMatrix.removeStackFromSlot(var2);
             if(var3 != null) {
                par1EntityPlayer.dropPlayerItemWithRandomChoice(var3, false);
             }
@@ -89,12 +87,12 @@ public class ContainerCarpentryBench extends Container {
    }
 
    public boolean canInteractWith(EntityPlayer par1EntityPlayer) {
-      return this.worldObj.getBlock(this.posX, this.posY, this.posZ) != CustomItems.carpentyBench?false:par1EntityPlayer.getDistanceSq((double)this.posX + 0.5D, (double)this.posY + 0.5D, (double)this.posZ + 0.5D) <= 64.0D;
+      return this.worldObj.getBlockState(this.pos).getBlock() != CustomItems.carpentyBench?false:par1EntityPlayer.getDistanceSq((double)this.pos.getX() + 0.5D, (double)this.pos.getY() + 0.5D, (double)this.pos.getZ() + 0.5D) <= 64.0D;
    }
 
    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par1) {
       ItemStack var2 = null;
-      Slot var3 = (Slot)super.inventorySlots.get(par1);
+      Slot var3 = (Slot)this.inventorySlots.get(par1);
       if(var3 != null && var3.getHasStack()) {
          ItemStack var4 = var3.getStack();
          var2 = var4.copy();
@@ -130,5 +128,9 @@ public class ContainerCarpentryBench extends Container {
       }
 
       return var2;
+   }
+
+   public boolean canMergeSlot(ItemStack p_94530_1_, Slot p_94530_2_) {
+      return p_94530_2_.inventory != this.craftResult && super.canMergeSlot(p_94530_1_, p_94530_2_);
    }
 }

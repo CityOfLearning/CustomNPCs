@@ -2,23 +2,26 @@ package noppes.npcs.controllers;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.constants.EnumOptionType;
+import noppes.npcs.api.constants.EnumOptionType;
+import noppes.npcs.api.handler.data.IDialogOption;
 import noppes.npcs.controllers.Dialog;
 import noppes.npcs.controllers.DialogController;
 
-public class DialogOption {
+public class DialogOption implements IDialogOption {
 
    public int dialogId = -1;
    public String title = "Talk";
    public EnumOptionType optionType;
    public int optionColor;
    public String command;
+   public int slot;
 
 
    public DialogOption() {
-      this.optionType = EnumOptionType.Disabled;
+      this.optionType = EnumOptionType.DIALOG_OPTION;
       this.optionColor = 14737632;
       this.command = "";
+      this.slot = -1;
    }
 
    public void readNBT(NBTTagCompound compound) {
@@ -63,5 +66,17 @@ public class DialogOption {
    public boolean isAvailable(EntityPlayer player) {
       Dialog dialog = this.getDialog();
       return dialog == null?false:dialog.availability.isAvailable(player);
+   }
+
+   public int getSlot() {
+      return this.slot;
+   }
+
+   public String getName() {
+      return this.title;
+   }
+
+   public EnumOptionType getType() {
+      return this.optionType;
    }
 }

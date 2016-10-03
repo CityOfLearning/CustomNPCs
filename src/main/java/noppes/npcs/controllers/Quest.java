@@ -7,10 +7,11 @@ import noppes.npcs.ICompatibilty;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.Server;
 import noppes.npcs.VersionCompatibility;
+import noppes.npcs.api.constants.EnumQuestType;
+import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumQuestCompletion;
 import noppes.npcs.constants.EnumQuestRepeat;
-import noppes.npcs.constants.EnumQuestType;
 import noppes.npcs.controllers.FactionOptions;
 import noppes.npcs.controllers.PlayerMail;
 import noppes.npcs.controllers.QuestCategory;
@@ -22,7 +23,7 @@ import noppes.npcs.quests.QuestItem;
 import noppes.npcs.quests.QuestKill;
 import noppes.npcs.quests.QuestLocation;
 
-public class Quest implements ICompatibilty {
+public class Quest implements ICompatibilty, IQuest {
 
    public int version;
    public int id;
@@ -48,7 +49,7 @@ public class Quest implements ICompatibilty {
    public Quest() {
       this.version = VersionCompatibility.ModRev;
       this.id = -1;
-      this.type = EnumQuestType.Item;
+      this.type = EnumQuestType.ITEM;
       this.repeat = EnumQuestRepeat.NONE;
       this.completion = EnumQuestCompletion.Npc;
       this.title = "default";
@@ -100,12 +101,12 @@ public class Quest implements ICompatibilty {
 
    public void setType(EnumQuestType questType) {
       this.type = questType;
-      if(this.type == EnumQuestType.Item) {
+      if(this.type == EnumQuestType.ITEM) {
          this.questInterface = new QuestItem();
-      } else if(this.type == EnumQuestType.Dialog) {
+      } else if(this.type == EnumQuestType.DIALOG) {
          this.questInterface = new QuestDialog();
-      } else if(this.type != EnumQuestType.Kill && this.type != EnumQuestType.AreaKill) {
-         if(this.type == EnumQuestType.Location) {
+      } else if(this.type != EnumQuestType.KILL && this.type != EnumQuestType.AREA_KILL) {
+         if(this.type == EnumQuestType.LOCATION) {
             this.questInterface = new QuestLocation();
          }
       } else {
@@ -173,5 +174,17 @@ public class Quest implements ICompatibilty {
 
    public void setVersion(int version) {
       this.version = version;
+   }
+
+   public int getId() {
+      return this.id;
+   }
+
+   public String getName() {
+      return this.title;
+   }
+
+   public EnumQuestType getType() {
+      return this.type;
    }
 }

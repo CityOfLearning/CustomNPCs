@@ -1,6 +1,9 @@
 package noppes.npcs.blocks;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
@@ -16,22 +19,22 @@ public abstract class BlockTrigger extends BlockRotated {
       return true;
    }
 
-   public int isProvidingStrongPower(IBlockAccess world, int x, int y, int z, int p_149748_5_) {
-      return this.isProvidingWeakPower(world, x, y, z, p_149748_5_);
+   public int getStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
+      return this.getWeakPower(worldIn, pos, state, side);
    }
 
-   public int isProvidingWeakPower(IBlockAccess world, int x, int y, int z, int p_149709_5_) {
-      TileColorable tile = (TileColorable)world.getTileEntity(x, y, z);
+   public int getWeakPower(IBlockAccess world, BlockPos pos, IBlockState state, EnumFacing side) {
+      TileColorable tile = (TileColorable)world.getTileEntity(pos);
       return tile != null?tile.powerProvided():0;
    }
 
-   public void updateSurrounding(World par1World, int par2, int par3, int par4) {
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, this);
-      par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, this);
+   public void updateSurrounding(World par1World, BlockPos pos) {
+      par1World.notifyNeighborsOfStateChange(pos, this);
+      par1World.notifyNeighborsOfStateChange(pos.down(), this);
+      par1World.notifyNeighborsOfStateChange(pos.up(), this);
+      par1World.notifyNeighborsOfStateChange(pos.west(), this);
+      par1World.notifyNeighborsOfStateChange(pos.east(), this);
+      par1World.notifyNeighborsOfStateChange(pos.south(), this);
+      par1World.notifyNeighborsOfStateChange(pos.north(), this);
    }
 }

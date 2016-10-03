@@ -1,6 +1,7 @@
 package noppes.npcs.blocks;
 
 import java.util.List;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -8,8 +9,9 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
@@ -23,21 +25,19 @@ public class BlockSign extends BlockRotated {
       super(Blocks.planks);
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
-      l %= 4;
-      TileSign tile = (TileSign)par1World.getTileEntity(par2, par3, par4);
-      tile.rotation = l;
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      super.onBlockPlacedBy(world, pos, state, entity, stack);
+      TileSign tile = (TileSign)world.getTileEntity(pos);
       tile.time = System.currentTimeMillis();
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-      if(par5EntityLivingBase instanceof EntityPlayer && par1World.isRemote) {
-         ((EntityPlayer)par5EntityLivingBase).addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      if(entity instanceof EntityPlayer && world.isRemote) {
+         ((EntityPlayer)entity).addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
       }
 
    }
 
-   public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-      TileBanner tile = (TileBanner)world.getTileEntity(x, y, z);
+   public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+      TileBanner tile = (TileBanner)world.getTileEntity(pos);
       return tile.canEdit();
    }
 
@@ -50,10 +50,10 @@ public class BlockSign extends BlockRotated {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      TileEntity tileentity = world.getTileEntity(x, y, z);
+   public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+      TileEntity tileentity = world.getTileEntity(pos);
       if(!(tileentity instanceof TileColorable)) {
-         super.setBlockBoundsBasedOnState(world, x, y, z);
+         super.setBlockBoundsBasedOnState(world, pos);
       } else {
          TileColorable tile = (TileColorable)tileentity;
          if(tile.rotation % 2 == 1) {
@@ -65,8 +65,8 @@ public class BlockSign extends BlockRotated {
       }
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {

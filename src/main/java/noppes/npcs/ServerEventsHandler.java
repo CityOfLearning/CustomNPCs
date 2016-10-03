@@ -1,10 +1,10 @@
 package noppes.npcs;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
@@ -16,12 +16,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.village.MerchantRecipeList;
-import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.EntityInteractEvent;
@@ -29,18 +29,18 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent.Post;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.CustomNpcsPermissions;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NPCSpawning;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.Server;
+import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
-import noppes.npcs.constants.EnumQuestType;
-import noppes.npcs.constants.EnumRoleType;
-import noppes.npcs.constants.EnumScriptType;
 import noppes.npcs.controllers.Line;
 import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
@@ -50,7 +50,6 @@ import noppes.npcs.controllers.RecipeCarpentry;
 import noppes.npcs.controllers.RecipeController;
 import noppes.npcs.controllers.ServerCloneController;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.items.ItemExcalibur;
 import noppes.npcs.items.ItemShield;
 import noppes.npcs.items.ItemSoulstoneEmpty;
 import noppes.npcs.quests.QuestKill;
@@ -76,7 +75,7 @@ public class ServerEventsHandler {
             CustomNpcsPermissions var10000;
             if(item.getItem() == CustomItems.wand && npcInteracted && !isRemote) {
                var10000 = CustomNpcsPermissions.Instance;
-               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, "customnpcs.npc.gui")) {
+               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, CustomNpcsPermissions.NPC_GUI)) {
                   return;
                }
 
@@ -90,7 +89,7 @@ public class ServerEventsHandler {
 
                PlayerData merchantrecipelist1 = PlayerDataController.instance.getPlayerData(event.entityPlayer);
                ServerCloneController.Instance.cleanTags(player1);
-               if(!Server.sendData((EntityPlayerMP)event.entityPlayer, EnumPacketClient.CLONE, new Object[]{player1})) {
+               if(!Server.sendDataChecked((EntityPlayerMP)event.entityPlayer, EnumPacketClient.CLONE, new Object[]{player1})) {
                   event.entityPlayer.addChatMessage(new ChatComponentText("Entity too big to clone"));
                }
 
@@ -98,16 +97,16 @@ public class ServerEventsHandler {
                event.setCanceled(true);
             } else if(item.getItem() == CustomItems.scripter && !isRemote && npcInteracted) {
                var10000 = CustomNpcsPermissions.Instance;
-               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, "customnpcs.npc.gui")) {
+               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, CustomNpcsPermissions.NPC_GUI)) {
                   return;
                }
 
                NoppesUtilServer.setEditingNpc(event.entityPlayer, (EntityNPCInterface)event.target);
                event.setCanceled(true);
-               Server.sendData((EntityPlayerMP)event.entityPlayer, EnumPacketClient.GUI, new Object[]{Integer.valueOf(EnumGuiType.Script.ordinal())});
+               Server.sendData((EntityPlayerMP)event.entityPlayer, EnumPacketClient.GUI, new Object[]{Integer.valueOf(EnumGuiType.Script.ordinal()), Integer.valueOf(0), Integer.valueOf(0), Integer.valueOf(0)});
             } else if(item.getItem() == CustomItems.mount) {
                var10000 = CustomNpcsPermissions.Instance;
-               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, "customnpcs.mounter")) {
+               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, CustomNpcsPermissions.TOOL_MOUNTER)) {
                   return;
                }
 
@@ -118,7 +117,7 @@ public class ServerEventsHandler {
                }
             } else if(item.getItem() == CustomItems.wand && event.target instanceof EntityVillager) {
                var10000 = CustomNpcsPermissions.Instance;
-               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, "customnpcs.villager")) {
+               if(!CustomNpcsPermissions.hasPermission(event.entityPlayer, CustomNpcsPermissions.EDIT_VILLAGER)) {
                   return;
                }
 
@@ -147,10 +146,10 @@ public class ServerEventsHandler {
                ItemStack item = player.getCurrentEquippedItem();
                if(item != null && item.getItem() instanceof ItemShield) {
                   if(((ItemShield)item.getItem()).material.getDamageVsEntity() >= player.getRNG().nextInt(9)) {
-                     float damage = (float)item.getMetadata() + event.ammount;
+                     float damage = (float)item.getItemDamage() + event.ammount;
                      item.damageItem((int)event.ammount, player);
-                     if(damage > (float)item.getMaxDurability()) {
-                        event.ammount = damage - (float)item.getMaxDurability();
+                     if(damage > (float)item.getMaxDamage()) {
+                        event.ammount = damage - (float)item.getMaxDamage();
                      } else {
                         event.ammount = 0.0F;
                         event.setCanceled(true);
@@ -165,114 +164,113 @@ public class ServerEventsHandler {
 
    @SubscribeEvent
    public void invoke(PlayerInteractEvent event) {
-      EntityPlayer player = event.entityPlayer;
-      Block block = player.worldObj.getBlock(event.x, event.y, event.z);
-      if(event.action == Action.LEFT_CLICK_BLOCK && player.getHeldItem() != null && player.getHeldItem().getItem() == CustomItems.teleporter) {
-         event.setCanceled(true);
-      }
-
-      RecipeController item;
-      NBTTagList y;
-      int meta;
-      Iterator tile;
-      RecipeCarpentry recipe;
-      NBTTagCompound compound;
-      NBTTagCompound var12;
-      if(block == Blocks.crafting_table && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote) {
-         item = RecipeController.instance;
-         y = new NBTTagList();
-         meta = 0;
-         tile = item.globalRecipes.values().iterator();
-
-         while(tile.hasNext()) {
-            recipe = (RecipeCarpentry)tile.next();
-            y.appendTag(recipe.writeNBT());
-            ++meta;
-            if(meta % 10 == 0) {
-               compound = new NBTTagCompound();
-               compound.setTag("recipes", y);
-               Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{compound});
-               y = new NBTTagList();
-            }
+      if(event.pos != null) {
+         EntityPlayer player = event.entityPlayer;
+         BlockPos pos = event.pos;
+         IBlockState state = player.worldObj.getBlockState(pos);
+         Block block = state.getBlock();
+         if(event.action == Action.LEFT_CLICK_BLOCK && player.getHeldItem() != null && player.getHeldItem().getItem() == CustomItems.teleporter) {
+            event.setCanceled(true);
          }
 
-         if(meta % 10 != 0) {
-            var12 = new NBTTagCompound();
-            var12.setTag("recipes", y);
-            Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{var12});
-         }
+         RecipeController item;
+         NBTTagList meta;
+         int tile;
+         Iterator compound;
+         RecipeCarpentry recipe;
+         NBTTagCompound compound1;
+         NBTTagCompound var14;
+         if(block == Blocks.crafting_table && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote) {
+            item = RecipeController.instance;
+            meta = new NBTTagList();
+            tile = 0;
+            compound = item.globalRecipes.values().iterator();
 
-         Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_WORKBENCH, new Object[0]);
-      }
-
-      if(block == CustomItems.carpentyBench && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote) {
-         item = RecipeController.instance;
-         y = new NBTTagList();
-         meta = 0;
-         tile = item.anvilRecipes.values().iterator();
-
-         while(tile.hasNext()) {
-            recipe = (RecipeCarpentry)tile.next();
-            y.appendTag(recipe.writeNBT());
-            ++meta;
-            if(meta % 10 == 0) {
-               compound = new NBTTagCompound();
-               compound.setTag("recipes", y);
-               Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{compound});
-               y = new NBTTagList();
-            }
-         }
-
-         if(meta % 10 != 0) {
-            var12 = new NBTTagCompound();
-            var12.setTag("recipes", y);
-            Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{var12});
-         }
-
-         Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH, new Object[0]);
-      }
-
-      if((block == CustomItems.banner || block == CustomItems.wallBanner || block == CustomItems.sign) && event.action == Action.RIGHT_CLICK_BLOCK) {
-         ItemStack var10 = player.inventory.getCurrentItem();
-         if(var10 == null || var10.getItem() == null) {
-            return;
-         }
-
-         int var11 = event.y;
-         meta = player.worldObj.getBlockMetadata(event.x, event.y, event.z);
-         if(meta >= 7) {
-            --var11;
-         }
-
-         TileBanner var13 = (TileBanner)player.worldObj.getTileEntity(event.x, var11, event.z);
-         if(!var13.canEdit()) {
-            if(var10.getItem() == CustomItems.wand && CustomNpcsPermissions.hasPermission(player, "customnpcs.editblocks")) {
-               var13.time = System.currentTimeMillis();
-               if(player.worldObj.isRemote) {
-                  player.addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
+            while(compound.hasNext()) {
+               recipe = (RecipeCarpentry)compound.next();
+               meta.appendTag(recipe.writeNBT());
+               ++tile;
+               if(tile % 10 == 0) {
+                  compound1 = new NBTTagCompound();
+                  compound1.setTag("recipes", meta);
+                  Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{compound1});
+                  meta = new NBTTagList();
                }
             }
 
-            return;
+            if(tile % 10 != 0) {
+               var14 = new NBTTagCompound();
+               var14.setTag("recipes", meta);
+               Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{var14});
+            }
+
+            Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_WORKBENCH, new Object[0]);
          }
 
-         if(!player.worldObj.isRemote) {
-            var13.icon = var10.copy();
-            player.worldObj.markBlockForUpdate(event.x, var11, event.z);
-            event.setCanceled(true);
+         if(block == CustomItems.carpentyBench && event.action == Action.RIGHT_CLICK_BLOCK && !player.worldObj.isRemote) {
+            item = RecipeController.instance;
+            meta = new NBTTagList();
+            tile = 0;
+            compound = item.anvilRecipes.values().iterator();
+
+            while(compound.hasNext()) {
+               recipe = (RecipeCarpentry)compound.next();
+               meta.appendTag(recipe.writeNBT());
+               ++tile;
+               if(tile % 10 == 0) {
+                  compound1 = new NBTTagCompound();
+                  compound1.setTag("recipes", meta);
+                  Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{compound1});
+                  meta = new NBTTagList();
+               }
+            }
+
+            if(tile % 10 != 0) {
+               var14 = new NBTTagCompound();
+               var14.setTag("recipes", meta);
+               Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_ADD, new Object[]{var14});
+            }
+
+            Server.sendData((EntityPlayerMP)player, EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH, new Object[0]);
          }
+
+         if((block == CustomItems.banner || block == CustomItems.wallBanner || block == CustomItems.sign) && event.action == Action.RIGHT_CLICK_BLOCK) {
+            ItemStack var12 = player.inventory.getCurrentItem();
+            if(var12 == null || var12.getItem() == null) {
+               return;
+            }
+
+            int var13 = block.getMetaFromState(state);
+            if(var13 >= 7) {
+               pos = pos.down();
+            }
+
+            TileBanner var15 = (TileBanner)player.worldObj.getTileEntity(pos);
+            if(!var15.canEdit()) {
+               if(var12.getItem() == CustomItems.wand && CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
+                  var15.time = System.currentTimeMillis();
+                  if(player.worldObj.isRemote) {
+                     player.addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
+                  }
+               }
+
+               return;
+            }
+
+            if(!player.worldObj.isRemote) {
+               var15.icon = var12.copy();
+               player.worldObj.markBlockForUpdate(pos);
+               event.setCanceled(true);
+            }
+         }
+
       }
-
    }
 
    @SubscribeEvent
    public void invoke(LivingDeathEvent event) {
       if(!event.entityLiving.worldObj.isRemote) {
          if(event.source.getEntity() != null) {
-            if(event.source.getEntity() instanceof EntityPlayer) {
-               this.doExcalibur((EntityPlayer)event.source.getEntity(), event.entityLiving);
-            }
-
             if(event.source.getEntity() instanceof EntityNPCInterface && event.entityLiving != null) {
                EntityNPCInterface data = (EntityNPCInterface)event.source.getEntity();
                Line line = data.advanced.getKillLine();
@@ -280,13 +278,13 @@ public class ServerEventsHandler {
                   data.saySurrounding(line.formatTarget(event.entityLiving));
                }
 
-               data.script.callScript(EnumScriptType.KILLS, new Object[]{"target", event.entityLiving});
+               EventHooks.onNPCKills(data, event.entityLiving);
             }
 
             EntityPlayer data1 = null;
             if(event.source.getEntity() instanceof EntityPlayer) {
                data1 = (EntityPlayer)event.source.getEntity();
-            } else if(event.source.getEntity() instanceof EntityNPCInterface && ((EntityNPCInterface)event.source.getEntity()).advanced.role == EnumRoleType.Follower) {
+            } else if(event.source.getEntity() instanceof EntityNPCInterface && ((EntityNPCInterface)event.source.getEntity()).advanced.role == 2) {
                data1 = ((RoleFollower)((EntityNPCInterface)event.source.getEntity()).roleInterface).owner;
             }
 
@@ -306,14 +304,6 @@ public class ServerEventsHandler {
       }
    }
 
-   private void doExcalibur(EntityPlayer player, EntityLivingBase entity) {
-      ItemStack item = player.getCurrentEquippedItem();
-      if(item != null && item.getItem() == CustomItems.excalibur) {
-         Server.sendData((EntityPlayerMP)player, EnumPacketClient.PLAY_MUSIC, new Object[]{"customnpcs:songs.excalibur"});
-         player.addChatMessage(new ChatComponentTranslation("<" + StatCollector.translateToLocal(item.getItem().getUnlocalizedName() + ".name") + "> " + ItemExcalibur.quotes[player.getRNG().nextInt(ItemExcalibur.quotes.length)], new Object[0]));
-      }
-   }
-
    private void doFactionPoints(EntityPlayer player, EntityNPCInterface npc) {
       npc.advanced.factions.addPoints(player);
    }
@@ -326,9 +316,9 @@ public class ServerEventsHandler {
 
       while(var7.hasNext()) {
          QuestData data = (QuestData)var7.next();
-         if(data.quest.type == EnumQuestType.Kill || data.quest.type == EnumQuestType.AreaKill) {
-            if(data.quest.type == EnumQuestType.AreaKill && all) {
-               List name = player.worldObj.getEntitiesWithinAABB(EntityPlayer.class, entity.boundingBox.expand(10.0D, 10.0D, 10.0D));
+         if(data.quest.type == EnumQuestType.KILL || data.quest.type == EnumQuestType.AREA_KILL) {
+            if(data.quest.type == EnumQuestType.AREA_KILL && all) {
+               List name = player.worldObj.getEntitiesWithinAABB(EntityPlayer.class, entity.getEntityBoundingBox().expand(10.0D, 10.0D, 10.0D));
                Iterator quest = name.iterator();
 
                while(quest.hasNext()) {
@@ -341,8 +331,8 @@ public class ServerEventsHandler {
 
             String name1 = entityName;
             QuestKill quest1 = (QuestKill)data.quest.questInterface;
-            if(quest1.targets.containsKey(entity.getCommandSenderName())) {
-               name1 = entity.getCommandSenderName();
+            if(quest1.targets.containsKey(entity.getName())) {
+               name1 = entity.getName();
             } else if(!quest1.targets.containsKey(entityName)) {
                continue;
             }
@@ -362,7 +352,7 @@ public class ServerEventsHandler {
       }
 
       if(change) {
-         playerdata.checkQuestCompletion(player, EnumQuestType.Kill);
+         playerdata.checkQuestCompletion(player, EnumQuestType.KILL);
       }
    }
 
@@ -370,14 +360,15 @@ public class ServerEventsHandler {
    public void pickUp(EntityItemPickupEvent event) {
       if(!event.entityPlayer.worldObj.isRemote) {
          PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(event.entityPlayer).questData;
-         playerdata.checkQuestCompletion(event.entityPlayer, EnumQuestType.Item);
+         playerdata.checkQuestCompletion(event.entityPlayer, EnumQuestType.ITEM);
       }
    }
 
    @SubscribeEvent
-   public void construct(EntityConstructing event) {
-      if(event.entity.worldObj == null || !(event.entity instanceof EntityPlayer)) {
-         ;
+   public void world(EntityJoinWorldEvent event) {
+      if(!event.world.isRemote && event.entity instanceof EntityPlayer) {
+         PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer)event.entity);
+         data.updateCompanion(event.world);
       }
    }
 

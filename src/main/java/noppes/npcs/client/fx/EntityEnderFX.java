@@ -1,13 +1,15 @@
 package noppes.npcs.client.fx;
 
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.particle.EntityPortalFX;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.ModelPartData;
 import noppes.npcs.client.ClientProxy;
 import noppes.npcs.entity.EntityCustomNpc;
-import org.lwjgl.opengl.GL11;
 
 public class EntityEnderFX extends EntityPortalFX {
 
@@ -26,10 +28,10 @@ public class EntityEnderFX extends EntityPortalFX {
       super(npc.worldObj, par2, par4, par6, par8, par10, par12);
       this.npc = npc;
       this.particleNumber = npc.getRNG().nextInt(2);
-      this.portalParticleScale = super.particleScale = super.rand.nextFloat() * 0.2F + 0.5F;
-      super.particleRed = (float)(data.color >> 16 & 255) / 255.0F;
-      super.particleGreen = (float)(data.color >> 8 & 255) / 255.0F;
-      super.particleBlue = (float)(data.color & 255) / 255.0F;
+      this.portalParticleScale = this.particleScale = this.rand.nextFloat() * 0.2F + 0.5F;
+      this.particleRed = (float)(data.color >> 16 & 255) / 255.0F;
+      this.particleGreen = (float)(data.color >> 8 & 255) / 255.0F;
+      this.particleBlue = (float)(data.color & 255) / 255.0F;
       if(npc.getRNG().nextInt(3) == 1) {
          this.move = false;
          this.startX = (float)npc.posX;
@@ -40,46 +42,43 @@ public class EntityEnderFX extends EntityPortalFX {
       if(data.playerTexture) {
          this.location = npc.textureLocation;
       } else {
-         this.location = new ResourceLocation(data.texture);
+         this.location = data.getResource();
       }
 
    }
 
-   public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7) {
+   public void renderParticle(WorldRenderer renderer, Entity entity, float par2, float par3, float par4, float par5, float par6, float par7) {
       if(this.move) {
          this.startX = (float)(this.npc.prevPosX + (this.npc.posX - this.npc.prevPosX) * (double)par2);
          this.startY = (float)(this.npc.prevPosY + (this.npc.posY - this.npc.prevPosY) * (double)par2);
          this.startZ = (float)(this.npc.prevPosZ + (this.npc.posZ - this.npc.prevPosZ) * (double)par2);
       }
 
-      Tessellator tessellator = Tessellator.instance;
+      Tessellator tessellator = Tessellator.getInstance();
       tessellator.draw();
-      float scale = ((float)super.particleAge + par2) / (float)super.particleMaxAge;
+      float scale = ((float)this.particleAge + par2) / (float)this.particleMaxAge;
       scale = 1.0F - scale;
       scale *= scale;
       scale = 1.0F - scale;
-      super.particleScale = this.portalParticleScale * scale;
+      this.particleScale = this.portalParticleScale * scale;
       ClientProxy.bindTexture(this.location);
       float f = 0.875F;
       float f1 = f + 0.125F;
       float f2 = 0.75F - (float)this.particleNumber * 0.25F;
       float f3 = f2 + 0.25F;
-      float f4 = 0.1F * super.particleScale;
-      float f5 = (float)(super.prevPosX + (super.posX - super.prevPosX) * (double)par2 - EntityFX.interpPosX + (double)this.startX);
-      float f6 = (float)(super.prevPosY + (super.posY - super.prevPosY) * (double)par2 - EntityFX.interpPosY + (double)this.startY);
-      float f7 = (float)(super.prevPosZ + (super.posZ - super.prevPosZ) * (double)par2 - EntityFX.interpPosZ + (double)this.startZ);
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      tessellator.startDrawingQuads();
-      tessellator.setBrightness(240);
-      par1Tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
-      par1Tessellator.setColorRGBA_F(super.particleRed, super.particleGreen, super.particleBlue, 1.0F);
-      par1Tessellator.addVertexWithUV((double)(f5 - par3 * f4 - par6 * f4), (double)(f6 - par4 * f4), (double)(f7 - par5 * f4 - par7 * f4), (double)f1, (double)f3);
-      par1Tessellator.addVertexWithUV((double)(f5 - par3 * f4 + par6 * f4), (double)(f6 + par4 * f4), (double)(f7 - par5 * f4 + par7 * f4), (double)f1, (double)f2);
-      par1Tessellator.addVertexWithUV((double)(f5 + par3 * f4 + par6 * f4), (double)(f6 + par4 * f4), (double)(f7 + par5 * f4 + par7 * f4), (double)f, (double)f2);
-      par1Tessellator.addVertexWithUV((double)(f5 + par3 * f4 - par6 * f4), (double)(f6 - par4 * f4), (double)(f7 + par5 * f4 - par7 * f4), (double)f, (double)f3);
+      float f4 = 0.1F * this.particleScale;
+      float f5 = (float)(this.prevPosX + (this.posX - this.prevPosX) * (double)par2 - interpPosX + (double)this.startX);
+      float f6 = (float)(this.prevPosY + (this.posY - this.prevPosY) * (double)par2 - interpPosY + (double)this.startY);
+      float f7 = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)par2 - interpPosZ + (double)this.startZ);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      renderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
+      renderer.pos((double)(f5 - par3 * f4 - par6 * f4), (double)(f6 - par4 * f4), (double)(f7 - par5 * f4 - par7 * f4)).tex((double)f1, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).endVertex();
+      renderer.pos((double)(f5 - par3 * f4 + par6 * f4), (double)(f6 + par4 * f4), (double)(f7 - par5 * f4 + par7 * f4)).tex((double)f1, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).endVertex();
+      renderer.pos((double)(f5 + par3 * f4 + par6 * f4), (double)(f6 + par4 * f4), (double)(f7 + par5 * f4 + par7 * f4)).tex((double)f, (double)f2).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).endVertex();
+      renderer.pos((double)(f5 + par3 * f4 - par6 * f4), (double)(f6 - par4 * f4), (double)(f7 + par5 * f4 - par7 * f4)).tex((double)f, (double)f3).color(this.particleRed, this.particleGreen, this.particleBlue, 1.0F).endVertex();
       tessellator.draw();
       ClientProxy.bindTexture(resource);
-      tessellator.startDrawingQuads();
+      renderer.begin(7, DefaultVertexFormats.PARTICLE_POSITION_TEX_COLOR_LMAP);
    }
 
    public int getFXLayer() {

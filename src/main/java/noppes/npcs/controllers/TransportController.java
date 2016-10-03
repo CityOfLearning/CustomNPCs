@@ -12,7 +12,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
-import noppes.npcs.constants.EnumRoleType;
 import noppes.npcs.controllers.TransportCategory;
 import noppes.npcs.controllers.TransportLocation;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -293,7 +292,7 @@ public class TransportController {
 
    public TransportLocation saveLocation(int categoryId, NBTTagCompound compound, EntityPlayerMP player, EntityNPCInterface npc) {
       TransportCategory category = (TransportCategory)this.categories.get(Integer.valueOf(categoryId));
-      if(category != null && npc.advanced.role == EnumRoleType.Transporter) {
+      if(category != null && npc.advanced.role == 4) {
          RoleTransporter role = (RoleTransporter)npc.roleInterface;
          TransportLocation location = new TransportLocation();
          location.readNBT(compound);

@@ -11,7 +11,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
-import noppes.npcs.constants.EnumOptionType;
+import noppes.npcs.NoppesStringUtils;
+import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.controllers.Dialog;
 import noppes.npcs.controllers.DialogCategory;
 import noppes.npcs.controllers.DialogOption;
@@ -56,8 +57,8 @@ public class DialogController {
 
             return;
          }
-      } catch (Exception var10) {
-         LogWriter.except(var10);
+      } catch (Exception var11) {
+         LogWriter.except(var11);
       }
 
       dir = this.getDir();
@@ -72,15 +73,16 @@ public class DialogController {
             File file = var2[var4];
             if(file.isDirectory()) {
                DialogCategory category = this.loadCategoryDir(file);
-               Iterator ite = category.dialogs.keySet().iterator();
+               Iterator ite = category.dialogs.entrySet().iterator();
 
                while(ite.hasNext()) {
-                  int id = ((Integer)ite.next()).intValue();
+                  Entry entry = (Entry)ite.next();
+                  int id = ((Integer)entry.getKey()).intValue();
                   if(id > this.lastUsedDialogID) {
                      this.lastUsedDialogID = id;
                   }
 
-                  Dialog dialog = (Dialog)category.dialogs.get(Integer.valueOf(id));
+                  Dialog dialog = (Dialog)entry.getValue();
                   if(this.dialogs.containsKey(Integer.valueOf(id))) {
                      LogWriter.error("Duplicate id " + dialog.id + " from category " + category.title);
                      ite.remove();
@@ -114,7 +116,7 @@ public class DialogController {
                category.dialogs.put(Integer.valueOf(e.id), e);
                e.category = category;
             } catch (Exception var8) {
-               ;
+               LogWriter.error("Error loading: " + file.getAbsolutePath(), var8);
             }
          }
       }
@@ -135,6 +137,7 @@ public class DialogController {
             while(ita.hasNext()) {
                Entry entry = (Entry)ita.next();
                Dialog dialog = (Dialog)entry.getValue();
+               dialog.id = ((Integer)entry.getKey()).intValue();
                dialog.category = category;
                if(this.dialogs.containsKey(Integer.valueOf(dialog.id))) {
                   ita.remove();
@@ -172,14 +175,14 @@ public class DialogController {
       DialogOption option = new DialogOption();
       option.title = "Tell me something about this village";
       option.dialogId = 2;
-      option.optionType = EnumOptionType.DialogOption;
+      option.optionType = EnumOptionType.DIALOG_OPTION;
       DialogOption option2 = new DialogOption();
       option2.title = "Who are you?";
       option2.dialogId = 3;
-      option2.optionType = EnumOptionType.DialogOption;
+      option2.optionType = EnumOptionType.DIALOG_OPTION;
       DialogOption option3 = new DialogOption();
       option3.title = "Goodbye";
-      option3.optionType = EnumOptionType.QuitOption;
+      option3.optionType = EnumOptionType.QUIT_OPTION;
       dia1.options.put(Integer.valueOf(0), option2);
       dia1.options.put(Integer.valueOf(1), option);
       dia1.options.put(Integer.valueOf(2), option3);
@@ -189,6 +192,7 @@ public class DialogController {
       dia2.options.put(Integer.valueOf(1), option4);
       dia3.options.put(Integer.valueOf(1), option4);
       this.lastUsedDialogID = 3;
+      this.lastUsedCatID = 1;
       this.saveCategory(cat);
       this.saveDialog(cat.id, dia1);
       this.saveDialog(cat.id, dia2);
@@ -196,6 +200,7 @@ public class DialogController {
    }
 
    public void saveCategory(DialogCategory category) {
+      category.title = NoppesStringUtils.cleanFileName(category.title);
       if(this.categories.containsKey(Integer.valueOf(category.id))) {
          DialogCategory dir = (DialogCategory)this.categories.get(Integer.valueOf(category.id));
          if(!dir.title.equals(category.title)) {

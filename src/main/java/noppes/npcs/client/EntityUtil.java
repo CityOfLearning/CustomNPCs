@@ -4,6 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.passive.EntityChicken;
 import net.minecraft.entity.player.EntityPlayer;
+import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class EntityUtil {
@@ -18,7 +19,7 @@ public class EntityUtil {
       entity.moveForward = copied.moveForward;
       entity.moveStrafing = copied.moveStrafing;
       entity.setPosition(copied.posX, copied.posY, copied.posZ);
-      entity.boundingBox.setBB(copied.boundingBox);
+      entity.setEntityBoundingBox(copied.getEntityBoundingBox());
       entity.prevPosX = copied.prevPosX;
       entity.prevPosY = copied.prevPosY;
       entity.prevPosZ = copied.prevPosZ;
@@ -51,12 +52,12 @@ public class EntityUtil {
          EntityPlayer target = (EntityPlayer)copied;
          npc.cameraYaw = target.cameraYaw;
          npc.prevCameraYaw = target.prevCameraYaw;
-         npc.field_71091_bM = target.field_71091_bM;
-         npc.field_71096_bN = target.field_71096_bN;
-         npc.field_71097_bO = target.field_71097_bO;
-         npc.field_71094_bP = target.field_71094_bP;
-         npc.field_71095_bQ = target.field_71095_bQ;
-         npc.field_71085_bR = target.field_71085_bR;
+         npc.prevChasingPosX = target.prevChasingPosX;
+         npc.prevChasingPosY = target.prevChasingPosY;
+         npc.prevChasingPosZ = target.prevChasingPosZ;
+         npc.chasingPosX = target.chasingPosX;
+         npc.chasingPosY = target.chasingPosY;
+         npc.chasingPosZ = target.chasingPosZ;
       }
 
       if(entity instanceof EntityDragon) {
@@ -83,5 +84,16 @@ public class EntityUtil {
          var6.setDataWatcher(var5.getDataWatcher());
       }
 
+      if(entity instanceof EntityCustomNpc && copied instanceof EntityCustomNpc) {
+         EntityCustomNpc var7 = (EntityCustomNpc)copied;
+         EntityCustomNpc var8 = (EntityCustomNpc)entity;
+         var8.modelData = var7.modelData.copy();
+         var8.modelData.setEntityClass((Class)null);
+      }
+
+   }
+
+   public static void setRecentlyHit(EntityLivingBase entity) {
+      entity.recentlyHit = 100;
    }
 }

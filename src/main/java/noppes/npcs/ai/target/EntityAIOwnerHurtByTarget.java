@@ -9,7 +9,7 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget {
 
    EntityNPCInterface npc;
    EntityLivingBase theOwnerAttacker;
-   private int field_142051_e;
+   private int timer;
 
 
    public EntityAIOwnerHurtByTarget(EntityNPCInterface npc) {
@@ -26,7 +26,7 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget {
          } else {
             this.theOwnerAttacker = entitylivingbase.getAITarget();
             int i = entitylivingbase.getRevengeTimer();
-            return i != this.field_142051_e && this.isSuitableTarget(this.theOwnerAttacker, false);
+            return i != this.timer && this.isSuitableTarget(this.theOwnerAttacker, false);
          }
       } else {
          return false;
@@ -34,10 +34,10 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget {
    }
 
    public void startExecuting() {
-      super.taskOwner.setAttackTarget(this.theOwnerAttacker);
+      this.taskOwner.setAttackTarget(this.theOwnerAttacker);
       EntityLivingBase entitylivingbase = this.npc.getOwner();
       if(entitylivingbase != null) {
-         this.field_142051_e = entitylivingbase.getRevengeTimer();
+         this.timer = entitylivingbase.getRevengeTimer();
       }
 
       super.startExecuting();

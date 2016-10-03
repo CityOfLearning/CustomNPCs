@@ -133,9 +133,9 @@ public class ContainerManageRecipes extends Container {
          if(var17 >= firstRow && var17 <= lastRow) {
             String var20 = "";
 
-            for(int var22 = 0; var22 < this.width; ++var22) {
-               if(var22 >= firstColumn && var22 <= lastColumn) {
-                  ItemStack var24 = this.craftingMatrix.getStackInSlot(var17 * this.width + var22 + 1);
+            for(int var21 = 0; var21 < this.width; ++var21) {
+               if(var21 >= firstColumn && var21 <= lastColumn) {
+                  ItemStack var24 = this.craftingMatrix.getStackInSlot(var17 * this.width + var21 + 1);
                   if(var24 == null) {
                      var20 = var20 + " ";
                   } else {
@@ -163,13 +163,13 @@ public class ContainerManageRecipes extends Container {
          Iterator var18 = nameMapping.keySet().iterator();
 
          while(var18.hasNext()) {
-            ItemStack var21 = (ItemStack)var18.next();
-            Character var23 = (Character)nameMapping.get(var21);
+            ItemStack var22 = (ItemStack)var18.next();
+            Character var23 = (Character)nameMapping.get(var22);
             var16.add(var23);
-            var16.add(var21);
+            var16.add(var22);
          }
 
-         this.recipe = RecipeCarpentry.saveRecipe(this.recipe, this.craftingMatrix.getStackInSlot(0), var16.toArray());
+         this.recipe = RecipeCarpentry.createRecipe(this.recipe, this.craftingMatrix.getStackInSlot(0), var16.toArray());
       }
    }
 }

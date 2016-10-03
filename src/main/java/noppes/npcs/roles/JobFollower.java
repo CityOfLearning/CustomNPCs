@@ -4,10 +4,12 @@ import java.util.Iterator;
 import java.util.List;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.api.entity.ICustomNpc;
+import noppes.npcs.api.entity.data.role.IJobFollower;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobInterface;
 
-public class JobFollower extends JobInterface {
+public class JobFollower extends JobInterface implements IJobFollower {
 
    public EntityNPCInterface following = null;
    private int ticks = 40;
@@ -29,7 +31,7 @@ public class JobFollower extends JobInterface {
    }
 
    public boolean aiShouldExecute() {
-      if(super.npc.isAttacking()) {
+      if(this.npc.isAttacking()) {
          return false;
       } else {
          --this.ticks;
@@ -38,12 +40,12 @@ public class JobFollower extends JobInterface {
          } else {
             this.ticks = 10;
             this.following = null;
-            List list = super.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, super.npc.boundingBox.expand((double)this.getRange(), (double)this.getRange(), (double)this.getRange()));
+            List list = this.npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class, this.npc.getEntityBoundingBox().expand((double)this.getRange(), (double)this.getRange(), (double)this.getRange()));
             Iterator var2 = list.iterator();
 
             while(var2.hasNext()) {
                EntityNPCInterface entity = (EntityNPCInterface)var2.next();
-               if(entity != super.npc && !entity.isKilled() && entity.display.name.equalsIgnoreCase(this.name)) {
+               if(entity != this.npc && !entity.isKilled() && entity.display.getName().equalsIgnoreCase(this.name)) {
                   this.following = entity;
                   break;
                }
@@ -70,5 +72,17 @@ public class JobFollower extends JobInterface {
 
    public boolean hasOwner() {
       return !this.name.isEmpty();
+   }
+
+   public String getFollowing() {
+      return this.name;
+   }
+
+   public void setFollowing(String name) {
+      this.name = name;
+   }
+
+   public ICustomNpc getFollowingNpc() {
+      return this.following == null?null:this.following.wrappedNPC;
    }
 }

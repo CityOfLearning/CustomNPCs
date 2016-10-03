@@ -15,11 +15,11 @@ public class ImageBufferDownloadAlt extends ImageBufferDownload {
 
    public BufferedImage parseUserSkin(BufferedImage bufferedimage) {
       this.imageWidth = bufferedimage.getWidth((ImageObserver)null);
-      this.imageHeight = this.imageWidth / 2;
-      BufferedImage bufferedimage1 = new BufferedImage(this.imageWidth, this.imageHeight, 2);
-      Graphics g = bufferedimage1.getGraphics();
-      g.drawImage(bufferedimage, 0, 0, (ImageObserver)null);
-      g.dispose();
+      this.imageHeight = bufferedimage.getHeight((ImageObserver)null);
+      BufferedImage bufferedimage1 = new BufferedImage(this.imageWidth, this.imageWidth, 2);
+      Graphics graphics = bufferedimage1.getGraphics();
+      graphics.drawImage(bufferedimage, 0, 0, (ImageObserver)null);
+      graphics.dispose();
       this.imageData = ((DataBufferInt)bufferedimage1.getRaster().getDataBuffer()).getData();
       this.setAreaTransparent(this.imageWidth / 2, 0, this.imageWidth, this.imageHeight / 2);
       return bufferedimage1;

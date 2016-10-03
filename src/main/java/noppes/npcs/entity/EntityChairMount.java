@@ -1,10 +1,11 @@
 package noppes.npcs.entity;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class EntityChairMount extends Entity {
 
@@ -21,13 +22,13 @@ public class EntityChairMount extends Entity {
 
    public void onEntityUpdate() {
       super.onEntityUpdate();
-      if(super.worldObj != null && !super.worldObj.isRemote && super.riddenByEntity == null) {
-         super.isDead = true;
+      if(this.worldObj != null && !this.worldObj.isRemote && this.riddenByEntity == null) {
+         this.isDead = true;
       }
 
    }
 
-   public boolean isEntityInvulnerable() {
+   public boolean isEntityInvulnerable(DamageSource source) {
       return true;
    }
 
@@ -49,10 +50,10 @@ public class EntityChairMount extends Entity {
       return false;
    }
 
-   protected void fall(float p_70069_1_) {}
+   public void fall(float p_70069_1_, float mod) {}
 
    @SideOnly(Side.CLIENT)
-   public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_) {
+   public void setPositionAndRotation2(double p_70056_1_, double p_70056_3_, double p_70056_5_, float p_70056_7_, float p_70056_8_, int p_70056_9_, boolean bo) {
       this.setPosition(p_70056_1_, p_70056_3_, p_70056_5_);
       this.setRotation(p_70056_7_, p_70056_8_);
    }

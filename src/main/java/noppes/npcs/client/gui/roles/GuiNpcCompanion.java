@@ -33,42 +33,51 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
 
    public void initGui() {
       super.initGui();
-      this.talents.clear();
-      int y = super.guiTop + 4;
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 70, y, 90, 20, new String[]{EnumCompanionStage.BABY.name, EnumCompanionStage.CHILD.name, EnumCompanionStage.TEEN.name, EnumCompanionStage.ADULT.name, EnumCompanionStage.FULLGROWN.name}, this.role.stage.ordinal()));
-      this.addLabel(new GuiNpcLabel(0, "companion.stage", super.guiLeft + 4, y + 5));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 162, y, 90, 20, "gui.update"));
-      GuiNpcButton var10001;
-      int var10004 = super.guiLeft + 70;
+      this.talents = new ArrayList();
+      int y = this.guiTop + 4;
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 70, y, 90, 20, new String[]{EnumCompanionStage.BABY.name, EnumCompanionStage.CHILD.name, EnumCompanionStage.TEEN.name, EnumCompanionStage.ADULT.name, EnumCompanionStage.FULLGROWN.name}, this.role.stage.ordinal()));
+      this.addLabel(new GuiNpcLabel(0, "companion.stage", this.guiLeft + 4, y + 5));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 162, y, 90, 20, "gui.update"));
+      GuiNpcButton var10001 = new GuiNpcButton;
+      int var10004 = this.guiLeft + 70;
       y += 22;
-      var10001 = new GuiNpcButton(2, var10004, y, 90, 20, new String[]{"gui.no", "gui.yes"}, this.role.canAge?1:0);
+      var10001.<init>(2, var10004, y, 90, 20, new String[]{"gui.no", "gui.yes"}, this.role.canAge?1:0);
       this.addButton(var10001);
-      this.addLabel(new GuiNpcLabel(2, "companion.age", super.guiLeft + 4, y + 5));
+      this.addLabel(new GuiNpcLabel(2, "companion.age", this.guiLeft + 4, y + 5));
       if(this.role.canAge) {
-         this.addTextField(new GuiNpcTextField(2, this, super.guiLeft + 162, y, 140, 20, this.role.ticksActive + ""));
+         this.addTextField(new GuiNpcTextField(2, this, this.guiLeft + 162, y, 140, 20, this.role.ticksActive + ""));
          this.getTextField(2).numbersOnly = true;
          this.getTextField(2).setMinMaxDefault(0, Integer.MAX_VALUE, 0);
       }
 
       List var10000 = this.talents;
-      GuiNpcCompanionTalents.GuiTalent var2;
-      int var10005 = super.guiLeft + 4;
+      GuiNpcCompanionTalents.GuiTalent var4 = new GuiNpcCompanionTalents.GuiTalent;
+      int var10005 = this.guiLeft + 4;
       y += 26;
-      var2 = new GuiNpcCompanionTalents.GuiTalent(this.role, EnumCompanionTalent.INVENTORY, var10005, y);
-      var10000.add(var2);
-      this.addSlider(new GuiNpcSlider(this, 10, super.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.INVENTORY) / 5000.0F));
+      var4.<init>(this.role, EnumCompanionTalent.INVENTORY, var10005, y);
+      var10000.add(var4);
+      this.addSlider(new GuiNpcSlider(this, 10, this.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.INVENTORY) / 5000.0F));
       var10000 = this.talents;
-      var10005 = super.guiLeft + 4;
+      var4 = new GuiNpcCompanionTalents.GuiTalent;
+      var10005 = this.guiLeft + 4;
       y += 26;
-      var2 = new GuiNpcCompanionTalents.GuiTalent(this.role, EnumCompanionTalent.ARMOR, var10005, y);
-      var10000.add(var2);
-      this.addSlider(new GuiNpcSlider(this, 11, super.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.ARMOR) / 5000.0F));
+      var4.<init>(this.role, EnumCompanionTalent.ARMOR, var10005, y);
+      var10000.add(var4);
+      this.addSlider(new GuiNpcSlider(this, 11, this.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.ARMOR) / 5000.0F));
       var10000 = this.talents;
-      var10005 = super.guiLeft + 4;
+      var4 = new GuiNpcCompanionTalents.GuiTalent;
+      var10005 = this.guiLeft + 4;
       y += 26;
-      var2 = new GuiNpcCompanionTalents.GuiTalent(this.role, EnumCompanionTalent.SWORD, var10005, y);
-      var10000.add(var2);
-      this.addSlider(new GuiNpcSlider(this, 12, super.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.SWORD) / 5000.0F));
+      var4.<init>(this.role, EnumCompanionTalent.SWORD, var10005, y);
+      var10000.add(var4);
+      this.addSlider(new GuiNpcSlider(this, 12, this.guiLeft + 30, y + 2, 100, 20, (float)this.role.getExp(EnumCompanionTalent.SWORD) / 5000.0F));
+      Iterator var2 = this.talents.iterator();
+
+      while(var2.hasNext()) {
+         GuiNpcCompanionTalents.GuiTalent gui = (GuiNpcCompanionTalents.GuiTalent)var2.next();
+         gui.setWorldAndResolution(this.mc, this.width, this.height);
+      }
+
    }
 
    public void buttonEvent(GuiButton guibutton) {
@@ -104,7 +113,7 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
 
    public void drawScreen(int i, int j, float f) {
       super.drawScreen(i, j, f);
-      Iterator var4 = this.talents.iterator();
+      Iterator var4 = (new ArrayList(this.talents)).iterator();
 
       while(var4.hasNext()) {
          GuiNpcCompanionTalents.GuiTalent talent = (GuiNpcCompanionTalents.GuiTalent)var4.next();
@@ -122,10 +131,10 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
    public void mouseDragged(GuiNpcSlider slider) {
       if(slider.sliderValue <= 0.0F) {
          slider.setString("gui.disabled");
-         this.role.talents.remove(EnumCompanionTalent.values()[slider.field_146127_k - 10]);
+         this.role.talents.remove(EnumCompanionTalent.values()[slider.id - 10]);
       } else {
          slider.displayString = (int)(slider.sliderValue * 50.0F) * 100 + " exp";
-         this.role.setExp(EnumCompanionTalent.values()[slider.field_146127_k - 10], (int)(slider.sliderValue * 50.0F) * 100);
+         this.role.setExp(EnumCompanionTalent.values()[slider.id - 10], (int)(slider.sliderValue * 50.0F) * 100);
       }
 
    }

@@ -257,11 +257,11 @@
   },
   "human.girl.villager.what_do_you_need": {
     "category": "player",
-    "sounds": ["human/girl/villager/What do you need"]
+    "sounds": ["human/girl/villager/What Do You Need"]
   },
   "human.girl.villager.trade": {
     "category": "player",
-    "sounds": ["human/girl/villager/Would you like to trade"]
+    "sounds": ["human/girl/villager/Would You Like To Trade"]
   },
   "human.girl.villager.yes": {
     "category": "player",
@@ -369,11 +369,11 @@
   },
   "human.male.villager.what_do_you_need": {
     "category": "player",
-    "sounds": ["human/male/villager/What do you need"]
+    "sounds": ["human/male/villager/What Do You Need"]
   },
   "human.male.villager.trade": {
     "category": "player",
-    "sounds": ["human/male/villager/Would you like to trade"]
+    "sounds": ["human/male/villager/Would You Like To Trade"]
   },
   "human.male.villager.yes": {
     "category": "player",

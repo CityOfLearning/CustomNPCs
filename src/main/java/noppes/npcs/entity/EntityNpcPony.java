@@ -17,19 +17,19 @@ public class EntityNpcPony extends EntityNPCInterface {
 
    public EntityNpcPony(World world) {
       super(world);
-      super.display.texture = "customnpcs:textures/entity/ponies/MineLP Derpy Hooves.png";
+      this.display.setSkinTexture("customnpcs:textures/entity/ponies/MineLP Derpy Hooves.png");
    }
 
    public void onUpdate() {
-      super.isDead = true;
-      if(!super.worldObj.isRemote) {
+      this.isDead = true;
+      if(!this.worldObj.isRemote) {
          NBTTagCompound compound = new NBTTagCompound();
          this.writeToNBT(compound);
-         EntityCustomNpc npc = new EntityCustomNpc(super.worldObj);
+         EntityCustomNpc npc = new EntityCustomNpc(this.worldObj);
          npc.readFromNBT(compound);
          ModelData data = npc.modelData;
          data.setEntityClass(EntityNpcPony.class);
-         super.worldObj.spawnEntityInWorld(npc);
+         this.worldObj.spawnEntityInWorld(npc);
       }
 
       super.onUpdate();

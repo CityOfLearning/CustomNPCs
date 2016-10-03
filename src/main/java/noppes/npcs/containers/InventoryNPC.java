@@ -4,6 +4,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.IChatComponent;
 
 public class InventoryNPC implements IInventory {
 
@@ -64,7 +66,7 @@ public class InventoryNPC implements IInventory {
       return false;
    }
 
-   public ItemStack getStackInSlotOnClosing(int i) {
+   public ItemStack removeStackFromSlot(int i) {
       return null;
    }
 
@@ -72,11 +74,11 @@ public class InventoryNPC implements IInventory {
       return true;
    }
 
-   public String getInventoryName() {
-      return this.inventoryTitle;
+   public IChatComponent getDisplayName() {
+      return new ChatComponentText(this.inventoryTitle);
    }
 
-   public boolean isCustomInventoryName() {
+   public boolean hasCustomName() {
       return true;
    }
 
@@ -84,7 +86,23 @@ public class InventoryNPC implements IInventory {
       this.con.onCraftMatrixChanged(this);
    }
 
-   public void openChest() {}
+   public void openInventory(EntityPlayer player) {}
 
-   public void closeChest() {}
+   public void closeInventory(EntityPlayer player) {}
+
+   public String getName() {
+      return null;
+   }
+
+   public int getField(int id) {
+      return 0;
+   }
+
+   public void setField(int id, int value) {}
+
+   public int getFieldCount() {
+      return 0;
+   }
+
+   public void clear() {}
 }

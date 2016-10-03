@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.Iterator;
 import java.util.List;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -11,6 +12,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TileChair;
@@ -24,13 +27,13 @@ public class BlockChair extends BlockRotated {
       this.setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      super.onBlockPlacedBy(par1World, par2, par3, par4, par5EntityLivingBase, par6ItemStack);
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      super.onBlockPlacedBy(world, pos, state, entity, stack);
    }
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int x, int y, int z) {
-      return AxisAlignedBB.getBoundingBox((double)((float)x + 0.1F), (double)y, (double)((float)z + 0.1F), (double)((float)x + 0.9F), (double)((float)y + 0.5F), (double)((float)z + 0.9F));
+   public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+      return new AxisAlignedBB((double)((float)pos.getX() + 0.1F), (double)pos.getY(), (double)((float)pos.getZ() + 0.1F), (double)((float)pos.getX() + 0.9F), (double)((float)pos.getY() + 0.5F), (double)((float)pos.getZ() + 0.9F));
    }
 
    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
@@ -42,31 +45,30 @@ public class BlockChair extends BlockRotated {
       par3List.add(new ItemStack(par1, 1, 5));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
    public TileEntity createNewTileEntity(World var1, int var2) {
       return new TileChair();
    }
 
-   public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-      return MountBlock(world, x, y, z, player);
+   public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+      return MountBlock(world, pos, player);
    }
 
-   public static boolean MountBlock(World world, int x, int y, int z, EntityPlayer player) {
+   public static boolean MountBlock(World world, BlockPos pos, EntityPlayer player) {
       if(world.isRemote) {
          return true;
       } else {
-         List list = world.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.getBoundingBox((double)x, (double)y, (double)z, (double)(x + 1), (double)(y + 1), (double)(z + 1)));
+         List list = world.getEntitiesWithinAABB(Entity.class, AxisAlignedBB.fromBounds((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), (double)(pos.getX() + 1), (double)(pos.getY() + 1), (double)(pos.getZ() + 1)));
          Iterator mount = list.iterator();
 
          Entity entity;
          do {
             if(!mount.hasNext()) {
                EntityChairMount mount1 = new EntityChairMount(world);
-               mount1.setPosition((double)((float)x + 0.5F), (double)y, (double)z + 0.5D);
-               player.mountEntity(mount1);
+               mount1.setPosition((double)((float)pos.getX() + 0.5F), (double)pos.getY(), (double)pos.getZ() + 0.5D);
                world.spawnEntityInWorld(mount1);
                player.mountEntity(mount1);
                return true;

@@ -9,10 +9,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
 import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.util.JsonException;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class LinkedNpcController {
@@ -36,35 +34,39 @@ public class LinkedNpcController {
    }
 
    public File getDir() {
-      return new File(CustomNpcs.getWorldSaveDirectory(), "linkednpcs");
+      File dir = new File(CustomNpcs.getWorldSaveDirectory(), "linkednpcs");
+      if(!dir.exists()) {
+         dir.mkdir();
+      }
+
+      return dir;
    }
 
    private void loadNpcs() {
       LogWriter.info("Loading Linked Npcs");
       File dir = this.getDir();
-      if(!dir.exists()) {
-         dir.mkdir();
-      }
+      if(dir.exists()) {
+         ArrayList list = new ArrayList();
+         File[] var3 = dir.listFiles();
+         int var4 = var3.length;
 
-      ArrayList list = new ArrayList();
-      File[] var3 = dir.listFiles();
-      int var4 = var3.length;
-
-      for(int var5 = 0; var5 < var4; ++var5) {
-         File file = var3[var5];
-         if(file.getName().endsWith(".json")) {
-            try {
-               NBTTagCompound e = NBTJsonUtil.LoadFile(file);
-               LinkedNpcController.LinkedData linked = new LinkedNpcController.LinkedData();
-               linked.setNBT(e);
-               list.add(linked);
-            } catch (Exception var9) {
-               LogWriter.error("Error loading: " + file.getName(), var9);
+         for(int var5 = 0; var5 < var4; ++var5) {
+            File file = var3[var5];
+            if(file.getName().endsWith(".json")) {
+               try {
+                  NBTTagCompound e = NBTJsonUtil.LoadFile(file);
+                  LinkedNpcController.LinkedData linked = new LinkedNpcController.LinkedData();
+                  linked.setNBT(e);
+                  list.add(linked);
+               } catch (Exception var9) {
+                  LogWriter.error("Error loading: " + file.getAbsolutePath(), var9);
+               }
             }
          }
+
+         this.list = list;
       }
 
-      this.list = list;
       LogWriter.info("Done loading Linked Npcs");
    }
 
@@ -94,41 +96,43 @@ public class LinkedNpcController {
          }
 
          file.renameTo(file1);
-      } catch (JsonException var5) {
+      } catch (NBTJsonUtil.JsonException var5) {
          LogWriter.except(var5);
       }
 
    }
 
    public void loadNpcData(EntityNPCInterface npc) {
-      LinkedNpcController.LinkedData data = this.getData(npc.linkedName);
-      if(data == null) {
-         npc.linkedLast = 0L;
-         npc.linkedName = "";
-         npc.linkedData = null;
-      } else {
-         npc.linkedData = data;
-         if(npc.posX == 0.0D && npc.posY == 0.0D && npc.posX == 0.0D) {
-            return;
+      if(!npc.linkedName.isEmpty()) {
+         LinkedNpcController.LinkedData data = this.getData(npc.linkedName);
+         if(data == null) {
+            npc.linkedLast = 0L;
+            npc.linkedName = "";
+            npc.linkedData = null;
+         } else {
+            npc.linkedData = data;
+            if(npc.posX == 0.0D && npc.posY == 0.0D && npc.posX == 0.0D) {
+               return;
+            }
+
+            npc.linkedLast = data.time;
+            List points = npc.ai.getMovingPath();
+            NBTTagCompound compound = NBTTags.NBTMerge(this.readNpcData(npc), data.data);
+            npc.display.readToNBT(compound);
+            npc.stats.readToNBT(compound);
+            npc.advanced.readToNBT(compound);
+            npc.inventory.readEntityFromNBT(compound);
+            if(compound.hasKey("ModelData")) {
+               ((EntityCustomNpc)npc).modelData.readFromNBT(compound.getCompoundTag("ModelData"));
+            }
+
+            npc.ai.readToNBT(compound);
+            npc.transform.readToNBT(compound);
+            npc.ai.setMovingPath(points);
+            npc.updateClient = true;
          }
 
-         npc.linkedLast = data.time;
-         List points = npc.ai.getMovingPath();
-         NBTTagCompound compound = NBTTags.NBTMerge(this.readNpcData(npc), data.data);
-         npc.display.readToNBT(compound);
-         npc.stats.readToNBT(compound);
-         npc.advanced.readToNBT(compound);
-         npc.inventory.readEntityFromNBT(compound);
-         if(compound.hasKey("ModelData")) {
-            ((EntityCustomNpc)npc).modelData.readFromNBT(compound.getCompoundTag("ModelData"));
-         }
-
-         npc.ai.readToNBT(compound);
-         npc.transform.readToNBT(compound);
-         npc.ai.setMovingPath(points);
-         NoppesUtilServer.updateNpc(npc);
       }
-
    }
 
    private void cleanTags(NBTTagCompound compound) {

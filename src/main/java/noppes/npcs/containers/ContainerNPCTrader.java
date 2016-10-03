@@ -3,7 +3,9 @@ package noppes.npcs.containers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesUtilPlayer;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.containers.ContainerNpcInterface;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTrader;
@@ -11,10 +13,12 @@ import noppes.npcs.roles.RoleTrader;
 public class ContainerNPCTrader extends ContainerNpcInterface {
 
    public RoleTrader role;
+   private EntityNPCInterface npc;
 
 
    public ContainerNPCTrader(EntityNPCInterface npc, EntityPlayer player) {
       super(player);
+      this.npc = npc;
       this.role = (RoleTrader)npc.roleInterface;
 
       int j1;
@@ -58,19 +62,44 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
          if(j == 1) {
             return null;
          } else {
-            Slot slot = (Slot)super.inventorySlots.get(i);
+            Slot slot = (Slot)this.inventorySlots.get(i);
             if(slot != null && slot.getStack() != null) {
                ItemStack item = slot.getStack();
                if(!this.canGivePlayer(item, entityplayer)) {
                   return null;
-               } else if(!this.canBuy(i, entityplayer)) {
-                  return null;
                } else {
-                  NoppesUtilPlayer.consumeItem(entityplayer, this.role.inventoryCurrency.getStackInSlot(i), false);
-                  NoppesUtilPlayer.consumeItem(entityplayer, this.role.inventoryCurrency.getStackInSlot(i + 18), false);
-                  ItemStack soldItem = item.copy();
-                  this.givePlayer(soldItem, entityplayer);
-                  return soldItem;
+                  ItemStack currency = this.role.inventoryCurrency.getStackInSlot(i);
+                  ItemStack currency2 = this.role.inventoryCurrency.getStackInSlot(i + 18);
+                  if(!this.canBuy(currency, currency2, entityplayer)) {
+                     return null;
+                  } else {
+                     RoleEvent.TraderEvent event = new RoleEvent.TraderEvent(entityplayer, this.npc.wrappedNPC, item, currency, currency2);
+                     if(EventHooks.onNPCRole(this.npc, event)) {
+                        return null;
+                     } else {
+                        if(event.currency1 != null) {
+                           currency = event.currency1.getMCItemStack();
+                        }
+
+                        if(event.currency2 != null) {
+                           currency2 = event.currency2.getMCItemStack();
+                        }
+
+                        if(!this.canBuy(currency, currency2, entityplayer)) {
+                           return null;
+                        } else {
+                           NoppesUtilPlayer.consumeItem(entityplayer, currency, this.role.ignoreDamage, this.role.ignoreNBT);
+                           NoppesUtilPlayer.consumeItem(entityplayer, currency2, this.role.ignoreDamage, this.role.ignoreNBT);
+                           ItemStack soldItem = null;
+                           if(event.sold != null) {
+                              soldItem = event.sold.getMCItemStack();
+                              this.givePlayer(soldItem, entityplayer);
+                           }
+
+                           return soldItem;
+                        }
+                     }
+                  }
                }
             } else {
                return null;
@@ -81,9 +110,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
       }
    }
 
-   public boolean canBuy(int slot, EntityPlayer player) {
-      ItemStack currency = this.role.inventoryCurrency.getStackInSlot(slot);
-      ItemStack currency2 = this.role.inventoryCurrency.getStackInSlot(slot + 18);
+   public boolean canBuy(ItemStack currency, ItemStack currency2, EntityPlayer player) {
       if(currency == null && currency2 == null) {
          return true;
       } else {
@@ -98,7 +125,7 @@ public class ContainerNPCTrader extends ContainerNpcInterface {
             currency2 = null;
          }
 
-         return currency2 == null?NoppesUtilPlayer.compareItems(player, currency, false):NoppesUtilPlayer.compareItems(player, currency, false) && NoppesUtilPlayer.compareItems(player, currency2, false);
+         return currency2 == null?NoppesUtilPlayer.compareItems(player, currency, this.role.ignoreDamage, this.role.ignoreNBT):NoppesUtilPlayer.compareItems(player, currency, this.role.ignoreDamage, this.role.ignoreNBT) && NoppesUtilPlayer.compareItems(player, currency2, this.role.ignoreDamage, this.role.ignoreNBT);
       }
    }
 

@@ -1,12 +1,12 @@
 package noppes.npcs.client.model.animation;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.client.model.ModelMPM;
 
 public class AniCrawling {
 
-   public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity, ModelMPM model) {
+   public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity, ModelBiped model) {
       model.bipedHead.rotateAngleZ = -par4 / 57.295776F;
       model.bipedHead.rotateAngleY = 0.0F;
       model.bipedHead.rotateAngleX = -0.95993114F;
@@ -33,11 +33,11 @@ public class AniCrawling {
       model.bipedLeftLeg.rotateAngleY = movement * 0.1F;
       model.bipedLeftLeg.rotateAngleZ = -0.122173056F - movement * 0.25F;
       model.bipedLeftLeg.rotationPointY = 10.4F + movement * 9.0F;
-      model.bipedLeftLeg.rotationPointZ = movement * 0.6F - 0.01F;
+      model.bipedLeftLeg.rotationPointZ = movement * 0.6F;
       model.bipedRightLeg.rotateAngleX = movement * -0.1F;
       model.bipedRightLeg.rotateAngleY = movement * 0.1F;
       model.bipedRightLeg.rotateAngleZ = 0.122173056F - movement * 0.25F;
       model.bipedRightLeg.rotationPointY = 10.4F - movement * 9.0F;
-      model.bipedRightLeg.rotationPointZ = movement * -0.6F - 0.01F;
+      model.bipedRightLeg.rotationPointZ = movement * -0.6F;
    }
 }

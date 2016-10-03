@@ -56,7 +56,7 @@ public class JobPuppet extends JobInterface {
    public void delete() {}
 
    public boolean isActive() {
-      return !super.npc.isEntityAlive()?false:this.whileAttacking && super.npc.isAttacking() || this.whileMoving && super.npc.isWalking() || this.whileStanding && !super.npc.isWalking();
+      return !this.npc.isEntityAlive()?false:this.whileAttacking && this.npc.isAttacking() || this.whileMoving && this.npc.isWalking() || this.whileStanding && !this.npc.isWalking();
    }
 
    public static class PartConfig {

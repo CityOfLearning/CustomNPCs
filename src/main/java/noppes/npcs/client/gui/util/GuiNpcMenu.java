@@ -5,7 +5,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraft.client.gui.NPCGuiHelper;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.client.Client;
@@ -22,7 +21,7 @@ import org.lwjgl.input.Keyboard;
 public class GuiNpcMenu implements GuiYesNoCallback {
 
    private GuiScreen parent;
-   private GuiMenuTopButton[] topButtons;
+   private GuiMenuTopButton[] topButtons = new GuiMenuTopButton[0];
    private int activeMenu;
    private EntityNPCInterface npc;
 
@@ -50,7 +49,7 @@ public class GuiNpcMenu implements GuiYesNoCallback {
 
       for(int var14 = 0; var14 < var13; ++var14) {
          GuiMenuTopButton button = var12[var14];
-         button.active = button.field_146127_k == this.activeMenu;
+         button.active = button.id == this.activeMenu;
       }
 
    }
@@ -58,8 +57,8 @@ public class GuiNpcMenu implements GuiYesNoCallback {
    private void topButtonPressed(GuiMenuTopButton button) {
       if(!button.displayString.equals(Integer.valueOf(this.activeMenu))) {
          Minecraft mc = Minecraft.getMinecraft();
-         NPCGuiHelper.clickSound();
-         int id = button.field_146127_k;
+         NoppesUtil.clickSound();
+         int id = button.id;
          if(id == 0) {
             this.close();
          } else if(id == 66) {

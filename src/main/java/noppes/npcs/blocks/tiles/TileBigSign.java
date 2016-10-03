@@ -4,10 +4,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.tileentity.TileEntity;
 import noppes.npcs.TextBlock;
+import noppes.npcs.blocks.tiles.TileNpcEntity;
 
-public class TileBigSign extends TileEntity {
+public class TileBigSign extends TileNpcEntity {
 
    public int rotation;
    public boolean canEdit = true;
@@ -28,15 +28,6 @@ public class TileBigSign extends TileEntity {
       compound.setString("SignText", this.signText);
    }
 
-   public boolean canUpdate() {
-      return false;
-   }
-
-   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-      NBTTagCompound compound = pkt.getNbtCompound();
-      this.readFromNBT(compound);
-   }
-
    public void setText(String text) {
       this.signText = text;
       this.hasChanged = true;
@@ -46,10 +37,16 @@ public class TileBigSign extends TileEntity {
       return this.signText;
    }
 
+   public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+      NBTTagCompound compound = pkt.getNbtCompound();
+      this.readFromNBT(compound);
+   }
+
    public Packet getDescriptionPacket() {
       NBTTagCompound compound = new NBTTagCompound();
       this.writeToNBT(compound);
-      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(super.xCoord, super.yCoord, super.zCoord, 0, compound);
+      compound.removeTag("ExtraData");
+      S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(this.pos, 0, compound);
       return packet;
    }
 }

@@ -4,6 +4,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.util.EnumHelper;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
@@ -22,9 +23,13 @@ public abstract class EnchantInterface extends Enchantment {
    private Class[] classes;
 
 
-   protected EnchantInterface(int par2, Class ... obs) {
-      super(CustomNpcs.EnchantStartId++, par2, CustomNpcsType);
+   protected EnchantInterface(int par2, ResourceLocation location, Class ... obs) {
+      super(CustomNpcs.EnchantStartId++, location, par2, CustomNpcsType);
       this.classes = obs;
+   }
+
+   public boolean canApplyAtEnchantingTable(ItemStack stack) {
+      return this.canApply(stack);
    }
 
    public boolean canApply(ItemStack par1ItemStack) {
@@ -54,6 +59,10 @@ public abstract class EnchantInterface extends Enchantment {
             Poison = new EnchantPoison();
             Confusion = new EnchantConfusion();
             Infinite = new EnchantInfinite();
+            addToBookList(Damage);
+            addToBookList(Poison);
+            addToBookList(Confusion);
+            addToBookList(Infinite);
          } catch (Exception var1) {
             LogWriter.except(var1);
          }

@@ -1,12 +1,12 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.entity.EntityProjectile;
 import noppes.npcs.items.ItemNpcInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemThrowingWeapon extends ItemNpcInterface {
 
@@ -24,7 +24,7 @@ public class ItemThrowingWeapon extends ItemNpcInterface {
       if(worldObj.isRemote) {
          player.swingItem();
       } else {
-         EntityProjectile projectile = new EntityProjectile(worldObj, player, new ItemStack(par1ItemStack.getItem(), 1, par1ItemStack.getMetadata()), false);
+         EntityProjectile projectile = new EntityProjectile(worldObj, player, new ItemStack(par1ItemStack.getItem(), 1, par1ItemStack.getItemDamage()), false);
          projectile.damage = (float)this.damage;
          projectile.canBePickedUp = !player.capabilities.isCreativeMode && this.dropItem;
          projectile.setRotating(this.rotating);
@@ -59,7 +59,7 @@ public class ItemThrowingWeapon extends ItemNpcInterface {
 
    public void renderSpecial() {
       super.renderSpecial();
-      GL11.glTranslatef(0.2F, 0.1F, 0.06F);
+      GlStateManager.translate(0.2F, 0.1F, 0.06F);
    }
 
    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {

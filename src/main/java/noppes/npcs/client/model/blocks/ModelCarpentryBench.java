@@ -23,8 +23,8 @@ public class ModelCarpentryBench extends ModelBase {
 
 
    public ModelCarpentryBench() {
-      super.textureWidth = 128;
-      super.textureHeight = 64;
+      this.textureWidth = 128;
+      this.textureHeight = 64;
       this.Leg1 = new ModelRenderer(this, 0, 0);
       this.Leg1.addBox(0.0F, 0.0F, 0.0F, 2, 14, 2);
       this.Leg1.setRotationPoint(6.0F, 10.0F, 5.0F);

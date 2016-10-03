@@ -1,13 +1,16 @@
 package noppes.npcs.controllers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.ICompatibilty;
 import noppes.npcs.VersionCompatibility;
-import noppes.npcs.constants.EnumOptionType;
+import noppes.npcs.api.constants.EnumOptionType;
+import noppes.npcs.api.handler.data.IDialog;
 import noppes.npcs.controllers.Availability;
 import noppes.npcs.controllers.DialogCategory;
 import noppes.npcs.controllers.DialogOption;
@@ -16,7 +19,7 @@ import noppes.npcs.controllers.PlayerMail;
 import noppes.npcs.controllers.Quest;
 import noppes.npcs.controllers.QuestController;
 
-public class Dialog implements ICompatibilty {
+public class Dialog implements ICompatibilty, IDialog {
 
    public int version;
    public int id;
@@ -61,7 +64,7 @@ public class Dialog implements ICompatibilty {
          }
 
          option = (DialogOption)var2.next();
-      } while(option == null || option.optionType != EnumOptionType.DialogOption || !option.hasDialog() || !option.isAvailable(player));
+      } while(option == null || option.optionType != EnumOptionType.DIALOG_OPTION || !option.hasDialog() || !option.isAvailable(player));
 
       return true;
    }
@@ -92,6 +95,7 @@ public class Dialog implements ICompatibilty {
          DialogOption dia = new DialogOption();
          dia.readNBT(option.getCompoundTag("Option"));
          newoptions.put(Integer.valueOf(opslot), dia);
+         dia.slot = opslot;
       }
 
       this.options = newoptions;
@@ -140,7 +144,7 @@ public class Dialog implements ICompatibilty {
    }
 
    public Quest getQuest() {
-      return (Quest)QuestController.instance.quests.get(Integer.valueOf(this.quest));
+      return QuestController.instance == null?null:(Quest)QuestController.instance.quests.get(Integer.valueOf(this.quest));
    }
 
    public boolean hasOtherOptions() {
@@ -153,7 +157,7 @@ public class Dialog implements ICompatibilty {
          }
 
          option = (DialogOption)var1.next();
-      } while(option == null || option.optionType == EnumOptionType.Disabled);
+      } while(option == null || option.optionType == EnumOptionType.DISABLED);
 
       return true;
    }
@@ -176,7 +180,7 @@ public class Dialog implements ICompatibilty {
       while(var3.hasNext()) {
          int slot = ((Integer)var3.next()).intValue();
          DialogOption option = (DialogOption)this.options.get(Integer.valueOf(slot));
-         if(option.optionType != EnumOptionType.DialogOption || option.hasDialog() && option.isAvailable(player)) {
+         if(option.optionType != EnumOptionType.DIALOG_OPTION || option.hasDialog() && option.isAvailable(player)) {
             dialog.options.put(Integer.valueOf(slot), option);
          }
       }
@@ -190,5 +194,17 @@ public class Dialog implements ICompatibilty {
 
    public void setVersion(int version) {
       this.version = version;
+   }
+
+   public int getId() {
+      return this.id;
+   }
+
+   public String getName() {
+      return this.title;
+   }
+
+   public List getOptions() {
+      return new ArrayList(this.options.values());
    }
 }

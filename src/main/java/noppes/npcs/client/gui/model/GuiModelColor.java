@@ -6,39 +6,48 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.ResourceLocation;
 import noppes.npcs.ModelPartData;
-import noppes.npcs.client.gui.util.GuiModelInterface;
+import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.client.gui.util.ITextfieldListener;
-import noppes.npcs.entity.EntityCustomNpc;
-import org.lwjgl.opengl.GL11;
+import noppes.npcs.client.gui.util.SubGuiInterface;
 
-public class GuiModelColor extends GuiModelInterface implements ITextfieldListener {
+public class GuiModelColor extends SubGuiInterface implements ITextfieldListener {
 
    private GuiScreen parent;
-   private static final ResourceLocation color = new ResourceLocation("customnpcs:textures/gui/color.png");
+   private static final ResourceLocation color = new ResourceLocation("moreplayermodels:textures/gui/color.png");
+   private static final ResourceLocation colorgui = new ResourceLocation("moreplayermodels:textures/gui/color_gui.png");
    private int colorX;
    private int colorY;
    private GuiNpcTextField textfield;
    private ModelPartData data;
 
 
-   public GuiModelColor(GuiScreen parent, ModelPartData data, EntityCustomNpc npc) {
-      super(npc);
+   public GuiModelColor(GuiScreen parent, ModelPartData data) {
       this.parent = parent;
       this.data = data;
-      super.xOffset = 60;
-      super.ySize = 230;
+      this.ySize = 230;
+      this.closeOnEsc = false;
+      this.background = colorgui;
    }
 
    public void initGui() {
       super.initGui();
-      this.colorX = super.guiLeft + 4;
-      this.colorY = super.guiTop + 50;
-      this.addTextField(this.textfield = new GuiNpcTextField(0, this, super.guiLeft + 25, super.guiTop + 20, 70, 20, this.data.getColor()));
+      this.colorX = this.guiLeft + 4;
+      this.colorY = this.guiTop + 50;
+      this.addTextField(this.textfield = new GuiNpcTextField(0, this, this.guiLeft + 35, this.guiTop + 25, 60, 20, this.data.getColor()));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 107, this.guiTop + 8, 20, 20, "X"));
       this.textfield.setTextColor(this.data.color);
+   }
+
+   protected void actionPerformed(GuiButton guibutton) {
+      if(guibutton.id == 66) {
+         this.close();
+      }
+
    }
 
    public void keyTyped(char c, int i) {
@@ -57,18 +66,10 @@ public class GuiModelColor extends GuiModelInterface implements ITextfieldListen
       }
    }
 
-   protected void actionPerformed(GuiButton btn) {
-      super.actionPerformed(btn);
-   }
-
-   public void close() {
-      super.mc.displayGuiScreen(this.parent);
-   }
-
    public void drawScreen(int par1, int par2, float par3) {
       super.drawScreen(par1, par2, par3);
-      super.mc.getTextureManager().bindTexture(color);
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.getTextureManager().bindTexture(color);
       this.drawTexturedModalRect(this.colorX, this.colorY, 0, 0, 120, 120);
    }
 
@@ -78,9 +79,9 @@ public class GuiModelColor extends GuiModelInterface implements ITextfieldListen
          InputStream stream = null;
 
          try {
-            IResource e = super.mc.getResourceManager().getResource(color);
+            IResource e = this.mc.getResourceManager().getResource(color);
             BufferedImage bufferedimage = ImageIO.read(stream = e.getInputStream());
-            int color = bufferedimage.getRGB((i - super.guiLeft - 4) * 4, (j - super.guiTop - 50) * 4) & 16777215;
+            int color = bufferedimage.getRGB((i - this.guiLeft - 4) * 4, (j - this.guiTop - 50) * 4) & 16777215;
             if(color != 0) {
                this.data.color = color;
                this.textfield.setTextColor(color);

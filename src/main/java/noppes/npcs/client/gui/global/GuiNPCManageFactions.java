@@ -40,38 +40,38 @@ public class GuiNPCManageFactions extends GuiNPCInterface2 implements IScrollDat
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 368, super.guiTop + 8, 45, 20, "gui.add"));
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 368, super.guiTop + 32, 45, 20, "gui.remove"));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 368, this.guiTop + 8, 45, 20, "gui.add"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 368, this.guiTop + 32, 45, 20, "gui.remove"));
       if(this.scrollFactions == null) {
          this.scrollFactions = new GuiCustomScroll(this, 0);
          this.scrollFactions.setSize(143, 208);
       }
 
-      this.scrollFactions.guiLeft = super.guiLeft + 220;
-      this.scrollFactions.guiTop = super.guiTop + 4;
+      this.scrollFactions.guiLeft = this.guiLeft + 220;
+      this.scrollFactions.guiTop = this.guiTop + 4;
       this.addScroll(this.scrollFactions);
       if(this.faction.id != -1) {
-         this.addTextField(new GuiNpcTextField(0, this, super.guiLeft + 40, super.guiTop + 4, 136, 20, this.faction.name));
+         this.addTextField(new GuiNpcTextField(0, this, this.guiLeft + 40, this.guiTop + 4, 136, 20, this.faction.name));
          this.getTextField(0).setMaxStringLength(20);
-         this.addLabel(new GuiNpcLabel(0, "gui.name", super.guiLeft + 8, super.guiTop + 9));
-         this.addLabel(new GuiNpcLabel(10, "ID", super.guiLeft + 178, super.guiTop + 4));
-         this.addLabel(new GuiNpcLabel(11, this.faction.id + "", super.guiLeft + 178, super.guiTop + 14));
+         this.addLabel(new GuiNpcLabel(0, "gui.name", this.guiLeft + 8, this.guiTop + 9));
+         this.addLabel(new GuiNpcLabel(10, "ID", this.guiLeft + 178, this.guiTop + 4));
+         this.addLabel(new GuiNpcLabel(11, this.faction.id + "", this.guiLeft + 178, this.guiTop + 14));
 
          String color;
          for(color = Integer.toHexString(this.faction.color); color.length() < 6; color = "0" + color) {
             ;
          }
 
-         this.addButton(new GuiNpcButton(10, super.guiLeft + 40, super.guiTop + 26, 60, 20, color));
-         this.addLabel(new GuiNpcLabel(1, "gui.color", super.guiLeft + 8, super.guiTop + 31));
+         this.addButton(new GuiNpcButton(10, this.guiLeft + 40, this.guiTop + 26, 60, 20, color));
+         this.addLabel(new GuiNpcLabel(1, "gui.color", this.guiLeft + 8, this.guiTop + 31));
          this.getButton(10).setTextColor(this.faction.color);
-         this.addLabel(new GuiNpcLabel(2, "faction.points", super.guiLeft + 8, super.guiTop + 53));
-         this.addButton(new GuiNpcButton(2, super.guiLeft + 100, super.guiTop + 48, 45, 20, "selectServer.edit"));
-         this.addLabel(new GuiNpcLabel(3, "faction.hidden", super.guiLeft + 8, super.guiTop + 75));
-         this.addButton(new GuiNpcButton(3, super.guiLeft + 100, super.guiTop + 70, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.hideFaction?1:0));
-         this.addLabel(new GuiNpcLabel(4, "faction.attacked", super.guiLeft + 8, super.guiTop + 97));
-         this.addButton(new GuiNpcButton(4, super.guiLeft + 100, super.guiTop + 92, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.getsAttacked?1:0));
-         this.addLabel(new GuiNpcLabel(6, "faction.hostiles", super.guiLeft + 8, super.guiTop + 145));
+         this.addLabel(new GuiNpcLabel(2, "faction.points", this.guiLeft + 8, this.guiTop + 53));
+         this.addButton(new GuiNpcButton(2, this.guiLeft + 100, this.guiTop + 48, 45, 20, "selectServer.edit"));
+         this.addLabel(new GuiNpcLabel(3, "faction.hidden", this.guiLeft + 8, this.guiTop + 75));
+         this.addButton(new GuiNpcButton(3, this.guiLeft + 100, this.guiTop + 70, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.hideFaction?1:0));
+         this.addLabel(new GuiNpcLabel(4, "faction.attacked", this.guiLeft + 8, this.guiTop + 97));
+         this.addButton(new GuiNpcButton(4, this.guiLeft + 100, this.guiTop + 92, 45, 20, new String[]{"gui.no", "gui.yes"}, this.faction.getsAttacked?1:0));
+         this.addLabel(new GuiNpcLabel(6, "faction.hostiles", this.guiLeft + 8, this.guiTop + 145));
          ArrayList hostileList = new ArrayList(this.scrollFactions.getList());
          hostileList.remove(this.faction.name);
          HashSet set = new HashSet();
@@ -86,8 +86,8 @@ public class GuiNPCManageFactions extends GuiNPCInterface2 implements IScrollDat
 
          GuiCustomScroll scrollHostileFactions1 = new GuiCustomScroll(this, 1, true);
          scrollHostileFactions1.setSize(163, 58);
-         scrollHostileFactions1.guiLeft = super.guiLeft + 4;
-         scrollHostileFactions1.guiTop = super.guiTop + 154;
+         scrollHostileFactions1.guiLeft = this.guiLeft + 4;
+         scrollHostileFactions1.guiTop = this.guiTop + 154;
          scrollHostileFactions1.setList(hostileList);
          scrollHostileFactions1.setSelectedList(set);
          this.addScroll(scrollHostileFactions1);
@@ -96,7 +96,7 @@ public class GuiNPCManageFactions extends GuiNPCInterface2 implements IScrollDat
 
    protected void actionPerformed(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
+      if(button.id == 0) {
          this.save();
 
          String name;
@@ -110,26 +110,26 @@ public class GuiNPCManageFactions extends GuiNPCInterface2 implements IScrollDat
          Client.sendData(EnumPacketServer.FactionSave, new Object[]{compound});
       }
 
-      if(button.field_146127_k == 1 && this.data.containsKey(this.scrollFactions.getSelected())) {
+      if(button.id == 1 && this.data.containsKey(this.scrollFactions.getSelected())) {
          Client.sendData(EnumPacketServer.FactionRemove, new Object[]{this.data.get(this.selected)});
          this.scrollFactions.clear();
          this.faction = new Faction();
          this.initGui();
       }
 
-      if(button.field_146127_k == 2) {
+      if(button.id == 2) {
          this.setSubGui(new SubGuiNpcFactionPoints(this.faction));
       }
 
-      if(button.field_146127_k == 3) {
+      if(button.id == 3) {
          this.faction.hideFaction = button.getValue() == 1;
       }
 
-      if(button.field_146127_k == 4) {
+      if(button.id == 4) {
          this.faction.getsAttacked = button.getValue() == 1;
       }
 
-      if(button.field_146127_k == 10) {
+      if(button.id == 10) {
          this.setSubGui(new SubGuiColorSelector(this.faction.color));
       }
 

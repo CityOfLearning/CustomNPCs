@@ -6,18 +6,23 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.zip.GZIPInputStream;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.EventHooks;
 import noppes.npcs.LogWriter;
+import noppes.npcs.api.handler.IFactionHandler;
+import noppes.npcs.api.handler.data.IFaction;
 import noppes.npcs.controllers.Faction;
 
-public class FactionController {
+public class FactionController implements IFactionHandler {
 
    public HashMap factions;
    private static FactionController instance;
@@ -34,6 +39,7 @@ public class FactionController {
          this.factions.put(Integer.valueOf(2), new Faction(2, "Aggressive", 14483456, 0));
       }
 
+      EventHooks.onGlobalFactionsLoaded(this);
    }
 
    public static FactionController getInstance() {
@@ -168,10 +174,18 @@ public class FactionController {
       return this.lastUsedID;
    }
 
-   public void removeFaction(int id) {
+   public IFaction delete(int id) {
       if(id >= 0 && this.factions.size() > 1) {
-         this.factions.remove(Integer.valueOf(id));
-         this.saveFactions();
+         Faction faction = (Faction)this.factions.remove(Integer.valueOf(id));
+         if(faction == null) {
+            return null;
+         } else {
+            this.saveFactions();
+            faction.id = -1;
+            return faction;
+         }
+      } else {
+         return null;
       }
    }
 
@@ -227,5 +241,21 @@ public class FactionController {
       }
 
       return names;
+   }
+
+   public List list() {
+      return new ArrayList(this.factions.values());
+   }
+
+   public IFaction create(String name, int color) {
+      Faction faction;
+      for(faction = new Faction(); this.hasName(name); name = name + "_") {
+         ;
+      }
+
+      faction.name = name;
+      faction.color = color;
+      this.saveFaction(faction);
+      return faction;
    }
 }

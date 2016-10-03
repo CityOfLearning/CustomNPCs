@@ -1,7 +1,7 @@
 package noppes.npcs.client.gui.player;
 
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,7 +15,6 @@ import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerNPCBankInterface;
 import noppes.npcs.entity.EntityNPCInterface;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiData {
 
@@ -30,10 +29,10 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
    public GuiNPCBankChest(EntityNPCInterface npc, ContainerNPCBankInterface container) {
       super(npc, container);
       this.container = container;
-      super.title = "";
-      super.allowUserInput = false;
-      super.ySize = 235;
-      super.closeOnEsc = true;
+      this.title = "";
+      this.allowUserInput = false;
+      this.ySize = 235;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
@@ -41,7 +40,7 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
       this.availableSlots = 0;
       if(this.maxSlots > 1) {
          for(int i = 0; i < this.maxSlots; ++i) {
-            GuiNpcButton button = new GuiNpcButton(i, super.field_147003_i - 50, super.field_147009_r + 10 + i * 24, 50, 20, "Tab " + (i + 1));
+            GuiNpcButton button = new GuiNpcButton(i, this.guiLeft - 50, this.guiTop + 10 + i * 24, 50, 20, "Tab " + (i + 1));
             if(i > this.unlockedSlots) {
                button.setEnabled(false);
             }
@@ -51,14 +50,14 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
          }
 
          if(this.availableSlots == 1) {
-            super.buttonList.clear();
+            this.buttonList.clear();
          }
       }
 
       if(!this.container.isAvailable()) {
-         this.addButton(new GuiNpcButton(8, super.field_147003_i + 48, super.field_147009_r + 48, 80, 20, StatCollector.translateToLocal("bank.unlock")));
+         this.addButton(new GuiNpcButton(8, this.guiLeft + 48, this.guiTop + 48, 80, 20, StatCollector.translateToLocal("bank.unlock")));
       } else if(this.container.canBeUpgraded()) {
-         this.addButton(new GuiNpcButton(9, super.field_147003_i + 48, super.field_147009_r + 48, 80, 20, StatCollector.translateToLocal("bank.upgrade")));
+         this.addButton(new GuiNpcButton(9, this.guiLeft + 48, this.guiTop + 48, 80, 20, StatCollector.translateToLocal("bank.upgrade")));
       }
 
       if(this.maxSlots > 1) {
@@ -72,7 +71,6 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
       super.actionPerformed(guibutton);
       int id = guibutton.id;
       if(id < 6) {
-         this.close();
          NoppesUtilPlayer.sendData(EnumPlayerPacket.BankSlotOpen, new Object[]{Integer.valueOf(id), Integer.valueOf(this.container.bankid)});
       }
 
@@ -87,36 +85,36 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
    }
 
    protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      int l = (super.width - super.xSize) / 2;
-      int i1 = (super.height - super.ySize) / 2;
-      this.drawTexturedModalRect(l, i1, 0, 0, super.xSize, 6);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.resource);
+      int l = (this.width - this.xSize) / 2;
+      int i1 = (this.height - this.ySize) / 2;
+      this.drawTexturedModalRect(l, i1, 0, 0, this.xSize, 6);
       int ii;
       int y;
       if(!this.container.isAvailable()) {
-         this.drawTexturedModalRect(l, i1 + 6, 0, 6, super.xSize, 64);
-         this.drawTexturedModalRect(l, i1 + 70, 0, 124, super.xSize, 98);
-         ii = super.field_147003_i + 30;
-         y = super.field_147009_r + 8;
-         super.fontRendererObj.drawString(StatCollector.translateToLocal("bank.unlockCosts") + ":", ii, y + 4, CustomNpcResourceListener.DefaultTextColor);
+         this.drawTexturedModalRect(l, i1 + 6, 0, 6, this.xSize, 64);
+         this.drawTexturedModalRect(l, i1 + 70, 0, 124, this.xSize, 98);
+         ii = this.guiLeft + 30;
+         y = this.guiTop + 8;
+         this.fontRendererObj.drawString(StatCollector.translateToLocal("bank.unlockCosts") + ":", ii, y + 4, CustomNpcResourceListener.DefaultTextColor);
          this.drawItem(ii + 90, y, this.currency, i, j);
       } else if(this.container.isUpgraded()) {
-         this.drawTexturedModalRect(l, i1 + 60, 0, 60, super.xSize, 162);
-         this.drawTexturedModalRect(l, i1 + 6, 0, 60, super.xSize, 64);
+         this.drawTexturedModalRect(l, i1 + 60, 0, 60, this.xSize, 162);
+         this.drawTexturedModalRect(l, i1 + 6, 0, 60, this.xSize, 64);
       } else if(this.container.canBeUpgraded()) {
-         this.drawTexturedModalRect(l, i1 + 6, 0, 6, super.xSize, 216);
-         ii = super.field_147003_i + 30;
-         y = super.field_147009_r + 8;
-         super.fontRendererObj.drawString(StatCollector.translateToLocal("bank.upgradeCosts") + ":", ii, y + 4, CustomNpcResourceListener.DefaultTextColor);
+         this.drawTexturedModalRect(l, i1 + 6, 0, 6, this.xSize, 216);
+         ii = this.guiLeft + 30;
+         y = this.guiTop + 8;
+         this.fontRendererObj.drawString(StatCollector.translateToLocal("bank.upgradeCosts") + ":", ii, y + 4, CustomNpcResourceListener.DefaultTextColor);
          this.drawItem(ii + 90, y, this.currency, i, j);
       } else {
-         this.drawTexturedModalRect(l, i1 + 6, 0, 60, super.xSize, 162);
+         this.drawTexturedModalRect(l, i1 + 6, 0, 60, this.xSize, 162);
       }
 
       if(this.maxSlots > 1) {
          for(ii = 0; ii < this.maxSlots && this.availableSlots != ii; ++ii) {
-            super.fontRendererObj.drawString("Tab " + (ii + 1), super.field_147003_i - 40, super.field_147009_r + 16 + ii * 24, 16777215);
+            this.fontRendererObj.drawString("Tab " + (ii + 1), this.guiLeft - 40, this.guiTop + 16 + ii * 24, 16777215);
          }
       }
 
@@ -125,13 +123,13 @@ public class GuiNPCBankChest extends GuiContainerNPCInterface implements IGuiDat
 
    private void drawItem(int x, int y, ItemStack item, int mouseX, int mouseY) {
       if(item != null) {
-         GL11.glEnable('\u803a');
+         GlStateManager.enableRescaleNormal();
          RenderHelper.enableGUIStandardItemLighting();
-         GuiScreen.itemRender.renderItemIntoGUI(super.fontRendererObj, super.mc.renderEngine, item, x, y);
-         GuiScreen.itemRender.renderItemOverlayIntoGUI(super.fontRendererObj, super.mc.renderEngine, item, x, y);
+         this.itemRender.renderItemAndEffectIntoGUI(item, x, y);
+         this.itemRender.renderItemOverlays(this.fontRendererObj, item, x, y);
          RenderHelper.disableStandardItemLighting();
-         GL11.glDisable('\u803a');
-         if(this.isPointInRegion(x - super.field_147003_i, y - super.field_147009_r, 16, 16, mouseX, mouseY)) {
+         GlStateManager.disableRescaleNormal();
+         if(this.isPointInRegion(x - this.guiLeft, y - this.guiTop, 16, 16, mouseX, mouseY)) {
             this.renderToolTip(item, mouseX, mouseY);
          }
 

@@ -2,8 +2,8 @@ package noppes.npcs.client.gui.util;
 
 import java.util.ArrayList;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 public class GuiHoverText extends GuiScreen {
 
@@ -22,14 +22,14 @@ public class GuiHoverText extends GuiScreen {
    }
 
    public void drawScreen(int par1, int par2, float par3) {
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.getTextureManager().bindTexture(buttonTextures);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.getTextureManager().bindTexture(buttonTextures);
       this.drawTexturedModalRect(this.x, this.y, 0, 0, 12, 12);
       if(this.inArea(this.x, this.y, 12, 12, par1, par2)) {
          ArrayList lines = new ArrayList();
          lines.add(this.text);
-         this.drawHoveringText(lines, this.x + 8, this.y + 6, super.fontRendererObj);
-         GL11.glDisable(2896);
+         this.drawHoveringText(lines, this.x + 8, this.y + 6, this.fontRendererObj);
+         GlStateManager.disableLighting();
       }
 
    }

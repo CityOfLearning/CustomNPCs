@@ -29,8 +29,8 @@ public class RoleBank extends RoleInterface {
 
    public void interact(EntityPlayer player) {
       BankData data = PlayerDataController.instance.getBankData(player, this.bankId).getBankOrDefault(this.bankId);
-      data.openBankGui(player, super.npc, this.bankId, 0);
-      super.npc.say(player, super.npc.advanced.getInteractLine());
+      data.openBankGui(player, this.npc, this.bankId, 0);
+      this.npc.say(player, this.npc.advanced.getInteractLine());
    }
 
    public Bank getBank() {

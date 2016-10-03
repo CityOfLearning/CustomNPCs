@@ -1,7 +1,5 @@
 package noppes.npcs;
 
-import cpw.mods.fml.common.network.internal.FMLProxyPacket;
-import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,21 +10,24 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import net.minecraftforge.oredict.OreDictionary;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.CustomTeleporter;
+import noppes.npcs.EventHooks;
 import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.QuestLogData;
 import noppes.npcs.Server;
-import noppes.npcs.constants.EnumOptionType;
+import noppes.npcs.api.constants.EnumOptionType;
+import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerPacket;
-import noppes.npcs.constants.EnumRoleType;
-import noppes.npcs.constants.EnumScriptType;
 import noppes.npcs.containers.ContainerNPCBankInterface;
 import noppes.npcs.containers.ContainerNPCFollower;
 import noppes.npcs.containers.ContainerNPCFollowerHire;
@@ -46,22 +47,23 @@ import noppes.npcs.controllers.QuestData;
 import noppes.npcs.controllers.TransportController;
 import noppes.npcs.controllers.TransportLocation;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.roles.RoleDialog;
 import noppes.npcs.roles.RoleFollower;
 
 public class NoppesUtilPlayer {
 
    public static void changeFollowerState(EntityPlayerMP player, EntityNPCInterface npc) {
-      if(npc.advanced.role == EnumRoleType.Follower) {
+      if(npc.advanced.role == 2) {
          RoleFollower role = (RoleFollower)npc.roleInterface;
          EntityPlayer owner = role.owner;
-         if(owner != null && owner.getCommandSenderName().equals(player.getCommandSenderName())) {
+         if(owner != null && owner.getName().equals(player.getName())) {
             role.isFollowing = !role.isFollowing;
          }
       }
    }
 
    public static void hireFollower(EntityPlayerMP player, EntityNPCInterface npc) {
-      if(npc.advanced.role == EnumRoleType.Follower) {
+      if(npc.advanced.role == 2) {
          Container con = player.openContainer;
          if(con != null && con instanceof ContainerNPCFollowerHire) {
             ContainerNPCFollowerHire container = (ContainerNPCFollowerHire)con;
@@ -72,7 +74,7 @@ public class NoppesUtilPlayer {
    }
 
    public static void extendFollower(EntityPlayerMP player, EntityNPCInterface npc) {
-      if(npc.advanced.role == EnumRoleType.Follower) {
+      if(npc.advanced.role == 2) {
          Container con = player.openContainer;
          if(con != null && con instanceof ContainerNPCFollower) {
             ContainerNPCFollower container = (ContainerNPCFollower)con;
@@ -86,11 +88,14 @@ public class NoppesUtilPlayer {
       TransportLocation loc = TransportController.getInstance().getTransport(location);
       PlayerTransportData playerdata = PlayerDataController.instance.getPlayerData(player).transportData;
       if(loc != null && (loc.isDefault() || playerdata.transports.contains(Integer.valueOf(loc.id)))) {
-         teleportPlayer(player, loc.posX, loc.posY, loc.posZ, loc.dimension);
+         RoleEvent.TransporterUseEvent event = new RoleEvent.TransporterUseEvent(player, npc.wrappedNPC);
+         if(!EventHooks.onNPCRole(npc, event)) {
+            teleportPlayer(player, loc.pos, loc.dimension);
+         }
       }
    }
 
-   public static void teleportPlayer(EntityPlayerMP player, double posX, double posY, double posZ, int dimension) {
+   public static void teleportPlayer(EntityPlayerMP player, BlockPos pos, int dimension) {
       if(player.dimension != dimension) {
          int dim = player.dimension;
          MinecraftServer server = MinecraftServer.getServer();
@@ -100,14 +105,14 @@ public class NoppesUtilPlayer {
             return;
          }
 
-         player.setLocationAndAngles(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
+         player.setLocationAndAngles((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), player.rotationYaw, player.rotationPitch);
          server.getConfigurationManager().transferPlayerToDimension(player, dimension, new CustomTeleporter(wor));
-         player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
+         player.playerNetServerHandler.setPlayerLocation((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), player.rotationYaw, player.rotationPitch);
          if(!wor.playerEntities.contains(player)) {
             wor.spawnEntityInWorld(player);
          }
       } else {
-         player.playerNetServerHandler.setPlayerLocation(posX, posY, posZ, player.rotationYaw, player.rotationPitch);
+         player.playerNetServerHandler.setPlayerLocation((double)pos.getX(), (double)pos.getY(), (double)pos.getZ(), player.rotationYaw, player.rotationPitch);
       }
 
       player.worldObj.updateEntityWithOptionalForce(player, false);
@@ -124,7 +129,7 @@ public class NoppesUtilPlayer {
          while(stackSize.hasNext()) {
             days = ((Integer)stackSize.next()).intValue();
             ItemStack possibleDays = (ItemStack)role.inventory.items.get(Integer.valueOf(days));
-            if(possibleDays != null && possibleDays.getItem() == currency.getItem() && (!possibleDays.getHasSubtypes() || possibleDays.getMetadata() == currency.getMetadata())) {
+            if(possibleDays != null && possibleDays.getItem() == currency.getItem() && (!possibleDays.getHasSubtypes() || possibleDays.getItemDamage() == currency.getItemDamage())) {
                possibleSize = 1;
                if(role.rates.containsKey(Integer.valueOf(days))) {
                   possibleSize = ((Integer)role.rates.get(Integer.valueOf(days))).intValue();
@@ -141,10 +146,10 @@ public class NoppesUtilPlayer {
             possibleSize = stackSize1;
 
             while(true) {
-               Iterator var10 = cd.keySet().iterator();
+               Iterator event = cd.keySet().iterator();
 
-               while(var10.hasNext()) {
-                  ItemStack item = (ItemStack)var10.next();
+               while(event.hasNext()) {
+                  ItemStack item = (ItemStack)event.next();
                   int rDays = ((Integer)cd.get(item)).intValue();
                   int rValue = item.stackSize;
                   if(rValue <= stackSize1) {
@@ -159,7 +164,12 @@ public class NoppesUtilPlayer {
                }
 
                if(stackSize1 == possibleSize) {
-                  if(days == 0) {
+                  RoleEvent.FollowerHireEvent event1 = new RoleEvent.FollowerHireEvent(player, npc.wrappedNPC, days);
+                  if(EventHooks.onNPCRole(npc, event1)) {
+                     return;
+                  }
+
+                  if(event1.days == 0) {
                      return;
                   }
 
@@ -184,7 +194,7 @@ public class NoppesUtilPlayer {
    }
 
    public static void bankUpgrade(EntityPlayerMP player, EntityNPCInterface npc) {
-      if(npc.advanced.role == EnumRoleType.Bank) {
+      if(npc.advanced.role == 3) {
          Container con = player.openContainer;
          if(con != null && con instanceof ContainerNPCBankInterface) {
             ContainerNPCBankInterface container = (ContainerNPCBankInterface)con;
@@ -204,6 +214,8 @@ public class NoppesUtilPlayer {
                   PlayerBankData data = PlayerDataController.instance.getBankData(player, bank.id);
                   BankData bankData = data.getBank(bank.id);
                   bankData.upgradedSlots.put(Integer.valueOf(container.slot), Boolean.valueOf(true));
+                  RoleEvent.BankUpgradedEvent event = new RoleEvent.BankUpgradedEvent(player, npc.wrappedNPC, container.slot);
+                  EventHooks.onNPCRole(npc, event);
                   bankData.openBankGui(player, npc, bank.id, container.slot);
                }
             }
@@ -212,7 +224,7 @@ public class NoppesUtilPlayer {
    }
 
    public static void bankUnlock(EntityPlayerMP player, EntityNPCInterface npc) {
-      if(npc.advanced.role == EnumRoleType.Bank) {
+      if(npc.advanced.role == 3) {
          Container con = player.openContainer;
          if(con != null && con instanceof ContainerNPCBankInterface) {
             ContainerNPCBankInterface container = (ContainerNPCBankInterface)con;
@@ -235,6 +247,8 @@ public class NoppesUtilPlayer {
                      ++bankData.unlockedSlots;
                   }
 
+                  RoleEvent.BankUnlockedEvent event = new RoleEvent.BankUnlockedEvent(player, npc.wrappedNPC, container.slot);
+                  EventHooks.onNPCRole(npc, event);
                   bankData.openBankGui(player, npc, bank.id, container.slot);
                }
             }
@@ -243,7 +257,7 @@ public class NoppesUtilPlayer {
    }
 
    public static void sendData(EnumPlayerPacket enu, Object ... obs) {
-      ByteBuf buffer = Unpooled.buffer();
+      PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());
 
       try {
          if(!Server.fillBuffer(buffer, enu, obs)) {
@@ -258,27 +272,40 @@ public class NoppesUtilPlayer {
    }
 
    public static void dialogSelected(int dialogId, int optionId, EntityPlayerMP player, EntityNPCInterface npc) {
-      Dialog dialog = (Dialog)DialogController.instance.dialogs.get(Integer.valueOf(dialogId));
-      if(dialog != null) {
-         npc.script.callScript(EnumScriptType.DIALOG_OPTION, new Object[]{"player", player, "dialog", Integer.valueOf(dialogId), "option", Integer.valueOf(optionId + 1)});
-         if(dialog.hasDialogs(player) || dialog.hasOtherOptions()) {
-            DialogOption option = (DialogOption)dialog.options.get(Integer.valueOf(optionId));
-            if(option != null && (option.optionType != EnumOptionType.DialogOption || option.isAvailable(player) && option.hasDialog()) && option.optionType != EnumOptionType.Disabled && option.optionType != EnumOptionType.QuitOption) {
-               if(option.optionType == EnumOptionType.RoleOption) {
-                  if(npc.roleInterface != null) {
-                     npc.roleInterface.interact(player);
-                  } else {
-                     Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
-                  }
-               } else if(option.optionType == EnumOptionType.DialogOption) {
-                  NoppesUtilServer.openDialog(player, npc, option.getDialog());
-               } else if(option.optionType == EnumOptionType.CommandBlock) {
-                  Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
-                  NoppesUtilServer.runCommand(player, npc.getCommandSenderName(), option.command);
-               } else {
-                  Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
-               }
+      if(dialogId < 0 && npc.advanced.role == 7) {
+         String dialog1 = (String)((RoleDialog)npc.roleInterface).optionsTexts.get(Integer.valueOf(optionId));
+         if(dialog1 != null && !dialog1.isEmpty()) {
+            Dialog option1 = new Dialog();
+            option1.text = dialog1;
+            NoppesUtilServer.openDialog(player, npc, option1);
+         }
 
+      } else {
+         Dialog dialog = (Dialog)DialogController.instance.dialogs.get(Integer.valueOf(dialogId));
+         if(dialog != null) {
+            if(dialog.hasDialogs(player) || dialog.hasOtherOptions()) {
+               DialogOption option = (DialogOption)dialog.options.get(Integer.valueOf(optionId));
+               if(option != null) {
+                  if(EventHooks.onNPCDialogOption(npc, player, dialog, option)) {
+                     Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
+                  } else if((option.optionType != EnumOptionType.DIALOG_OPTION || option.isAvailable(player) && option.hasDialog()) && option.optionType != EnumOptionType.DISABLED && option.optionType != EnumOptionType.QUIT_OPTION) {
+                     if(option.optionType == EnumOptionType.ROLE_OPTION) {
+                        if(npc.roleInterface != null) {
+                           npc.roleInterface.interact(player);
+                        } else {
+                           Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
+                        }
+                     } else if(option.optionType == EnumOptionType.DIALOG_OPTION) {
+                        NoppesUtilServer.openDialog(player, npc, option.getDialog());
+                     } else if(option.optionType == EnumOptionType.COMMAND_BLOCK) {
+                        Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
+                        NoppesUtilServer.runCommand(npc, npc.getName(), option.command, player);
+                     } else {
+                        Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
+                     }
+
+                  }
+               }
             }
          }
       }
@@ -297,6 +324,7 @@ public class NoppesUtilPlayer {
       QuestData data = (QuestData)playerdata.activeQuests.get(Integer.valueOf(questId));
       if(data != null) {
          if(data.quest.questInterface.isCompleted(player)) {
+            EventHooks.onQuestTurnedIn(player, data.quest);
             data.quest.questInterface.handleComplete(player);
             if(data.quest.rewardExp > 0) {
                player.worldObj.playSoundAtEntity(player, "random.orb", 0.1F, 0.5F * ((player.worldObj.rand.nextFloat() - player.worldObj.rand.nextFloat()) * 0.7F + 1.8F));
@@ -305,7 +333,7 @@ public class NoppesUtilPlayer {
 
             data.quest.factionOptions.addPoints(player);
             if(data.quest.mail.isValid()) {
-               PlayerDataController.instance.addPlayerMessage(player.getCommandSenderName(), data.quest.mail);
+               PlayerDataController.instance.addPlayerMessage(player.getName(), data.quest.mail);
             }
 
             if(!data.quest.randomReward) {
@@ -357,7 +385,7 @@ public class NoppesUtilPlayer {
                int id = var6[var8];
                boolean match1 = false;
                boolean match2 = false;
-               Iterator var12 = OreDictionary.getOres(Integer.valueOf(id)).iterator();
+               Iterator var12 = OreDictionary.getOres(OreDictionary.getOreName(id)).iterator();
 
                while(var12.hasNext()) {
                   ItemStack is = (ItemStack)var12.next();
@@ -383,17 +411,17 @@ public class NoppesUtilPlayer {
    }
 
    private static boolean compareItemDetails(ItemStack item, ItemStack item2, boolean ignoreDamage, boolean ignoreNBT) {
-      return item.getItem() != item2.getItem()?false:(!ignoreDamage && item.getMetadata() != -1 && item.getMetadata() != item2.getMetadata()?false:(!ignoreNBT && item.stackTagCompound != null && (item2.stackTagCompound == null || !item.stackTagCompound.equals(item2.stackTagCompound))?false:ignoreNBT || item2.stackTagCompound == null || item.stackTagCompound != null));
+      return item.getItem() != item2.getItem()?false:(!ignoreDamage && item.getItemDamage() != -1 && item.getItemDamage() != item2.getItemDamage()?false:(!ignoreNBT && item.getTagCompound() != null && (item2.getTagCompound() == null || !item.getTagCompound().equals(item2.getTagCompound()))?false:ignoreNBT || item2.getTagCompound() == null || item.getTagCompound() != null));
    }
 
-   public static boolean compareItems(EntityPlayer player, ItemStack item, boolean ignoreDamage) {
+   public static boolean compareItems(EntityPlayer player, ItemStack item, boolean ignoreDamage, boolean ignoreNBT) {
       int size = 0;
-      ItemStack[] var4 = player.inventory.mainInventory;
-      int var5 = var4.length;
+      ItemStack[] var5 = player.inventory.mainInventory;
+      int var6 = var5.length;
 
-      for(int var6 = 0; var6 < var5; ++var6) {
-         ItemStack is = var4[var6];
-         if(is != null && compareItems(item, is, ignoreDamage, false)) {
+      for(int var7 = 0; var7 < var6; ++var7) {
+         ItemStack is = var5[var7];
+         if(is != null && compareItems(item, is, ignoreDamage, ignoreNBT)) {
             size += is.stackSize;
          }
       }
@@ -401,13 +429,13 @@ public class NoppesUtilPlayer {
       return size >= item.stackSize;
    }
 
-   public static void consumeItem(EntityPlayer player, ItemStack item, boolean ignoreDamage) {
+   public static void consumeItem(EntityPlayer player, ItemStack item, boolean ignoreDamage, boolean ignoreNBT) {
       if(item != null) {
          int size = item.stackSize;
 
          for(int i = 0; i < player.inventory.mainInventory.length; ++i) {
             ItemStack is = player.inventory.mainInventory[i];
-            if(is != null && compareItems(item, is, ignoreDamage, false)) {
+            if(is != null && compareItems(item, is, ignoreDamage, ignoreNBT)) {
                if(size < is.stackSize) {
                   player.inventory.mainInventory[i].splitStack(size);
                   break;

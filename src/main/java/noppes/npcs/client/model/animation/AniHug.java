@@ -1,12 +1,12 @@
 package noppes.npcs.client.model.animation;
 
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.client.model.ModelMPM;
 
 public class AniHug {
 
-   public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity, ModelMPM base) {
+   public static void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity entity, ModelBiped base) {
       float f6 = MathHelper.sin(base.swingProgress * 3.141593F);
       float f7 = MathHelper.sin((1.0F - (1.0F - base.swingProgress) * (1.0F - base.swingProgress)) * 3.141593F);
       base.bipedRightArm.rotateAngleZ = 0.0F;

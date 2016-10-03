@@ -1,8 +1,8 @@
 package noppes.npcs.items;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.Item.ToolMaterial;
 import noppes.npcs.items.ItemNpcWeaponInterface;
-import org.lwjgl.opengl.GL11;
 
 public class ItemExcalibur extends ItemNpcWeaponInterface {
 
@@ -14,7 +14,7 @@ public class ItemExcalibur extends ItemNpcWeaponInterface {
    }
 
    public void renderSpecial() {
-      GL11.glTranslatef(0.2F, 0.3F, 0.1F);
+      GlStateManager.translate(0.2F, 0.3F, 0.1F);
    }
 
 }

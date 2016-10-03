@@ -1,5 +1,6 @@
 package noppes.npcs.enchants;
 
+import net.minecraft.util.ResourceLocation;
 import noppes.npcs.enchants.EnchantInterface;
 import noppes.npcs.items.ItemGun;
 import noppes.npcs.items.ItemStaff;
@@ -7,7 +8,7 @@ import noppes.npcs.items.ItemStaff;
 public class EnchantPoison extends EnchantInterface {
 
    public EnchantPoison() {
-      super(6, new Class[]{ItemStaff.class, ItemGun.class});
+      super(6, new ResourceLocation("cnpc_poison"), new Class[]{ItemStaff.class, ItemGun.class});
       this.setName("poison");
    }
 

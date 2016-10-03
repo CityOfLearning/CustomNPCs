@@ -1,53 +1,58 @@
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.NoppesUtilServer;
+import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileWallBanner;
+import noppes.npcs.client.renderer.ITileRenderer;
 
-public class BlockWallBanner extends BlockContainer {
+public class BlockWallBanner extends BlockContainer implements ITileRenderer {
 
+   public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
    public int renderId = -1;
+   private TileColorable renderTile;
 
 
    public BlockWallBanner() {
       super(Material.rock);
    }
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
+   public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
       ItemStack item = player.inventory.getCurrentItem();
       if(item == null) {
          return false;
       } else {
-         TileWallBanner tile = (TileWallBanner)par1World.getTileEntity(i, j, k);
+         TileWallBanner tile = (TileWallBanner)par1World.getTileEntity(pos);
          if(tile.canEdit()) {
             return true;
          } else if(item.getItem() != Items.dye) {
             return false;
          } else {
-            int color = BlockColored.func_150031_c(item.getMetadata());
+            int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
             if(tile.color != color) {
                NoppesUtilServer.consumeItemStack(1, player);
                tile.color = color;
-               par1World.markBlockForUpdate(i, j, k);
+               par1World.markBlockForUpdate(pos);
             }
 
             return true;
@@ -55,21 +60,21 @@ public class BlockWallBanner extends BlockContainer {
       }
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
       l %= 4;
-      TileWallBanner tile = (TileWallBanner)par1World.getTileEntity(par2, par3, par4);
+      world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+      TileWallBanner tile = (TileWallBanner)world.getTileEntity(pos);
       tile.rotation = l;
-      tile.color = 15 - par6ItemStack.getMetadata();
+      tile.color = 15 - stack.getItemDamage();
       tile.time = System.currentTimeMillis();
-      par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-      if(par5EntityLivingBase instanceof EntityPlayer && par1World.isRemote) {
-         ((EntityPlayer)par5EntityLivingBase).addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
+      if(entity instanceof EntityPlayer && world.isRemote) {
+         ((EntityPlayer)entity).addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));
       }
 
    }
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
+   public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
       return null;
    }
 
@@ -81,15 +86,27 @@ public class BlockWallBanner extends BlockContainer {
       par3List.add(new ItemStack(par1, 1, 4));
    }
 
-   public int damageDropped(int par1) {
-      return par1;
+   public int getMetaFromState(IBlockState state) {
+      return this.damageDropped(state);
+   }
+
+   public IBlockState getStateFromMeta(int meta) {
+      return this.getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta));
+   }
+
+   protected BlockState createBlockState() {
+      return new BlockState(this, new IProperty[]{DAMAGE});
+   }
+
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
    public boolean isOpaqueCube() {
       return false;
    }
 
-   public boolean renderAsNormalBlock() {
+   public boolean isFullCube() {
       return false;
    }
 
@@ -97,16 +114,16 @@ public class BlockWallBanner extends BlockContainer {
       return this.renderId;
    }
 
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {}
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int p_149691_1_, int meta) {
-      meta %= 7;
-      return meta == 1?Blocks.stone.getIcon(p_149691_1_, 0):(meta == 2?Blocks.iron_block.getIcon(p_149691_1_, 0):(meta == 3?Blocks.gold_block.getIcon(p_149691_1_, 0):(meta == 4?Blocks.diamond_block.getIcon(p_149691_1_, 0):Blocks.planks.getIcon(p_149691_1_, 0))));
-   }
-
    public TileEntity createNewTileEntity(World var1, int var2) {
       return new TileWallBanner();
    }
+
+   public TileColorable getTile() {
+      if(this.renderTile == null) {
+         this.renderTile = (TileColorable)this.createNewTileEntity((World)null, 0);
+      }
+
+      return this.renderTile;
+   }
+
 }

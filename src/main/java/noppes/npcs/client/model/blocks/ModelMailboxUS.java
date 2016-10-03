@@ -22,8 +22,8 @@ public class ModelMailboxUS extends ModelBase {
 
 
    public ModelMailboxUS() {
-      super.textureWidth = 64;
-      super.textureHeight = 128;
+      this.textureWidth = 64;
+      this.textureHeight = 128;
       this.Shape1 = new ModelRenderer(this, 0, 48);
       this.Shape1.addBox(0.0F, 0.0F, 0.0F, 16, 14, 16);
       this.Shape1.setRotationPoint(-8.0F, 8.0F, -8.0F);

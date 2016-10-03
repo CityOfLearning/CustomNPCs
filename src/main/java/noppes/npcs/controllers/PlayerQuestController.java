@@ -4,10 +4,11 @@ import java.util.Iterator;
 import java.util.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
+import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumQuestRepeat;
-import noppes.npcs.constants.EnumQuestType;
 import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerQuestData;
@@ -35,6 +36,10 @@ public class PlayerQuestController {
    public static void addActiveQuest(Quest quest, EntityPlayer player) {
       PlayerQuestData data = PlayerDataController.instance.getPlayerData(player).questData;
       if(canQuestBeAccepted(quest, player)) {
+         if(EventHooks.onQuestStarted(player, quest)) {
+            return;
+         }
+
          data.activeQuests.put(Integer.valueOf(quest.id), new QuestData(quest));
          Server.sendData((EntityPlayerMP)player, EnumPacketClient.MESSAGE, new Object[]{"quest.newquest", quest.title});
          Server.sendData((EntityPlayerMP)player, EnumPacketClient.CHAT, new Object[]{"quest.newquest", ": ", quest.title});
@@ -52,7 +57,7 @@ public class PlayerQuestController {
          data.finishedQuests.put(Integer.valueOf(quest.id), Long.valueOf(System.currentTimeMillis()));
       }
 
-      if(quest.repeat != EnumQuestRepeat.NONE && quest.type == EnumQuestType.Dialog) {
+      if(quest.repeat != EnumQuestRepeat.NONE && quest.type == EnumQuestType.DIALOG) {
          QuestDialog questdialog = (QuestDialog)quest.questInterface;
          Iterator var5 = questdialog.dialogs.values().iterator();
 

@@ -26,7 +26,7 @@ public class EntityMagicProjectile extends EntityProjectile {
       super.onUpdate();
    }
 
-   public String getCommandSenderName() {
+   public String getName() {
       return StatCollector.translateToLocal("entity.throwableitem.name");
    }
 }

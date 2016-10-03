@@ -3,7 +3,7 @@ package noppes.npcs.ai;
 import java.util.Random;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import noppes.npcs.constants.AiMutex;
@@ -26,7 +26,7 @@ public class EntityAIFindShade extends EntityAIBase {
    public boolean shouldExecute() {
       if(!this.theWorld.isDaytime()) {
          return false;
-      } else if(!this.theWorld.canBlockSeeTheSky(MathHelper.floor_double(this.theCreature.posX), (int)this.theCreature.boundingBox.minY, MathHelper.floor_double(this.theCreature.posZ))) {
+      } else if(!this.theWorld.canSeeSky(new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ))) {
          return false;
       } else {
          Vec3 var1 = this.findPossibleShelter();
@@ -50,15 +50,13 @@ public class EntityAIFindShade extends EntityAIBase {
    }
 
    private Vec3 findPossibleShelter() {
-      Random var1 = this.theCreature.getRNG();
+      Random random = this.theCreature.getRNG();
+      BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ);
 
-      for(int var2 = 0; var2 < 10; ++var2) {
-         int var3 = MathHelper.floor_double(this.theCreature.posX + (double)var1.nextInt(20) - 10.0D);
-         int var4 = MathHelper.floor_double(this.theCreature.boundingBox.minY + (double)var1.nextInt(6) - 3.0D);
-         int var5 = MathHelper.floor_double(this.theCreature.posZ + (double)var1.nextInt(20) - 10.0D);
-         float light = this.theWorld.getLightBrightness(var3, var4, var5) - 0.5F;
-         if(!this.theWorld.canBlockSeeTheSky(var3, var4, var5) && light < 0.0F) {
-            return Vec3.createVectorHelper((double)var3, (double)var4, (double)var5);
+      for(int i = 0; i < 10; ++i) {
+         BlockPos blockpos1 = blockpos.add(random.nextInt(20) - 10, random.nextInt(6) - 3, random.nextInt(20) - 10);
+         if(!this.theWorld.canSeeSky(blockpos1) && this.theCreature.getBlockPathWeight(blockpos1) < 0.0F) {
+            return new Vec3((double)blockpos1.getX(), (double)blockpos1.getY(), (double)blockpos1.getZ());
          }
       }
 

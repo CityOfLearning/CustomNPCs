@@ -65,6 +65,10 @@ public class ContainerNPCBankInterface extends ContainerNpcInterface {
 
    }
 
+   public synchronized void setCurrency(ItemStack item) {
+      this.currency.item = item;
+   }
+
    public int getRowNumber() {
       return 0;
    }

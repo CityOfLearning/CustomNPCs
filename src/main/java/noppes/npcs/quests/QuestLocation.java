@@ -30,7 +30,7 @@ public class QuestLocation extends QuestInterface {
 
    public boolean isCompleted(EntityPlayer player) {
       PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-      QuestData data = (QuestData)playerdata.activeQuests.get(Integer.valueOf(super.questId));
+      QuestData data = (QuestData)playerdata.activeQuests.get(Integer.valueOf(this.questId));
       return data == null?false:this.getFound(data, 0);
    }
 
@@ -39,7 +39,7 @@ public class QuestLocation extends QuestInterface {
    public Vector getQuestLogStatus(EntityPlayer player) {
       Vector vec = new Vector();
       PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
-      QuestData data = (QuestData)playerdata.activeQuests.get(Integer.valueOf(super.questId));
+      QuestData data = (QuestData)playerdata.activeQuests.get(Integer.valueOf(this.questId));
       if(data == null) {
          return vec;
       } else {

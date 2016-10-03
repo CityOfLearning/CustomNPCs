@@ -1,54 +1,60 @@
 package noppes.npcs.blocks;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import java.util.List;
-import net.minecraft.block.BlockColored;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyInteger;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileTallLamp;
+import noppes.npcs.client.renderer.ITileRenderer;
 
-public class BlockTallLamp extends BlockContainer {
+public class BlockTallLamp extends BlockContainer implements ITileRenderer {
 
+   public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
+   public static final PropertyBool IS_TOP = PropertyBool.create("istop");
    public int renderId = -1;
+   private TileColorable renderTile;
 
 
    public BlockTallLamp() {
       super(Material.wood);
+      this.setDefaultState(this.blockState.getBaseState().withProperty(IS_TOP, Boolean.valueOf(false)));
       this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F);
       this.setLightLevel(1.0F);
    }
 
-   public boolean onBlockActivated(World par1World, int i, int j, int k, EntityPlayer player, int par6, float par7, float par8, float par9) {
+   public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
       ItemStack item = player.inventory.getCurrentItem();
       if(item != null && item.getItem() == Items.dye) {
-         int meta = par1World.getBlockMetadata(i, j, k);
-         if(meta >= 7) {
-            --j;
+         if(((Boolean)state.getValue(IS_TOP)).booleanValue()) {
+            pos = pos.down();
          }
 
-         TileColorable tile = (TileColorable)par1World.getTileEntity(i, j, k);
-         int color = BlockColored.func_150031_c(item.getMetadata());
+         TileColorable tile = (TileColorable)par1World.getTileEntity(pos);
+         int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
          if(tile.color != color) {
             NoppesUtilServer.consumeItemStack(1, player);
             tile.color = color;
-            par1World.markBlockForUpdate(i, j, k);
+            par1World.markBlockForUpdate(pos);
          }
 
          return true;
@@ -57,9 +63,9 @@ public class BlockTallLamp extends BlockContainer {
       }
    }
 
-   public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int x, int y, int z) {
-      this.setBlockBoundsBasedOnState(world, x, y, z);
-      return super.getCollisionBoundingBoxFromPool(world, x, y, z);
+   public AxisAlignedBB getCollisionBoundingBox(World world, BlockPos pos, IBlockState state) {
+      this.setBlockBoundsBasedOnState(world, pos);
+      return super.getCollisionBoundingBox(world, pos, state);
    }
 
    public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
@@ -70,31 +76,46 @@ public class BlockTallLamp extends BlockContainer {
       par3List.add(new ItemStack(par1, 1, 4));
    }
 
-   public int damageDropped(int par1) {
-      return par1 % 7;
+   public int damageDropped(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue();
    }
 
-   public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLivingBase par5EntityLivingBase, ItemStack par6ItemStack) {
-      if(!par1World.isAirBlock(par2, par3 + 1, par4)) {
-         par1World.setBlockToAir(par2, par3, par4);
+   public int getMetaFromState(IBlockState state) {
+      return ((Integer)state.getValue(DAMAGE)).intValue() + (((Boolean)state.getValue(IS_TOP)).booleanValue()?7:0);
+   }
+
+   public IBlockState getStateFromMeta(int meta) {
+      return this.getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta % 7)).withProperty(IS_TOP, Boolean.valueOf(meta >= 7));
+   }
+
+   protected BlockState createBlockState() {
+      return new BlockState(this, new IProperty[]{DAMAGE, IS_TOP});
+   }
+
+   public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity, ItemStack stack) {
+      if(!world.isAirBlock(pos.up())) {
+         world.setBlockToAir(pos);
       } else {
-         int l = MathHelper.floor_double((double)(par5EntityLivingBase.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+         int l = MathHelper.floor_double((double)(entity.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
          l %= 4;
-         TileColorable tile = (TileColorable)par1World.getTileEntity(par2, par3, par4);
+         world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())).withProperty(IS_TOP, Boolean.valueOf(false)), 2);
+         world.setBlockState(pos.up(), state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())).withProperty(IS_TOP, Boolean.valueOf(true)), 2);
+         TileColorable tile = (TileColorable)world.getTileEntity(pos);
          tile.rotation = l;
-         tile.color = 15 - par6ItemStack.getMetadata();
-         par1World.setBlockMetadataWithNotify(par2, par3, par4, par6ItemStack.getMetadata(), 2);
-         par1World.setBlock(par2, par3 + 1, par4, this, par6ItemStack.getMetadata() + 7, 2);
+         tile.color = 15 - stack.getItemDamage();
       }
 
    }
 
-   public void setBlockBoundsBasedOnState(IBlockAccess world, int x, int y, int z) {
-      int meta = world.getBlockMetadata(x, y, z);
-      if(meta >= 7) {
-         this.setBlockBounds(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-      } else {
-         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F);
+   public void setBlockBoundsBasedOnState(IBlockAccess world, BlockPos pos) {
+      try {
+         if(((Boolean)world.getBlockState(pos).getValue(IS_TOP)).booleanValue()) {
+            this.setBlockBounds(0.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+         } else {
+            this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F);
+         }
+      } catch (IllegalArgumentException var4) {
+         ;
       }
 
    }
@@ -103,7 +124,7 @@ public class BlockTallLamp extends BlockContainer {
       return false;
    }
 
-   public boolean renderAsNormalBlock() {
+   public boolean isFullCube() {
       return false;
    }
 
@@ -111,25 +132,25 @@ public class BlockTallLamp extends BlockContainer {
       return this.renderId;
    }
 
-   @SideOnly(Side.CLIENT)
-   public void registerIcons(IIconRegister par1IconRegister) {}
-
-   @SideOnly(Side.CLIENT)
-   public IIcon getIcon(int p_149691_1_, int meta) {
-      meta %= 7;
-      return meta == 1?Blocks.stone.getIcon(p_149691_1_, 0):(meta == 2?Blocks.iron_block.getIcon(p_149691_1_, 0):(meta == 3?Blocks.gold_block.getIcon(p_149691_1_, 0):(meta == 4?Blocks.diamond_block.getIcon(p_149691_1_, 0):Blocks.planks.getIcon(p_149691_1_, 0))));
-   }
-
    public TileEntity createNewTileEntity(World var1, int var2) {
       return var2 < 7?new TileTallLamp():null;
    }
 
-   public void onBlockHarvested(World p_149681_1_, int p_149681_2_, int p_149681_3_, int p_149681_4_, int p_149681_5_, EntityPlayer p_149681_6_) {
-      if(p_149681_5_ >= 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ - 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ - 1, p_149681_4_);
-      } else if(p_149681_5_ < 7 && p_149681_1_.getBlock(p_149681_2_, p_149681_3_ + 1, p_149681_4_) == this) {
-         p_149681_1_.setBlockToAir(p_149681_2_, p_149681_3_ + 1, p_149681_4_);
+   public void onBlockHarvested(World world, BlockPos pos, IBlockState state, EntityPlayer player) {
+      if(((Boolean)state.getValue(IS_TOP)).booleanValue() && world.getBlockState(pos.down()).getBlock() == this) {
+         world.setBlockToAir(pos.down());
+      } else if(!((Boolean)state.getValue(IS_TOP)).booleanValue() && world.getBlockState(pos.up()).getBlock() == this) {
+         world.setBlockToAir(pos.up());
       }
 
    }
+
+   public TileColorable getTile() {
+      if(this.renderTile == null) {
+         this.renderTile = (TileColorable)this.createNewTileEntity((World)null, 0);
+      }
+
+      return this.renderTile;
+   }
+
 }

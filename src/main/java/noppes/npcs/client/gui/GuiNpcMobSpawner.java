@@ -37,17 +37,17 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
 
 
    public GuiNpcMobSpawner(int i, int j, int k) {
-      super.xSize = 256;
+      this.xSize = 256;
       this.posX = i;
       this.posY = j;
       this.posZ = k;
-      super.closeOnEsc = true;
+      this.closeOnEsc = true;
       this.setBackground("menubg.png");
    }
 
    public void initGui() {
       super.initGui();
-      super.guiTop += 10;
+      this.guiTop += 10;
       if(this.scroll == null) {
          this.scroll = new GuiCustomScroll(this, 0);
          this.scroll.setSize(165, 188);
@@ -55,32 +55,32 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
          this.scroll.clear();
       }
 
-      this.scroll.guiLeft = super.guiLeft + 4;
-      this.scroll.guiTop = super.guiTop + 26;
+      this.scroll.guiLeft = this.guiLeft + 4;
+      this.scroll.guiTop = this.guiTop + 26;
       this.addScroll(this.scroll);
-      this.addTextField(new GuiNpcTextField(1, this, super.fontRendererObj, super.guiLeft + 4, super.guiTop + 4, 165, 20, search));
+      this.addTextField(new GuiNpcTextField(1, this, this.fontRendererObj, this.guiLeft + 4, this.guiTop + 4, 165, 20, search));
       GuiMenuTopButton button;
-      this.addTopButton(button = new GuiMenuTopButton(3, super.guiLeft + 4, super.guiTop - 17, "spawner.clones"));
+      this.addTopButton(button = new GuiMenuTopButton(3, this.guiLeft + 4, this.guiTop - 17, "spawner.clones"));
       button.active = showingClones == 0;
       this.addTopButton(button = new GuiMenuTopButton(4, button, "spawner.entities"));
       button.active = showingClones == 1;
       this.addTopButton(button = new GuiMenuTopButton(5, button, "gui.server"));
       button.active = showingClones == 2;
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 170, super.guiTop + 6, 82, 20, "item.monsterPlacer.name"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 170, super.guiTop + 100, 82, 20, "spawner.mobspawner"));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 170, this.guiTop + 6, 82, 20, "item.monsterPlacer.name"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 170, this.guiTop + 100, 82, 20, "spawner.mobspawner"));
       if(showingClones != 0 && showingClones != 2) {
          this.showEntities();
       } else {
-         this.addSideButton(new GuiMenuSideButton(21, super.guiLeft - 69, super.guiTop + 2, 70, 22, "Tab 1"));
-         this.addSideButton(new GuiMenuSideButton(22, super.guiLeft - 69, super.guiTop + 23, 70, 22, "Tab 2"));
-         this.addSideButton(new GuiMenuSideButton(23, super.guiLeft - 69, super.guiTop + 44, 70, 22, "Tab 3"));
-         this.addSideButton(new GuiMenuSideButton(24, super.guiLeft - 69, super.guiTop + 65, 70, 22, "Tab 4"));
-         this.addSideButton(new GuiMenuSideButton(25, super.guiLeft - 69, super.guiTop + 86, 70, 22, "Tab 5"));
-         this.addSideButton(new GuiMenuSideButton(26, super.guiLeft - 69, super.guiTop + 107, 70, 22, "Tab 6"));
-         this.addSideButton(new GuiMenuSideButton(27, super.guiLeft - 69, super.guiTop + 128, 70, 22, "Tab 7"));
-         this.addSideButton(new GuiMenuSideButton(28, super.guiLeft - 69, super.guiTop + 149, 70, 22, "Tab 8"));
-         this.addSideButton(new GuiMenuSideButton(29, super.guiLeft - 69, super.guiTop + 170, 70, 22, "Tab 9"));
-         this.addButton(new GuiNpcButton(6, super.guiLeft + 170, super.guiTop + 30, 82, 20, "gui.remove"));
+         this.addSideButton(new GuiMenuSideButton(21, this.guiLeft - 69, this.guiTop + 2, 70, 22, "Tab 1"));
+         this.addSideButton(new GuiMenuSideButton(22, this.guiLeft - 69, this.guiTop + 23, 70, 22, "Tab 2"));
+         this.addSideButton(new GuiMenuSideButton(23, this.guiLeft - 69, this.guiTop + 44, 70, 22, "Tab 3"));
+         this.addSideButton(new GuiMenuSideButton(24, this.guiLeft - 69, this.guiTop + 65, 70, 22, "Tab 4"));
+         this.addSideButton(new GuiMenuSideButton(25, this.guiLeft - 69, this.guiTop + 86, 70, 22, "Tab 5"));
+         this.addSideButton(new GuiMenuSideButton(26, this.guiLeft - 69, this.guiTop + 107, 70, 22, "Tab 6"));
+         this.addSideButton(new GuiMenuSideButton(27, this.guiLeft - 69, this.guiTop + 128, 70, 22, "Tab 7"));
+         this.addSideButton(new GuiMenuSideButton(28, this.guiLeft - 69, this.guiTop + 149, 70, 22, "Tab 8"));
+         this.addSideButton(new GuiMenuSideButton(29, this.guiLeft - 69, this.guiTop + 170, 70, 22, "Tab 9"));
+         this.addButton(new GuiNpcButton(6, this.guiLeft + 170, this.guiTop + 30, 82, 20, "gui.remove"));
          this.getSideButton(20 + this.activeTab).active = true;
          this.showClones();
       }
@@ -90,19 +90,21 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
    private void showEntities() {
       Map data = EntityList.stringToClassMapping;
       ArrayList list = new ArrayList();
-      Iterator var3 = data.keySet().iterator();
+      ArrayList classes = new ArrayList();
+      Iterator var4 = data.keySet().iterator();
 
-      while(var3.hasNext()) {
-         Object name = var3.next();
+      while(var4.hasNext()) {
+         Object name = var4.next();
          Class c = (Class)data.get(name);
 
          try {
-            if(EntityLiving.class.isAssignableFrom(c) && c.getConstructor(new Class[]{World.class}) != null && !Modifier.isAbstract(c.getModifiers())) {
+            if(!classes.contains(c) && EntityLiving.class.isAssignableFrom(c) && c.getConstructor(new Class[]{World.class}) != null && !Modifier.isAbstract(c.getModifiers())) {
                list.add(name.toString());
+               classes.add(c);
             }
-         } catch (SecurityException var7) {
-            var7.printStackTrace();
-         } catch (NoSuchMethodException var8) {
+         } catch (SecurityException var8) {
+            var8.printStackTrace();
+         } catch (NoSuchMethodException var9) {
             ;
          }
       }
@@ -152,7 +154,7 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
       if(sel == null) {
          return null;
       } else if(showingClones == 0) {
-         return ClientCloneController.Instance.getCloneData(super.player, sel, this.activeTab);
+         return ClientCloneController.Instance.getCloneData(this.player, sel, this.activeTab);
       } else {
          Entity entity = EntityList.createEntityByName(sel, Minecraft.getMinecraft().theWorld);
          if(entity == null) {

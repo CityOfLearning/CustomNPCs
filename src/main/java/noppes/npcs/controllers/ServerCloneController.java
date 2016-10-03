@@ -111,7 +111,7 @@ public class ServerCloneController {
          try {
             return NBTJsonUtil.LoadFile(file);
          } catch (Exception var6) {
-            LogWriter.except(var6);
+            LogWriter.error("Error loading: " + file.getAbsolutePath(), var6);
             if(player != null) {
                player.addChatMessage(new ChatComponentText(var6.getMessage()));
             }

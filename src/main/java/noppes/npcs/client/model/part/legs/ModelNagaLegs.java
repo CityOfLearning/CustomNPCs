@@ -2,10 +2,10 @@ package noppes.npcs.client.model.part.legs;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.client.model.util.ModelPlaneRenderer;
-import org.lwjgl.opengl.GL11;
+import noppes.npcs.client.model.ModelPlaneRenderer;
 
 public class ModelNagaLegs extends ModelRenderer {
 
@@ -166,22 +166,22 @@ public class ModelNagaLegs extends ModelRenderer {
    }
 
    public void render(float par7) {
-      if(!super.isHidden && super.showModel) {
+      if(!this.isHidden && this.showModel) {
          this.nagaPart1.render(par7);
          this.nagaPart3.render(par7);
          if(!this.isRiding) {
             this.nagaPart2.render(par7);
          }
 
-         GL11.glPushMatrix();
-         GL11.glScalef(0.74F, 0.7F, 0.85F);
-         GL11.glTranslatef(this.nagaPart3.rotateAngleY, 0.66F, 0.06F);
+         GlStateManager.pushMatrix();
+         GlStateManager.scale(0.74F, 0.7F, 0.85F);
+         GlStateManager.translate(this.nagaPart3.rotateAngleY, 0.66F, 0.06F);
          this.nagaPart4.render(par7);
-         GL11.glPopMatrix();
-         GL11.glPushMatrix();
-         GL11.glTranslatef(this.nagaPart3.rotateAngleY + this.nagaPart4.rotateAngleY, 0.0F, 0.0F);
+         GlStateManager.popMatrix();
+         GlStateManager.pushMatrix();
+         GlStateManager.translate(this.nagaPart3.rotateAngleY + this.nagaPart4.rotateAngleY, 0.0F, 0.0F);
          this.nagaPart5.render(par7);
-         GL11.glPopMatrix();
+         GlStateManager.popMatrix();
       }
    }
 }

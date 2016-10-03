@@ -20,8 +20,11 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 
 
    public GuiNpcDimension() {
-      super.xSize = 256;
+      this.xSize = 256;
       this.setBackground("menubg.png");
+   }
+
+   public void initPacket() {
       Client.sendData(EnumPacketServer.DimensionsGet, new Object[0]);
    }
 
@@ -32,13 +35,13 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
          this.scroll.setSize(165, 208);
       }
 
-      this.scroll.guiLeft = super.guiLeft + 4;
-      this.scroll.guiTop = super.guiTop + 4;
+      this.scroll.guiLeft = this.guiLeft + 4;
+      this.scroll.guiTop = this.guiTop + 4;
       this.addScroll(this.scroll);
       String title = StatCollector.translateToLocal("Dimensions");
-      int x = (super.xSize - super.fontRendererObj.getStringWidth(title)) / 2;
-      this.addLabel(new GuiNpcLabel(0, title, super.guiLeft + x, super.guiTop - 8));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 170, super.guiTop + 72, 82, 20, "remote.tp"));
+      int x = (this.xSize - this.fontRendererObj.getStringWidth(title)) / 2;
+      this.addLabel(new GuiNpcLabel(0, title, this.guiLeft + x, this.guiTop - 8));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 170, this.guiTop + 72, 82, 20, "remote.tp"));
    }
 
    public void confirmClicked(boolean flag, int i) {
@@ -46,7 +49,7 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
          Client.sendData(EnumPacketServer.RemoteDelete, new Object[]{this.data.get(this.scroll.getSelected())});
       }
 
-      NoppesUtil.openGUI(super.player, this);
+      NoppesUtil.openGUI(this.player, this);
    }
 
    protected void actionPerformed(GuiButton guibutton) {

@@ -25,7 +25,7 @@ public class ContainerMail extends ContainerNpcInterface {
       staticmail = new PlayerMail();
       this.canEdit = canEdit;
       this.canSend = canSend;
-      player.inventory.openChest();
+      player.inventory.openInventory(player);
 
       int k;
       for(k = 0; k < 4; ++k) {
@@ -47,12 +47,12 @@ public class ContainerMail extends ContainerNpcInterface {
 
    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
       ItemStack itemstack = null;
-      Slot slot = (Slot)super.inventorySlots.get(par2);
+      Slot slot = (Slot)this.inventorySlots.get(par2);
       if(slot != null && slot.getHasStack()) {
          ItemStack itemstack1 = slot.getStack();
          itemstack = itemstack1.copy();
          if(par2 < 4) {
-            if(!this.mergeItemStack(itemstack1, 4, super.inventorySlots.size(), true)) {
+            if(!this.mergeItemStack(itemstack1, 4, this.inventorySlots.size(), true)) {
                return null;
             }
          } else if(!this.canEdit || !this.mergeItemStack(itemstack1, 0, 4, false)) {

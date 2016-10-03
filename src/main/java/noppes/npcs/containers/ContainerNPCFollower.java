@@ -34,7 +34,7 @@ public class ContainerNPCFollower extends ContainerNpcInterface {
    public void onContainerClosed(EntityPlayer entityplayer) {
       super.onContainerClosed(entityplayer);
       if(!entityplayer.worldObj.isRemote) {
-         ItemStack itemstack = this.currencyMatrix.getStackInSlotOnClosing(0);
+         ItemStack itemstack = this.currencyMatrix.removeStackFromSlot(0);
          if(itemstack != null && !entityplayer.worldObj.isRemote) {
             entityplayer.entityDropItem(itemstack, 0.0F);
          }

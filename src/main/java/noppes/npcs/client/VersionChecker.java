@@ -5,14 +5,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.ClickEvent.Action;
 import net.minecraft.util.ChatComponentTranslation;
 
 public class VersionChecker extends Thread {
 
-   private int revision = 11;
+   private int revision = 12;
 
 
    public void run() {
@@ -23,7 +23,7 @@ public class VersionChecker extends Thread {
          text = name + '\u00a7' + "4 update available " + link;
       }
 
-      EntityClientPlayerMP player;
+      EntityPlayerSP player;
       try {
          player = Minecraft.getMinecraft().thePlayer;
       } catch (NoSuchMethodError var7) {
@@ -45,7 +45,7 @@ public class VersionChecker extends Thread {
 
    private boolean hasUpdate() {
       try {
-         URL e = new URL("https://dl.dropboxusercontent.com/u/3096920/update/minecraft/1.7/CustomNPCs.txt");
+         URL e = new URL("https://dl.dropboxusercontent.com/u/3096920/update/minecraft/1.8/CustomNPCs.txt");
          URLConnection yc = e.openConnection();
          BufferedReader in = new BufferedReader(new InputStreamReader(yc.getInputStream()));
          String inputLine = in.readLine();

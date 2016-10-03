@@ -1,7 +1,5 @@
 package noppes.npcs.containers;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ICrafting;
@@ -10,6 +8,8 @@ import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.containers.ContainerNpcInterface;
 
 public class ContainerMerchantAdd extends ContainerNpcInterface {
@@ -60,7 +60,7 @@ public class ContainerMerchantAdd extends ContainerNpcInterface {
 
    public ItemStack transferStackInSlot(EntityPlayer par1EntityPlayer, int par2) {
       ItemStack itemstack = null;
-      Slot slot = (Slot)super.inventorySlots.get(par2);
+      Slot slot = (Slot)this.inventorySlots.get(par2);
       if(slot != null && slot.getHasStack()) {
          ItemStack itemstack1 = slot.getStack();
          itemstack = itemstack1.copy();
@@ -97,12 +97,12 @@ public class ContainerMerchantAdd extends ContainerNpcInterface {
       this.theMerchant.setCustomer((EntityPlayer)null);
       super.onContainerClosed(par1EntityPlayer);
       if(!this.theWorld.isRemote) {
-         ItemStack itemstack = this.merchantInventory.getStackInSlotOnClosing(0);
+         ItemStack itemstack = this.merchantInventory.removeStackFromSlot(0);
          if(itemstack != null) {
             par1EntityPlayer.dropPlayerItemWithRandomChoice(itemstack, false);
          }
 
-         itemstack = this.merchantInventory.getStackInSlotOnClosing(1);
+         itemstack = this.merchantInventory.removeStackFromSlot(1);
          if(itemstack != null) {
             par1EntityPlayer.dropPlayerItemWithRandomChoice(itemstack, false);
          }

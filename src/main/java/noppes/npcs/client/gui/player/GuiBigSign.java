@@ -1,5 +1,6 @@
 package noppes.npcs.client.gui.player;
 
+import net.minecraft.util.BlockPos;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.client.gui.SubGuiNpcTextArea;
@@ -12,12 +13,12 @@ public class GuiBigSign extends SubGuiNpcTextArea {
 
    public GuiBigSign(int x, int y, int z) {
       super("");
-      this.tile = (TileBigSign)super.player.worldObj.getTileEntity(x, y, z);
-      super.text = this.tile.getText();
+      this.tile = (TileBigSign)this.player.worldObj.getTileEntity(new BlockPos(x, y, z));
+      this.text = this.tile.getText();
    }
 
    public void close() {
       super.close();
-      NoppesUtilPlayer.sendData(EnumPlayerPacket.SignSave, new Object[]{Integer.valueOf(this.tile.xCoord), Integer.valueOf(this.tile.yCoord), Integer.valueOf(this.tile.zCoord), super.text});
+      NoppesUtilPlayer.sendData(EnumPlayerPacket.SignSave, new Object[]{Integer.valueOf(this.tile.getPos().getX()), Integer.valueOf(this.tile.getPos().getY()), Integer.valueOf(this.tile.getPos().getZ()), this.text});
    }
 }

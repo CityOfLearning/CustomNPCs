@@ -1,10 +1,7 @@
 package noppes.npcs.blocks.tiles;
 
-import net.minecraft.tileentity.TileEntity;
+import noppes.npcs.blocks.tiles.TileNpcEntity;
 
-public class TileMailbox extends TileEntity {
+public class TileMailbox extends TileNpcEntity {
 
-   public boolean canUpdate() {
-      return false;
-   }
 }

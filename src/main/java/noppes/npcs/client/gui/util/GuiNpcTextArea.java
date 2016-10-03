@@ -5,12 +5,15 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.MathHelper;
+import noppes.npcs.client.ClientProxy;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 public class GuiNpcTextArea extends GuiNpcTextField {
 
@@ -21,7 +24,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
    private int width;
    private int height;
    private int cursorCounter;
-   private FontRenderer fontrenderer;
+   private ClientProxy.FontContainer font;
    private int cursorPosition = 0;
    private int listHeight;
    private float scrolledY = 0.0F;
@@ -30,13 +33,14 @@ public class GuiNpcTextArea extends GuiNpcTextField {
    private boolean wrapLine = true;
 
 
-   public GuiNpcTextArea(int id, GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j, int k, int l, String s) {
-      super(id, guiscreen, fontrenderer, i, j, k, l, s);
+   public GuiNpcTextArea(int id, GuiScreen guiscreen, int i, int j, int k, int l, String s) {
+      super(id, guiscreen, i, j, k, l, s);
       this.posX = i;
       this.posY = j;
       this.width = k;
       this.listHeight = this.height = l;
-      this.fontrenderer = fontrenderer;
+      this.font = ClientProxy.Font.copy();
+      this.font.useCustomFont = true;
       this.setMaxStringLength(Integer.MAX_VALUE);
       this.setText(s);
    }
@@ -46,7 +50,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
    }
 
    public boolean textboxKeyTyped(char c, int i) {
-      if(this.isFocused() && super.canEdit) {
+      if(this.isFocused() && this.canEdit) {
          String originalText = this.getText();
          this.setText(originalText);
          if(c == 13 || c == 10) {
@@ -81,9 +85,9 @@ public class GuiNpcTextArea extends GuiNpcTextField {
       if(this.hoverVerticalScrollBar(i, j)) {
          this.clickVerticalBar = true;
          this.startClick = -1;
-      } else if(k == 0 && super.canEdit) {
+      } else if(k == 0 && this.canEdit) {
          int x = i - this.posX;
-         int y = (j - this.posY - 4) / this.fontrenderer.FONT_HEIGHT + this.getStartLineY();
+         int y = (j - this.posY - 4) / this.font.height() + this.getStartLineY();
          this.cursorPosition = 0;
          List lines = this.getLines();
          int charCount = 0;
@@ -99,7 +103,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
             for(int var16 = 0; var16 < var15; ++var16) {
                char c = var14[var16];
                this.cursorPosition = charCount;
-               if(this.fontrenderer.getStringWidth(line + c) > maxSize && this.wrapLine) {
+               if(this.font.width(line + c) > maxSize && this.wrapLine) {
                   ++lineCount;
                   line = "";
                   if(y < lineCount) {
@@ -107,7 +111,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
                   }
                }
 
-               if(lineCount == y && x <= this.fontrenderer.getStringWidth(line + c)) {
+               if(lineCount == y && x <= this.font.width(line + c)) {
                   return;
                }
 
@@ -155,7 +159,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
          this.scrolledY = 0.0F;
       }
 
-      return MathHelper.ceiling_double_int((double)(this.scrolledY * (float)this.listHeight / (float)this.fontrenderer.FONT_HEIGHT));
+      return MathHelper.ceiling_double_int((double)(this.scrolledY * (float)this.listHeight / (float)this.font.height()));
    }
 
    public void drawTextBox(int mouseX, int mouseY) {
@@ -164,7 +168,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
       int color = 14737632;
       boolean flag = this.isFocused() && this.cursorCounter / 6 % 2 == 0;
       int startLine = this.getStartLineY();
-      int maxLine = this.height / this.fontrenderer.FONT_HEIGHT + startLine;
+      int maxLine = this.height / this.font.height() + startLine;
       List lines = this.getLines();
       int charCount = 0;
       int lineCount = 0;
@@ -179,22 +183,22 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 
          for(int var16 = 0; var16 < yy; ++var16) {
             char c = xx[var16];
-            if(this.fontrenderer.getStringWidth(line + c) > maxSize && this.wrapLine) {
+            if(this.font.width(line + c) > maxSize && this.wrapLine) {
                if(lineCount >= startLine && lineCount < maxLine) {
-                  this.drawString(this.fontrenderer, line, this.posX + 4, this.posY + 4 + (lineCount - startLine) * this.fontrenderer.FONT_HEIGHT, color);
+                  this.drawString((FontRenderer)null, line, this.posX + 4, this.posY + 4 + (lineCount - startLine) * this.font.height(), color);
                }
 
                line = "";
                ++lineCount;
             }
 
-            if(flag && charCount == this.cursorPosition && lineCount >= startLine && lineCount < maxLine && super.canEdit) {
-               int xx1 = this.posX + this.fontrenderer.getStringWidth(line) + 3;
-               int yy1 = this.posY + (lineCount - startLine) * this.fontrenderer.FONT_HEIGHT + 4;
+            if(flag && charCount == this.cursorPosition && lineCount >= startLine && lineCount < maxLine && this.canEdit) {
+               int xx1 = this.posX + this.font.width(line) + 4;
+               int yy1 = this.posY + (lineCount - startLine) * this.font.height() + 4;
                if(this.getText().length() == this.cursorPosition) {
-                  this.fontrenderer.drawString("_", xx1, yy1, color);
+                  this.font.drawString("_", xx1, yy1, color);
                } else {
-                  this.drawCursorVertical(xx1, yy1, xx1 + 1, yy1 + this.fontrenderer.FONT_HEIGHT);
+                  this.drawCursorVertical(xx1, yy1, xx1 + 1, yy1 + this.font.height());
                }
             }
 
@@ -203,14 +207,14 @@ public class GuiNpcTextArea extends GuiNpcTextField {
          }
 
          if(lineCount >= startLine && lineCount < maxLine) {
-            this.drawString(this.fontrenderer, line, this.posX + 4, this.posY + 4 + (lineCount - startLine) * this.fontrenderer.FONT_HEIGHT, color);
-            if(flag && charCount == this.cursorPosition && super.canEdit) {
-               int var20 = this.posX + this.fontrenderer.getStringWidth(line) + 3;
-               yy = this.posY + (lineCount - startLine) * this.fontrenderer.FONT_HEIGHT + 4;
+            this.drawString((FontRenderer)null, line, this.posX + 4, this.posY + 4 + (lineCount - startLine) * this.font.height(), color);
+            if(flag && charCount == this.cursorPosition && this.canEdit) {
+               int var20 = this.posX + this.font.width(line) + 4;
+               yy = this.posY + (lineCount - startLine) * this.font.height() + 4;
                if(this.getText().length() == this.cursorPosition) {
-                  this.fontrenderer.drawString("_", var20, yy, color);
+                  this.font.drawString("_", var20, yy, color);
                } else {
-                  this.drawCursorVertical(var20, yy, var20 + 1, yy + this.fontrenderer.FONT_HEIGHT);
+                  this.drawCursorVertical(var20, yy, var20 + 1, yy + this.font.height());
                }
             }
          }
@@ -240,8 +244,13 @@ public class GuiNpcTextArea extends GuiNpcTextField {
          this.clickVerticalBar = false;
       }
 
-      this.listHeight = lineCount * this.fontrenderer.FONT_HEIGHT;
+      this.listHeight = lineCount * this.font.height();
       this.drawVerticalScrollBar();
+   }
+
+   public void drawString(FontRenderer fontRendererIn, String text, int x, int y, int color) {
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.font.drawString(text, x, y, color);
    }
 
    private boolean isScrolling() {
@@ -287,19 +296,19 @@ public class GuiNpcTextArea extends GuiNpcTextField {
          p_146188_1_ = this.posX + this.width;
       }
 
-      Tessellator tessellator = Tessellator.instance;
-      GL11.glColor4f(0.0F, 0.0F, 255.0F, 255.0F);
-      GL11.glDisable(3553);
-      GL11.glEnable(3058);
-      GL11.glLogicOp(5387);
-      tessellator.startDrawingQuads();
-      tessellator.addVertex((double)p_146188_1_, (double)p_146188_4_, 0.0D);
-      tessellator.addVertex((double)p_146188_3_, (double)p_146188_4_, 0.0D);
-      tessellator.addVertex((double)p_146188_3_, (double)p_146188_2_, 0.0D);
-      tessellator.addVertex((double)p_146188_1_, (double)p_146188_2_, 0.0D);
-      tessellator.draw();
-      GL11.glDisable(3058);
-      GL11.glEnable(3553);
+      WorldRenderer tessellator = Tessellator.getInstance().getWorldRenderer();
+      GlStateManager.color(0.0F, 0.0F, 255.0F, 255.0F);
+      GlStateManager.disableTexture2D();
+      GlStateManager.enableColorLogic();
+      GlStateManager.colorLogicOp(5387);
+      tessellator.begin(7, DefaultVertexFormats.POSITION);
+      tessellator.pos((double)p_146188_1_, (double)p_146188_4_, 0.0D).endVertex();
+      tessellator.pos((double)p_146188_3_, (double)p_146188_4_, 0.0D).endVertex();
+      tessellator.pos((double)p_146188_3_, (double)p_146188_2_, 0.0D).endVertex();
+      tessellator.pos((double)p_146188_1_, (double)p_146188_2_, 0.0D).endVertex();
+      Tessellator.getInstance().draw();
+      GlStateManager.disableColorLogic();
+      GlStateManager.enableTexture2D();
    }
 
    private int getVerticalBarSize() {
@@ -311,7 +320,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
          Minecraft.getMinecraft().renderEngine.bindTexture(GuiCustomScroll.resource);
          int x = this.posX + this.width - 6;
          int y = (int)((float)this.posY + this.scrolledY * (float)this.height) + 2;
-         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
          int sbSize = this.getVerticalBarSize();
          this.drawTexturedModalRect(x, y, this.width, 9, 5, 1);
 

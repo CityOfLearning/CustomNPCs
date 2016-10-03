@@ -1,6 +1,7 @@
 package noppes.npcs.client.gui.player;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -13,7 +14,6 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.controllers.Quest;
-import org.lwjgl.opengl.GL11;
 
 public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonListener {
 
@@ -22,39 +22,39 @@ public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonLis
 
 
    public GuiQuestCompletion(Quest quest) {
-      super.xSize = 176;
-      super.ySize = 222;
+      this.xSize = 176;
+      this.ySize = 222;
       this.quest = quest;
-      super.drawDefaultBackground = false;
-      super.title = "";
+      this.drawDefaultBackground = false;
+      this.title = "";
    }
 
    public void initGui() {
       super.initGui();
       String questTitle = this.quest.title;
-      int left = (super.xSize - super.fontRendererObj.getStringWidth(questTitle)) / 2;
-      this.addLabel(new GuiNpcLabel(0, questTitle, super.guiLeft + left, super.guiTop + 4));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 38, super.guiTop + super.ySize - 24, 100, 20, StatCollector.translateToLocal("quest.complete")));
+      int left = (this.xSize - this.fontRendererObj.getStringWidth(questTitle)) / 2;
+      this.addLabel(new GuiNpcLabel(0, questTitle, this.guiLeft + left, this.guiTop + 4));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 38, this.guiTop + this.ySize - 24, 100, 20, StatCollector.translateToLocal("quest.complete")));
    }
 
    public void drawScreen(int i, int j, float f) {
       this.drawDefaultBackground();
-      GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-      super.mc.renderEngine.bindTexture(this.resource);
-      this.drawTexturedModalRect(super.guiLeft, super.guiTop, 0, 0, super.xSize, super.ySize);
-      this.drawHorizontalLine(super.guiLeft + 4, super.guiLeft + 170, super.guiTop + 13, -16777216 + CustomNpcResourceListener.DefaultTextColor);
+      GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+      this.mc.renderEngine.bindTexture(this.resource);
+      this.drawTexturedModalRect(this.guiLeft, this.guiTop, 0, 0, this.xSize, this.ySize);
+      this.drawHorizontalLine(this.guiLeft + 4, this.guiLeft + 170, this.guiTop + 13, -16777216 + CustomNpcResourceListener.DefaultTextColor);
       this.drawQuestText();
       super.drawScreen(i, j, f);
    }
 
    private void drawQuestText() {
-      int xoffset = super.guiLeft + 4;
-      TextBlockClient block = new TextBlockClient(this.quest.completeText, 172, new Object[]{super.player});
-      int yoffset = super.guiTop + 20;
+      int xoffset = this.guiLeft + 4;
+      TextBlockClient block = new TextBlockClient(this.quest.completeText, 172, true, new Object[]{this.player});
+      int yoffset = this.guiTop + 20;
 
       for(int i = 0; i < block.lines.size(); ++i) {
          String text = ((IChatComponent)block.lines.get(i)).getFormattedText();
-         super.fontRendererObj.drawString(text, super.guiLeft + 4, super.guiTop + 16 + i * super.fontRendererObj.FONT_HEIGHT, CustomNpcResourceListener.DefaultTextColor);
+         this.fontRendererObj.drawString(text, this.guiLeft + 4, this.guiTop + 16 + i * this.fontRendererObj.FONT_HEIGHT, CustomNpcResourceListener.DefaultTextColor);
       }
 
    }

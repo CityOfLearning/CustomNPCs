@@ -26,7 +26,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
    public GuiNPCDialogNpcOptions(EntityNPCInterface npc, GuiScreen parent) {
       super(npc);
       this.parent = parent;
-      super.drawDefaultBackground = true;
+      this.drawDefaultBackground = true;
       Client.sendData(EnumPacketServer.DialogNpcGet, new Object[0]);
    }
 
@@ -35,14 +35,14 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 
       for(int i = 0; i < 12; ++i) {
          int offset = i >= 6?200:0;
-         this.addButton(new GuiNpcButton(i + 20, super.guiLeft + 20 + offset, super.guiTop + 13 + i % 6 * 22, 20, 20, "X"));
-         this.addLabel(new GuiNpcLabel(i, "" + i, super.guiLeft + 6 + offset, super.guiTop + 18 + i % 6 * 22));
+         this.addButton(new GuiNpcButton(i + 20, this.guiLeft + 20 + offset, this.guiTop + 13 + i % 6 * 22, 20, 20, "X"));
+         this.addLabel(new GuiNpcLabel(i, "" + i, this.guiLeft + 6 + offset, this.guiTop + 18 + i % 6 * 22));
          String title = "dialog.selectoption";
          if(this.data.containsKey(Integer.valueOf(i))) {
             title = ((DialogOption)this.data.get(Integer.valueOf(i))).title;
          }
 
-         this.addButton(new GuiNpcButton(i, super.guiLeft + 44 + offset, super.guiTop + 13 + i % 6 * 22, 140, 20, title));
+         this.addButton(new GuiNpcButton(i, this.guiLeft + 44 + offset, this.guiTop + 13 + i % 6 * 22, 140, 20, title));
       }
 
    }
@@ -54,7 +54,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
    protected void actionPerformed(GuiButton guibutton) {
       int id = guibutton.id;
       if(id == 1) {
-         NoppesUtil.openGUI(super.player, this.parent);
+         NoppesUtil.openGUI(this.player, this.parent);
       }
 
       int slot;
@@ -66,7 +66,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
             slot = ((DialogOption)this.data.get(Integer.valueOf(id))).dialogId;
          }
 
-         NoppesUtil.openGUI(super.player, new GuiNPCDialogSelection(super.npc, this, slot));
+         NoppesUtil.openGUI(this.player, new GuiNPCDialogSelection(this.npc, this, slot));
       }
 
       if(id >= 20 && id < 40) {

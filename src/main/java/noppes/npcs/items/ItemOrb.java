@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.util.List;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.passive.EntitySheep;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.items.ItemNpcInterface;
@@ -16,12 +17,8 @@ public class ItemOrb extends ItemNpcInterface {
    }
 
    public int getColorFromItemStack(ItemStack par1ItemStack, int par2) {
-      float[] color = EntitySheep.fleeceColorTable[par1ItemStack.getMetadata()];
+      float[] color = EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(par1ItemStack.getItemDamage()));
       return (new Color(color[0], color[1], color[2])).getRGB();
-   }
-
-   public boolean requiresMultipleRenderPasses() {
-      return true;
    }
 
    public void getSubItems(Item par1, CreativeTabs par2CreativeTabs, List par3List) {

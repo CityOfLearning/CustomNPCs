@@ -1,6 +1,5 @@
 package noppes.npcs.controllers;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -10,32 +9,19 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.script.Invocable;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityMob;
-import net.minecraft.entity.passive.EntityAnimal;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.event.world.WorldEvent.Save;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.LogWriter;
-import noppes.npcs.controllers.ScriptEntityData;
-import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.scripted.ScriptAnimal;
-import noppes.npcs.scripted.ScriptEntity;
-import noppes.npcs.scripted.ScriptLiving;
-import noppes.npcs.scripted.ScriptLivingBase;
-import noppes.npcs.scripted.ScriptMonster;
-import noppes.npcs.scripted.ScriptPlayer;
-import noppes.npcs.scripted.ScriptWorld;
+import noppes.npcs.api.wrapper.WorldWrapper;
 import noppes.npcs.util.NBTJsonUtil;
 
 public class ScriptController {
@@ -61,8 +47,7 @@ public class ScriptController {
 
       while(var1.hasNext()) {
          ScriptEngineFactory fac = (ScriptEngineFactory)var1.next();
-         if(!fac.getExtensions().isEmpty()) {
-            this.manager.getEngineByName(fac.getLanguageName());
+         if(!fac.getExtensions().isEmpty() && this.manager.getEngineByName(fac.getLanguageName()) instanceof Invocable) {
             String ext = "." + ((String)fac.getExtensions().get(0)).toLowerCase();
             LogWriter.info(fac.getLanguageName() + ": " + ext);
             this.languages.put(fac.getLanguageName(), ext);
@@ -72,16 +57,16 @@ public class ScriptController {
    }
 
    private void loadCategories() {
-      if(!this.getSavedFile().exists()) {
-         this.shouldSave = true;
-      }
-
-      (new ScriptWorld((WorldServer)null)).clearTempData();
       this.dir = new File(CustomNpcs.getWorldSaveDirectory(), "scripts");
       if(!this.dir.exists()) {
          this.dir.mkdir();
       }
 
+      if(!this.getSavedFile().exists()) {
+         this.shouldSave = true;
+      }
+
+      WorldWrapper.tempData.clear();
       this.scripts.clear();
       Iterator var1 = this.languages.keySet().iterator();
 
@@ -120,18 +105,19 @@ public class ScriptController {
    }
 
    public boolean loadStoredData() {
+      this.loadCategories();
+      File file = this.getSavedFile();
+
       try {
-         this.loadCategories();
-         File e = this.getSavedFile();
-         if(!e.exists()) {
+         if(!file.exists()) {
             return false;
          } else {
-            this.compound = NBTJsonUtil.LoadFile(e);
+            this.compound = NBTJsonUtil.LoadFile(file);
             this.shouldSave = false;
             return true;
          }
-      } catch (Exception var2) {
-         LogWriter.except(var2);
+      } catch (Exception var3) {
+         LogWriter.error("Error loading: " + file.getAbsolutePath(), var3);
          return false;
       }
    }
@@ -201,36 +187,6 @@ public class ScriptController {
          }
 
          return list;
-      }
-   }
-
-   public ScriptEntity getScriptForEntity(Entity entity) {
-      if(entity == null) {
-         return null;
-      } else if(entity instanceof EntityNPCInterface) {
-         return ((EntityNPCInterface)entity).script.dummyNpc;
-      } else {
-         ScriptEntityData data = (ScriptEntityData)entity.getExtendedProperties("ScriptedObject");
-         if(data != null) {
-            return data.base;
-         } else {
-            if(entity instanceof EntityPlayerMP) {
-               data = new ScriptEntityData(new ScriptPlayer((EntityPlayerMP)entity));
-            } else if(entity instanceof EntityAnimal) {
-               data = new ScriptEntityData(new ScriptAnimal((EntityAnimal)entity));
-            } else if(entity instanceof EntityMob) {
-               data = new ScriptEntityData(new ScriptMonster((EntityMob)entity));
-            } else if(entity instanceof EntityLiving) {
-               data = new ScriptEntityData(new ScriptLiving((EntityLiving)entity));
-            } else if(entity instanceof EntityLivingBase) {
-               data = new ScriptEntityData(new ScriptLivingBase((EntityLivingBase)entity));
-            } else {
-               data = new ScriptEntityData(new ScriptEntity(entity));
-            }
-
-            entity.registerExtendedProperties("ScriptedObject", data);
-            return data.base;
-         }
       }
    }
 

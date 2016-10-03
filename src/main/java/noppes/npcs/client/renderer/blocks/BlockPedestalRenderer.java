@@ -1,22 +1,22 @@
 package noppes.npcs.client.renderer.blocks;
 
-import cpw.mods.fml.client.registry.RenderingRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransformVec3f;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.CustomItems;
-import noppes.npcs.blocks.BlockRotated;
 import noppes.npcs.blocks.tiles.TilePedestal;
 import noppes.npcs.client.model.blocks.ModelPedestal;
 import noppes.npcs.client.renderer.blocks.BlockRendererInterface;
-import org.lwjgl.opengl.GL11;
 
 public class BlockPedestalRenderer extends BlockRendererInterface {
 
@@ -24,23 +24,19 @@ public class BlockPedestalRenderer extends BlockRendererInterface {
    private static final ResourceLocation resource = new ResourceLocation("customnpcs:textures/models/npcPedestal.png");
 
 
-   public BlockPedestalRenderer() {
-      ((BlockRotated)CustomItems.pedestal).renderId = RenderingRegistry.getNextAvailableRenderId();
-      RenderingRegistry.registerBlockHandler(this);
-   }
-
-   public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8) {
+   public void renderTileEntityAt(TileEntity var1, double var2, double var4, double var6, float var8, int blockDamage) {
       TilePedestal tile = (TilePedestal)var1;
-      GL11.glDisable('\u803a');
-      GL11.glEnable(3008);
-      GL11.glPushMatrix();
-      GL11.glTranslatef((float)var2 + 0.5F, (float)var4 + 1.5F, (float)var6 + 0.5F);
-      GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glRotatef((float)(90 * tile.rotation), 0.0F, 1.0F, 0.0F);
-      GL11.glColor3f(1.0F, 1.0F, 1.0F);
+      GlStateManager.enableAlpha();
+      GlStateManager.disableBlend();
+      GlStateManager.pushMatrix();
+      GlStateManager.enableLighting();
+      GlStateManager.translate((float)var2 + 0.5F, (float)var4 + 1.5F, (float)var6 + 0.5F);
+      GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
+      GlStateManager.rotate((float)(90 * tile.rotation), 0.0F, 1.0F, 0.0F);
+      GlStateManager.color(1.0F, 1.0F, 1.0F);
       setMaterialTexture(var1.getBlockMetadata());
       this.model.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-      GL11.glScalef(1.0F, 0.99F, 1.0F);
+      GlStateManager.scale(1.0F, 0.99F, 1.0F);
       TextureManager manager = Minecraft.getMinecraft().getTextureManager();
       manager.bindTexture(resource);
       this.model.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
@@ -48,65 +44,26 @@ public class BlockPedestalRenderer extends BlockRendererInterface {
          this.doRender(tile.getStackInSlot(0));
       }
 
-      GL11.glPopMatrix();
-      GL11.glColor3f(1.0F, 1.0F, 1.0F);
+      GlStateManager.popMatrix();
+      GlStateManager.color(1.0F, 1.0F, 1.0F);
    }
 
-   private void doRender(ItemStack item) {
-      if(item != null && item.getItem() != null && !(item.getItem() instanceof ItemBlock)) {
-         GL11.glPushMatrix();
-         GL11.glTranslatef(0.06F, 0.3F, 0.02F);
-         GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-         GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-         GL11.glScalef(0.6F, 0.6F, 0.6F);
-         if(item.getItem().shouldRotateAroundWhenRendering()) {
-            GL11.glTranslatef(0.14F, 0.0F, 0.5F);
-            GL11.glRotatef(90.0F, 0.0F, 1.0F, 0.0F);
-         } else {
-            GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
+   private void doRender(ItemStack itemstack) {
+      if(itemstack != null && itemstack.getItem() != null && !(itemstack.getItem() instanceof ItemBlock)) {
+         Item item = itemstack.getItem();
+         GlStateManager.translate(0.0D, 0.6D, 0.0D);
+         GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
+         if(item instanceof ItemSword) {
+            GlStateManager.rotate(180.0F, -1.0F, 0.0F, 0.0F);
          }
 
-         GL11.glRotatef(-200.0F, 0.0F, 0.0F, 1.0F);
-         GL11.glRotatef(-50.0F, 0.0F, 1.0F, 0.0F);
-         int k;
-         float f12;
-         float f4;
-         if(item.getItem().requiresMultipleRenderPasses()) {
-            for(k = 0; k <= item.getItem().getRenderPasses(item.getMetadata()); ++k) {
-               int f11 = item.getItem().getColorFromItemStack(item, k);
-               f12 = (float)(f11 >> 16 & 255) / 255.0F;
-               f4 = (float)(f11 >> 8 & 255) / 255.0F;
-               float f5 = (float)(f11 & 255) / 255.0F;
-               GL11.glColor4f(f12, f4, f5, 1.0F);
-               RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, k);
-            }
-         } else {
-            k = item.getItem().getColorFromItemStack(item, 0);
-            float var7 = (float)(k >> 16 & 255) / 255.0F;
-            f12 = (float)(k >> 8 & 255) / 255.0F;
-            f4 = (float)(k & 255) / 255.0F;
-            GL11.glColor4f(var7, f12, f4, 1.0F);
-            RenderManager.instance.itemRenderer.renderItem(Minecraft.getMinecraft().thePlayer, item, 0);
-         }
-
-         GL11.glPopMatrix();
+         Minecraft minecraft = Minecraft.getMinecraft();
+         IBakedModel model = minecraft.getRenderItem().getItemModelMesher().getItemModel(itemstack);
+         ItemTransformVec3f p_175034_1_ = model.getItemCameraTransforms().thirdPerson;
+         GlStateManager.scale(p_175034_1_.scale.x + ItemCameraTransforms.field_181696_h, p_175034_1_.scale.y + ItemCameraTransforms.field_181697_i, p_175034_1_.scale.z + ItemCameraTransforms.field_181698_j);
+         GlStateManager.rotate(45.0F, 0.0F, 0.0F, 1.0F);
+         minecraft.getRenderItem().renderItem(itemstack, TransformType.NONE);
       }
-   }
-
-   public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) {
-      GL11.glPushMatrix();
-      GL11.glTranslatef(0.0F, 0.44F, 0.0F);
-      GL11.glScalef(0.76F, 0.66F, 0.76F);
-      GL11.glRotatef(180.0F, 0.0F, 0.0F, 1.0F);
-      GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-      setMaterialTexture(metadata);
-      GL11.glColor3f(1.0F, 1.0F, 1.0F);
-      this.model.render((Entity)null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-      GL11.glPopMatrix();
-   }
-
-   public int getRenderId() {
-      return CustomItems.pedestal.getRenderType();
    }
 
    public int specialRenderDistance() {

@@ -1,0 +1,19 @@
+{
+	"parent": "builtin/generated",
+	"textures": {
+		"layer0": "customnpcs:items/npcCursedTrident"
+	},
+	"display": {
+		"thirdperson": {
+			"rotation": [180, 90, -70],
+			"translation": [0, 1.25, -2.2],
+			"scale": [1.2, 1.6, 1.2]
+		},
+		"firstperson": {
+			"rotation": [0, 45, 50],
+			"translation": [0, 4, 2],
+			"scale": [1.7, 1.7, 1.7]
+		}
+	}
+}
+

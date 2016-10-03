@@ -27,19 +27,19 @@ public class GuiNpcBard extends GuiNPCInterface2 {
 
    public void initGui() {
       super.initGui();
-      this.addButton(new GuiNpcButton(1, super.guiLeft + 55, super.guiTop + 15, 20, 20, "X"));
-      this.addLabel(new GuiNpcLabel(0, this.job.song, super.guiLeft + 80, super.guiTop + 20));
-      this.addButton(new GuiNpcButton(0, super.guiLeft + 75, super.guiTop + 50, "gui.selectSound"));
-      this.addButton(new GuiNpcButton(2, super.guiLeft + 75, super.guiTop + 71, new String[]{"gui.none", "item.npcBanjo.name", "item.npcViolin.name", "item.npcGuitar.name", "item.npcFrenchHorn.name", "item.npcHarp.name"}, this.job.getInstrument().ordinal()));
-      this.addButton(new GuiNpcButton(3, super.guiLeft + 75, super.guiTop + 92, new String[]{"bard.jukebox", "bard.background"}, this.job.isStreamer?0:1));
-      this.addLabel(new GuiNpcLabel(2, "bard.ondistance", super.guiLeft + 60, super.guiTop + 143));
-      this.addTextField(new GuiNpcTextField(2, this, super.fontRendererObj, super.guiLeft + 160, super.guiTop + 138, 40, 20, this.job.minRange + ""));
+      this.addButton(new GuiNpcButton(1, this.guiLeft + 55, this.guiTop + 15, 20, 20, "X"));
+      this.addLabel(new GuiNpcLabel(0, this.job.song, this.guiLeft + 80, this.guiTop + 20));
+      this.addButton(new GuiNpcButton(0, this.guiLeft + 75, this.guiTop + 50, "gui.selectSound"));
+      this.addButton(new GuiNpcButton(2, this.guiLeft + 75, this.guiTop + 71, new String[]{"gui.none", "item.npcBanjo.name", "item.npcViolin.name", "item.npcGuitar.name", "item.npcHarp.name", "item.npcFrenchHorn.name"}, this.job.getInstrument().ordinal()));
+      this.addButton(new GuiNpcButton(3, this.guiLeft + 75, this.guiTop + 92, new String[]{"bard.jukebox", "bard.background"}, this.job.isStreamer?0:1));
+      this.addLabel(new GuiNpcLabel(2, "bard.ondistance", this.guiLeft + 60, this.guiTop + 143));
+      this.addTextField(new GuiNpcTextField(2, this, this.fontRendererObj, this.guiLeft + 160, this.guiTop + 138, 40, 20, this.job.minRange + ""));
       this.getTextField(2).numbersOnly = true;
       this.getTextField(2).setMinMaxDefault(2, 64, 5);
-      this.addLabel(new GuiNpcLabel(4, "bard.hasoff", super.guiLeft + 60, super.guiTop + 166));
-      this.addButton(new GuiNpcButton(4, super.guiLeft + 160, super.guiTop + 161, 60, 20, new String[]{"gui.no", "gui.yes"}, this.job.hasOffRange?1:0));
-      this.addLabel(new GuiNpcLabel(3, "bard.offdistance", super.guiLeft + 60, super.guiTop + 189));
-      this.addTextField(new GuiNpcTextField(3, this, super.fontRendererObj, super.guiLeft + 160, super.guiTop + 184, 40, 20, this.job.maxRange + ""));
+      this.addLabel(new GuiNpcLabel(4, "bard.hasoff", this.guiLeft + 60, this.guiTop + 166));
+      this.addButton(new GuiNpcButton(4, this.guiLeft + 160, this.guiTop + 161, 60, 20, new String[]{"gui.no", "gui.yes"}, this.job.hasOffRange?1:0));
+      this.addLabel(new GuiNpcLabel(3, "bard.offdistance", this.guiLeft + 60, this.guiTop + 189));
+      this.addTextField(new GuiNpcTextField(3, this, this.fontRendererObj, this.guiLeft + 160, this.guiTop + 184, 40, 20, this.job.maxRange + ""));
       this.getTextField(3).numbersOnly = true;
       this.getTextField(3).setMinMaxDefault(2, 64, 10);
       this.getLabel(3).enabled = this.job.hasOffRange;
@@ -52,29 +52,29 @@ public class GuiNpcBard extends GuiNPCInterface2 {
 
    protected void actionPerformed(GuiButton guibutton) {
       GuiNpcButton button = (GuiNpcButton)guibutton;
-      if(button.field_146127_k == 0) {
-         this.gui = new GuiNpcSoundSelection(super.npc, this, this.job.song);
-         NoppesUtil.openGUI(super.player, this.gui);
+      if(button.id == 0) {
+         this.gui = new GuiNpcSoundSelection(this, this.job.song);
+         NoppesUtil.openGUI(this.player, this.gui);
          this.job.song = "";
          MusicController.Instance.stopMusic();
       }
 
-      if(button.field_146127_k == 1) {
+      if(button.id == 1) {
          this.job.song = "";
          this.getLabel(0).label = "";
          MusicController.Instance.stopMusic();
       }
 
-      if(button.field_146127_k == 2) {
+      if(button.id == 2) {
          this.job.setInstrument(button.getValue());
       }
 
-      if(button.field_146127_k == 3) {
+      if(button.id == 3) {
          this.job.isStreamer = button.getValue() == 0;
          this.initGui();
       }
 
-      if(button.field_146127_k == 4) {
+      if(button.id == 4) {
          this.job.hasOffRange = button.getValue() == 1;
          this.initGui();
       }

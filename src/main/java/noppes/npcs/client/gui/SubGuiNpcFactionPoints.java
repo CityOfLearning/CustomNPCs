@@ -17,23 +17,23 @@ public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfiel
    public SubGuiNpcFactionPoints(Faction faction) {
       this.faction = faction;
       this.setBackground("menubg.png");
-      super.xSize = 256;
-      super.ySize = 216;
-      super.closeOnEsc = true;
+      this.xSize = 256;
+      this.ySize = 216;
+      this.closeOnEsc = true;
    }
 
    public void initGui() {
       super.initGui();
-      this.addLabel(new GuiNpcLabel(2, "faction.default", super.guiLeft + 4, super.guiTop + 33));
-      this.addTextField(new GuiNpcTextField(2, this, super.guiLeft + 8 + super.fontRendererObj.getStringWidth(this.getLabel(2).label), super.guiTop + 28, 70, 20, this.faction.defaultPoints + ""));
+      this.addLabel(new GuiNpcLabel(2, "faction.default", this.guiLeft + 4, this.guiTop + 33));
+      this.addTextField(new GuiNpcTextField(2, this, this.guiLeft + 8 + this.fontRendererObj.getStringWidth(this.getLabel(2).label), this.guiTop + 28, 70, 20, this.faction.defaultPoints + ""));
       this.getTextField(2).setMaxStringLength(6);
       this.getTextField(2).numbersOnly = true;
       String title = StatCollector.translateToLocal("faction.unfriendly") + "<->" + StatCollector.translateToLocal("faction.neutral");
-      this.addLabel(new GuiNpcLabel(3, title, super.guiLeft + 4, super.guiTop + 80));
-      this.addTextField(new GuiNpcTextField(3, this, super.guiLeft + 8 + super.fontRendererObj.getStringWidth(title), super.guiTop + 75, 70, 20, this.faction.neutralPoints + ""));
+      this.addLabel(new GuiNpcLabel(3, title, this.guiLeft + 4, this.guiTop + 80));
+      this.addTextField(new GuiNpcTextField(3, this, this.guiLeft + 8 + this.fontRendererObj.getStringWidth(title), this.guiTop + 75, 70, 20, this.faction.neutralPoints + ""));
       title = StatCollector.translateToLocal("faction.neutral") + "<->" + StatCollector.translateToLocal("faction.friendly");
-      this.addLabel(new GuiNpcLabel(4, title, super.guiLeft + 4, super.guiTop + 105));
-      this.addTextField(new GuiNpcTextField(4, this, super.guiLeft + 8 + super.fontRendererObj.getStringWidth(title), super.guiTop + 100, 70, 20, this.faction.friendlyPoints + ""));
+      this.addLabel(new GuiNpcLabel(4, title, this.guiLeft + 4, this.guiTop + 105));
+      this.addTextField(new GuiNpcTextField(4, this, this.guiLeft + 8 + this.fontRendererObj.getStringWidth(title), this.guiTop + 100, 70, 20, this.faction.friendlyPoints + ""));
       this.getTextField(3).numbersOnly = true;
       this.getTextField(4).numbersOnly = true;
       if(this.getTextField(3).xPosition > this.getTextField(4).xPosition) {
@@ -42,7 +42,7 @@ public class SubGuiNpcFactionPoints extends SubGuiInterface implements ITextfiel
          this.getTextField(3).xPosition = this.getTextField(4).xPosition;
       }
 
-      this.addButton(new GuiNpcButton(66, super.guiLeft + 20, super.guiTop + 192, 90, 20, "gui.done"));
+      this.addButton(new GuiNpcButton(66, this.guiLeft + 20, this.guiTop + 192, 90, 20, "gui.done"));
    }
 
    public void unFocused(GuiNpcTextField textfield) {
