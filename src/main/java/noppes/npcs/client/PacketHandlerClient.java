@@ -8,6 +8,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.achievement.GuiAchievement;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.network.PacketBuffer;
@@ -25,6 +26,7 @@ import noppes.npcs.Server;
 import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.client.controllers.MusicController;
 import noppes.npcs.client.gui.GuiNpcMobSpawnerAdd;
+import noppes.npcs.client.gui.player.GuiBook;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.IGuiClose;
@@ -193,6 +195,13 @@ public class PacketHandlerClient extends PacketHandlerServer {
 		} else if (type == EnumPacketClient.VILLAGER_LIST) {
 			MerchantRecipeList merchantrecipelist = MerchantRecipeList.readFromBuf(new PacketBuffer(buffer));
 			ServerEventsHandler.Merchant.setRecipes(merchantrecipelist);
+		} else if (type == EnumPacketClient.OPEN_BOOK) {
+			int x = buffer.readInt();
+			int y = buffer.readInt();
+			int z = buffer.readInt();
+
+			NoppesUtil.openGUI(player,
+					new GuiBook(player, ItemStack.loadItemStackFromNBT(Server.readNBT(buffer)), x, y, z));
 		}
 	}
 
