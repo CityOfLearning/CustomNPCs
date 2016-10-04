@@ -10,6 +10,8 @@ import java.util.Vector;
 
 import org.lwjgl.Sys;
 
+import com.rabbit.gui.RabbitGui;
+
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -23,6 +25,7 @@ import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.Server;
+import noppes.npcs.client.gui.player.GuiDialogInteract;
 import noppes.npcs.client.gui.player.GuiDialogInteract;
 import noppes.npcs.client.gui.player.GuiQuestCompletion;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
@@ -81,10 +84,11 @@ public class NoppesUtil {
 		Dialog dialog = new Dialog();
 		dialog.readNBT(compound);
 		GuiScreen gui = Minecraft.getMinecraft().currentScreen;
-		if ((gui == null) || !(gui instanceof GuiDialogInteract)) {
-			CustomNpcs.proxy.openGui(player, new GuiDialogInteract(npc, dialog));
+		if ((gui == null) || (RabbitGui.proxy.getCurrentStage() == null)
+				|| !(RabbitGui.proxy.getCurrentStage().getShow() instanceof GuiDialogInteract)) {
+			RabbitGui.proxy.display(new GuiDialogInteract(npc, dialog));
 		} else {
-			GuiDialogInteract dia = (GuiDialogInteract) gui;
+			GuiDialogInteract dia = (GuiDialogInteract) RabbitGui.proxy.getCurrentStage().getShow();
 			dia.appendDialog(dialog);
 		}
 	}
