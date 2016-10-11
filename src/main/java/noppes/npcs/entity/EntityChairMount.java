@@ -54,7 +54,8 @@ public class EntityChairMount extends Entity {
 	@Override
 	public void onEntityUpdate() {
 		super.onEntityUpdate();
-		if ((worldObj != null) && (!worldObj.isRemote) && (riddenByEntity == null) && !(worldObj.getTileEntity(this.getPosition()) instanceof TileChair)) {
+		if ((worldObj != null) && (!worldObj.isRemote) && (riddenByEntity == null)
+				&& !(worldObj.getTileEntity(getPosition()) instanceof TileChair)) {
 			isDead = true;
 		}
 	}

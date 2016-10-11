@@ -59,56 +59,6 @@ public class GuiDialogInteract extends Show {
 		nEntity.setTexture(npc.textureLocation);
 	}
 
-	@Override
-	public void onClose() {
-		pEntity.setDead();
-		nEntity.setDead();
-		NoppesUtilPlayer.sendData(EnumPlayerPacket.CheckQuestCompletion, new Object[0]);
-		super.onClose();
-	}
-
-	@Override
-	public void setup() {
-		super.setup();
-
-		String text = "";
-		for (String line : lines) {
-			text += NoppesStringUtils.formatText(line, new Object[] { player, npc }) + "\n";
-		}
-
-		npcDialog = (ChatBox) new ChatBox((int) (width / 4) + 10, (int) (height * .05) + 10,
-				(int) (width * (5.0 / 7.0) - 20), (int) (height * .5) - 20, text);
-		registerComponent(npcDialog);
-
-		// components
-		ArrayList<ListEntry> dOptions = new ArrayList<ListEntry>();
-
-		for (int slot : dialog.options.keySet()) {
-			DialogOption option = dialog.options.get(slot);
-			if (option != null) {
-				if (option.optionType == EnumOptionType.DISABLED) {
-					continue;
-				}
-				dOptions.add(new ButtonEntry(dialog.options.get(slot).title, btn -> {
-					handleDialogSelection(slot);
-				}));
-			}
-		}
-
-		optionsList = (ScrollableDisplayList) new ScrollableDisplayList((int) (width * 0.075),
-				(int) (height * .575) + 10, (int) (width * (5.0 / 9.0)), (int) (height * .375), 20, dOptions)
-						.setVisibleBackground(false);
-		optionsList.setId("dialogOptions");
-		registerComponent(optionsList);
-
-		registerComponent(new EntityComponent((int) (width * .15), (int) (height * .5), (int) (width * .2),
-				(int) (height * .2), nEntity, 0, 1.5f, false));
-
-		registerComponent(new EntityComponent((int) (width * .8), (int) (height * .95), (int) (width * .2),
-				(int) (height * .2), pEntity, 0, 1.5f, false));
-
-	}
-
 	public void appendDialog(Dialog dialog) {
 		this.dialog = dialog;
 		if ((dialog.sound != null) && !dialog.sound.isEmpty()) {
@@ -143,16 +93,66 @@ public class GuiDialogInteract extends Show {
 	private void handleDialogSelection(int optionId) {
 		NoppesUtilPlayer.sendData(EnumPlayerPacket.Dialog, dialog.id, optionId);
 		if ((dialog == null) || !dialog.hasOtherOptions() || dialog.options.isEmpty()) {
-			this.getStage().close();
+			getStage().close();
 			return;
 		}
 		DialogOption option = dialog.options.get(optionId);
 		if ((option == null) || (option.optionType == EnumOptionType.QUIT_OPTION)
 				|| (option.optionType == EnumOptionType.DISABLED)) {
-			this.getStage().close();
+			getStage().close();
 			return;
 		}
 		lines.clear();
 		NoppesUtil.clickSound();
+	}
+
+	@Override
+	public void onClose() {
+		pEntity.setDead();
+		nEntity.setDead();
+		NoppesUtilPlayer.sendData(EnumPlayerPacket.CheckQuestCompletion, new Object[0]);
+		super.onClose();
+	}
+
+	@Override
+	public void setup() {
+		super.setup();
+
+		String text = "";
+		for (String line : lines) {
+			text += NoppesStringUtils.formatText(line, new Object[] { player, npc }) + "\n";
+		}
+
+		npcDialog = new ChatBox(width / 4 + 10, (int) (height * .05) + 10, (int) ((width * (5.0 / 7.0)) - 20),
+				(int) (height * .5) - 20, text);
+		registerComponent(npcDialog);
+
+		// components
+		ArrayList<ListEntry> dOptions = new ArrayList<ListEntry>();
+
+		for (int slot : dialog.options.keySet()) {
+			DialogOption option = dialog.options.get(slot);
+			if (option != null) {
+				if (option.optionType == EnumOptionType.DISABLED) {
+					continue;
+				}
+				dOptions.add(new ButtonEntry(dialog.options.get(slot).title, btn -> {
+					handleDialogSelection(slot);
+				}));
+			}
+		}
+
+		optionsList = (ScrollableDisplayList) new ScrollableDisplayList((int) (width * 0.075),
+				(int) (height * .575) + 10, (int) (width * (5.0 / 9.0)), (int) (height * .375), 20, dOptions)
+						.setVisibleBackground(false);
+		optionsList.setId("dialogOptions");
+		registerComponent(optionsList);
+
+		registerComponent(new EntityComponent((int) (width * .15), (int) (height * .5), (int) (width * .2),
+				(int) (height * .2), nEntity, 0, 1.5f, false));
+
+		registerComponent(new EntityComponent((int) (width * .8), (int) (height * .95), (int) (width * .2),
+				(int) (height * .2), pEntity, 0, 1.5f, false));
+
 	}
 }
