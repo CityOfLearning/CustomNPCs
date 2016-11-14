@@ -226,7 +226,7 @@ public class CustomNpcs {
 	}
 
 	private void registerNpc(Class<? extends Entity> cl, String name) {
-		EntityList.stringToClassMapping.put(name, cl);
+		//EntityList.stringToClassMapping.put(name, cl);
 		EntityRegistry.registerModEntity(cl, name, CustomNpcs.NewEntityStartId++, this, 64, 3, true);
 	}
 
