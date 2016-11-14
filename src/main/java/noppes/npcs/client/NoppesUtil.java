@@ -94,35 +94,39 @@ public class NoppesUtil {
 
 	public static void openFolder(File dir) {
 		String s = dir.getAbsolutePath();
-		Label_0072: {
-			if (Util.getOSType() == Util.EnumOS.OSX) {
-				try {
-					Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
-					return;
-				} catch (IOException ioexception1) {
-					break Label_0072;
-				}
-			}
-			if (Util.getOSType() == Util.EnumOS.WINDOWS) {
-				String s2 = String.format("cmd.exe /C start \"Open file\" \"%s\"", s);
-				try {
-					Runtime.getRuntime().exec(s2);
-					return;
-				} catch (IOException ex) {
-				}
-			}
-		}
-		boolean flag = false;
-		try {
-			Class oclass = Class.forName("java.awt.Desktop");
-			Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
-			oclass.getMethod("browse", URI.class).invoke(object, dir.toURI());
-		} catch (Throwable throwable) {
-			flag = true;
-		}
-		if (flag) {
-			Sys.openURL("file://" + s);
-		}
+		if (Util.getOSType() == Util.EnumOS.OSX)
+	    {
+	      try
+	      {
+	        Runtime.getRuntime().exec(new String[] { "/usr/bin/open", s });
+	        return;
+	      }
+	      catch (IOException ioexception1) {}
+	    }
+	    else if (Util.getOSType() == Util.EnumOS.WINDOWS)
+	    {
+	      String s1 = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] { s });
+	      try
+	      {
+	        Runtime.getRuntime().exec(s1);
+	        return;
+	      }
+	      catch (IOException ioexception) {}
+	    }
+	    boolean flag = false;
+	    try
+	    {
+	      Class oclass = Class.forName("java.awt.Desktop");
+	      Object object = oclass.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+	      oclass.getMethod("browse", new Class[] { URI.class }).invoke(object, new Object[] { dir.toURI() });
+	    }
+	    catch (Throwable throwable)
+	    {
+	      flag = true;
+	    }
+	    if (flag) {
+	      Sys.openURL("file://" + s);
+	    }
 	}
 
 	public static void openGUI(EntityPlayer player, Object guiscreen) {
