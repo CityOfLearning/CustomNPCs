@@ -36,6 +36,7 @@ import noppes.npcs.blocks.BlockTrading;
 import noppes.npcs.blocks.BlockWallBanner;
 import noppes.npcs.blocks.BlockWaypoint;
 import noppes.npcs.blocks.BlockWeaponRack;
+import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.blocks.tiles.TileBarrel;
 import noppes.npcs.blocks.tiles.TileBeam;
 import noppes.npcs.blocks.tiles.TileBigSign;
@@ -213,6 +214,7 @@ public class CustomItems {
 
 		// furniture
 		GameRegistry.registerTileEntity(TileWallBanner.class, "TileNPCWallBanner");
+		GameRegistry.registerTileEntity(TileBanner.class, "TileNPCBanner");
 		GameRegistry.registerTileEntity(TileTallLamp.class, "TileNPCTallLamp");
 		GameRegistry.registerTileEntity(TileChair.class, "TileNPCChair");
 		GameRegistry.registerTileEntity(TileCrate.class, "TileNPCCrate");
