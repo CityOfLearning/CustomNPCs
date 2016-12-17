@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -14,11 +15,13 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import noppes.npcs.blocks.tiles.TileChair;
 import noppes.npcs.blocks.tiles.TileStool;
+import noppes.npcs.entity.EntityChairMount;
 
 public class BlockStool extends BlockRotated {
 	public BlockStool() {
-		super(Blocks.planks);
+		super(Material.wood);
 		setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 0.6F, 0.9F);
 	}
 
@@ -27,6 +30,13 @@ public class BlockStool extends BlockRotated {
 		return new TileStool();
 	}
 
+	@Override
+    public void breakBlock(World world, BlockPos pos, IBlockState state) {
+        ((TileStool) world.getTileEntity(pos)).killMount();
+        world.removeTileEntity(pos);
+        super.breakBlock(world, pos, state);
+    }
+	
 	@Override
 	public int damageDropped(IBlockState state) {
 		return state.getValue(DAMAGE).intValue();
@@ -51,7 +61,11 @@ public class BlockStool extends BlockRotated {
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
 			float hitX, float hitY, float hitZ) {
-		return BlockChair.MountBlock(world, pos, player);
+		if (world.isRemote) {
+			return true;
+		}
+		((TileChair) getTile()).mount(world, pos, player);
+		return true;
 	}
 
 	@Override
@@ -59,5 +73,11 @@ public class BlockStool extends BlockRotated {
 			ItemStack stack) {
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		super.onBlockPlacedBy(world, pos, state, entity, stack);
+		
+		TileStool tile = ((TileStool) world.getTileEntity(pos));
+		EntityChairMount mount = new EntityChairMount(world, pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5D);
+			mount.rotationYaw = tile.getRotation() * 90;
+			world.spawnEntityInWorld(mount);
+			tile.setMount(mount);
 	}
 }

@@ -1,4 +1,4 @@
 package noppes.npcs.blocks.tiles;
 
-public class TileStool extends TileColorable {
+public class TileStool extends TileChair {
 }

@@ -2,11 +2,27 @@ package noppes.npcs.blocks.tiles;
 
 import net.minecraft.nbt.NBTTagCompound;
 
-public class TileCouchWool extends TileColorable {
-	public boolean hasLeft = false;
-	public boolean hasRight = false;
-	public boolean hasCornerLeft = false;
-	public boolean hasCornerRight = false;
+public class TileCouchWool extends TileChair {
+	private boolean hasLeft = false;
+	private boolean hasRight = false;
+	private boolean hasCornerLeft = false;
+	private boolean hasCornerRight = false;
+
+	public boolean hasCornerLeft() {
+		return hasCornerLeft;
+	}
+
+	public boolean hasCornerRight() {
+		return hasCornerRight;
+	}
+
+	public boolean hasLeft() {
+		return hasLeft;
+	}
+
+	public boolean hasRight() {
+		return hasRight;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
@@ -15,6 +31,22 @@ public class TileCouchWool extends TileColorable {
 		hasRight = compound.getBoolean("CouchRight");
 		hasCornerLeft = compound.getBoolean("CouchCornerLeft");
 		hasCornerRight = compound.getBoolean("CouchCornerRight");
+	}
+
+	public void setHasCornerLeft(boolean hasCornerLeft) {
+		this.hasCornerLeft = hasCornerLeft;
+	}
+
+	public void setHasCornerRight(boolean hasCornerRight) {
+		this.hasCornerRight = hasCornerRight;
+	}
+
+	public void setHasLeft(boolean hasLeft) {
+		this.hasLeft = hasLeft;
+	}
+
+	public void setHasRight(boolean hasRight) {
+		this.hasRight = hasRight;
 	}
 
 	@Override

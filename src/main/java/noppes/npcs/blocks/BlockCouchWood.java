@@ -22,14 +22,14 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import noppes.npcs.NoppesUtilServer;
+import noppes.npcs.blocks.tiles.TileChair;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileCouchWood;
 import noppes.npcs.client.renderer.ITileRenderer;
+import noppes.npcs.entity.EntityChairMount;
+import noppes.npcs.util.NoppesUtilServer;
 
-public class BlockCouchWood extends BlockContainer implements ITileRenderer {
-	public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 5);
-	private TileColorable renderTile;
+public class BlockCouchWood extends BlockRotated {
 
 	public BlockCouchWood() {
 		super(Material.wood);
@@ -49,17 +49,19 @@ public class BlockCouchWood extends BlockContainer implements ITileRenderer {
 			return false;
 		}
 		TileCouchWood couch = (TileCouchWood) tile2;
-		return tile.rotation == couch.rotation;
-	}
-
-	@Override
-	protected BlockState createBlockState() {
-		return new BlockState(this, new IProperty[] { DAMAGE });
+		return tile.getRotation() == couch.getRotation();
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileCouchWood();
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		((TileCouchWood) world.getTileEntity(pos)).killMount();
+		world.removeTileEntity(pos);
+		super.breakBlock(world, pos, state);
 	}
 
 	@Override
@@ -78,11 +80,6 @@ public class BlockCouchWood extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(DAMAGE, Integer.valueOf(meta));
-	}
-
-	@Override
 	public void getSubBlocks(Item par1, CreativeTabs par2CreativeTabs, List par3List) {
 		par3List.add(new ItemStack(par1, 1, 0));
 		par3List.add(new ItemStack(par1, 1, 1));
@@ -93,49 +90,21 @@ public class BlockCouchWood extends BlockContainer implements ITileRenderer {
 	}
 
 	@Override
-	public TileColorable getTile() {
-		if (renderTile == null) {
-			renderTile = ((TileColorable) createNewTileEntity(null, 0));
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
+			float hitX, float hitY, float hitZ) {
+		if (world.isRemote) {
+			return true;
 		}
-		return renderTile;
-	}
-
-	@Override
-	public boolean isFullCube() {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-
-	@Override
-	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
-			EnumFacing side, float hitX, float hitY, float hitZ) {
-		ItemStack item = player.inventory.getCurrentItem();
-		if ((item == null) || (item.getItem() != Items.dye)) {
-			return BlockChair.MountBlock(par1World, pos, player);
-		}
-		TileColorable tile = (TileColorable) par1World.getTileEntity(pos);
-		int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
-		if (tile.color != color) {
-			NoppesUtilServer.consumeItemStack(1, player);
-			tile.color = color;
-			par1World.markBlockForUpdate(pos);
-		}
+		((TileChair) world.getTileEntity(pos)).mount(world, pos, player);
 		return true;
 	}
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, IBlockState state, EntityLivingBase entity,
 			ItemStack stack) {
-		int l = MathHelper.floor_double(((entity.rotationYaw * 4.0F) / 360.0F) + 0.5D) & 0x3;
-		l %= 4;
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
+		super.onBlockPlacedBy(world, pos, state, entity, stack);
 		TileCouchWood tile = (TileCouchWood) world.getTileEntity(pos);
-		tile.rotation = l;
-		tile.color = (15 - stack.getItemDamage());
 
 		updateModel(world, pos, tile);
 		onNeighborBlockChange(world, pos.east(), state, this);
@@ -143,6 +112,13 @@ public class BlockCouchWood extends BlockContainer implements ITileRenderer {
 		onNeighborBlockChange(world, pos.north(), state, this);
 		onNeighborBlockChange(world, pos.south(), state, this);
 		updateModel(world, pos, tile);
+
+		EntityChairMount mount = new EntityChairMount(world, pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5D);
+		// mount.rotationYaw = tile.getRotation() * 90;
+		mount.rotationYaw = ((2 + tile.getRotation()) % 4) * 90;
+		world.spawnEntityInWorld(mount);
+		tile.setMount(mount);
+
 		world.markBlockForUpdate(pos);
 	}
 
@@ -164,18 +140,18 @@ public class BlockCouchWood extends BlockContainer implements ITileRenderer {
 			return;
 		}
 		int meta = tile.getBlockMetadata();
-		if (tile.rotation == 0) {
-			tile.hasLeft = compareTiles(tile, pos.west(), world, meta);
-			tile.hasRight = compareTiles(tile, pos.east(), world, meta);
-		} else if (tile.rotation == 2) {
-			tile.hasLeft = compareTiles(tile, pos.east(), world, meta);
-			tile.hasRight = compareTiles(tile, pos.west(), world, meta);
-		} else if (tile.rotation == 1) {
-			tile.hasLeft = compareTiles(tile, pos.north(), world, meta);
-			tile.hasRight = compareTiles(tile, pos.south(), world, meta);
-		} else if (tile.rotation == 3) {
-			tile.hasLeft = compareTiles(tile, pos.south(), world, meta);
-			tile.hasRight = compareTiles(tile, pos.north(), world, meta);
+		if (tile.getRotation() == 0) {
+			tile.setHasLeft(compareTiles(tile, pos.west(), world, meta));
+			tile.setHasRight(compareTiles(tile, pos.east(), world, meta));
+		} else if (tile.getRotation() == 2) {
+			tile.setHasLeft(compareTiles(tile, pos.east(), world, meta));
+			tile.setHasRight(compareTiles(tile, pos.west(), world, meta));
+		} else if (tile.getRotation() == 1) {
+			tile.setHasLeft(compareTiles(tile, pos.north(), world, meta));
+			tile.setHasRight(compareTiles(tile, pos.south(), world, meta));
+		} else if (tile.getRotation() == 3) {
+			tile.setHasLeft(compareTiles(tile, pos.south(), world, meta));
+			tile.setHasRight(compareTiles(tile, pos.north(), world, meta));
 		}
 	}
 }
