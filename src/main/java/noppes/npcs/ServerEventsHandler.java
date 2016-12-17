@@ -19,6 +19,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -30,6 +31,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.api.constants.EnumQuestType;
+import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.controllers.PlayerData;
@@ -43,6 +45,7 @@ import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.quests.QuestKill;
 import noppes.npcs.roles.RoleFollower;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class ServerEventsHandler {
 	public static EntityVillager Merchant;
@@ -273,6 +276,34 @@ public class ServerEventsHandler {
 				Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_ADD, compound2);
 			}
 			Server.sendData((EntityPlayerMP) player, EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH, new Object[0]);
+		}
+		if (((block == CustomItems.banner) || (block == CustomItems.wallBanner) || (block == CustomItems.sign))
+				&& (event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK)) {
+			ItemStack item = player.inventory.getCurrentItem();
+			if ((item == null) || (item.getItem() == null)) {
+				return;
+			}
+			int meta = block.getMetaFromState(state);
+			if (meta >= 7) {
+				pos = pos.down();
+			}
+			TileBanner tile = (TileBanner) player.worldObj.getTileEntity(pos);
+			if (!tile.canEdit()) {
+				if ((item.getItem() == CustomItems.wand)
+						&& (CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS))) {
+					tile.setTime(System.currentTimeMillis());
+					if (player.worldObj.isRemote) {
+						player.addChatComponentMessage(
+								new ChatComponentTranslation("availability.editIcon", new Object[0]));
+					}
+				}
+				return;
+			}
+			if (!player.worldObj.isRemote) {
+				tile.setIcon(item.copy());
+				player.worldObj.markBlockForUpdate(pos);
+				event.setCanceled(true);
+			}
 		}
 	}
 
