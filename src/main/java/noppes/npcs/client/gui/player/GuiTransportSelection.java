@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
@@ -17,6 +16,7 @@ import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiTransportSelection extends GuiNPCInterface implements ITopButtonListener, IScrollData {
 	private ResourceLocation resource;

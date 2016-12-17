@@ -4,9 +4,9 @@ package noppes.npcs.controllers;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 
 public class DataTransform {
 	public NBTTagCompound display;

@@ -6,7 +6,7 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.WeightedRandom;
-import noppes.npcs.NBTTags;
+import noppes.npcs.util.NBTTags;
 
 public class SpawnData extends WeightedRandom.Item {
 	public List<String> biomes;

@@ -27,8 +27,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesUtilServer;
-import noppes.npcs.Schematic;
+import noppes.npcs.util.NoppesUtilServer;
+import noppes.npcs.util.Schematic;
 
 public class SchematicController {
 	public static SchematicController Instance;

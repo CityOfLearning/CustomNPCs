@@ -3,7 +3,6 @@ package noppes.npcs.client.layer;
 
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.model.Model2DRenderer;
 import noppes.npcs.client.model.part.head.ModelDuckBeak;
 import noppes.npcs.client.model.part.horns.ModelAntennasBack;
@@ -11,6 +10,7 @@ import noppes.npcs.client.model.part.horns.ModelAntennasFront;
 import noppes.npcs.client.model.part.horns.ModelAntlerHorns;
 import noppes.npcs.client.model.part.horns.ModelBullHorns;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelPartData;
 
 public class LayerHead extends LayerInterface {
 	private ModelRenderer small;

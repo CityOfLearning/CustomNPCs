@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,7 +21,7 @@ import noppes.npcs.constants.EnumGuiType;
 
 public class BlockBarrel extends BlockRotated {
 	public BlockBarrel() {
-		super(Blocks.planks);
+		super(Material.wood);
 	}
 
 	@Override

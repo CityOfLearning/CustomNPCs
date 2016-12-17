@@ -1,16 +1,27 @@
-package noppes.npcs;
+package noppes.npcs.packets;
 
 import java.util.Iterator;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemEditableBook;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.NetHandlerPlayServer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import noppes.npcs.CustomNpcs;
+import noppes.npcs.EventHooks;
+import noppes.npcs.Server;
 import noppes.npcs.api.event.RoleEvent;
+import noppes.npcs.blocks.tiles.TileBigSign;
+import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
@@ -26,6 +37,8 @@ import noppes.npcs.controllers.quest.PlayerQuestController;
 import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleCompanion;
+import noppes.npcs.util.NoppesUtilPlayer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class PacketHandlerPlayer {
 	@SubscribeEvent
@@ -220,6 +233,44 @@ public class PacketHandlerPlayer {
 					}
 					PlayerQuestController.addActiveQuest(mail.getQuest(), player);
 				}
+			}
+		} else if (type == EnumPlayerPacket.SignSave) {
+			BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+			TileEntity tile = player.worldObj.getTileEntity(pos);
+			if ((tile == null) || (!(tile instanceof TileBigSign))) {
+				return;
+			}
+			TileBigSign sign = (TileBigSign) tile;
+			if (sign.isCanEdit()) {
+				sign.setText(Server.readString(buffer));
+				sign.setCanEdit(false);
+				player.worldObj.markBlockForUpdate(pos);
+			}
+		} else if (type == EnumPlayerPacket.SaveBook) {
+			BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
+			TileEntity tileentity = player.worldObj.getTileEntity(pos);
+			if (!(tileentity instanceof TileBook)) {
+				return;
+			}
+			TileBook tile = (TileBook) tileentity;
+			if (tile.getBook().getItem() == Items.written_book) {
+				return;
+			}
+			boolean sign = buffer.readBoolean();
+			ItemStack book = ItemStack.loadItemStackFromNBT(Server.readNBT(buffer));
+			if (book == null) {
+				return;
+			}
+			if ((book.getItem() == Items.writable_book) && (!sign)
+					&& (ItemWritableBook.isNBTValid(book.getTagCompound()))) {
+				tile.getBook().setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
+			}
+			if ((book.getItem() == Items.written_book) && (sign)
+					&& (ItemEditableBook.validBookTagContents(book.getTagCompound()))) {
+				tile.getBook().setTagInfo("author", new NBTTagString(player.getName()));
+				tile.getBook().setTagInfo("title", new NBTTagString(book.getTagCompound().getString("title")));
+				tile.getBook().setTagInfo("pages", book.getTagCompound().getTagList("pages", 8));
+				tile.getBook().setItem(Items.written_book);
 			}
 		}
 	}

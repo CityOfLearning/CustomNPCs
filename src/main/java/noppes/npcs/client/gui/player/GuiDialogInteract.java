@@ -16,8 +16,6 @@ import com.rabbit.gui.utils.SkinManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.controllers.MusicController;
@@ -25,6 +23,8 @@ import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.controllers.dialog.Dialog;
 import noppes.npcs.controllers.dialog.DialogOption;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesStringUtils;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiDialogInteract extends Show {
 	private Dialog dialog;
@@ -123,7 +123,7 @@ public class GuiDialogInteract extends Show {
 			text += NoppesStringUtils.formatText(line, new Object[] { player, npc }) + "\n";
 		}
 
-		npcDialog = new ChatBox(width / 4 + 10, (int) (height * .05) + 10, (int) ((width * (5.0 / 7.0)) - 20),
+		npcDialog = new ChatBox((width / 4) + 10, (int) (height * .05) + 10, (int) ((width * (5.0 / 7.0)) - 20),
 				(int) (height * .5) - 20, text);
 		registerComponent(npcDialog);
 

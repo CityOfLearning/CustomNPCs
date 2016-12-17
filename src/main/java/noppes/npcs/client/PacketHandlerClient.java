@@ -20,8 +20,6 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.PacketHandlerServer;
 import noppes.npcs.Server;
 import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.client.controllers.MusicController;
@@ -39,6 +37,8 @@ import noppes.npcs.controllers.recipies.RecipeCarpentry;
 import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.entity.EntityDialogNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.packets.PacketHandlerServer;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class PacketHandlerClient extends PacketHandlerServer {
 	private void client(ByteBuf buffer, EntityPlayer player, EnumPacketClient type) throws Exception {

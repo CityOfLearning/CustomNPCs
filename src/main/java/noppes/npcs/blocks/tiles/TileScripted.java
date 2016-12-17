@@ -17,8 +17,6 @@ import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import noppes.npcs.CustomItems;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.block.IBlock;
 import noppes.npcs.api.wrapper.BlockScriptedWrapper;
 import noppes.npcs.constants.EnumScriptType;
@@ -26,6 +24,8 @@ import noppes.npcs.controllers.script.IScriptBlockHandler;
 import noppes.npcs.controllers.script.ScriptContainer;
 import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.data.DataTimers;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilPlayer;
 import noppes.npcs.util.ValueUtil;
 
 public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlockHandler {

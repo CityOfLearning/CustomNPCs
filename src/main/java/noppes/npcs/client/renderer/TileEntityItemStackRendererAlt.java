@@ -22,7 +22,7 @@ public class TileEntityItemStackRendererAlt extends TileEntityItemStackRenderer 
 			GlStateManager.enableRescaleNormal();
 			TileEntity entity = ((ITileRenderer) block).getTile();
 			if (entity instanceof TileColorable) {
-				((TileColorable) entity).color = 15 - stack.getItemDamage();
+				((TileColorable) entity).setColor(15 - stack.getItemDamage());
 			}
 			setRenderBlockMeta(entity, block, stack.getItemDamage());
 			TileEntityRendererDispatcher.instance.renderTileEntityAt(entity, 0.0, 0.0, 0.0, 0.0f);

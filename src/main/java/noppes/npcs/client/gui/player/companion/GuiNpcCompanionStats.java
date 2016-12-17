@@ -9,8 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiMenuTopIconButton;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
@@ -22,6 +20,8 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleCompanion;
+import noppes.npcs.util.NoppesStringUtils;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiNpcCompanionStats extends GuiNPCInterface implements IGuiData {
 	public static void addTopMenu(RoleCompanion role, GuiScreen screen, int active) {

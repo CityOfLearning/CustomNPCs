@@ -102,13 +102,13 @@ public class BlockWeaponRack extends BlockTrigger {
 		}
 		TileWeaponRack tile = (TileWeaponRack) par1World.getTileEntity(pos);
 		float hit = hitX;
-		if (tile.rotation == 2) {
+		if (tile.getRotation() == 2) {
 			hit = 1.0F - hitX;
 		}
-		if (tile.rotation == 3) {
+		if (tile.getRotation() == 3) {
 			hit = 1.0F - hitZ;
 		}
-		if (tile.rotation == 1) {
+		if (tile.getRotation() == 1) {
 			hit = hitZ;
 		}
 		int selected = 2 - (int) (hit / 0.34D);
@@ -157,7 +157,7 @@ public class BlockWeaponRack extends BlockTrigger {
 			l %= 4;
 
 			TileColorable tile = (TileColorable) world.getTileEntity(pos);
-			tile.rotation = l;
+			tile.setRotation(l);
 		}
 	}
 
@@ -181,13 +181,13 @@ public class BlockWeaponRack extends BlockTrigger {
 		float zStart = 0.0F;
 		float xEnd = 1.0F;
 		float zEnd = 1.0F;
-		if (tile.rotation == 0) {
+		if (tile.getRotation() == 0) {
 			zStart = 0.7F;
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			zEnd = 0.3F;
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			xStart = 0.7F;
-		} else if (tile.rotation == 1) {
+		} else if (tile.getRotation() == 1) {
 			xEnd = 0.3F;
 		}
 		if (isTop) {

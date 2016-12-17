@@ -18,12 +18,12 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.common.ForgeHooks;
-import noppes.npcs.NBTTags;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.entity.data.INPCInventory;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 import noppes.npcs.util.ValueUtil;
 
 public class DataInventory implements IInventory, INPCInventory {

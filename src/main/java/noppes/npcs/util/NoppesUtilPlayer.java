@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,6 +20,11 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.internal.FMLProxyPacket;
 import net.minecraftforge.oredict.OreDictionary;
+import noppes.npcs.CustomNpcs;
+import noppes.npcs.CustomTeleporter;
+import noppes.npcs.EventHooks;
+import noppes.npcs.QuestLogData;
+import noppes.npcs.Server;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumPacketClient;

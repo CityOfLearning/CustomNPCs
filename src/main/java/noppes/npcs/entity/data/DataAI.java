@@ -8,10 +8,10 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.BlockPos;
-import noppes.npcs.NBTTags;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.entity.data.INPCAi;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 
 public class DataAI implements INPCAi {
 	private EntityNPCInterface npc;

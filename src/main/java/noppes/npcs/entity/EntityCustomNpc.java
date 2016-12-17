@@ -6,10 +6,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartData;
 
 public class EntityCustomNpc extends EntityNPCFlying {
 	public ModelData modelData;

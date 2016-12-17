@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -10,6 +10,7 @@ import java.util.Arrays;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.StatCollector;
+import noppes.npcs.CustomNpcs;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class NoppesStringUtils {

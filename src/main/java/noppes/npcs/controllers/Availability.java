@@ -4,7 +4,6 @@ package noppes.npcs.controllers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.ICompatibilty;
-import noppes.npcs.VersionCompatibility;
 import noppes.npcs.constants.EnumAvailabilityDialog;
 import noppes.npcs.constants.EnumAvailabilityFaction;
 import noppes.npcs.constants.EnumAvailabilityFactionType;
@@ -14,6 +13,7 @@ import noppes.npcs.controllers.faction.Faction;
 import noppes.npcs.controllers.faction.FactionController;
 import noppes.npcs.controllers.faction.PlayerFactionData;
 import noppes.npcs.controllers.quest.PlayerQuestController;
+import noppes.npcs.util.VersionCompatibility;
 
 public class Availability implements ICompatibilty {
 	public int version;

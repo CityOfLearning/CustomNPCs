@@ -5,8 +5,6 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.ModelPartConfig;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.model.part.legs.ModelDigitigradeLegs;
 import noppes.npcs.client.model.part.legs.ModelHorseLegs;
 import noppes.npcs.client.model.part.legs.ModelMermaidLegs;
@@ -19,6 +17,8 @@ import noppes.npcs.client.model.part.tails.ModelSquirrelTail;
 import noppes.npcs.client.model.part.tails.ModelTailFin;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.model.ModelPartConfig;
+import noppes.npcs.model.ModelPartData;
 
 public class LayerLegs extends LayerInterface implements LayerPreRender {
 	private ModelSpiderLegs spiderLegs;

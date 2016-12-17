@@ -14,11 +14,11 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.NpcAPI;
 import noppes.npcs.api.entity.IEntityLivingBase;
 import noppes.npcs.api.entity.data.role.IJobSpawner;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class JobSpawner extends JobInterface implements IJobSpawner {
 	public NBTTagCompound compound6;
@@ -205,7 +205,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 
 	private List<EntityLivingBase> getNearbySpawned() {
 		List<EntityLivingBase> spawnList = new ArrayList<EntityLivingBase>();
-		List<EntityLivingBase> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
+		List<EntityLivingBase> list = npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
 		for (EntityLivingBase entity : list) {
 			if (entity.getEntityData().getString("NpcSpawnerId").equals(id) && !entity.isDead) {

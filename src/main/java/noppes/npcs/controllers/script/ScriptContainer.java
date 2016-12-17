@@ -13,8 +13,6 @@ import javax.script.ScriptEngine;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.constants.AnimationType;
 import noppes.npcs.api.constants.EntityType;
 import noppes.npcs.api.constants.JobType;
@@ -23,6 +21,8 @@ import noppes.npcs.api.constants.PotionEffectType;
 import noppes.npcs.api.constants.RoleType;
 import noppes.npcs.api.constants.TacticalType;
 import noppes.npcs.constants.EnumScriptType;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class ScriptContainer {
 	private static AnimationType animations;

@@ -18,11 +18,11 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class DataScenes {
 	public class SceneContainer {

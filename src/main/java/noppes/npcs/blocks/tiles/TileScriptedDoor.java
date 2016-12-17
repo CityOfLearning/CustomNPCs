@@ -11,7 +11,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NBTTags;
 import noppes.npcs.api.block.IBlock;
 import noppes.npcs.api.wrapper.BlockScriptedDoorWrapper;
 import noppes.npcs.constants.EnumScriptType;
@@ -19,6 +18,7 @@ import noppes.npcs.controllers.script.IScriptBlockHandler;
 import noppes.npcs.controllers.script.ScriptContainer;
 import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.data.DataTimers;
+import noppes.npcs.util.NBTTags;
 
 public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBlockHandler {
 	public List<ScriptContainer> scripts;

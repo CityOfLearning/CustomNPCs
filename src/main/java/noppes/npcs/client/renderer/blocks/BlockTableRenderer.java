@@ -50,7 +50,7 @@ public class BlockTableRenderer extends BlockRendererInterface {
 		}
 		setWoodTexture(var1.getBlockMetadata());
 		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
-		GlStateManager.rotate(90 * tile.rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(90 * tile.getRotation(), 0.0F, 1.0F, 0.0F);
 		model.Table.render(0.0625F);
 
 		GlStateManager.popMatrix();

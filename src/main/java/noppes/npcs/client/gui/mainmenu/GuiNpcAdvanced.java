@@ -3,7 +3,6 @@ package noppes.npcs.client.gui.mainmenu;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.advanced.GuiNPCAdvancedLinkedNpc;
@@ -32,6 +31,7 @@ import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 	private boolean hasChanges;

@@ -11,7 +11,7 @@ import noppes.npcs.blocks.tiles.TileColorable;
 
 public abstract class BlockTrigger extends BlockRotated {
 	protected BlockTrigger(Block block) {
-		super(block);
+		super(block.getMaterial());
 	}
 
 	@Override

@@ -20,8 +20,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.Schematic;
 import noppes.npcs.blocks.tiles.TileBuilder;
+import noppes.npcs.util.Schematic;
 
 public class ClientEventHandler {
 	private int displayList;
@@ -63,8 +63,8 @@ public class ClientEventHandler {
 		GlStateManager.translate(TileBuilder.DrawPos.getX() - TileEntityRendererDispatcher.staticPlayerX,
 				(TileBuilder.DrawPos.getY() - TileEntityRendererDispatcher.staticPlayerY) + 0.01,
 				TileBuilder.DrawPos.getZ() - TileEntityRendererDispatcher.staticPlayerZ);
-		GlStateManager.translate(1.0f, tile.yOffest, 1.0f);
-		if ((tile.rotation % 2) == 0) {
+		GlStateManager.translate(1.0f, tile.getyOffest(), 1.0f);
+		if ((tile.getRotation() % 2) == 0) {
 			drawSelectionBox(new BlockPos(schem.width, schem.height, schem.length));
 		} else {
 			drawSelectionBox(new BlockPos(schem.length, schem.height, schem.width));
@@ -87,7 +87,7 @@ public class ClientEventHandler {
 								int posX = i % schem.width;
 								int posZ = ((i - posX) / schem.width) % schem.length;
 								int posY = (((i - posX) / schem.width) - posZ) / schem.length;
-								BlockPos pos = schem.rotatePos(posX, posY, posZ, tile.rotation);
+								BlockPos pos = schem.rotatePos(posX, posY, posZ, tile.getRotation());
 								GlStateManager.pushMatrix();
 								GlStateManager.pushAttrib();
 								GlStateManager.enableRescaleNormal();
@@ -96,7 +96,7 @@ public class ClientEventHandler {
 										.bindTexture(TextureMap.locationBlocksTexture);
 								GlStateManager.color(1.0f, 1.0f, 1.0f);
 								GlStateManager.rotate(-90.0f, 0.0f, 1.0f, 0.0f);
-								state = schem.rotationState(state, tile.rotation);
+								state = schem.rotationState(state, tile.getRotation());
 								try {
 									dispatcher.renderBlockBrightness(state, 1.0f);
 									if (GL11.glGetError() != 0) {

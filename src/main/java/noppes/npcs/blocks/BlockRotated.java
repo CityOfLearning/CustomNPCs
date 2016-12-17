@@ -1,8 +1,8 @@
 
 package noppes.npcs.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
@@ -28,8 +28,8 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 
 	private TileEntity renderTile;
 
-	protected BlockRotated(Block block) {
-		super(block.getMaterial());
+	protected BlockRotated(Material material) {
+		super(material);
 		renderId = -1;
 	}
 
@@ -97,6 +97,6 @@ public abstract class BlockRotated extends BlockContainer implements ITileRender
 		int l = MathHelper.floor_double(((placer.rotationYaw * maxRotation()) / 360.0f) + 0.5) & (maxRotation() - 1);
 		l %= maxRotation();
 		TileColorable tile = (TileColorable) world.getTileEntity(pos);
-		tile.rotation = l;
+		tile.setRotation(l);
 	}
 }

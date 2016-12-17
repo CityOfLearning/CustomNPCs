@@ -4,9 +4,9 @@ package noppes.npcs.client.controllers;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartData;
 
 public class Preset {
 	public static void FillDefault(HashMap<String, Preset> presets) {

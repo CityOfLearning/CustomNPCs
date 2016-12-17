@@ -17,11 +17,11 @@ import noppes.npcs.controllers.quest.QuestData;
 import noppes.npcs.quests.QuestLocation;
 
 public class TileWaypoint extends TileNpcEntity implements ITickable {
-	public String name;
+	private String name;
 	private int ticks;
 	private List<EntityPlayer> recentlyChecked;
 	private List<EntityPlayer> toCheck;
-	public int range;
+	private int range;
 
 	public TileWaypoint() {
 		name = "";
@@ -30,9 +30,17 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 		range = 10;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	private List<EntityPlayer> getPlayerList(int x, int y, int z) {
-		return worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		return worldObj.getEntitiesWithinAABB(EntityPlayer.class,
 				new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(x, y, z));
+	}
+
+	public int getRange() {
+		return range;
 	}
 
 	@Override
@@ -43,6 +51,14 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 		if (range < 2) {
 			range = 2;
 		}
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setRange(int range) {
+		this.range = range;
 	}
 
 	@Override

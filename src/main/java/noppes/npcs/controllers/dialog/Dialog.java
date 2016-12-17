@@ -9,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.ICompatibilty;
-import noppes.npcs.VersionCompatibility;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.handler.data.IDialog;
 import noppes.npcs.api.handler.data.IDialogOption;
@@ -18,6 +17,7 @@ import noppes.npcs.controllers.faction.FactionOptions;
 import noppes.npcs.controllers.mail.PlayerMail;
 import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.controllers.quest.QuestController;
+import noppes.npcs.util.VersionCompatibility;
 
 public class Dialog implements ICompatibilty, IDialog {
 	public int version;

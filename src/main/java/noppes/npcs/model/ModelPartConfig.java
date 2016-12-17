@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.model;
 
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.util.ValueUtil;

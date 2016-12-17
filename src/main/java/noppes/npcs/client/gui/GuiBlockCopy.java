@@ -40,21 +40,21 @@ public class GuiBlockCopy extends GuiNPCInterface implements IGuiData, ITextfiel
 	public void initGui() {
 		super.initGui();
 		int y = guiTop + 4;
-		addTextField(new GuiNpcTextField(0, this, guiLeft + 104, y, 50, 20, tile.height + ""));
+		addTextField(new GuiNpcTextField(0, this, guiLeft + 104, y, 50, 20, tile.getHeight() + ""));
 		addLabel(new GuiNpcLabel(0, "schematic.height", guiLeft + 5, y + 5));
 		getTextField(0).numbersOnly = true;
 		getTextField(0).setMinMaxDefault(0, 100, 10);
 		boolean id = true;
 		int i = guiLeft + 104;
 		y += 23;
-		addTextField(new GuiNpcTextField(id ? 1 : 0, this, i, y, 50, 20, tile.width + ""));
+		addTextField(new GuiNpcTextField(id ? 1 : 0, this, i, y, 50, 20, tile.getWidth() + ""));
 		addLabel(new GuiNpcLabel(1, "schematic.width", guiLeft + 5, y + 5));
 		getTextField(1).numbersOnly = true;
 		getTextField(1).setMinMaxDefault(0, 100, 10);
 		int id2 = 2;
 		int j = guiLeft + 104;
 		y += 23;
-		addTextField(new GuiNpcTextField(id2, this, j, y, 50, 20, tile.length + ""));
+		addTextField(new GuiNpcTextField(id2, this, j, y, 50, 20, tile.getLength() + ""));
 		addLabel(new GuiNpcLabel(2, "schematic.length", guiLeft + 5, y + 5));
 		getTextField(2).numbersOnly = true;
 		getTextField(2).setMinMaxDefault(0, 100, 10);
@@ -90,13 +90,13 @@ public class GuiBlockCopy extends GuiNPCInterface implements IGuiData, ITextfiel
 	@Override
 	public void unFocused(GuiNpcTextField textfield) {
 		if (textfield.id == 0) {
-			tile.height = (short) textfield.getInteger();
+			tile.setHeight((short) textfield.getInteger());
 		}
 		if (textfield.id == 1) {
-			tile.width = (short) textfield.getInteger();
+			tile.setWidth((short) textfield.getInteger());
 		}
 		if (textfield.id == 2) {
-			tile.length = (short) textfield.getInteger();
+			tile.setLength((short) textfield.getInteger());
 		}
 	}
 }

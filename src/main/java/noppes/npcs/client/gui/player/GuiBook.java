@@ -20,8 +20,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.constants.EnumPlayerPacket;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 @SideOnly(Side.CLIENT)
 public class GuiBook extends GuiScreen {

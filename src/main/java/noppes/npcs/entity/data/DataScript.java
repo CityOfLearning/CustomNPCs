@@ -10,12 +10,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NBTTags;
 import noppes.npcs.constants.EnumScriptType;
 import noppes.npcs.controllers.script.IScriptHandler;
 import noppes.npcs.controllers.script.ScriptContainer;
 import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 
 public class DataScript implements IScriptHandler {
 	private List<ScriptContainer> scripts;

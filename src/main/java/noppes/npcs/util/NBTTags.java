@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.util.ArrayList;
 import java.util.Collection;

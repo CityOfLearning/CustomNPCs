@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.util.HashMap;
 import java.util.Map;

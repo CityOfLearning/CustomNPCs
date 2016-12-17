@@ -76,7 +76,7 @@ public class PlayerDataController {
 
 	public List<PlayerData> getPlayersData(ICommandSender sender, String username) {
 		ArrayList<PlayerData> list = new ArrayList<PlayerData>();
-		List<EntityPlayerMP> players = PlayerSelector.matchEntities(sender, username, (Class) EntityPlayerMP.class);
+		List<EntityPlayerMP> players = PlayerSelector.matchEntities(sender, username, EntityPlayerMP.class);
 		if (players.isEmpty()) {
 			PlayerData data = PlayerDataController.instance.getDataFromUsername(username);
 			if (data != null) {

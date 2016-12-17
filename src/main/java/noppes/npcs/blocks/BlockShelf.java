@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
@@ -20,7 +21,7 @@ import noppes.npcs.blocks.tiles.TileShelf;
 
 public class BlockShelf extends BlockRotated {
 	public BlockShelf() {
-		super(Blocks.planks);
+		super(Material.wood);
 	}
 
 	@Override
@@ -84,13 +85,13 @@ public class BlockShelf extends BlockRotated {
 		float zStart = 0.0F;
 		float xEnd = 1.0F;
 		float zEnd = 1.0F;
-		if (tile.rotation == 0) {
+		if (tile.getRotation() == 0) {
 			zStart = 0.3F;
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			zEnd = 0.7F;
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			xStart = 0.3F;
-		} else if (tile.rotation == 1) {
+		} else if (tile.getRotation() == 1) {
 			xEnd = 0.7F;
 		}
 		setBlockBounds(xStart, 0.44F, zStart, xEnd, 1.0F, zEnd);

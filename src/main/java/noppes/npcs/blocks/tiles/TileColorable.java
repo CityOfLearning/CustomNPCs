@@ -8,8 +8,8 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 public class TileColorable extends TileNpcEntity {
-	public int color;
-	public int rotation;
+	private int color;
+	private int rotation;
 
 	public TileColorable() {
 		color = 14;
@@ -17,6 +17,10 @@ public class TileColorable extends TileNpcEntity {
 
 	public boolean canUpdate() {
 		return false;
+	}
+
+	public int getColor() {
+		return color;
 	}
 
 	@Override
@@ -34,6 +38,10 @@ public class TileColorable extends TileNpcEntity {
 		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
 	}
 
+	public int getRotation() {
+		return rotation;
+	}
+
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 		NBTTagCompound compound = pkt.getNbtCompound();
@@ -49,6 +57,15 @@ public class TileColorable extends TileNpcEntity {
 		super.readFromNBT(compound);
 		color = compound.getInteger("BannerColor");
 		rotation = compound.getInteger("BannerRotation");
+	}
+
+	public void setColor(int color) {
+//		new RuntimeException().printStackTrace();
+		this.color = color;
+	}
+
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 
 	@Override

@@ -4,14 +4,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import noppes.npcs.TextBlock;
+import noppes.npcs.util.TextBlock;
 
 public class TileBigSign extends TileNpcEntity {
-	public int rotation;
-	public boolean canEdit = true;
-	public boolean hasChanged = true;
+	private int rotation;
+	private boolean canEdit = true;
+
+	private boolean hasChanged = true;
+
 	private String signText = "";
-	public TextBlock block;
+
+	private TextBlock block;
+
+	public TextBlock getBlock() {
+		return block;
+	}
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -22,8 +29,24 @@ public class TileBigSign extends TileNpcEntity {
 		return packet;
 	}
 
+	public int getRotation() {
+		return rotation;
+	}
+
+	public String getSignText() {
+		return signText;
+	}
+
 	public String getText() {
 		return signText;
+	}
+
+	public boolean isCanEdit() {
+		return canEdit;
+	}
+
+	public boolean isHasChanged() {
+		return hasChanged;
 	}
 
 	@Override
@@ -37,6 +60,26 @@ public class TileBigSign extends TileNpcEntity {
 		super.readFromNBT(compound);
 		rotation = compound.getInteger("SignRotation");
 		setText(compound.getString("SignText"));
+	}
+
+	public void setBlock(TextBlock block) {
+		this.block = block;
+	}
+
+	public void setCanEdit(boolean canEdit) {
+		this.canEdit = canEdit;
+	}
+
+	public void setHasChanged(boolean hasChanged) {
+		this.hasChanged = hasChanged;
+	}
+
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
+	}
+
+	public void setSignText(String signText) {
+		this.signText = signText;
 	}
 
 	public void setText(String text) {

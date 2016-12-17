@@ -22,10 +22,10 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileWallBanner;
 import noppes.npcs.client.renderer.ITileRenderer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockWallBanner extends BlockContainer implements ITileRenderer {
 	public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
@@ -113,9 +113,9 @@ public class BlockWallBanner extends BlockContainer implements ITileRenderer {
 			return false;
 		}
 		int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
-		if (tile.color != color) {
+		if (tile.getColor() != color) {
 			NoppesUtilServer.consumeItemStack(1, player);
-			tile.color = color;
+			tile.setColor(color);
 			par1World.markBlockForUpdate(pos);
 		}
 		return true;
@@ -128,9 +128,9 @@ public class BlockWallBanner extends BlockContainer implements ITileRenderer {
 		l %= 4;
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		TileWallBanner tile = (TileWallBanner) world.getTileEntity(pos);
-		tile.rotation = l;
-		tile.color = (15 - stack.getItemDamage());
-		tile.time = System.currentTimeMillis();
+		tile.setRotation(l);
+		tile.setColor((15 - stack.getItemDamage()));
+		tile.setTime(System.currentTimeMillis());
 		if (((entity instanceof EntityPlayer)) && (world.isRemote)) {
 			((EntityPlayer) entity)
 					.addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));

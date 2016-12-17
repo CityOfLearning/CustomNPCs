@@ -37,6 +37,9 @@ import noppes.npcs.containers.ContainerNpcQuestReward;
 import noppes.npcs.containers.ContainerNpcQuestTypeItem;
 import noppes.npcs.containers.ContainerTradingBlock;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.packets.PacketHandlerPlayer;
+import noppes.npcs.packets.PacketHandlerServer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class CommonProxy implements IGuiHandler {
 	public boolean newVersionAvailable;

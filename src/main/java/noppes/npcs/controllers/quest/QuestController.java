@@ -11,8 +11,8 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.util.NBTJsonUtil;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class QuestController {
 	public static QuestController instance;

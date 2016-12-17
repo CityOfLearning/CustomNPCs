@@ -9,8 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
@@ -19,6 +17,8 @@ import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.NBTJsonUtil;
+import noppes.npcs.util.NoppesUtilPlayer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleTrader extends RoleInterface implements IRoleTrader {
 	private static File getFile(String name) {

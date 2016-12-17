@@ -3,7 +3,7 @@ package noppes.npcs.entity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import noppes.npcs.ModelData;
+import noppes.npcs.model.ModelData;
 
 public class EntityNpcSlime extends EntityNPCInterface {
 	public EntityNpcSlime(World world) {

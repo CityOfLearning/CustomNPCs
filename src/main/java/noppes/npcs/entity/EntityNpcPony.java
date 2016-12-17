@@ -5,7 +5,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import noppes.npcs.ModelData;
+import noppes.npcs.model.ModelData;
 
 public class EntityNpcPony extends EntityNPCInterface {
 	public boolean isPegasus;

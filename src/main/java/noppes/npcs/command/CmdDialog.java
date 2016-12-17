@@ -7,7 +7,6 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.client.EntityUtil;
 import noppes.npcs.controllers.PlayerData;
@@ -16,6 +15,7 @@ import noppes.npcs.controllers.dialog.Dialog;
 import noppes.npcs.controllers.dialog.DialogController;
 import noppes.npcs.controllers.dialog.DialogOption;
 import noppes.npcs.entity.EntityDialogNpc;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class CmdDialog extends CommandNoppesBase {
 	@Override

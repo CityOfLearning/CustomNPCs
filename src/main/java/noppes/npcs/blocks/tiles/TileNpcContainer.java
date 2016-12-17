@@ -14,8 +14,8 @@ import net.minecraft.world.World;
 
 public abstract class TileNpcContainer extends TileColorable implements IInventory {
 	private ItemStack[] chestContents;
-	public String customName;
-	public int playerUsing;
+	private String customName;
+	private int playerUsing;
 
 	public TileNpcContainer() {
 		customName = "";
@@ -80,6 +80,10 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
 		}
 	}
 
+	public String getCustomName() {
+		return customName;
+	}
+
 	@Override
 	public IChatComponent getDisplayName() {
 		return new ChatComponentText(hasCustomName() ? customName : getName());
@@ -102,6 +106,10 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
 
 	@Override
 	public abstract String getName();
+
+	public int getPlayerUsing() {
+		return playerUsing;
+	}
 
 	@Override
 	public int getSizeInventory() {
@@ -170,6 +178,10 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
 		return null;
 	}
 
+	public void setCustomName(String customName) {
+		this.customName = customName;
+	}
+
 	@Override
 	public void setField(int id, int value) {
 	}
@@ -181,6 +193,10 @@ public abstract class TileNpcContainer extends TileColorable implements IInvento
 			par2ItemStack.stackSize = getInventoryStackLimit();
 		}
 		markDirty();
+	}
+
+	public void setPlayerUsing(int playerUsing) {
+		this.playerUsing = playerUsing;
 	}
 
 	@Override

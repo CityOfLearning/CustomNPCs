@@ -11,7 +11,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import noppes.npcs.NBTTags;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.controllers.Availability;
 import noppes.npcs.controllers.GlobalDataController;
@@ -19,6 +18,7 @@ import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.PlayerItemGiverData;
 import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 
 public class JobItemGiver extends JobInterface {
 	public int cooldownType;

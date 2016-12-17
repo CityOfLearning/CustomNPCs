@@ -1,4 +1,4 @@
-package noppes.npcs;
+package noppes.npcs.packets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +29,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import noppes.npcs.CustomNpcs;
+import noppes.npcs.CustomNpcsPermissions;
+import noppes.npcs.Server;
+import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.blocks.tiles.TileCopy;
 import noppes.npcs.blocks.tiles.TileScripted;
@@ -71,6 +75,9 @@ import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.roles.RoleTrader;
 import noppes.npcs.roles.RoleTransporter;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilPlayer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class PacketHandlerServer {
 	private boolean allowItem(ItemStack stack, EnumPacketServer type) {
@@ -720,7 +727,8 @@ public class PacketHandlerServer {
 			if ((tile4 == null) || name5.isEmpty()) {
 				return;
 			}
-			SchematicController.Instance.save(player, name5, tile4.getPos(), tile4.height, tile4.width, tile4.length);
+			SchematicController.Instance.save(player, name5, tile4.getPos(), tile4.getHeight(), tile4.getWidth(),
+					tile4.getLength());
 		}
 	}
 

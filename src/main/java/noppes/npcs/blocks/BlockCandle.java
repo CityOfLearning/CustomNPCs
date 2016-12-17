@@ -47,8 +47,8 @@ public class BlockCandle extends BlockLightable {
 		int x = pos.getX();
 		int y = pos.getY();
 		int z = pos.getZ();
-		if (tile.color == 1) {
-			if ((tile.rotation % 2) == 0) {
+		if (tile.getColor() == 1) {
+			if ((tile.getRotation() % 2) == 0) {
 				world.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, x + 0.5F, y + 0.66F, z + 0.13F, 0.0D, 0.0D, 0.0D,
 						new int[0]);
 				world.spawnParticle(EnumParticleTypes.FLAME, x + 0.5F, y + 0.65F, z + 0.13F, 0.0D, 0.0D, 0.0D,
@@ -93,18 +93,18 @@ public class BlockCandle extends BlockLightable {
 			float xOffset = 0.5F;
 			float yOffset = 0.45F;
 			float zOffset = 0.5F;
-			if (tile.color == 2) {
+			if (tile.getColor() == 2) {
 				yOffset = 1.05F;
-				if (tile.rotation == 0) {
+				if (tile.getRotation() == 0) {
 					zOffset += 0.12F;
 				}
-				if (tile.rotation == 4) {
+				if (tile.getRotation() == 4) {
 					zOffset -= 0.12F;
 				}
-				if (tile.rotation == 6) {
+				if (tile.getRotation() == 6) {
 					xOffset += 0.12F;
 				}
-				if (tile.rotation == 2) {
+				if (tile.getRotation() == 2) {
 					xOffset -= 0.12F;
 				}
 			}
@@ -125,20 +125,20 @@ public class BlockCandle extends BlockLightable {
 			return;
 		}
 		TileColorable tile = (TileColorable) tileentity;
-		if (tile.color == 2) {
+		if (tile.getColor() == 2) {
 			float xOffset = 0.0F;
 			float yOffset = 0.0F;
-			if (tile.rotation == 0) {
+			if (tile.getRotation() == 0) {
 				yOffset = 0.2F;
-			} else if (tile.rotation == 4) {
+			} else if (tile.getRotation() == 4) {
 				yOffset = -0.2F;
-			} else if (tile.rotation == 6) {
+			} else if (tile.getRotation() == 6) {
 				xOffset = 0.2F;
-			} else if (tile.rotation == 2) {
+			} else if (tile.getRotation() == 2) {
 				xOffset = -0.2F;
 			}
 			setBlockBounds(0.2F + xOffset, 0.4F, 0.2F + yOffset, 0.8F + xOffset, 0.9F, 0.8F + yOffset);
-		} else if (tile.color == 1) {
+		} else if (tile.getColor() == 1) {
 			setBlockBounds(0.1F, 0.1F, 0.1F, 0.9F, 0.8F, 0.9F);
 		} else {
 			setBlockBounds(0.3F, 0.0F, 0.3F, 0.7F, 0.5F, 0.7F);

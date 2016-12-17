@@ -13,11 +13,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileScriptedDoor;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockScriptedDoor extends BlockNpcDoorInterface implements IPermission {
 	@Override

@@ -17,13 +17,13 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noppes.npcs.NBTTags;
-import noppes.npcs.Schematic;
 import noppes.npcs.controllers.Availability;
 import noppes.npcs.controllers.BlockData;
 import noppes.npcs.controllers.SchematicController;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.JobBuilder;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.Schematic;
 
 public class TileBuilder extends TileEntity implements ITickable {
 	public static BlockPos DrawPos;
@@ -39,12 +39,17 @@ public class TileBuilder extends TileEntity implements ITickable {
 	}
 
 	private Schematic schematic;
-	public int rotation;
-	public int yOffest;
-	public boolean enabled;
-	public boolean started;
-	public boolean finished;
-	public Availability availability;
+	private int rotation;
+	private int yOffest;
+
+	private boolean enabled;
+
+	private boolean started;
+
+	private boolean finished;
+
+	private Availability availability;
+
 	private Stack<Integer> positions;
 
 	private Stack<Integer> positionsSecond;
@@ -62,6 +67,10 @@ public class TileBuilder extends TileEntity implements ITickable {
 		positions = new Stack<Integer>();
 		positionsSecond = new Stack<Integer>();
 		ticks = 20;
+	}
+
+	public Availability getAvailability() {
+		return availability;
 	}
 
 	public Stack<BlockData> getBlock() {
@@ -120,12 +129,44 @@ public class TileBuilder extends TileEntity implements ITickable {
 						.expand(10.0, 10.0, 10.0));
 	}
 
+	public Stack<Integer> getPositions() {
+		return positions;
+	}
+
+	public Stack<Integer> getPositionsSecond() {
+		return positionsSecond;
+	}
+
+	public int getRotation() {
+		return rotation;
+	}
+
 	public Schematic getSchematic() {
 		return schematic;
 	}
 
+	public int getTicks() {
+		return ticks;
+	}
+
+	public int getyOffest() {
+		return yOffest;
+	}
+
 	public boolean hasSchematic() {
 		return schematic != null;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public boolean isFinished() {
+		return finished;
+	}
+
+	public boolean isStarted() {
+		return started;
 	}
 
 	@Override
@@ -152,9 +193,33 @@ public class TileBuilder extends TileEntity implements ITickable {
 		availability.readFromNBT(compound.getCompoundTag("Availability"));
 	}
 
+	public void setAvailability(Availability availability) {
+		this.availability = availability;
+	}
+
 	@SideOnly(Side.CLIENT)
 	public void setDrawSchematic(Schematic schematics) {
 		schematic = schematics;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public void setFinished(boolean finished) {
+		this.finished = finished;
+	}
+
+	public void setPositions(Stack<Integer> positions) {
+		this.positions = positions;
+	}
+
+	public void setPositionsSecond(Stack<Integer> positionsSecond) {
+		this.positionsSecond = positionsSecond;
+	}
+
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 
 	public void setSchematic(Schematic schematics) {
@@ -189,6 +254,18 @@ public class TileBuilder extends TileEntity implements ITickable {
 		}
 		this.positions = positions;
 		positionsSecond.clear();
+	}
+
+	public void setStarted(boolean started) {
+		this.started = started;
+	}
+
+	public void setTicks(int ticks) {
+		this.ticks = ticks;
+	}
+
+	public void setyOffest(int yOffest) {
+		this.yOffest = yOffest;
 	}
 
 	@Override

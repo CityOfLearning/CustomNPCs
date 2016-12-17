@@ -17,11 +17,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileRedstoneBlock;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockNpcRedstone extends BlockContainer implements IPermission {
 	public static PropertyBool ACTIVE;

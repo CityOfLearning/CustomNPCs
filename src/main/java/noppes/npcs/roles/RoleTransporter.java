@@ -7,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.controllers.PlayerDataController;
@@ -15,6 +14,7 @@ import noppes.npcs.controllers.transport.PlayerTransportData;
 import noppes.npcs.controllers.transport.TransportController;
 import noppes.npcs.controllers.transport.TransportLocation;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleTransporter extends RoleInterface {
 	public int transportId;

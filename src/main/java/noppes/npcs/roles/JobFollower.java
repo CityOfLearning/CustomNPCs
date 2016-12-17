@@ -34,7 +34,7 @@ public class JobFollower extends JobInterface implements IJobFollower {
 		}
 		ticks = 10;
 		following = null;
-		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(getRange(), getRange(), getRange()));
 		for (EntityNPCInterface entity : list) {
 			if (entity != npc) {

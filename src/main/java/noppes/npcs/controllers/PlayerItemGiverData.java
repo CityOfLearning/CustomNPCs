@@ -4,8 +4,8 @@ package noppes.npcs.controllers;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
 import noppes.npcs.roles.JobItemGiver;
+import noppes.npcs.util.NBTTags;
 
 public class PlayerItemGiverData {
 	private HashMap<Integer, Long> itemgivers;

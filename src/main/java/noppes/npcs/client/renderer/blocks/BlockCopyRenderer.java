@@ -11,8 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import noppes.npcs.CustomItems;
-import noppes.npcs.Schematic;
 import noppes.npcs.blocks.tiles.TileCopy;
+import noppes.npcs.util.Schematic;
 
 public class BlockCopyRenderer extends BlockRendererInterface {
 	private static ItemStack item;
@@ -47,7 +47,7 @@ public class BlockCopyRenderer extends BlockRendererInterface {
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.disableBlend();
 		GlStateManager.translate(x, y, z);
-		drawSelectionBox(new BlockPos(tile.width, tile.height, tile.length));
+		drawSelectionBox(new BlockPos(tile.getWidth(), tile.getHeight(), tile.getLength()));
 		GlStateManager.translate(0.5f, 0.5f, 0.5f);
 		GlStateManager.scale(2.0f, 2.0f, 2.0f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);

@@ -12,10 +12,10 @@ import net.minecraft.item.crafting.ShapedRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.api.handler.data.IRecipe;
 import noppes.npcs.controllers.Availability;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class RecipeCarpentry extends ShapedRecipes implements IRecipe {
 	public static RecipeCarpentry createRecipe(RecipeCarpentry recipe, ItemStack par1ItemStack,

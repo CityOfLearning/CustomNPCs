@@ -2,10 +2,10 @@
 package noppes.npcs.client.layer;
 
 import net.minecraft.client.renderer.GlStateManager;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.model.Model2DRenderer;
 import noppes.npcs.client.renderer.RenderNPCInterface;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelPartData;
 
 public class LayerArms extends LayerInterface {
 	private Model2DRenderer lClaw;

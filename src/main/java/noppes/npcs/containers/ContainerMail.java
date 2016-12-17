@@ -9,10 +9,7 @@ import noppes.npcs.controllers.mail.PlayerMail;
 import noppes.npcs.controllers.mail.PlayerMailData;
 
 public class ContainerMail extends ContainerNpcInterface {
-	public static PlayerMail staticmail;
-	static {
-		ContainerMail.staticmail = new PlayerMail();
-	}
+	public static PlayerMail staticmail = new PlayerMail();
 	public PlayerMail mail;
 	private boolean canEdit;
 

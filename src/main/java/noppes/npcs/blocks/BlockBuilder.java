@@ -16,11 +16,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockBuilder extends BlockContainer implements IPermission {
 	public static PropertyInteger ROTATION;

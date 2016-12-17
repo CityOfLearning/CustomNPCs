@@ -4,8 +4,8 @@ package noppes.npcs.controllers.bank;
 import java.util.HashMap;
 
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.util.NBTTags;
 
 public class Bank {
 	public int id;

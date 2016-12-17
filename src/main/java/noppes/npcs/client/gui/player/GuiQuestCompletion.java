@@ -5,7 +5,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.client.CustomNpcResourceListener;
 import noppes.npcs.client.TextBlockClient;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
@@ -14,6 +13,7 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.ITopButtonListener;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiQuestCompletion extends GuiNPCInterface implements ITopButtonListener {
 	private Quest quest;

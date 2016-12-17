@@ -18,12 +18,12 @@ public class BlockTombstoneRenderer extends BlockRendererInterface {
 	private final ModelTombstone3 model3 = new ModelTombstone3();
 
 	private void renderText(TileTombstone tile, int meta) {
-		if ((tile.block == null) || (tile.hasChanged)) {
-			tile.block = new TextBlockClient(tile.getText(), 94, true,
-					new Object[] { Minecraft.getMinecraft().thePlayer });
-			tile.hasChanged = false;
+		if ((tile.getBlock() == null) || (tile.isHasChanged())) {
+			tile.setBlock(
+					new TextBlockClient(tile.getText(), 94, true, new Object[] { Minecraft.getMinecraft().thePlayer }));
+			tile.setHasChanged(false);
 		}
-		if (!tile.block.lines.isEmpty()) {
+		if (!tile.getBlock().lines.isEmpty()) {
 			GlStateManager.rotate(180.0F, 1.0F, 0.0F, 0.0F);
 			float f3 = 0.00665F;
 			GlStateManager.translate(0.0F, -0.64F, meta == 0 ? 0.095F : 0.126F);
@@ -33,11 +33,11 @@ public class BlockTombstoneRenderer extends BlockRendererInterface {
 			FontRenderer fontrenderer = getFontRenderer();
 
 			float lineOffset = 0.0F;
-			if (tile.block.lines.size() < 11) {
-				lineOffset = (11.0F - tile.block.lines.size()) / 2.0F;
+			if (tile.getBlock().lines.size() < 11) {
+				lineOffset = (11.0F - tile.getBlock().lines.size()) / 2.0F;
 			}
-			for (int i = 0; i < tile.block.lines.size(); i++) {
-				String text = tile.block.lines.get(i).getFormattedText();
+			for (int i = 0; i < tile.getBlock().lines.size(); i++) {
+				String text = tile.getBlock().lines.get(i).getFormattedText();
 				fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2,
 						(int) ((lineOffset + i) * (fontrenderer.FONT_HEIGHT - 0.3D)), 16777215);
 				if (i == 13) {
@@ -62,7 +62,7 @@ public class BlockTombstoneRenderer extends BlockRendererInterface {
 			GlStateManager.scale(1.0F, 1.0F, 1.14F);
 		}
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.rotate(90 * tile.rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(90 * tile.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Stone);

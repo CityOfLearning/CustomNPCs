@@ -12,8 +12,6 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartConfig;
 import noppes.npcs.client.model.animation.AniBow;
 import noppes.npcs.client.model.animation.AniCrawling;
 import noppes.npcs.client.model.animation.AniDancing;
@@ -23,6 +21,8 @@ import noppes.npcs.client.model.animation.AniWaving;
 import noppes.npcs.client.model.animation.AniYes;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartConfig;
 import noppes.npcs.roles.JobPuppet;
 
 public class ModelPlayerAlt extends ModelPlayer {

@@ -24,7 +24,7 @@ public class BlockBarrelRenderer extends BlockRendererInterface {
 		GlStateManager.translate((float) var2 + 0.5F, (float) var4 + 1.42F, (float) var6 + 0.5F);
 		GlStateManager.scale(1.0F, 0.94F, 1.0F);
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.rotate(45 * tile.rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(45 * tile.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 
 		GlStateManager.enableCull();

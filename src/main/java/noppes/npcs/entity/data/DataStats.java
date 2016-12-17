@@ -7,12 +7,12 @@ package noppes.npcs.entity.data;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.Resistances;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.entity.data.INPCMelee;
 import noppes.npcs.api.entity.data.INPCRanged;
 import noppes.npcs.api.entity.data.INPCStats;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.Resistances;
 import noppes.npcs.util.ValueUtil;
 
 public class DataStats implements INPCStats {

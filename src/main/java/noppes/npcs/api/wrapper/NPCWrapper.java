@@ -5,7 +5,6 @@
 package noppes.npcs.api.wrapper;
 
 import net.minecraft.util.BlockPos;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.ITimers;
@@ -23,6 +22,7 @@ import noppes.npcs.controllers.faction.Faction;
 import noppes.npcs.controllers.faction.FactionController;
 import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 import noppes.npcs.util.ValueUtil;
 
 public class NPCWrapper<T extends EntityNPCInterface> extends EntityLivingWrapper<T> implements ICustomNpc {

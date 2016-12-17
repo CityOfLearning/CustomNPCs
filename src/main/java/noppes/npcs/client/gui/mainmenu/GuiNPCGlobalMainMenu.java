@@ -2,7 +2,6 @@
 package noppes.npcs.client.gui.mainmenu;
 
 import net.minecraft.client.gui.GuiButton;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.global.GuiNpcManagePlayerData;
 import noppes.npcs.client.gui.global.GuiNpcNaturalSpawns;
@@ -10,6 +9,7 @@ import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class GuiNPCGlobalMainMenu extends GuiNPCInterface2 {
 	public GuiNPCGlobalMainMenu(EntityNPCInterface npc) {

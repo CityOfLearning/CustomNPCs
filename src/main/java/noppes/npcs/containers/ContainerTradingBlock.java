@@ -27,7 +27,7 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 		@Override
 		public boolean isItemValid(ItemStack par1ItemStack) {
 			if (player.worldObj.isRemote) {
-				return (tile.trader1 != null) && (tile.trader2 != null) && (state < 3);
+				return (tile.getTrader1() != null) && (tile.getTrader2() != null) && (state < 3);
 			}
 			return tile.isFull() && (state < 3);
 		}
@@ -122,10 +122,10 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 			return;
 		}
 		EntityPlayer other = tile.other(player);
-		if (tile.trader1 == player) {
-			tile.trader1 = null;
+		if (tile.getTrader1() == player) {
+			tile.setTrader1(null);
 		} else {
-			tile.trader2 = null;
+			tile.setTrader2(null);
 		}
 		if ((state != 3) && (other != null)) {
 			((ContainerTradingBlock) other.openContainer).setState(4);

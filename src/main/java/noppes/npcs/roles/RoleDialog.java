@@ -6,8 +6,6 @@ import java.util.Map;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.entity.data.role.IRoleDialog;
@@ -17,6 +15,8 @@ import noppes.npcs.controllers.quest.PlayerQuestController;
 import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.controllers.quest.QuestController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleDialog extends RoleInterface implements IRoleDialog {
 	public String dialog;

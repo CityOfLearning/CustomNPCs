@@ -7,7 +7,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.ICompatibilty;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.Server;
-import noppes.npcs.VersionCompatibility;
 import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.api.handler.data.IQuest;
 import noppes.npcs.constants.EnumPacketClient;
@@ -20,6 +19,7 @@ import noppes.npcs.quests.QuestInterface;
 import noppes.npcs.quests.QuestItem;
 import noppes.npcs.quests.QuestKill;
 import noppes.npcs.quests.QuestLocation;
+import noppes.npcs.util.VersionCompatibility;
 
 public class Quest implements ICompatibilty, IQuest {
 	public int version;

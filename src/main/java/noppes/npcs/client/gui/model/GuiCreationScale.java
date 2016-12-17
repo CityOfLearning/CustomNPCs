@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.ModelPartConfig;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
@@ -15,6 +14,7 @@ import noppes.npcs.client.gui.util.ICustomScrollListener;
 import noppes.npcs.client.gui.util.ISliderListener;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.model.ModelPartConfig;
 
 public class GuiCreationScale extends GuiCreationScreenInterface implements ISliderListener, ICustomScrollListener {
 	private static EnumParts selected;

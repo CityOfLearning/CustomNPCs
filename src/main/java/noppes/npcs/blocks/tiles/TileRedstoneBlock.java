@@ -16,17 +16,17 @@ import noppes.npcs.blocks.BlockNpcRedstone;
 import noppes.npcs.controllers.Availability;
 
 public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
-	public int onRange;
-	public int offRange;
-	public int onRangeX;
-	public int onRangeY;
-	public int onRangeZ;
-	public int offRangeX;
-	public int offRangeY;
-	public int offRangeZ;
-	public boolean isDetailed;
-	public Availability availability;
-	public boolean isActivated;
+	private int onRange;
+	private int offRange;
+	private int onRangeX;
+	private int onRangeY;
+	private int onRangeZ;
+	private int offRangeX;
+	private int offRangeY;
+	private int offRangeZ;
+	private boolean isDetailed;
+	private Availability availability;
+	private boolean isActivated;
 	private int ticks;
 
 	public TileRedstoneBlock() {
@@ -48,10 +48,54 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 		return true;
 	}
 
+	public Availability getAvailability() {
+		return availability;
+	}
+
+	public int getOffRange() {
+		return offRange;
+	}
+
+	public int getOffRangeX() {
+		return offRangeX;
+	}
+
+	public int getOffRangeY() {
+		return offRangeY;
+	}
+
+	public int getOffRangeZ() {
+		return offRangeZ;
+	}
+
+	public int getOnRange() {
+		return onRange;
+	}
+
+	public int getOnRangeX() {
+		return onRangeX;
+	}
+
+	public int getOnRangeY() {
+		return onRangeY;
+	}
+
+	public int getOnRangeZ() {
+		return onRangeZ;
+	}
+
 	private List<EntityPlayer> getPlayerList(int x, int y, int z) {
-		return worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		return worldObj.getEntitiesWithinAABB(EntityPlayer.class,
 				new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1)
 						.expand(x, y, z));
+	}
+
+	public boolean isActivated() {
+		return isActivated;
+	}
+
+	public boolean isDetailed() {
+		return isDetailed;
 	}
 
 	@Override
@@ -78,12 +122,56 @@ public class TileRedstoneBlock extends TileNpcEntity implements ITickable {
 		}
 	}
 
+	public void setActivated(boolean isActivated) {
+		this.isActivated = isActivated;
+	}
+
 	private void setActive(Block block, boolean bo) {
 		isActivated = bo;
 		IBlockState state = block.getDefaultState().withProperty(BlockNpcRedstone.ACTIVE, isActivated);
 		worldObj.setBlockState(pos, state, 2);
 		worldObj.markBlockForUpdate(pos);
 		block.onBlockAdded(worldObj, pos, state);
+	}
+
+	public void setAvailability(Availability availability) {
+		this.availability = availability;
+	}
+
+	public void setDetailed(boolean isDetailed) {
+		this.isDetailed = isDetailed;
+	}
+
+	public void setOffRange(int offRange) {
+		this.offRange = offRange;
+	}
+
+	public void setOffRangeX(int offRangeX) {
+		this.offRangeX = offRangeX;
+	}
+
+	public void setOffRangeY(int offRangeY) {
+		this.offRangeY = offRangeY;
+	}
+
+	public void setOffRangeZ(int offRangeZ) {
+		this.offRangeZ = offRangeZ;
+	}
+
+	public void setOnRange(int onRange) {
+		this.onRange = onRange;
+	}
+
+	public void setOnRangeX(int onRangeX) {
+		this.onRangeX = onRangeX;
+	}
+
+	public void setOnRangeY(int onRangeY) {
+		this.onRangeY = onRangeY;
+	}
+
+	public void setOnRangeZ(int onRangeZ) {
+		this.onRangeZ = onRangeZ;
 	}
 
 	@Override

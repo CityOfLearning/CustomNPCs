@@ -10,9 +10,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.gui.player.GuiFaction;
 import noppes.npcs.util.CustomNPCsScheduler;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class InventoryTabFactions extends AbstractTab {
 	public InventoryTabFactions() {

@@ -6,10 +6,10 @@ import java.util.Vector;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NBTTags;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.controllers.quest.QuestData;
+import noppes.npcs.util.NBTTags;
 
 public class QuestKill extends QuestInterface {
 	public HashMap<String, Integer> targets;

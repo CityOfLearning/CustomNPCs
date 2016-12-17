@@ -7,11 +7,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.ITimers;
 import noppes.npcs.api.block.IBlockScripted;
 import noppes.npcs.blocks.tiles.TileScripted;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockScriptedWrapper extends BlockWrapper implements IBlockScripted {
 	private TileScripted tile;

@@ -3,11 +3,11 @@ package noppes.npcs.entity.old;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartData;
 
 public class EntityNpcNagaMale extends EntityNPCInterface {
 	public EntityNpcNagaMale(World world) {

@@ -6,8 +6,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.TextBlock;
+import noppes.npcs.util.NoppesStringUtils;
+import noppes.npcs.util.TextBlock;
 
 public class TextBlockClient extends TextBlock {
 	private ChatStyle style;

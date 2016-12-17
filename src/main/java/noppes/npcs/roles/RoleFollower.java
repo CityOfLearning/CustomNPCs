@@ -9,9 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.StatCollector;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.api.NpcAPI;
 import noppes.npcs.api.entity.IPlayer;
@@ -19,6 +16,9 @@ import noppes.npcs.api.entity.data.role.IRoleFollower;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesStringUtils;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleFollower extends RoleInterface implements IRoleFollower {
 	private String ownerUUID;

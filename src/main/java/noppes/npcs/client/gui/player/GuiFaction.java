@@ -9,7 +9,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.client.CustomNpcResourceListener;
 import noppes.npcs.client.gui.util.GuiButtonNextPage;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
@@ -17,6 +16,7 @@ import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.controllers.faction.Faction;
 import noppes.npcs.controllers.faction.PlayerFactionData;
+import noppes.npcs.util.NoppesUtilPlayer;
 import tconstruct.client.tabs.InventoryTabFactions;
 import tconstruct.client.tabs.TabRegistry;
 

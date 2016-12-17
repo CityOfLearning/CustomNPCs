@@ -17,11 +17,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBorder;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockBorder extends BlockContainer implements IPermission {
 	public static PropertyInteger ROTATION;
@@ -116,7 +116,7 @@ public class BlockBorder extends BlockContainer implements IPermission {
 			adjacent.writeExtraNBT(compound);
 			tile.readExtraNBT(compound);
 		}
-		tile.rotation = l;
+		tile.setRotation(l);
 		if ((entity instanceof EntityPlayer) && !world.isRemote) {
 			NoppesUtilServer.sendOpenGui((EntityPlayer) entity, EnumGuiType.Border, null, pos.getX(), pos.getY(),
 					pos.getZ());

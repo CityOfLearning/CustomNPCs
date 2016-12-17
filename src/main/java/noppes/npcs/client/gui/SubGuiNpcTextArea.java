@@ -2,10 +2,10 @@
 package noppes.npcs.client.gui;
 
 import net.minecraft.client.gui.GuiButton;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcTextArea;
 import noppes.npcs.client.gui.util.SubGuiInterface;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class SubGuiNpcTextArea extends SubGuiInterface {
 	public String text;

@@ -8,10 +8,10 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NBTTags;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.NBTJsonUtil;
+import noppes.npcs.util.NBTTags;
 
 public class LinkedNpcController {
 	public static class LinkedData {

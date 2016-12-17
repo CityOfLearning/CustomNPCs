@@ -55,7 +55,6 @@ public class CustomNpcsPermissions {
 	public static Permission TOOL_SCRIPTER;
 	public static Permission EDIT_VILLAGER;
 	public static Permission EDIT_BLOCKS;
-	public static Permission SOULSTONE_ALL;
 	public static Permission SCENES;
 	public static CustomNpcsPermissions Instance;
 
@@ -89,7 +88,6 @@ public class CustomNpcsPermissions {
 		TOOL_SCRIPTER = new Permission("customnpcs.tool.scripter");
 		EDIT_VILLAGER = new Permission("customnpcs.edit.villager");
 		EDIT_BLOCKS = new Permission("customnpcs.edit.blocks");
-		SOULSTONE_ALL = new Permission("customnpcs.soulstone.all");
 		SCENES = new Permission("customnpcs.scenes");
 		CustomNpcsPermissions.Instance = new CustomNpcsPermissions();
 		CustomNpcsPermissions.SpongeLoaded = false;

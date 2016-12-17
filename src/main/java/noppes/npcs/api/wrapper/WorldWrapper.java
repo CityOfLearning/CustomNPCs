@@ -27,7 +27,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.IScoreboard;
@@ -40,6 +39,7 @@ import noppes.npcs.api.entity.data.IData;
 import noppes.npcs.controllers.ServerCloneController;
 import noppes.npcs.controllers.script.ScriptController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class WorldWrapper implements IWorld {
 	public static Map<String, Object> tempData;

@@ -34,7 +34,7 @@ public class RolePostman extends RoleInterface {
 		if ((npc.ticksExisted % 20) != 0) {
 			return false;
 		}
-		(toCheck = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
+		(toCheck = npc.worldObj.getEntitiesWithinAABB(EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0))).removeAll(recentlyChecked);
 		List<EntityPlayer> listMax = npc.worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
 				npc.getEntityBoundingBox().expand(20.0, 20.0, 20.0));

@@ -9,10 +9,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
 public class TileCopy extends TileEntity {
-	public short length;
-	public short width;
-	public short height;
-	public String name;
+	private short length;
+	private short width;
+	private short height;
+	private String name;
 
 	public TileCopy() {
 		length = 10;
@@ -31,10 +31,26 @@ public class TileCopy extends TileEntity {
 		return packet;
 	}
 
+	public short getHeight() {
+		return height;
+	}
+
+	public short getLength() {
+		return length;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + width + 1, pos.getY() + height + 1,
 				pos.getZ() + length + 1);
+	}
+
+	public short getWidth() {
+		return width;
 	}
 
 	@Override
@@ -52,6 +68,22 @@ public class TileCopy extends TileEntity {
 		width = compound.getShort("Width");
 		height = compound.getShort("Height");
 		name = compound.getString("Name");
+	}
+
+	public void setHeight(short height) {
+		this.height = height;
+	}
+
+	public void setLength(short length) {
+		this.length = length;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setWidth(short width) {
+		this.width = width;
 	}
 
 	@Override

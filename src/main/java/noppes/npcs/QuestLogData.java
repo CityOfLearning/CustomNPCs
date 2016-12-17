@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.constants.EnumQuestCompletion;
 import noppes.npcs.controllers.quest.PlayerQuestController;
 import noppes.npcs.controllers.quest.Quest;
+import noppes.npcs.util.NBTTags;
 
 public class QuestLogData {
 	public HashMap<String, Vector<String>> categories;

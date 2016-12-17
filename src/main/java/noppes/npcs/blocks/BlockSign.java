@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -21,7 +22,7 @@ import noppes.npcs.blocks.tiles.TileSign;
 
 public class BlockSign extends BlockRotated {
 	public BlockSign() {
-		super(Blocks.planks);
+		super(Material.wood);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public class BlockSign extends BlockRotated {
 			ItemStack stack) {
 		super.onBlockPlacedBy(world, pos, state, entity, stack);
 		TileSign tile = (TileSign) world.getTileEntity(pos);
-		tile.time = System.currentTimeMillis();
+		tile.setTime(System.currentTimeMillis());
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		if (((entity instanceof EntityPlayer)) && (world.isRemote)) {
 			((EntityPlayer) entity)
@@ -72,7 +73,7 @@ public class BlockSign extends BlockRotated {
 			return;
 		}
 		TileColorable tile = (TileColorable) tileentity;
-		if ((tile.rotation % 2) == 1) {
+		if ((tile.getRotation() % 2) == 1) {
 			setBlockBounds(0.0F, 0.3F, 0.3F, 1.0F, 1.0F, 0.7F);
 		} else {
 			setBlockBounds(0.3F, 0.3F, 0.0F, 0.7F, 1.0F, 1.0F);

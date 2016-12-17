@@ -11,9 +11,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import noppes.npcs.Schematic;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.controllers.SchematicController;
+import noppes.npcs.util.Schematic;
 
 public class CmdSchematics extends CommandNoppesBase {
 	@Override

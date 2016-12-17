@@ -34,7 +34,7 @@ public class BlockTradingRenderer extends BlockRendererInterface {
 		GlStateManager.translate((float) var2 + 0.5f, (float) var4 + 1.42f, (float) var6 + 0.5f);
 		GlStateManager.scale(1.0f, 0.94f, 1.0f);
 		GlStateManager.rotate(180.0f, 0.0f, 0.0f, 1.0f);
-		GlStateManager.rotate(90 * tile.rotation, 0.0f, 1.0f, 0.0f);
+		GlStateManager.rotate(90 * tile.getRotation(), 0.0f, 1.0f, 0.0f);
 		GlStateManager.color(1.0f, 1.0f, 1.0f);
 		Minecraft.getMinecraft().getTextureManager().bindTexture(BlockTradingRenderer.resource1);
 		model.render(null, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0625f);
@@ -49,14 +49,14 @@ public class BlockTradingRenderer extends BlockRendererInterface {
 		int i = 0;
 		int j = 1;
 		int k = 1;
-		if (tile.rotation == 0) {
+		if (tile.getRotation() == 0) {
 			i = -1;
 			j = 0;
 			k = -1;
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			j = -1;
 			k = -1;
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			i = 1;
 			j = 0;
 			k = 1;

@@ -1,5 +1,6 @@
 package noppes.npcs.blocks;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -19,7 +20,7 @@ import noppes.npcs.constants.EnumPacketClient;
 
 public class BlockBook extends BlockRotated {
 	public BlockBook() {
-		super(Blocks.planks);
+		super(Material.leaves);
 		setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.2F, 1.0F);
 	}
 
@@ -46,11 +47,11 @@ public class BlockBook extends BlockRotated {
 		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
 				&& (CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS))) {
-			((TileBook) tile).book.setItem(Items.writable_book);
+			((TileBook) tile).getBook().setItem(Items.writable_book);
 		}
 		Server.sendData((EntityPlayerMP) player, EnumPacketClient.OPEN_BOOK,
 				new Object[] { Integer.valueOf(pos.getX()), Integer.valueOf(pos.getY()), Integer.valueOf(pos.getZ()),
-						((TileBook) tile).book.writeToNBT(new NBTTagCompound()) });
+						((TileBook) tile).getBook().writeToNBT(new NBTTagCompound()) });
 		return true;
 	}
 }

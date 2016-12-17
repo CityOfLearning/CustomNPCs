@@ -11,10 +11,10 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.item.ItemStack;
 import noppes.npcs.CustomItems;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.ClientProxy;
 import noppes.npcs.client.gui.player.GuiQuestLog;
 import noppes.npcs.util.CustomNPCsScheduler;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class InventoryTabQuests extends AbstractTab {
 	public InventoryTabQuests() {

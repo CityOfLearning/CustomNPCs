@@ -237,7 +237,7 @@ public class JobConversation extends JobInterface {
 			return false;
 		}
 		npcs.clear();
-		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(10.0, 10.0, 10.0));
 		for (EntityNPCInterface npc : list) {
 			if (!npc.isKilled() && !npc.isAttacking() && names.contains(npc.getName().toLowerCase())) {

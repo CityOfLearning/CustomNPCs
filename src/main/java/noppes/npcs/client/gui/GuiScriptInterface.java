@@ -16,9 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.NoppesStringUtils;
 import noppes.npcs.client.NoppesUtil;
-import noppes.npcs.client.gui.swing.GuiJTextArea;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiMenuTopButton;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
@@ -30,6 +28,7 @@ import noppes.npcs.client.gui.util.IJTextAreaListener;
 import noppes.npcs.controllers.script.IScriptHandler;
 import noppes.npcs.controllers.script.ScriptContainer;
 import noppes.npcs.controllers.script.ScriptController;
+import noppes.npcs.util.NoppesStringUtils;
 
 public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, GuiYesNoCallback, IJTextAreaListener {
 	private int activeTab;
@@ -107,13 +106,6 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 				handler.getScripts().add(container = new ScriptContainer(handler));
 			}
 			setSubGui(new GuiScriptList(languages.get(handler.getLanguage()), container));
-		}
-		if (guibutton.id == 108) {
-			ScriptContainer container = handler.getScripts().get(activeTab - 1);
-			if (container != null) {
-				setScript();
-				GuiNPCInterface.AWTWindow = new GuiJTextArea(container.script).setListener(this);
-			}
 		}
 	}
 
@@ -199,7 +191,6 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 			addButton(new GuiNpcButton(101, left + 61, guiTop + yoffset, 60, 20, "gui.paste"));
 			addButton(new GuiNpcButton(100, left, guiTop + 21 + yoffset, 60, 20, "gui.copy"));
 			addButton(new GuiNpcButton(105, left + 61, guiTop + 21 + yoffset, 60, 20, "gui.remove"));
-			addButton(new GuiNpcButton(108, left, guiTop + 43 + yoffset, 80, 20, "gui.editor"));
 			addButton(new GuiNpcButton(107, left, guiTop + 66 + yoffset, 80, 20, "script.loadscript"));
 			GuiCustomScroll scroll = new GuiCustomScroll(this, 0).setUnselectable();
 			scroll.setSize(100, (int) (ySize * 0.54) - (yoffset * 2));

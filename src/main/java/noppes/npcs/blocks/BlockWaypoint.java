@@ -13,11 +13,11 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileWaypoint;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockWaypoint extends BlockContainer implements IPermission {
 	public BlockWaypoint() {

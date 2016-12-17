@@ -11,13 +11,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringUtils;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartConfig;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.entity.data.INPCDisplay;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartConfig;
 import noppes.npcs.util.ValueUtil;
 
 public class DataDisplay implements INPCDisplay {

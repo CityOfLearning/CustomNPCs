@@ -39,16 +39,16 @@ public class BlockLamp extends BlockLightable {
 			return;
 		}
 		TileColorable tile = (TileColorable) tileentity;
-		if (tile.color == 2) {
+		if (tile.getColor() == 2) {
 			float xOffset = 0.0F;
 			float yOffset = 0.0F;
-			if (tile.rotation == 0) {
+			if (tile.getRotation() == 0) {
 				yOffset = 0.2F;
-			} else if (tile.rotation == 4) {
+			} else if (tile.getRotation() == 4) {
 				yOffset = -0.2F;
-			} else if (tile.rotation == 6) {
+			} else if (tile.getRotation() == 6) {
 				xOffset = 0.2F;
-			} else if (tile.rotation == 2) {
+			} else if (tile.getRotation() == 2) {
 				xOffset = -0.2F;
 			}
 			setBlockBounds(0.3F + xOffset, 0.2F, 0.3F + yOffset, 0.7F + xOffset, 0.7F, 0.7F + yOffset);

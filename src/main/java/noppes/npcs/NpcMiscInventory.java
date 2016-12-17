@@ -8,6 +8,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IChatComponent;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class NpcMiscInventory implements IInventory {
 	public HashMap<Integer, ItemStack> items;

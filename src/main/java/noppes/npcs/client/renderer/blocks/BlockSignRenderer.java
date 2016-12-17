@@ -3,7 +3,6 @@ package noppes.npcs.client.renderer.blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import noppes.npcs.blocks.tiles.TileSign;
@@ -13,9 +12,9 @@ public class BlockSignRenderer extends BlockRendererInterface {
 	private final ModelSign model = new ModelSign();
 
 	public void doRender(double par2, double par4, double par6, int meta, ItemStack iicon) {
-		if ((iicon.getItem() instanceof ItemBlock)) {
-			return;
-		}
+		// if ((iicon.getItem() instanceof ItemBlock)) {
+		// return;
+		// }
 		GlStateManager.pushMatrix();
 		bindTexture(TextureMap.locationBlocksTexture);
 		GlStateManager.translate(0.0D, 1.0199999809265137D, -3.57D);
@@ -42,7 +41,7 @@ public class BlockSignRenderer extends BlockRendererInterface {
 		GlStateManager.translate((float) var2 + 0.5F, (float) var4 + 1.62F, (float) var6 + 0.5F);
 
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.rotate((90 * tile.rotation) + 90, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate((90 * tile.getRotation()) + 90, 0.0F, 1.0F, 0.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Steel);
@@ -50,8 +49,8 @@ public class BlockSignRenderer extends BlockRendererInterface {
 
 		setWoodTexture(tile.getBlockMetadata());
 		model.Sign.render(0.0625F);
-		if ((tile.icon != null) && (!playerTooFar(tile))) {
-			doRender(var2, var4, var6, tile.rotation, tile.icon);
+		if ((tile.getIcon() != null) && (!playerTooFar(tile))) {
+			doRender(var2, var4, var6, tile.getRotation(), tile.getIcon());
 		}
 		GlStateManager.popMatrix();
 	}

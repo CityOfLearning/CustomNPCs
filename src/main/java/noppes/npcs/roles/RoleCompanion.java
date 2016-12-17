@@ -31,7 +31,6 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcMiscInventory;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
@@ -49,6 +48,7 @@ import noppes.npcs.roles.companion.CompanionFoodStats;
 import noppes.npcs.roles.companion.CompanionGuard;
 import noppes.npcs.roles.companion.CompanionJobInterface;
 import noppes.npcs.roles.companion.CompanionTrader;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleCompanion extends RoleInterface {
 	public NpcMiscInventory inventory;

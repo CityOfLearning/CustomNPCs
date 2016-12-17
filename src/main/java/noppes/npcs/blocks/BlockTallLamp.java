@@ -23,10 +23,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileTallLamp;
 import noppes.npcs.client.renderer.ITileRenderer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockTallLamp extends BlockContainer implements ITileRenderer {
 	public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
@@ -120,9 +120,9 @@ public class BlockTallLamp extends BlockContainer implements ITileRenderer {
 		}
 		TileColorable tile = (TileColorable) par1World.getTileEntity(pos);
 		int color = EnumDyeColor.byDyeDamage(item.getItemDamage()).getMetadata();
-		if (tile.color != color) {
+		if (tile.getColor() != color) {
 			NoppesUtilServer.consumeItemStack(1, player);
-			tile.color = color;
+			tile.setColor(color);
 			par1World.markBlockForUpdate(pos);
 		}
 		return true;
@@ -152,8 +152,8 @@ public class BlockTallLamp extends BlockContainer implements ITileRenderer {
 					.withProperty(IS_TOP, Boolean.valueOf(true)), 2);
 
 			TileColorable tile = (TileColorable) world.getTileEntity(pos);
-			tile.rotation = l;
-			tile.color = (15 - stack.getItemDamage());
+			tile.setRotation(l);
+			tile.setColor((15 - stack.getItemDamage()));
 		}
 	}
 

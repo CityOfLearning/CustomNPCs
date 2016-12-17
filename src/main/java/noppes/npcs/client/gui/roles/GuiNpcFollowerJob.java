@@ -39,7 +39,7 @@ public class GuiNpcFollowerJob extends GuiNPCInterface2 implements ICustomScroll
 		scroll.guiTop = guiTop + 4;
 		addScroll(scroll);
 		List<String> names = new ArrayList<String>();
-		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+		List<EntityNPCInterface> list = npc.worldObj.getEntitiesWithinAABB(EntityNPCInterface.class,
 				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
 		for (EntityNPCInterface npc : list) {
 			if (npc != this.npc) {

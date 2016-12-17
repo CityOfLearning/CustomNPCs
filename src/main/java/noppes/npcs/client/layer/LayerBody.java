@@ -5,10 +5,10 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.model.Model2DRenderer;
 import noppes.npcs.client.model.ModelPlaneRenderer;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelPartData;
 
 public class LayerBody extends LayerInterface {
 	private Model2DRenderer lWing;

@@ -4,9 +4,9 @@ package noppes.npcs.entity.old;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import noppes.npcs.ModelData;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.model.ModelData;
 
 public class EntityNPCVillager extends EntityNPCInterface {
 	public EntityNPCVillager(World world) {

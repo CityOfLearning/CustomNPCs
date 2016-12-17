@@ -29,12 +29,12 @@ public class GuiNpcRedstoneBlock extends GuiNPCInterface implements IGuiData {
 			close();
 		}
 		if (id == 1) {
-			tile.isDetailed = (((GuiNpcButton) guibutton).getValue() == 1);
+			tile.setDetailed((((GuiNpcButton) guibutton).getValue() == 1));
 			initGui();
 		}
 		if (id == 4) {
 			save();
-			setSubGui(new SubGuiNpcAvailability(tile.availability));
+			setSubGui(new SubGuiNpcAvailability(tile.getAvailability()));
 		}
 	}
 
@@ -44,49 +44,49 @@ public class GuiNpcRedstoneBlock extends GuiNPCInterface implements IGuiData {
 		addButton(new GuiNpcButton(4, guiLeft + 40, guiTop + 20, 120, 20, "availability.options"));
 		addLabel(new GuiNpcLabel(11, "gui.detailed", guiLeft + 40, guiTop + 47, 16777215));
 		addButton(new GuiNpcButton(1, guiLeft + 110, guiTop + 42, 50, 20, new String[] { "gui.no", "gui.yes" },
-				tile.isDetailed ? 1 : 0));
-		if (tile.isDetailed) {
+				tile.isDetailed() ? 1 : 0));
+		if (tile.isDetailed()) {
 			addLabel(new GuiNpcLabel(0, StatCollector.translateToLocal("bard.ondistance") + " X:", guiLeft + 1,
 					guiTop + 76, 16777215));
 			addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 80, guiTop + 71, 30, 20,
-					tile.onRangeX + ""));
+					tile.getOnRangeX() + ""));
 			getTextField(0).numbersOnly = true;
 			getTextField(0).setMinMaxDefault(0, 50, 6);
 			addLabel(new GuiNpcLabel(1, "Y:", guiLeft + 113, guiTop + 76, 16777215));
 			addTextField(new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 122, guiTop + 71, 30, 20,
-					tile.onRangeY + ""));
+					tile.getOnRangeY() + ""));
 			getTextField(1).numbersOnly = true;
 			getTextField(1).setMinMaxDefault(0, 50, 6);
 			addLabel(new GuiNpcLabel(2, "Z:", guiLeft + 155, guiTop + 76, 16777215));
 			addTextField(new GuiNpcTextField(2, this, fontRendererObj, guiLeft + 164, guiTop + 71, 30, 20,
-					tile.onRangeZ + ""));
+					tile.getOnRangeZ() + ""));
 			getTextField(2).numbersOnly = true;
 			getTextField(2).setMinMaxDefault(0, 50, 6);
 			addLabel(new GuiNpcLabel(3, StatCollector.translateToLocal("bard.offdistance") + " X:", guiLeft - 3,
 					guiTop + 99, 16777215));
 			addTextField(new GuiNpcTextField(3, this, fontRendererObj, guiLeft + 80, guiTop + 94, 30, 20,
-					tile.offRangeX + ""));
+					tile.getOffRangeX() + ""));
 			getTextField(3).numbersOnly = true;
 			getTextField(3).setMinMaxDefault(0, 50, 10);
 			addLabel(new GuiNpcLabel(4, "Y:", guiLeft + 113, guiTop + 99, 16777215));
 			addTextField(new GuiNpcTextField(4, this, fontRendererObj, guiLeft + 122, guiTop + 94, 30, 20,
-					tile.offRangeY + ""));
+					tile.getOffRangeY() + ""));
 			getTextField(4).numbersOnly = true;
 			getTextField(4).setMinMaxDefault(0, 50, 10);
 			addLabel(new GuiNpcLabel(5, "Z:", guiLeft + 155, guiTop + 99, 16777215));
 			addTextField(new GuiNpcTextField(5, this, fontRendererObj, guiLeft + 164, guiTop + 94, 30, 20,
-					tile.offRangeZ + ""));
+					tile.getOffRangeZ() + ""));
 			getTextField(5).numbersOnly = true;
 			getTextField(5).setMinMaxDefault(0, 50, 10);
 		} else {
 			addLabel(new GuiNpcLabel(0, "bard.ondistance", guiLeft + 1, guiTop + 76, 16777215));
 			addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 80, guiTop + 71, 30, 20,
-					tile.onRange + ""));
+					tile.getOnRange() + ""));
 			getTextField(0).numbersOnly = true;
 			getTextField(0).setMinMaxDefault(0, 50, 6);
 			addLabel(new GuiNpcLabel(3, "bard.offdistance", guiLeft - 3, guiTop + 99, 16777215));
 			addTextField(new GuiNpcTextField(3, this, fontRendererObj, guiLeft + 80, guiTop + 94, 30, 20,
-					tile.offRange + ""));
+					tile.getOffRange() + ""));
 			getTextField(3).numbersOnly = true;
 			getTextField(3).setMinMaxDefault(0, 50, 10);
 		}
@@ -98,27 +98,27 @@ public class GuiNpcRedstoneBlock extends GuiNPCInterface implements IGuiData {
 		if (tile == null) {
 			return;
 		}
-		if (tile.isDetailed) {
-			tile.onRangeX = getTextField(0).getInteger();
-			tile.onRangeY = getTextField(1).getInteger();
-			tile.onRangeZ = getTextField(2).getInteger();
-			tile.offRangeX = getTextField(3).getInteger();
-			tile.offRangeY = getTextField(4).getInteger();
-			tile.offRangeZ = getTextField(5).getInteger();
-			if (tile.onRangeX > tile.offRangeX) {
-				tile.offRangeX = tile.onRangeX;
+		if (tile.isDetailed()) {
+			tile.setOnRangeX(getTextField(0).getInteger());
+			tile.setOnRangeY(getTextField(1).getInteger());
+			tile.setOnRangeZ(getTextField(2).getInteger());
+			tile.setOffRangeX(getTextField(3).getInteger());
+			tile.setOffRangeY(getTextField(4).getInteger());
+			tile.setOffRangeZ(getTextField(5).getInteger());
+			if (tile.getOnRangeX() > tile.getOffRangeX()) {
+				tile.setOffRangeX(tile.getOnRangeX());
 			}
-			if (tile.onRangeY > tile.offRangeY) {
-				tile.offRangeY = tile.onRangeY;
+			if (tile.getOnRangeY() > tile.getOffRangeY()) {
+				tile.setOffRangeY(tile.getOnRangeY());
 			}
-			if (tile.onRangeZ > tile.offRangeZ) {
-				tile.offRangeZ = tile.onRangeZ;
+			if (tile.getOnRangeZ() > tile.getOffRangeZ()) {
+				tile.setOffRangeZ(tile.getOnRangeZ());
 			}
 		} else {
-			tile.onRange = getTextField(0).getInteger();
-			tile.offRange = getTextField(3).getInteger();
-			if (tile.onRange > tile.offRange) {
-				tile.offRange = tile.onRange;
+			tile.setOnRange(getTextField(0).getInteger());
+			tile.setOffRange(getTextField(3).getInteger());
+			if (tile.getOnRange() > tile.getOffRange()) {
+				tile.setOffRange(tile.getOnRange());
 			}
 		}
 		NBTTagCompound compound = new NBTTagCompound();

@@ -8,10 +8,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import noppes.npcs.ModelData;
-import noppes.npcs.ModelPartData;
 import noppes.npcs.client.ClientProxy;
 import noppes.npcs.entity.EntityCustomNpc;
+import noppes.npcs.model.ModelData;
+import noppes.npcs.model.ModelPartData;
 
 public abstract class LayerInterface implements LayerRenderer {
 	protected RenderLiving render;

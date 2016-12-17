@@ -61,11 +61,8 @@ import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.IChatMessages;
-import noppes.npcs.NBTTags;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.NpcDamageSource;
 import noppes.npcs.Server;
-import noppes.npcs.VersionCompatibility;
 import noppes.npcs.ai.EntityAIAmbushTarget;
 import noppes.npcs.ai.EntityAIAnimation;
 import noppes.npcs.ai.EntityAIAttackTarget;
@@ -131,6 +128,9 @@ import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.roles.RoleInterface;
 import noppes.npcs.util.GameProfileAlt;
+import noppes.npcs.util.NBTTags;
+import noppes.npcs.util.NoppesUtilServer;
+import noppes.npcs.util.VersionCompatibility;
 
 public abstract class EntityNPCInterface extends EntityCreature
 		implements IEntityAdditionalSpawnData, ICommandSender, IRangedAttackMob, IBossDisplayData {
@@ -401,7 +401,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 				return super.attackEntityFrom(damagesource, i);
 			}
 			if (i > 0.0f) {
-				List<EntityNPCInterface> inRange = worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
+				List<EntityNPCInterface> inRange = worldObj.getEntitiesWithinAABB(EntityNPCInterface.class,
 						getEntityBoundingBox().expand(32.0, 16.0, 32.0));
 				for (EntityNPCInterface npc2 : inRange) {
 					if (!npc2.isKilled() && npc2.advanced.defendFaction) {
@@ -1174,7 +1174,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 					}
 				}
 				if (faction.getsAttacked && !isAttacking()) {
-					List<EntityMob> list = worldObj.getEntitiesWithinAABB((Class) EntityMob.class,
+					List<EntityMob> list = worldObj.getEntitiesWithinAABB(EntityMob.class,
 							getEntityBoundingBox().expand(16.0, 16.0, 16.0));
 					for (EntityMob mob : list) {
 						if ((mob.getAttackTarget() == null) && canSee(mob)) {

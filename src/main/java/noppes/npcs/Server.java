@@ -98,7 +98,7 @@ public class Server {
 	}
 
 	public static void sendAssociatedData(Entity entity, EnumPacketClient enu, Object... obs) {
-		List<EntityPlayerMP> list = entity.worldObj.getEntitiesWithinAABB((Class) EntityPlayerMP.class,
+		List<EntityPlayerMP> list = entity.worldObj.getEntitiesWithinAABB(EntityPlayerMP.class,
 				entity.getEntityBoundingBox().expand(160.0, 160.0, 160.0));
 		if (list.isEmpty()) {
 			return;

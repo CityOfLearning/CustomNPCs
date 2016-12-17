@@ -12,9 +12,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldSettings;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.NoppesStringUtils;
-import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.Server;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.IItemStack;
@@ -32,6 +29,9 @@ import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.controllers.quest.QuestController;
 import noppes.npcs.controllers.quest.QuestData;
 import noppes.npcs.entity.EntityDialogNpc;
+import noppes.npcs.util.NoppesStringUtils;
+import noppes.npcs.util.NoppesUtilPlayer;
+import noppes.npcs.util.NoppesUtilServer;
 import noppes.npcs.util.ValueUtil;
 
 public class PlayerWrapper<T extends EntityPlayerMP> extends EntityLivingBaseWrapper<T> implements IPlayer {

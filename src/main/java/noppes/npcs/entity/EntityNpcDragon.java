@@ -5,7 +5,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import noppes.npcs.ModelData;
+import noppes.npcs.model.ModelData;
 
 public class EntityNpcDragon extends EntityNPCInterface {
 	public double[][] field_40162_d;

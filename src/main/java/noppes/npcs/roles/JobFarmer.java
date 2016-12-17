@@ -19,14 +19,14 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import noppes.npcs.NoppesUtilPlayer;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.controllers.BlockData;
 import noppes.npcs.controllers.MassBlockController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilPlayer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class JobFarmer extends JobInterface implements MassBlockController.IMassBlock {
 	public int chestMode;

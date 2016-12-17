@@ -10,12 +10,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.controllers.BlockData;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class JobBuilder extends JobInterface {
 	public TileBuilder build;
@@ -57,7 +57,7 @@ public class JobBuilder extends JobInterface {
 
 	@Override
 	public void aiUpdateTask() {
-		if ((build.finished && (placingList == null)) || !build.enabled || build.isInvalid()) {
+		if ((build.isFinished() && (placingList == null)) || !build.isEnabled() || build.isInvalid()) {
 			build = null;
 			npc.getNavigator().tryMoveToXYZ(npc.getStartXPos(), npc.getStartYPos(), npc.getStartZPos(), 1.0);
 			return;

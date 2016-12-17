@@ -5,7 +5,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
 public class TileBook extends TileColorable {
-	public ItemStack book = new ItemStack(Items.writable_book);
+	private ItemStack book = new ItemStack(Items.writable_book);
+
+	public ItemStack getBook() {
+		return book;
+	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
@@ -14,6 +18,10 @@ public class TileBook extends TileColorable {
 		if (book == null) {
 			book = new ItemStack(Items.writable_book);
 		}
+	}
+
+	public void setBook(ItemStack book) {
+		this.book = book;
 	}
 
 	@Override

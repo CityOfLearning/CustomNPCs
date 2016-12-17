@@ -8,7 +8,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.Schematic;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
@@ -21,6 +20,7 @@ import noppes.npcs.client.gui.util.ICustomScrollListener;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumPacketServer;
+import noppes.npcs.util.Schematic;
 
 public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICustomScrollListener, IScrollData {
 	private int x;
@@ -55,20 +55,20 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 			}
 		}
 		if (guibutton.id == 4) {
-			tile.enabled = ((GuiNpcButtonYesNo) guibutton).getBoolean();
+			tile.setEnabled(((GuiNpcButtonYesNo) guibutton).getBoolean());
 		}
 		if (guibutton.id == 5) {
-			tile.rotation = ((GuiNpcButton) guibutton).getValue();
+			tile.setRotation(((GuiNpcButton) guibutton).getValue());
 		}
 		if (guibutton.id == 6) {
-			setSubGui(new SubGuiNpcAvailability(tile.availability));
+			setSubGui(new SubGuiNpcAvailability(tile.getAvailability()));
 		}
 		if (guibutton.id == 7) {
-			tile.finished = ((GuiNpcButtonYesNo) guibutton).getBoolean();
+			tile.setFinished(((GuiNpcButtonYesNo) guibutton).getBoolean());
 			Client.sendData(EnumPacketServer.SchematicsSet, x, y, z, scroll.getSelected());
 		}
 		if (guibutton.id == 8) {
-			tile.started = ((GuiNpcButtonYesNo) guibutton).getBoolean();
+			tile.setStarted(((GuiNpcButtonYesNo) guibutton).getBoolean());
 		}
 	}
 
@@ -119,29 +119,29 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 			int id4 = 4;
 			int x4 = guiLeft + 200;
 			y += 16;
-			addButton(new GuiNpcButtonYesNo(id4, x4, y, tile.enabled));
+			addButton(new GuiNpcButtonYesNo(id4, x4, y, tile.isEnabled()));
 			addLabel(new GuiNpcLabel(4, StatCollector.translateToLocal("gui.enabled"), guiLeft + 130, y + 5));
 			int id5 = 7;
 			int x5 = guiLeft + 200;
 			y += 23;
-			addButton(new GuiNpcButtonYesNo(id5, x5, y, tile.finished));
+			addButton(new GuiNpcButtonYesNo(id5, x5, y, tile.isFinished()));
 			addLabel(new GuiNpcLabel(7, StatCollector.translateToLocal("gui.finished"), guiLeft + 130, y + 5));
 			int id6 = 8;
 			int x6 = guiLeft + 200;
 			y += 23;
-			addButton(new GuiNpcButtonYesNo(id6, x6, y, tile.started));
+			addButton(new GuiNpcButtonYesNo(id6, x6, y, tile.isStarted()));
 			addLabel(new GuiNpcLabel(8, StatCollector.translateToLocal("gui.started"), guiLeft + 130, y + 5));
 			int id7 = 9;
 			int i = guiLeft + 200;
 			y += 23;
-			addTextField(new GuiNpcTextField(id7, this, i, y, 50, 20, tile.yOffest + ""));
+			addTextField(new GuiNpcTextField(id7, this, i, y, 50, 20, tile.getyOffest() + ""));
 			addLabel(new GuiNpcLabel(9, StatCollector.translateToLocal("gui.yoffset"), guiLeft + 130, y + 5));
 			getTextField(9).numbersOnly = true;
 			getTextField(9).setMinMaxDefault(-10, 10, 0);
 			int j = 5;
 			int k = guiLeft + 200;
 			y += 23;
-			addButton(new GuiNpcButton(j, k, y, 50, 20, new String[] { "0", "90", "180", "270" }, tile.rotation));
+			addButton(new GuiNpcButton(j, k, y, 50, 20, new String[] { "0", "90", "180", "270" }, tile.getRotation()));
 			addLabel(new GuiNpcLabel(5, StatCollector.translateToLocal("movement.rotation"), guiLeft + 130, y + 5));
 			int l = 6;
 			int m = guiLeft + 130;
@@ -158,7 +158,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	@Override
 	public void save() {
 		if (getTextField(9) != null) {
-			tile.yOffest = getTextField(9).getInteger();
+			tile.setyOffest(getTextField(9).getInteger());
 		}
 		Client.sendData(EnumPacketServer.SchematicsTileSave, x, y, z, tile.writePartNBT(new NBTTagCompound()));
 	}

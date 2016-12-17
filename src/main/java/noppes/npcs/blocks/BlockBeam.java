@@ -2,6 +2,7 @@ package noppes.npcs.blocks;
 
 import java.util.List;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -17,7 +18,7 @@ import noppes.npcs.blocks.tiles.TileColorable;
 
 public class BlockBeam extends BlockRotated {
 	public BlockBeam() {
-		super(Blocks.planks);
+		super(Material.wood);
 	}
 
 	@Override
@@ -55,13 +56,13 @@ public class BlockBeam extends BlockRotated {
 			return;
 		}
 		TileColorable tile = (TileColorable) tileentity;
-		if (tile.rotation == 0) {
+		if (tile.getRotation() == 0) {
 			setBlockBounds(0.33F, 0.33F, 0.25F, 0.67F, 0.67F, 1.0F);
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			setBlockBounds(0.33F, 0.33F, 0.0F, 0.67F, 0.67F, 0.75F);
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			setBlockBounds(0.25F, 0.33F, 0.33F, 1.0F, 0.67F, 0.67F);
-		} else if (tile.rotation == 1) {
+		} else if (tile.getRotation() == 1) {
 			setBlockBounds(0.0F, 0.33F, 0.33F, 0.75F, 0.67F, 0.67F);
 		}
 	}

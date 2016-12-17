@@ -1,5 +1,5 @@
 
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.util.Collection;
 import java.util.List;
@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagInt;
 import net.minecraft.nbt.NBTTagList;
+import noppes.npcs.ICompatibilty;
 import noppes.npcs.constants.EnumScriptType;
 import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.controllers.lines.Lines;

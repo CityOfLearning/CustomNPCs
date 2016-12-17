@@ -1,4 +1,4 @@
-package noppes.npcs;
+package noppes.npcs.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -32,6 +32,9 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import noppes.npcs.CustomNpcs;
+import noppes.npcs.EventHooks;
+import noppes.npcs.Server;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerData;
@@ -67,11 +70,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTransporter;
 
 public class NoppesUtilServer {
-	private static HashMap<String, Quest> editingQuests;
-
-	static {
-		NoppesUtilServer.editingQuests = new HashMap<String, Quest>();
-	}
+	private static HashMap<String, Quest> editingQuests = new HashMap<String, Quest>();
 
 	public static void consumeItemStack(int i, EntityPlayer player) {
 		ItemStack item = player.inventory.getCurrentItem();

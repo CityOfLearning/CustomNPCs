@@ -22,7 +22,7 @@ public abstract class BlockLightable extends BlockRotated {
 	public static final PropertyBool LIT = PropertyBool.create("lit");
 
 	protected BlockLightable(Block block, boolean lit) {
-		super(block);
+		super(block.getMaterial());
 		setDefaultState(blockState.getBaseState().withProperty(LIT, Boolean.valueOf(lit)));
 		if (lit) {
 			setLightLevel(1.0F);
@@ -70,19 +70,19 @@ public abstract class BlockLightable extends BlockRotated {
 			EnumFacing facing) {
 		TileColorable tile = (TileColorable) world.getTileEntity(pos);
 		if (facing == EnumFacing.UP) {
-			tile.color = 0;
+			tile.setColor(0);
 		} else if (facing == EnumFacing.DOWN) {
-			tile.color = 1;
+			tile.setColor(1);
 		} else {
-			tile.color = 2;
+			tile.setColor(2);
 			if (facing == EnumFacing.NORTH) {
-				tile.rotation = 0;
+				tile.setRotation(0);
 			} else if (facing == EnumFacing.EAST) {
-				tile.rotation = 2;
+				tile.setRotation(2);
 			} else if (facing == EnumFacing.SOUTH) {
-				tile.rotation = 4;
+				tile.setRotation(4);
 			} else if (facing == EnumFacing.WEST) {
-				tile.rotation = 6;
+				tile.setRotation(6);
 			}
 		}
 	}

@@ -23,15 +23,24 @@ public class BlockTallLampRenderer extends BlockRendererInterface {
 		GlStateManager.translate((float) var2 + 0.5F, (float) var4 + 1.5F, (float) var6 + 0.5F);
 
 		GlStateManager.rotate(180.0F, 0.0F, 0.0F, 1.0F);
-		GlStateManager.rotate(90 * tile.rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(90 * tile.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
 
 		setMaterialTexture(var1.getBlockMetadata());
 		model.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 
 		bindTexture(resourceTop);
-		float[] color = BlockRendererInterface.colorTable[tile.color];
-		GlStateManager.color(color[0], color[1], color[2]);
+		if (tile.getColor() > colorTable.length) {
+			int color = tile.getColor();
+			float f3 = (float) (color >> 24 & 255) / 255.0F;
+			float f = (float) (color >> 16 & 255) / 255.0F;
+			float f1 = (float) (color >> 8 & 255) / 255.0F;
+			float f2 = (float) (color & 255) / 255.0F;
+			GlStateManager.color(f, f1, f2, f3);
+		} else {
+			float[] color = colorTable[tile.getColor()];
+			GlStateManager.color(color[0], color[1], color[2]);
+		}
 		top.render(null, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 
 		GlStateManager.popMatrix();

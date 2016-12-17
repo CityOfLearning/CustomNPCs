@@ -3,8 +3,8 @@ package noppes.npcs.roles.companion;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.constants.EnumGuiType;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class CompanionTrader extends CompanionJobInterface {
 	@Override

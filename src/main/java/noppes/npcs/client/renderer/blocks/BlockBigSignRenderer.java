@@ -22,29 +22,29 @@ public class BlockBigSignRenderer extends BlockRendererInterface {
 		TileBigSign tile = (TileBigSign) var1;
 		Minecraft mc = Minecraft.getMinecraft();
 		GlStateManager.enableLighting();
-		if ((tile.block == null) || (tile.hasChanged)) {
-			tile.block = new TextBlockClient(tile.getText(), 112, true, new Object[] { mc.thePlayer });
-			tile.hasChanged = false;
+		if ((tile.getBlock() == null) || (tile.isHasChanged())) {
+			tile.setBlock(new TextBlockClient(tile.getText(), 112, true, new Object[] { mc.thePlayer }));
+			tile.setHasChanged(false);
 		}
 		GlStateManager.pushMatrix();
 		GlStateManager.disableBlend();
 		float xOffset = 0.0F;
 		float yOffset = 0.0F;
-		if (tile.rotation == 1) {
+		if (tile.getRotation() == 1) {
 			xOffset = -0.44F;
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			xOffset = 0.44F;
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			yOffset = -0.44F;
-		} else if (tile.rotation == 0) {
+		} else if (tile.getRotation() == 0) {
 			yOffset = 0.44F;
 		}
 		GlStateManager.translate((float) var2 + 0.5F + xOffset, (float) var4 + 0.5F, (float) var6 + 0.5F + yOffset);
 
 		float f1 = 0.6666667F;
-		GlStateManager.rotate(90 * tile.rotation, 0.0F, 1.0F, 0.0F);
+		GlStateManager.rotate(90 * tile.getRotation(), 0.0F, 1.0F, 0.0F);
 		GlStateManager.color(1.0F, 1.0F, 1.0F);
-		if ((tile.rotation % 2) == 0) {
+		if ((tile.getRotation() % 2) == 0) {
 			GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
 		}
 		GlStateManager.pushMatrix();
@@ -55,7 +55,7 @@ public class BlockBigSignRenderer extends BlockRendererInterface {
 		manager.bindTexture(resource);
 		model.renderSign();
 		GlStateManager.popMatrix();
-		if ((!tile.block.lines.isEmpty()) && (!playerTooFar(tile))) {
+		if ((!tile.getBlock().lines.isEmpty()) && (!playerTooFar(tile))) {
 			float f3 = 0.0133F * f1;
 			GlStateManager.translate(0.0F, 0.5F, 0.065F);
 			GlStateManager.scale(f3, -f3, f3);
@@ -64,11 +64,11 @@ public class BlockBigSignRenderer extends BlockRendererInterface {
 			FontRenderer fontrenderer = getFontRenderer();
 
 			float lineOffset = 0.0F;
-			if (tile.block.lines.size() < 14) {
-				lineOffset = (14.0F - tile.block.lines.size()) / 2.0F;
+			if (tile.getBlock().lines.size() < 14) {
+				lineOffset = (14.0F - tile.getBlock().lines.size()) / 2.0F;
 			}
-			for (int i = 0; i < tile.block.lines.size(); i++) {
-				String text = tile.block.lines.get(i).getFormattedText();
+			for (int i = 0; i < tile.getBlock().lines.size(); i++) {
+				String text = tile.getBlock().lines.get(i).getFormattedText();
 				fontrenderer.drawString(text, -fontrenderer.getStringWidth(text) / 2,
 						(int) ((lineOffset + i) * (fontrenderer.FONT_HEIGHT - 0.3D)), 0);
 				if (i == 12) {

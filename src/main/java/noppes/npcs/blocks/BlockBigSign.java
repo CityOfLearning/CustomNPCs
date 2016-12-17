@@ -17,11 +17,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockBigSign extends BlockContainer implements ITileRenderer {
 	public int renderId = -1;
@@ -94,7 +94,7 @@ public class BlockBigSign extends BlockContainer implements ITileRenderer {
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
 				&& (CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS))) {
 			TileBigSign tile = (TileBigSign) par1World.getTileEntity(pos);
-			tile.canEdit = true;
+			tile.setCanEdit(true);
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.BigSign, null, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 		}
@@ -108,7 +108,7 @@ public class BlockBigSign extends BlockContainer implements ITileRenderer {
 		l %= 4;
 
 		TileBigSign tile = (TileBigSign) world.getTileEntity(pos);
-		tile.rotation = l;
+		tile.setRotation(l);
 
 		world.setBlockState(pos, state.withProperty(BlockRotated.DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		if (((entity instanceof EntityPlayer)) && (!world.isRemote)) {
@@ -130,13 +130,13 @@ public class BlockBigSign extends BlockContainer implements ITileRenderer {
 		float zStart = 0.0F;
 		float xEnd = 1.0F;
 		float zEnd = 1.0F;
-		if (tile.rotation == 0) {
+		if (tile.getRotation() == 0) {
 			zStart = 0.87F;
-		} else if (tile.rotation == 2) {
+		} else if (tile.getRotation() == 2) {
 			zEnd = 0.13F;
-		} else if (tile.rotation == 3) {
+		} else if (tile.getRotation() == 3) {
 			xStart = 0.87F;
-		} else if (tile.rotation == 1) {
+		} else if (tile.getRotation() == 1) {
 			xEnd = 0.13F;
 		}
 		setBlockBounds(xStart, 0.0F, zStart, xEnd, 1.0F, zEnd);

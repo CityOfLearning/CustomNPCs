@@ -29,7 +29,7 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 		}
 		if (id == 4) {
 			save();
-			setSubGui(new SubGuiNpcAvailability(tile.availability));
+			setSubGui(new SubGuiNpcAvailability(tile.getAvailability()));
 		}
 	}
 
@@ -38,12 +38,13 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 		super.initGui();
 		addButton(new GuiNpcButton(4, guiLeft + 40, guiTop + 40, 120, 20, "Availability Options"));
 		addLabel(new GuiNpcLabel(0, "Height", guiLeft + 1, guiTop + 76, 16777215));
-		addTextField(
-				new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 60, guiTop + 71, 40, 20, tile.height + ""));
+		addTextField(new GuiNpcTextField(0, this, fontRendererObj, guiLeft + 60, guiTop + 71, 40, 20,
+				tile.getHeight() + ""));
 		getTextField(0).numbersOnly = true;
 		getTextField(0).setMinMaxDefault(0, 500, 6);
 		addLabel(new GuiNpcLabel(1, "Message", guiLeft + 1, guiTop + 100, 16777215));
-		addTextField(new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 60, guiTop + 95, 200, 20, tile.message));
+		addTextField(
+				new GuiNpcTextField(1, this, fontRendererObj, guiLeft + 60, guiTop + 95, 200, 20, tile.getMessage()));
 		addButton(new GuiNpcButton(0, guiLeft + 40, guiTop + 190, 120, 20, "Done"));
 	}
 
@@ -52,8 +53,8 @@ public class GuiBorderBlock extends GuiNPCInterface implements IGuiData {
 		if (tile == null) {
 			return;
 		}
-		tile.height = getTextField(0).getInteger();
-		tile.message = getTextField(1).getText();
+		tile.setHeight(getTextField(0).getInteger());
+		tile.setMessage(getTextField(1).getText());
 		NBTTagCompound compound = new NBTTagCompound();
 		tile.writeToNBT(compound);
 		Client.sendData(EnumPacketServer.SaveTileEntity, compound);

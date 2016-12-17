@@ -1,10 +1,10 @@
 package noppes.npcs.client.gui.player;
 
 import net.minecraft.util.BlockPos;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.client.gui.SubGuiNpcTextArea;
 import noppes.npcs.constants.EnumPlayerPacket;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiBigSign extends SubGuiNpcTextArea {
 	public TileBigSign tile;

@@ -11,6 +11,7 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.EnumDyeColor;
@@ -23,10 +24,10 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.client.renderer.ITileRenderer;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockBanner extends BlockContainer implements ITileRenderer {
 	public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 5);
@@ -111,10 +112,12 @@ public class BlockBanner extends BlockContainer implements ITileRenderer {
 		if (item.getItem() != Items.dye) {
 			return false;
 		}
-		int color = EnumDyeColor.byMetadata(item.getItemDamage()).getMapColor().colorValue;
-		if (tile.color != color) {
+//		EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(color))
+//		int color = EnumDyeColor.byMetadata(item.getItemDamage()).getMapColor().colorValue;
+		int color = 15-item.getItemDamage();
+		if (tile.getColor() != color) {
 			NoppesUtilServer.consumeItemStack(1, player);
-			tile.color = color;
+			tile.setColor(color);
 			par1World.markBlockForUpdate(pos);
 		}
 		return true;
@@ -144,9 +147,9 @@ public class BlockBanner extends BlockContainer implements ITileRenderer {
 			l %= 4;
 
 			TileBanner tile = (TileBanner) world.getTileEntity(pos);
-			tile.rotation = l;
-			tile.color = (15 - stack.getItemDamage());
-			tile.time = System.currentTimeMillis();
+			tile.setRotation(l);
+			tile.setColor((15 - stack.getItemDamage()));
+			tile.setTime(System.currentTimeMillis());
 			if (((entity instanceof EntityPlayer)) && (world.isRemote)) {
 				((EntityPlayer) entity)
 						.addChatComponentMessage(new ChatComponentTranslation("availability.editIcon", new Object[0]));

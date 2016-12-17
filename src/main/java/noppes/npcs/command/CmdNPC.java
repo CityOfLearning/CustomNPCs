@@ -67,8 +67,7 @@ public class CmdNPC extends CommandNoppesBase {
 	}
 
 	public <T extends Entity> List<T> getEntities(Class<? extends T> cls, World world, BlockPos pos, int range) {
-		return world.getEntitiesWithinAABB((Class) cls,
-				new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(range, range, range));
+		return world.getEntitiesWithinAABB(cls, new AxisAlignedBB(pos, pos.add(1, 1, 1)).expand(range, range, range));
 	}
 
 	@Override

@@ -5,9 +5,9 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
-import noppes.npcs.ModelData;
 import noppes.npcs.constants.EnumParts;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.model.ModelData;
 
 public class ModelSpiderLegs extends ModelRenderer {
 	private ModelRenderer spiderLeg1;

@@ -10,8 +10,8 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import noppes.npcs.NBTTags;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NBTTags;
 import noppes.npcs.util.ValueUtil;
 
 public class JobHealer extends JobInterface {
@@ -44,7 +44,7 @@ public class JobHealer extends JobInterface {
 			return false;
 		}
 		healTicks = 0;
-		affected = npc.worldObj.getEntitiesWithinAABB((Class) EntityLivingBase.class,
+		affected = npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 				npc.getEntityBoundingBox().expand(range, range / 2.0, range));
 		return !affected.isEmpty();
 	}

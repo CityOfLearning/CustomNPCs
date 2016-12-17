@@ -9,8 +9,8 @@ import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.containers.ContainerTradingBlock;
 
 public class TileTrading extends TileColorable {
-	public EntityPlayer trader1;
-	public EntityPlayer trader2;
+	private EntityPlayer trader1;
+	private EntityPlayer trader2;
 
 	public TileTrading() {
 		trader1 = null;
@@ -38,6 +38,14 @@ public class TileTrading extends TileColorable {
 		}
 	}
 
+	public EntityPlayer getTrader1() {
+		return trader1;
+	}
+
+	public EntityPlayer getTrader2() {
+		return trader2;
+	}
+
 	public boolean isFull() {
 		if (trader1 != null) {
 			if (!(trader1.openContainer instanceof ContainerTradingBlock)) {
@@ -61,5 +69,13 @@ public class TileTrading extends TileColorable {
 			return trader2;
 		}
 		return trader1;
+	}
+
+	public void setTrader1(EntityPlayer trader1) {
+		this.trader1 = trader1;
+	}
+
+	public void setTrader2(EntityPlayer trader2) {
+		this.trader2 = trader2;
 	}
 }

@@ -13,13 +13,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerTradingBlock;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiData {
 	private ResourceLocation resource;
@@ -33,8 +33,8 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 		this.container = container;
 		ySize = 230;
 		closeOnEsc = true;
-		container.tile.trader1 = player;
-		container.tile.trader2 = null;
+		container.tile.setTrader1(player);
+		container.tile.setTrader2(null);
 		title = "";
 	}
 
@@ -58,9 +58,9 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 			super.drawGuiContainerBackgroundLayer(f, i, j);
 			return;
 		}
-		if (container.tile.trader2 != null) {
+		if (container.tile.getTrader2() != null) {
 			GuiInventory.drawEntityOnScreen(guiLeft + 142, guiTop + 94, 30, (guiLeft + 141) - i, (guiTop + 52) - j,
-					container.tile.trader2);
+					container.tile.getTrader2());
 		}
 		ItemStack hover = null;
 		for (int k = 0; k < 9; ++k) {
@@ -102,7 +102,7 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 	public void initGui() {
 		super.initGui();
 		GuiNpcLabel label = null;
-		if (container.tile.trader2 == null) {
+		if (container.tile.getTrader2() == null) {
 			addLabel(label = new GuiNpcLabel(0, "trader.waiting", guiLeft + 53, guiTop + 107));
 		} else if ((container.state == 0) || (container.state == 1)) {
 			addButton(new GuiNpcButton(0, guiLeft + 53, guiTop + 102, 70, 20, "trader.trade"));
@@ -126,9 +126,9 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 			items = new HashMap<Integer, ItemStack>();
 			String id = compound.getString("Player");
 			if (id.isEmpty()) {
-				container.tile.trader2 = null;
+				container.tile.setTrader2(null);
 			} else {
-				container.tile.trader2 = player.worldObj.getPlayerEntityByUUID(UUID.fromString(id));
+				container.tile.setTrader2(player.worldObj.getPlayerEntityByUUID(UUID.fromString(id)));
 			}
 		} else if (compound.hasKey("State")) {
 			container.state = compound.getInteger("State");

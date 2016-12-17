@@ -99,7 +99,7 @@ public class BlockPedestal extends BlockTrigger {
 			return;
 		}
 		TileColorable tile = (TileColorable) tileentity;
-		if ((tile.rotation % 2) == 0) {
+		if ((tile.getRotation() % 2) == 0) {
 			setBlockBounds(0.0F, 0.0F, 0.2F, 1.0F, 0.5F, 0.8F);
 		} else {
 			setBlockBounds(0.2F, 0.0F, 0.0F, 0.8F, 0.5F, 1.0F);

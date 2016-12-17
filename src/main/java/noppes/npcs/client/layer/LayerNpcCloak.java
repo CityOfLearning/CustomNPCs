@@ -5,9 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import noppes.npcs.ModelPartConfig;
 import noppes.npcs.client.model.ModelPlayerAlt;
 import noppes.npcs.constants.EnumParts;
+import noppes.npcs.model.ModelPartConfig;
 
 public class LayerNpcCloak extends LayerInterface {
 	public LayerNpcCloak(RenderLiving render) {

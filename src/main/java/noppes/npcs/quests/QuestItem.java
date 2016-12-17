@@ -7,8 +7,8 @@ import java.util.Vector;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class QuestItem extends QuestInterface {
 	public NpcMiscInventory items;

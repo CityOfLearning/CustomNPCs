@@ -22,11 +22,11 @@ import noppes.npcs.blocks.BlockBorder;
 import noppes.npcs.controllers.Availability;
 
 public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
-	public Availability availability;
-	public AxisAlignedBB boundingbox;
-	public int rotation;
-	public int height;
-	public String message;
+	private Availability availability;
+	private AxisAlignedBB boundingbox;
+	private int rotation;
+	private int height;
+	private String message;
 
 	public TileBorder() {
 		availability = new Availability();
@@ -40,12 +40,32 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 		return isEntityApplicable((Entity) ob);
 	}
 
+	public Availability getAvailability() {
+		return availability;
+	}
+
+	public AxisAlignedBB getBoundingbox() {
+		return boundingbox;
+	}
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound compound = new NBTTagCompound();
 		compound.setInteger("Rotation", rotation);
 		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
 		return packet;
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public String getMessage() {
+		return message;
+	}
+
+	public int getRotation() {
+		return rotation;
 	}
 
 	public boolean isEntityApplicable(Entity var1) {
@@ -73,6 +93,26 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 			getWorld().setBlockState(getPos(),
 					CustomItems.border.getDefaultState().withProperty(BlockBorder.ROTATION, rotation));
 		}
+	}
+
+	public void setAvailability(Availability availability) {
+		this.availability = availability;
+	}
+
+	public void setBoundingbox(AxisAlignedBB boundingbox) {
+		this.boundingbox = boundingbox;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public void setRotation(int rotation) {
+		this.rotation = rotation;
 	}
 
 	@Override

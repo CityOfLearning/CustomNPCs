@@ -19,8 +19,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileCampfire;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockCampfire extends BlockLightable {
 	public BlockCampfire(boolean lit) {

@@ -90,6 +90,6 @@ public class BlockTrading extends BlockContainer implements ITileRenderer {
 		int l = MathHelper.floor_double(((placer.rotationYaw * 4.0f) / 360.0f) + 0.5) & 0x3;
 		l %= 4;
 		TileColorable tile = (TileColorable) world.getTileEntity(pos);
-		tile.rotation = l;
+		tile.setRotation(l);
 	}
 }

@@ -21,11 +21,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileTombstone;
 import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockTombstone extends BlockContainer implements ITileRenderer {
 	public static final PropertyInteger DAMAGE = PropertyInteger.create("damage", 0, 6);
@@ -102,7 +102,7 @@ public class BlockTombstone extends BlockContainer implements ITileRenderer {
 			if (tile.getBlockMetadata() >= 2) {
 				return false;
 			}
-			tile.canEdit = true;
+			tile.setCanEdit(true);
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.BigSign, null, pos.getX(), pos.getY(), pos.getZ());
 			return true;
 		}
@@ -116,7 +116,7 @@ public class BlockTombstone extends BlockContainer implements ITileRenderer {
 		l %= maxRotation();
 
 		TileTombstone tile = (TileTombstone) world.getTileEntity(pos);
-		tile.rotation = l;
+		tile.setRotation(l);
 
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		if (((entity instanceof EntityPlayer)) && (!world.isRemote) && (stack.getItemDamage() < 2)) {
@@ -133,7 +133,7 @@ public class BlockTombstone extends BlockContainer implements ITileRenderer {
 			return;
 		}
 		TileTombstone tile = (TileTombstone) tileentity;
-		if ((tile.rotation % 2) == 0) {
+		if ((tile.getRotation() % 2) == 0) {
 			setBlockBounds(0.0F, 0.0F, 0.3F, 1.0F, 1.0F, 0.7F);
 		} else {
 			setBlockBounds(0.3F, 0.0F, 0.0F, 0.7F, 1.0F, 1.0F);

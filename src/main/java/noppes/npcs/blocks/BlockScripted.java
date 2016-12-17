@@ -21,11 +21,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.EventHooks;
-import noppes.npcs.NoppesUtilServer;
 import noppes.npcs.blocks.tiles.TileScripted;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;
+import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockScripted extends BlockContainer implements IPermission {
 	public BlockScripted() {
