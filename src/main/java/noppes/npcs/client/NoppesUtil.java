@@ -23,7 +23,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.NoppesUtilPlayer;
 import noppes.npcs.Server;
 import noppes.npcs.client.gui.player.GuiDialogInteract;
 import noppes.npcs.client.gui.player.GuiQuestCompletion;
@@ -37,14 +36,11 @@ import noppes.npcs.controllers.dialog.Dialog;
 import noppes.npcs.controllers.dialog.DialogController;
 import noppes.npcs.controllers.quest.Quest;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.NoppesUtilPlayer;
 
 public class NoppesUtil {
 	private static EntityNPCInterface lastNpc;
-	private static HashMap<String, Integer> data;
-
-	static {
-		NoppesUtil.data = new HashMap<String, Integer>();
-	}
+	private static HashMap<String, Integer> data = new HashMap<String, Integer>();
 
 	public static void addScrollData(ByteBuf buffer) {
 		try {
