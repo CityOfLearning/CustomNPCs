@@ -4,6 +4,7 @@ package noppes.npcs.client.renderer.blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
@@ -33,11 +34,11 @@ public abstract class BlockRendererInterface extends TileEntitySpecialRenderer {
 		PlanksAcacia = new ResourceLocation("customnpcs", "textures/cache/planks_acacia.png");
 		PlanksJungle = new ResourceLocation("customnpcs", "textures/cache/planks_jungle.png");
 		Steel = new ResourceLocation("customnpcs", "textures/models/Steel.png");
-		BlockRendererInterface.colorTable = new float[][] { { 1.0f, 1.0f, 1.0f }, { 0.95f, 0.7f, 0.2f },
-				{ 0.9f, 0.5f, 0.85f }, { 0.6f, 0.7f, 0.95f }, { 0.9f, 0.9f, 0.2f }, { 0.5f, 0.8f, 0.1f },
-				{ 0.95f, 0.7f, 0.8f }, { 0.3f, 0.3f, 0.3f }, { 0.6f, 0.6f, 0.6f }, { 0.3f, 0.6f, 0.7f },
-				{ 0.7f, 0.4f, 0.9f }, { 0.2f, 0.4f, 0.8f }, { 0.5f, 0.4f, 0.3f }, { 0.4f, 0.5f, 0.2f },
-				{ 0.8f, 0.3f, 0.3f }, { 0.1f, 0.1f, 0.1f } };
+		BlockRendererInterface.colorTable = new float[][] { { 1.0f, 1.0f, 1.0f }, { 0.85F, 0.5F, 0.2F },
+				{ 0.7F, 0.3F, 0.85F }, { 0.4F, 0.6F, 0.85F }, { 0.9F, 0.9F, 0.2F }, { 0.5F, 0.8F, 0.1F },
+				{ 0.95F, 0.5F, 0.65F }, { 0.3F, 0.3F, 0.3F }, { 0.6F, 0.6F, 0.6F }, { 0.3F, 0.5F, 0.6F },
+				{ 0.5F, 0.25F, 0.7F }, { 0.2F, 0.3F, 0.7F }, { 0.4F, 0.3F, 0.2F }, { 0.4F, 0.5F, 0.2F },
+				{ 0.6F, 0.2F, 0.2F }, { 0.1f, 0.1f, 0.1f } };
 	}
 
 	public static void setMaterialTexture(int meta) {
