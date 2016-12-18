@@ -57,7 +57,7 @@ public class GuiNpcSlider extends GuiButton {
 		}
 		mc.getTextureManager().bindTexture(GuiButton.buttonTextures);
 		if (dragging) {
-			sliderValue = (par2 - (xPosition + 4)) / (width - 8);
+			sliderValue = (par2 - ((float) xPosition + 4)) / (float)(width - 8);
 			if (sliderValue < 0.0f) {
 				sliderValue = 0.0f;
 			}
@@ -80,7 +80,7 @@ public class GuiNpcSlider extends GuiButton {
 	public boolean mousePressed(Minecraft par1Minecraft, int par2, int par3) {
 		if (enabled && visible && (par2 >= xPosition) && (par3 >= yPosition) && (par2 < (xPosition + width))
 				&& (par3 < (yPosition + height))) {
-			sliderValue = (par2 - (xPosition + 4)) / (width - 8);
+			sliderValue = (par2 - ((float) xPosition + 4)) / (float) (width - 8);
 			if (sliderValue < 0.0f) {
 				sliderValue = 0.0f;
 			}
