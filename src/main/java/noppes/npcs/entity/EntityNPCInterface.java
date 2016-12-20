@@ -1379,7 +1379,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 		}
 		ServerChatEvent event = new ServerChatEvent(getFakePlayer(), line.text,
 				new ChatComponentTranslation(line.text.replace("%", "%%"), new Object[0]));
-		if (MinecraftForge.EVENT_BUS.post(event) || (event.component == null)) {
+		if (MinecraftForge.EVENT_BUS.post(event) || (event.getComponent() == null)) {
 			return;
 		}
 		// why does this line exist? it just kept prepending the npc name...
