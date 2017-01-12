@@ -77,7 +77,8 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 		if (!scroll.hasSelected()) {
 			return;
 		}
-		if (selected != null) {
+		if (selected != null && selected.size < 125000) {
+			//the button only appears if the schematic is under a certain size
 			getButton(3).setDisplay(0);
 		}
 		TileBuilder.SetDrawPos(null);

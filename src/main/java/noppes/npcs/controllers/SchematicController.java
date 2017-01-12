@@ -47,7 +47,7 @@ public class SchematicController {
 		buildingPercentage = 0;
 		included = Arrays.asList("Archery_Range", "Bakery", "Barn", "Building_Site", "Chapel", "Church", "Gate",
 				"Glassworks", "Guard_Tower", "Guild_House", "House", "House_Small", "Inn", "Library", "Lighthouse",
-				"Mill", "Observatory", "Ship", "Shop", "Stall", "Stall2", "Stall3", "Tier_House1", "Tier_House2",
+				"Mill", "Observatory", "Rollercoaster", "Ship", "Shop", "Stall", "Stall2", "Stall3", "Tier_House1", "Tier_House2",
 				"Tier_House3", "Tower", "Wall", "Wall_Corner");
 	}
 
