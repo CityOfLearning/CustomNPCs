@@ -26,7 +26,6 @@ import noppes.npcs.util.IPermission;
 public class ItemTeleporter extends Item implements IPermission {
 	public ItemTeleporter() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

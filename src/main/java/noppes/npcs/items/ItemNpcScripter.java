@@ -12,7 +12,6 @@ import noppes.npcs.util.IPermission;
 public class ItemNpcScripter extends Item implements IPermission {
 	public ItemNpcScripter() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

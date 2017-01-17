@@ -12,7 +12,6 @@ import noppes.npcs.util.IPermission;
 public class ItemMounter extends Item implements IPermission {
 	public ItemMounter() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

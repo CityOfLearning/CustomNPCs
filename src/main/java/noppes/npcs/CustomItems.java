@@ -152,6 +152,7 @@ public class CustomItems {
 		GameRegistry.registerTileEntity(TileCopy.class, "TileNPCCopy");
 		GameRegistry.registerTileEntity(TileTrading.class, "TileNPCTrading");
 		GameRegistry.registerTileEntity(TileBorder.class, "TileNPCBorder");
+
 		CustomItems.wand = new ItemNpcWand().setUnlocalizedName("npcWand").setFull3D();
 		CustomItems.cloner = new ItemNpcCloner().setUnlocalizedName("npcMobCloner").setFull3D();
 		CustomItems.scripter = new ItemNpcScripter().setUnlocalizedName("npcScripter").setFull3D();
@@ -159,27 +160,44 @@ public class CustomItems {
 		CustomItems.mount = new ItemMounter().setUnlocalizedName("npcMounter").setFull3D();
 		CustomItems.teleporter = new ItemTeleporter().setUnlocalizedName("npcTeleporter").setFull3D();
 		CustomItems.redstoneBlock = new BlockNpcRedstone().setHardness(50.0f).setResistance(2000.0f)
-				.setUnlocalizedName("npcRedstoneBlock").setCreativeTab(CustomItems.tab);
+				.setUnlocalizedName("npcRedstoneBlock");
 		CustomItems.carpentyBench = new BlockCarpentryBench().setUnlocalizedName("npcCarpentyBench").setHardness(5.0f)
-				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tab);
+				.setResistance(10.0f).setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tabBlocks);
 		CustomItems.mailbox = new BlockMailbox().setUnlocalizedName("npcMailbox").setHardness(5.0f).setResistance(10.0f)
-				.setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tab);
+				.setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tabBlocks);
 		CustomItems.waypoint = new BlockWaypoint().setUnlocalizedName("npcLocationBlock").setHardness(5.0f)
-				.setResistance(10.0f).setStepSound(Block.soundTypeMetal).setCreativeTab(CustomItems.tab);
+				.setResistance(10.0f).setStepSound(Block.soundTypeMetal);
 		CustomItems.border = new BlockBorder().setUnlocalizedName("npcBorder").setHardness(5.0f).setResistance(10.0f)
-				.setStepSound(Block.soundTypeWood).setCreativeTab(CustomItems.tab);
+				.setStepSound(Block.soundTypeWood);
 		CustomItems.scripted = new BlockScripted().setUnlocalizedName("npcScripted").setHardness(5.0f)
-				.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tab);
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone);
 		CustomItems.scriptedDoor = new BlockScriptedDoor().setUnlocalizedName("npcScriptedDoor").setHardness(5.0f)
 				.setResistance(10.0f);
 		CustomItems.scriptedDoorTool = new ItemScriptedDoor(CustomItems.scriptedDoor)
 				.setUnlocalizedName("npcScriptedDoorTool").setFull3D();
 		CustomItems.builder = new BlockBuilder().setUnlocalizedName("npcBuilderBlock").setHardness(5.0f)
-				.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tab);
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone);
 		CustomItems.copy = new BlockCopy().setUnlocalizedName("npcCopyBlock").setHardness(5.0f).setResistance(10.0f)
-				.setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tab);
+				.setStepSound(Block.soundTypeStone);
 		CustomItems.trading = new BlockTrading().setUnlocalizedName("npcTradingBlock").setHardness(5.0f)
-				.setResistance(10.0f).setStepSound(Block.soundTypeStone).setCreativeTab(CustomItems.tab);
+				.setResistance(10.0f).setStepSound(Block.soundTypeStone);
+
+		CustomItems.wand.setCreativeTab(CustomItems.tab);
+		CustomItems.cloner.setCreativeTab(CustomItems.tab);
+		CustomItems.scripter.setCreativeTab(CustomItems.tab);
+		CustomItems.moving.setCreativeTab(CustomItems.tab);
+		CustomItems.mount.setCreativeTab(CustomItems.tab);
+		CustomItems.teleporter.setCreativeTab(CustomItems.tab);
+		CustomItems.redstoneBlock.setCreativeTab(CustomItems.tab);
+		CustomItems.waypoint.setCreativeTab(CustomItems.tab);
+		CustomItems.border.setCreativeTab(CustomItems.tab);
+		CustomItems.scripted.setCreativeTab(CustomItems.tab);
+		CustomItems.scriptedDoor.setCreativeTab(CustomItems.tab);
+		CustomItems.scriptedDoorTool.setCreativeTab(CustomItems.tab);
+		CustomItems.builder.setCreativeTab(CustomItems.tab);
+		CustomItems.copy.setCreativeTab(CustomItems.tab);
+		CustomItems.trading.setCreativeTab(CustomItems.tab);
+
 		CustomNpcs.proxy.registerBlock(CustomItems.redstoneBlock, "npcRedstoneBlock", 0, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(CustomItems.carpentyBench, "npcCarpentyBench", 1, ItemNpcBlock.class);
 		CustomNpcs.proxy.registerBlock(CustomItems.mailbox, "npcMailbox", 2, ItemBlock.class);
@@ -190,6 +208,7 @@ public class CustomItems {
 		CustomNpcs.proxy.registerBlock(CustomItems.builder, "npcBuilderBlock", 0, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(CustomItems.copy, "npcCopyBlock", 0, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(CustomItems.trading, "npcTradingBlock", 0, ItemBlock.class);
+
 		((ItemNpcBlock) Item.getItemFromBlock(CustomItems.carpentyBench)).names = new String[] {
 				"tile.npcCarpentyBench", "tile.anvil" };
 
@@ -210,7 +229,7 @@ public class CustomItems {
 				.setCreativeTab(CustomItems.tab);
 		CustomItems.bag = new ItemNpcInterface(26953).setUnlocalizedName("npcBag").setCreativeTab(CustomItems.tab);
 
-		CustomItems.tab.item = CustomItems.wand;
+		CustomItems.tab.item = CustomItems.bag;
 
 		// furniture
 		GameRegistry.registerTileEntity(TileWallBanner.class, "TileNPCWallBanner");

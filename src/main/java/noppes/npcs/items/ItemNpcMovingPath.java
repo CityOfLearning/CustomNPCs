@@ -25,7 +25,6 @@ import noppes.npcs.util.NoppesUtilServer;
 public class ItemNpcMovingPath extends Item implements IPermission {
 	public ItemNpcMovingPath() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

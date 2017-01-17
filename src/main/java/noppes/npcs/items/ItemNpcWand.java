@@ -23,7 +23,6 @@ import noppes.npcs.util.NoppesUtilServer;
 public class ItemNpcWand extends Item implements IPermission {
 	public ItemNpcWand() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override

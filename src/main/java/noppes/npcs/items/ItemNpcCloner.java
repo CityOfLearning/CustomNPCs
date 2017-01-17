@@ -18,7 +18,6 @@ import noppes.npcs.util.NoppesUtilServer;
 public class ItemNpcCloner extends Item implements IPermission {
 	public ItemNpcCloner() {
 		maxStackSize = 1;
-		setCreativeTab(CustomItems.tab);
 	}
 
 	@Override
