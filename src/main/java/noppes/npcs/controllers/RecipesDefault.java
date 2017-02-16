@@ -260,8 +260,6 @@ public class RecipesDefault {
 							Character.valueOf('Y'), Blocks.glass, Character.valueOf('Z'), Blocks.torch });
 			addRecipe("Candle", new ItemStack(CustomItems.candle), false, new Object[] { "XZX", " X ",
 					Character.valueOf('X'), Items.iron_ingot, Character.valueOf('Z'), Blocks.torch });
-			addRecipe("BigSign", new ItemStack(CustomItems.bigsign, 2), false,
-					new Object[] { "XXX", "XXX", "XXX", Character.valueOf('X'), Blocks.planks });
 		}
 	}
 }

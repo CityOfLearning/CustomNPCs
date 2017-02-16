@@ -8,7 +8,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 import noppes.npcs.blocks.BlockBanner;
 import noppes.npcs.blocks.BlockBarrel;
 import noppes.npcs.blocks.BlockBeam;
-import noppes.npcs.blocks.BlockBigSign;
 import noppes.npcs.blocks.BlockBook;
 import noppes.npcs.blocks.BlockBorder;
 import noppes.npcs.blocks.BlockBuilder;
@@ -39,7 +38,6 @@ import noppes.npcs.blocks.BlockWeaponRack;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.blocks.tiles.TileBarrel;
 import noppes.npcs.blocks.tiles.TileBeam;
-import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileBlockAnvil;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.blocks.tiles.TileBorder;
@@ -124,7 +122,6 @@ public class CustomItems {
 	public static Block couchWood;
 	public static Block table;
 	public static Block stool;
-	public static Block bigsign;
 	public static Block barrel;
 	public static Block tombstone;
 	public static Block shelf;
@@ -244,7 +241,6 @@ public class CustomItems {
 		GameRegistry.registerTileEntity(TileLamp.class, "TileNPCLamp");
 		GameRegistry.registerTileEntity(TileCandle.class, "TileNPCCandle");
 		GameRegistry.registerTileEntity(TileStool.class, "TileNPCStool");
-		GameRegistry.registerTileEntity(TileBigSign.class, "TileNPCBigSign");
 		GameRegistry.registerTileEntity(TileBarrel.class, "TileNPCBarrel");
 		GameRegistry.registerTileEntity(TileCampfire.class, "TileNPCCampfire");
 		GameRegistry.registerTileEntity(TileTombstone.class, "TileNPCTombstone");
@@ -277,8 +273,6 @@ public class CustomItems {
 		candle = new BlockCandle(true).setUnlocalizedName("npcCandle").setHardness(5.0F).setResistance(10.0F)
 				.setStepSound(Block.soundTypeWood).setCreativeTab(tabBlocks);
 		stool = new BlockStool().setUnlocalizedName("npcStool").setHardness(5.0F).setResistance(10.0F)
-				.setStepSound(Block.soundTypeWood).setCreativeTab(tabBlocks);
-		bigsign = new BlockBigSign().setUnlocalizedName("npcBigSign").setHardness(5.0F).setResistance(10.0F)
 				.setStepSound(Block.soundTypeWood).setCreativeTab(tabBlocks);
 		barrel = new BlockBarrel().setUnlocalizedName("npcBarrel").setHardness(5.0F).setResistance(10.0F)
 				.setStepSound(Block.soundTypeWood).setCreativeTab(tabBlocks);
@@ -314,7 +308,6 @@ public class CustomItems {
 		CustomNpcs.proxy.registerBlock(couchWood, "npcCouchWood", 5, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(table, "npcTable", 5, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(stool, "npcStool", 5, ItemBlock.class);
-		CustomNpcs.proxy.registerBlock(bigsign, "npcBigSign", 0, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(barrel, "npcBarrel", 5, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(tombstone, "npcTombstone", 2, ItemBlock.class);
 		CustomNpcs.proxy.registerBlock(shelf, "npcShelf", 5, ItemBlock.class);

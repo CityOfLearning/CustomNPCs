@@ -20,7 +20,7 @@ import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
 import noppes.npcs.api.event.RoleEvent;
-import noppes.npcs.blocks.tiles.TileBigSign;
+import noppes.npcs.blocks.tiles.TileTextArea;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumGuiType;
@@ -237,10 +237,10 @@ public class PacketHandlerPlayer {
 		} else if (type == EnumPlayerPacket.SignSave) {
 			BlockPos pos = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 			TileEntity tile = player.worldObj.getTileEntity(pos);
-			if ((tile == null) || (!(tile instanceof TileBigSign))) {
+			if ((tile == null) || (!(tile instanceof TileTextArea))) {
 				return;
 			}
-			TileBigSign sign = (TileBigSign) tile;
+			TileTextArea sign = (TileTextArea) tile;
 			if (sign.isCanEdit()) {
 				sign.setText(Server.readString(buffer));
 				sign.setCanEdit(false);

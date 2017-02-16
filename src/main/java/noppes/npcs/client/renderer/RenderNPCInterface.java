@@ -183,7 +183,7 @@ public class RenderNPCInterface<T extends EntityNPCInterface> extends RenderLivi
 			String s = obs[j].toString();
 			GlStateManager.translate(0.0f, height, 0.0f);
 			GlStateManager.scale(-f2 * scale, -f2 * scale, f2 * scale);
-			tessellator.begin(7, DefaultVertexFormats.POSITION_COLOR);
+			tessellator.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
 			int size = fontrenderer.getStringWidth(s) / 2;
 			tessellator.pos(-size - 1, -1.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();
 			tessellator.pos(-size - 1, 8.0, 0.0).color(0.0f, 0.0f, 0.0f, 0.25f).endVertex();

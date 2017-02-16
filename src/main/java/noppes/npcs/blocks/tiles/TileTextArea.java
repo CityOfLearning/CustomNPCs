@@ -6,7 +6,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import noppes.npcs.util.TextBlock;
 
-public class TileBigSign extends TileNpcEntity {
+public class TileTextArea extends TileNpcEntity {
 	private int rotation;
 	private boolean canEdit = true;
 

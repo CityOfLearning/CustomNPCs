@@ -58,7 +58,6 @@ import noppes.npcs.blocks.BlockWeaponRack;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.blocks.tiles.TileBarrel;
 import noppes.npcs.blocks.tiles.TileBeam;
-import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileBlockAnvil;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.blocks.tiles.TileCampfire;
@@ -114,7 +113,7 @@ import noppes.npcs.client.gui.mainmenu.GuiNpcAI;
 import noppes.npcs.client.gui.mainmenu.GuiNpcAdvanced;
 import noppes.npcs.client.gui.mainmenu.GuiNpcDisplay;
 import noppes.npcs.client.gui.mainmenu.GuiNpcStats;
-import noppes.npcs.client.gui.player.GuiBigSign;
+import noppes.npcs.client.gui.player.GuiTextSign;
 import noppes.npcs.client.gui.player.GuiCrate;
 import noppes.npcs.client.gui.player.GuiMailbox;
 import noppes.npcs.client.gui.player.GuiMailmanWrite;
@@ -150,7 +149,6 @@ import noppes.npcs.client.renderer.TileEntityItemStackRendererAlt;
 import noppes.npcs.client.renderer.blocks.BlockBannerRenderer;
 import noppes.npcs.client.renderer.blocks.BlockBarrelRenderer;
 import noppes.npcs.client.renderer.blocks.BlockBeamRenderer;
-import noppes.npcs.client.renderer.blocks.BlockBigSignRenderer;
 import noppes.npcs.client.renderer.blocks.BlockBookRenderer;
 import noppes.npcs.client.renderer.blocks.BlockCampfireRenderer;
 import noppes.npcs.client.renderer.blocks.BlockCandleRenderer;
@@ -401,7 +399,7 @@ public class ClientProxy extends CommonProxy {
 				return new GuiBorderBlock(x, y, z);
 			}
 			if (gui == EnumGuiType.BigSign) {
-				return new GuiBigSign(x, y, z);
+				return new GuiTextSign(x, y, z);
 			}
 			if (gui == EnumGuiType.RedstoneBlock) {
 				return new GuiNpcRedstoneBlock(x, y, z);
@@ -480,7 +478,6 @@ public class ClientProxy extends CommonProxy {
 		blockIgnoreBlockstate(CustomItems.couchWood, new IProperty[] { BlockCouchWood.DAMAGE });
 		blockIgnoreBlockstate(CustomItems.couchWool, new IProperty[] { BlockCouchWool.DAMAGE });
 		blockIgnoreBlockstate(CustomItems.tombstone, new IProperty[] { BlockTombstone.DAMAGE });
-		blockIgnoreBlockstate(CustomItems.bigsign, new IProperty[] { BlockRotated.DAMAGE });
 		blockIgnoreBlockstate(CustomItems.table, new IProperty[] { BlockRotated.DAMAGE });
 		blockIgnoreBlockstate(CustomItems.shelf, new IProperty[] { BlockRotated.DAMAGE });
 
@@ -585,7 +582,6 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCandle.class, new BlockCandleRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileLamp.class, new BlockLampRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileStool.class, new BlockStoolRenderer());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileBigSign.class, new BlockBigSignRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileBarrel.class, new BlockBarrelRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileCampfire.class, new BlockCampfireRenderer());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileTombstone.class, new BlockTombstoneRenderer());

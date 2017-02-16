@@ -1,17 +1,17 @@
 package noppes.npcs.client.gui.player;
 
 import net.minecraft.util.BlockPos;
-import noppes.npcs.blocks.tiles.TileBigSign;
+import noppes.npcs.blocks.tiles.TileTextArea;
 import noppes.npcs.client.gui.SubGuiNpcTextArea;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.util.NoppesUtilPlayer;
 
-public class GuiBigSign extends SubGuiNpcTextArea {
-	public TileBigSign tile;
+public class GuiTextSign extends SubGuiNpcTextArea {
+	public TileTextArea tile;
 
-	public GuiBigSign(int x, int y, int z) {
+	public GuiTextSign(int x, int y, int z) {
 		super("");
-		tile = ((TileBigSign) player.worldObj.getTileEntity(new BlockPos(x, y, z)));
+		tile = ((TileTextArea) player.worldObj.getTileEntity(new BlockPos(x, y, z)));
 		text = tile.getText();
 	}
 

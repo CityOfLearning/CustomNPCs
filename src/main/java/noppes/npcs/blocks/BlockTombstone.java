@@ -21,7 +21,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcsPermissions;
-import noppes.npcs.blocks.tiles.TileBigSign;
 import noppes.npcs.blocks.tiles.TileTombstone;
 import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
@@ -98,7 +97,7 @@ public class BlockTombstone extends BlockContainer implements ITileRenderer {
 		ItemStack currentItem = player.inventory.getCurrentItem();
 		if ((currentItem != null) && (currentItem.getItem() == CustomItems.wand)
 				&& (CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS))) {
-			TileBigSign tile = (TileBigSign) par1World.getTileEntity(pos);
+			TileTombstone tile = (TileTombstone) par1World.getTileEntity(pos);
 			if (tile.getBlockMetadata() >= 2) {
 				return false;
 			}
