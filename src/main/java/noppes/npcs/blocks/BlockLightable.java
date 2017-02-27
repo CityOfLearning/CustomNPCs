@@ -57,9 +57,9 @@ public abstract class BlockLightable extends BlockRotated {
 			float hitX, float hitY, float hitZ) {
 		TileEntity tile = world.getTileEntity(pos);
 		if (litBlock() == this) {
-			world.setBlockState(pos, unlitBlock().getDefaultState().withProperty(DAMAGE, state.getValue(DAMAGE)), 2);
+			world.setBlockState(pos, unlitBlock().getDefaultState().withProperty(DAMAGE, state.getValue(DAMAGE)), 3);
 		} else {
-			world.setBlockState(pos, litBlock().getDefaultState().withProperty(DAMAGE, state.getValue(DAMAGE)), 2);
+			world.setBlockState(pos, litBlock().getDefaultState().withProperty(DAMAGE, state.getValue(DAMAGE)), 3);
 		}
 		tile.validate();
 		world.setTileEntity(pos, tile);

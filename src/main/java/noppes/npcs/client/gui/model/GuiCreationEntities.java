@@ -33,7 +33,7 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 		super(npc);
 		data = new HashMap<String, Class<? extends EntityLivingBase>>();
 		resetToSelected = true;
-		for (Object name : EntityList.stringToClassMapping.keySet()) {
+		for (String name : EntityList.stringToClassMapping.keySet()) {
 			Class<? extends Entity> c = EntityList.stringToClassMapping.get(name);
 			try {
 				if (!EntityLiving.class.isAssignableFrom(c) || (c.getConstructor(World.class) == null)
