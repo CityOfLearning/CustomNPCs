@@ -15,6 +15,7 @@ import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourcePack;
+import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -111,7 +112,7 @@ public class AssetsBrowser {
 	private void getFiles() {
 		folders.clear();
 		files.clear();
-		Minecraft.getMinecraft().getResourcePackRepository();
+		ResourcePackRepository resourcePak = Minecraft.getMinecraft().getResourcePackRepository();
 		SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) Minecraft.getMinecraft()
 				.getResourceManager();
 		Map<String, IResourceManager> map = (Map<String, IResourceManager>) ObfuscationReflectionHelper
@@ -136,7 +137,10 @@ public class AssetsBrowser {
 			}
 		}
 		for (String file2 : set) {
-			progressFile(new File(file2));
+			File pFile = new File(file2);
+			if (pFile.exists()) {
+				progressFile(pFile);
+			}
 		}
 		for (ModContainer mod : Loader.instance().getModList()) {
 			if (mod.getSource().exists()) {
