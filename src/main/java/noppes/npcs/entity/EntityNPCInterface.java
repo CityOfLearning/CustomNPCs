@@ -53,9 +53,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.FakePlayer;
-import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.fml.common.registry.IEntityAdditionalSpawnData;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
@@ -202,7 +200,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 		totalTicksAlive = 0L;
 		taskCount = 1;
 		lastInteract = 0;
-		interactingEntities = new ArrayList<EntityLivingBase>();
+		interactingEntities = new ArrayList<>();
 		textureLocation = null;
 		textureGlowLocation = null;
 		textureCloakLocation = null;
@@ -215,7 +213,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 		if (!isRemote()) {
 			wrappedNPC = new NPCWrapper(this);
 		}
-		dialogs = new HashMap<Integer, DialogOption>();
+		dialogs = new HashMap<>();
 		if (!CustomNpcs.DefaultInteractLine.isEmpty()) {
 			advanced.interactLines.lines.put(0, new Line(CustomNpcs.DefaultInteractLine));
 		}
@@ -502,7 +500,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 
 	private void clearTasks(EntityAITasks tasks) {
 		tasks.taskEntries.iterator();
-		List<EntityAITasks.EntityAITaskEntry> list = new ArrayList<EntityAITasks.EntityAITaskEntry>(tasks.taskEntries);
+		List<EntityAITasks.EntityAITaskEntry> list = new ArrayList<>(tasks.taskEntries);
 		for (EntityAITasks.EntityAITaskEntry entityaitaskentry : list) {
 			this.tasks.removeTask(entityaitaskentry.action);
 		}
@@ -1377,17 +1375,21 @@ public abstract class EntityNPCInterface extends EntityCreature
 		if ((line == null) || (line.text == null)) {
 			return;
 		}
-		ServerChatEvent event = new ServerChatEvent(getFakePlayer(), line.text,
-				new ChatComponentTranslation(line.text.replace("%", "%%"), new Object[0]));
-		if (MinecraftForge.EVENT_BUS.post(event) || (event.getComponent() == null)) {
-			return;
-		}
-		// why does this line exist? it just kept prepending the npc name...
-		// line.text = event.component.getUnformattedText().replace("%%", "%");
+		// posting to the chat bus send it to everyone...
+		// ServerChatEvent event = new ServerChatEvent(getFakePlayer(),
+		// line.text,
+		// new ChatComponentTranslation(line.text.replace("%", "%%"), new
+		// Object[0]));
+		// if (MinecraftForge.EVENT_BUS.post(event) || (event.getComponent() ==
+		// null)) {
+		// return;
+		// }
 		List<EntityPlayer> inRange = worldObj.getEntitiesWithinAABB((Class) EntityPlayer.class,
-				getEntityBoundingBox().expand(20.0, 20.0, 20.0));
+				getEntityBoundingBox().expand(32.0, 32.0, 32.0));
 		for (EntityPlayer player : inRange) {
-			say(player, line);
+			if (canSee(player)) { // only if the player is within sight range
+				say(player, line);
+			}
 		}
 	}
 
