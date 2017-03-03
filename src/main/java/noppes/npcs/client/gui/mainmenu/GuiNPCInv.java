@@ -28,7 +28,7 @@ public class GuiNPCInv extends GuiContainerNPCInterface2 implements ISliderListe
 
 	public GuiNPCInv(EntityNPCInterface npc, ContainerNPCInv container) {
 		super(npc, container, 3);
-		chances = new HashMap<Integer, Integer>();
+		chances = new HashMap<>();
 		setBackground("npcinv.png");
 		this.container = container;
 		ySize = 200;

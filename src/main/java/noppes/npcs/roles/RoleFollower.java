@@ -45,7 +45,7 @@ public class RoleFollower extends RoleInterface implements IRoleFollower {
 		refuseSoulStone = false;
 		owner = null;
 		inventory = new NpcMiscInventory(3);
-		rates = new HashMap<Integer, Integer>();
+		rates = new HashMap<>();
 	}
 
 	@Override

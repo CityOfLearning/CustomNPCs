@@ -38,10 +38,10 @@ public class DataInventory implements IInventory, INPCInventory {
 	public ItemStack renderOffhand;
 
 	public DataInventory(EntityNPCInterface npc) {
-		drops = new HashMap<Integer, IItemStack>();
-		dropchance = new HashMap<Integer, Integer>();
-		weapons = new HashMap<Integer, IItemStack>();
-		armor = new HashMap<Integer, IItemStack>();
+		drops = new HashMap<>();
+		dropchance = new HashMap<>();
+		weapons = new HashMap<>();
+		armor = new HashMap<>();
 		minExp = 0;
 		maxExp = 0;
 		lootMode = 0;
@@ -94,7 +94,7 @@ public class DataInventory implements IInventory, INPCInventory {
 	}
 
 	public void dropStuff(Entity entity, DamageSource damagesource) {
-		ArrayList<EntityItem> list = new ArrayList<EntityItem>();
+		ArrayList<EntityItem> list = new ArrayList<>();
 		for (int i : drops.keySet()) {
 			IItemStack item = drops.get(i);
 			if (item == null) {

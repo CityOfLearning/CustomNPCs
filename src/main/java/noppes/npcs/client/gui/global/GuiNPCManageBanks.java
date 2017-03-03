@@ -31,7 +31,7 @@ public class GuiNPCManageBanks extends GuiContainerNPCInterface2
 
 	public GuiNPCManageBanks(EntityNPCInterface npc, ContainerManageBanks container) {
 		super(npc, container);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		bank = new Bank();
 		selected = null;
 		this.container = container;

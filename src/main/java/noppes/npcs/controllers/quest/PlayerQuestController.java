@@ -55,7 +55,7 @@ public class PlayerQuestController {
 	}
 
 	public static Vector<Quest> getActiveQuests(EntityPlayer player) {
-		Vector<Quest> quests = new Vector<Quest>();
+		Vector<Quest> quests = new Vector<>();
 		PlayerQuestData data = PlayerDataController.instance.getPlayerData(player).questData;
 		for (QuestData questdata : data.activeQuests.values()) {
 			if (questdata.quest == null) {

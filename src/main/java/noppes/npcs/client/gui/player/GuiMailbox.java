@@ -139,7 +139,7 @@ public class GuiMailbox extends GuiNPCInterface implements IGuiData, ICustomScro
 	public void setGuiData(NBTTagCompound compound) {
 		PlayerMailData data = new PlayerMailData();
 		data.loadNBTData(compound);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		Collections.sort(data.playermail, (o1, o2) -> {
 			if (o1.time == o2.time) {
 				return 0;

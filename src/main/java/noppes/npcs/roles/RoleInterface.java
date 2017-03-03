@@ -13,7 +13,7 @@ public abstract class RoleInterface implements INPCRole {
 	public HashMap<String, String> dataString;
 
 	public RoleInterface(EntityNPCInterface npc) {
-		dataString = new HashMap<String, String>();
+		dataString = new HashMap<>();
 		this.npc = npc;
 	}
 

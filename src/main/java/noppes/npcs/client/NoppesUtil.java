@@ -40,7 +40,7 @@ import noppes.npcs.util.NoppesUtilPlayer;
 
 public class NoppesUtil {
 	private static EntityNPCInterface lastNpc;
-	private static HashMap<String, Integer> data = new HashMap<String, Integer>();
+	private static HashMap<String, Integer> data = new HashMap<>();
 
 	public static void addScrollData(ByteBuf buffer) {
 		try {
@@ -155,9 +155,9 @@ public class NoppesUtil {
 			gui = ((GuiContainerNPCInterface) gui).getSubGui();
 		}
 		if (gui instanceof IScrollData) {
-			((IScrollData) gui).setData(new Vector<String>(NoppesUtil.data.keySet()), NoppesUtil.data);
+			((IScrollData) gui).setData(new Vector<>(NoppesUtil.data.keySet()), NoppesUtil.data);
 		}
-		NoppesUtil.data = new HashMap<String, Integer>();
+		NoppesUtil.data = new HashMap<>();
 	}
 
 	public static void setScrollList(ByteBuf buffer) {
@@ -168,7 +168,7 @@ public class NoppesUtil {
 		if ((gui == null) || !(gui instanceof IScrollData)) {
 			return;
 		}
-		Vector<String> data = new Vector<String>();
+		Vector<String> data = new Vector<>();
 		try {
 			for (int size = buffer.readInt(), i = 0; i < size; ++i) {
 				data.add(Server.readString(buffer));

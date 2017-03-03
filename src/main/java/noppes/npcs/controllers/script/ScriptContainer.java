@@ -57,10 +57,10 @@ public class ScriptContainer {
 	public ScriptContainer(IScriptHandler handler) {
 		fullscript = "";
 		script = "";
-		console = new HashMap<Long, String>();
+		console = new HashMap<>();
 		errored = false;
-		scripts = new ArrayList<String>();
-		unknownFunctions = new ArrayList<Integer>();
+		scripts = new ArrayList<>();
+		unknownFunctions = new ArrayList<>();
 		lastCreated = 0L;
 		currentScriptLanguage = null;
 		engine = null;
@@ -89,7 +89,7 @@ public class ScriptContainer {
 					fullscript = fullscript + code + "\n";
 				}
 			}
-			unknownFunctions = new ArrayList<Integer>();
+			unknownFunctions = new ArrayList<>();
 			init = false;
 		}
 		return fullscript;

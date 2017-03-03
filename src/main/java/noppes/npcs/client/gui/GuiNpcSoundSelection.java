@@ -32,7 +32,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
 
 	public GuiNpcSoundSelection(GuiScreen parent, String sound) {
 		up = "..<" + StatCollector.translateToLocal("gui.up") + ">..";
-		domains = new HashMap<String, List<String>>();
+		domains = new HashMap<>();
 		SoundHandler handler = Minecraft.getMinecraft().getSoundHandler();
 		SoundRegistry registry = (SoundRegistry) ObfuscationReflectionHelper.getPrivateValue((Class) SoundHandler.class,
 				handler, 4);
@@ -40,7 +40,7 @@ public class GuiNpcSoundSelection extends GuiNPCInterface {
 		for (ResourceLocation location : set) {
 			List<String> list = domains.get(location.getResourceDomain());
 			if (list == null) {
-				domains.put(location.getResourceDomain(), list = new ArrayList<String>());
+				domains.put(location.getResourceDomain(), list = new ArrayList<>());
 			}
 			list.add(location.getResourcePath());
 			domains.put(location.getResourceDomain(), list);

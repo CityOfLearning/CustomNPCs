@@ -23,8 +23,8 @@ public class DialogController {
 	private int lastUsedCatID;
 
 	public DialogController() {
-		categories = new HashMap<Integer, DialogCategory>();
-		dialogs = new HashMap<Integer, Dialog>();
+		categories = new HashMap<>();
+		dialogs = new HashMap<>();
 		lastUsedDialogID = 0;
 		lastUsedCatID = 0;
 		(DialogController.instance = this).load();
@@ -54,7 +54,7 @@ public class DialogController {
 	}
 
 	public Map<String, Integer> getScroll() {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<>();
 		for (DialogCategory category : categories.values()) {
 			map.put(category.title, category.id);
 		}

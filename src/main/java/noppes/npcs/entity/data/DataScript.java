@@ -25,7 +25,7 @@ public class DataScript implements IScriptHandler {
 	public boolean hasInited;
 
 	public DataScript(EntityNPCInterface npc) {
-		scripts = new ArrayList<ScriptContainer>();
+		scripts = new ArrayList<>();
 		scriptLanguage = "ECMAScript";
 		enabled = false;
 		hasInited = false;

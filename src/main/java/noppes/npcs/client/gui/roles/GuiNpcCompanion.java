@@ -27,7 +27,7 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
 
 	public GuiNpcCompanion(EntityNPCInterface npc) {
 		super(npc);
-		talents = new ArrayList<GuiNpcCompanionTalents.GuiTalent>();
+		talents = new ArrayList<>();
 		role = (RoleCompanion) npc.roleInterface;
 	}
 
@@ -54,7 +54,7 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
 	@Override
 	public void drawScreen(int i, int j, float f) {
 		super.drawScreen(i, j, f);
-		for (GuiNpcCompanionTalents.GuiTalent talent : new ArrayList<GuiNpcCompanionTalents.GuiTalent>(talents)) {
+		for (GuiNpcCompanionTalents.GuiTalent talent : new ArrayList<>(talents)) {
 			talent.drawScreen(i, j, f);
 		}
 	}
@@ -66,7 +66,7 @@ public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListe
 	@Override
 	public void initGui() {
 		super.initGui();
-		talents = new ArrayList<GuiNpcCompanionTalents.GuiTalent>();
+		talents = new ArrayList<>();
 		int y = guiTop + 4;
 		addButton(new GuiNpcButton(0, guiLeft + 70, y, 90, 20,
 				new String[] { EnumCompanionStage.BABY.name, EnumCompanionStage.CHILD.name,

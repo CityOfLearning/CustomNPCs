@@ -86,7 +86,7 @@ public class GuiNpcCompanionTalents extends GuiNPCInterface {
 
 	public GuiNpcCompanionTalents(EntityNPCInterface npc) {
 		super(npc);
-		talents = new HashMap<Integer, GuiTalent>();
+		talents = new HashMap<>();
 		lastPressedTime = 0L;
 		startPressedTime = 0L;
 		role = (RoleCompanion) npc.roleInterface;
@@ -187,7 +187,7 @@ public class GuiNpcCompanionTalents extends GuiNPCInterface {
 	@Override
 	public void initGui() {
 		super.initGui();
-		talents = new HashMap<Integer, GuiTalent>();
+		talents = new HashMap<>();
 		addLabel(new GuiNpcLabel(0, NoppesStringUtils.translate("quest.exp", ": "), guiLeft + 4, guiTop + 10));
 		GuiNpcCompanionStats.addTopMenu(role, this, 2);
 		int i = 0;

@@ -63,14 +63,14 @@ public abstract class GuiNPCInterface extends GuiScreen {
 
 	public GuiNPCInterface(EntityNPCInterface npc) {
 		drawDefaultBackground = true;
-		buttons = new ConcurrentHashMap<Integer, GuiNpcButton>();
-		topbuttons = new ConcurrentHashMap<Integer, GuiMenuTopButton>();
-		sidebuttons = new ConcurrentHashMap<Integer, GuiMenuSideButton>();
-		textfields = new ConcurrentHashMap<Integer, GuiNpcTextField>();
-		labels = new ConcurrentHashMap<Integer, GuiNpcLabel>();
-		scrolls = new ConcurrentHashMap<Integer, GuiCustomScroll>();
-		sliders = new ConcurrentHashMap<Integer, GuiNpcSlider>();
-		extra = new ConcurrentHashMap<Integer, GuiScreen>();
+		buttons = new ConcurrentHashMap<>();
+		topbuttons = new ConcurrentHashMap<>();
+		sidebuttons = new ConcurrentHashMap<>();
+		textfields = new ConcurrentHashMap<>();
+		labels = new ConcurrentHashMap<>();
+		scrolls = new ConcurrentHashMap<>();
+		sliders = new ConcurrentHashMap<>();
+		extra = new ConcurrentHashMap<>();
 		background = null;
 		closeOnEsc = true;
 		bgScale = 1.0f;
@@ -266,17 +266,17 @@ public abstract class GuiNPCInterface extends GuiScreen {
 			GlStateManager.popMatrix();
 		}
 		drawCenteredString(fontRendererObj, title, width / 2, 8, 16777215);
-		for (GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
+		for (GuiNpcLabel label : new ArrayList<>(labels.values())) {
 			label.drawLabel(this, fontRendererObj);
 		}
-		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 			tf.drawTextBox(mouseX, mouseY);
 		}
-		for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+		for (GuiCustomScroll scroll : new ArrayList<>(scrolls.values())) {
 			scroll.drawScreen(mouseX, mouseY, partialTicks,
 					(!hasSubGui() && scroll.isMouseOver(mouseX, mouseY)) ? Mouse.getDWheel() : 0);
 		}
-		for (GuiScreen gui : new ArrayList<GuiScreen>(extra.values())) {
+		for (GuiScreen gui : new ArrayList<>(extra.values())) {
 			gui.drawScreen(mouseX, mouseY, partialTicks);
 		}
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -349,14 +349,14 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		guiLeft = (width - xSize) / 2;
 		guiTop = (height - ySize) / 2;
 		buttonList = Lists.newArrayList();
-		buttons = new ConcurrentHashMap<Integer, GuiNpcButton>();
-		topbuttons = new ConcurrentHashMap<Integer, GuiMenuTopButton>();
-		sidebuttons = new ConcurrentHashMap<Integer, GuiMenuSideButton>();
-		textfields = new ConcurrentHashMap<Integer, GuiNpcTextField>();
-		labels = new ConcurrentHashMap<Integer, GuiNpcLabel>();
-		scrolls = new ConcurrentHashMap<Integer, GuiCustomScroll>();
-		sliders = new ConcurrentHashMap<Integer, GuiNpcSlider>();
-		extra = new ConcurrentHashMap<Integer, GuiScreen>();
+		buttons = new ConcurrentHashMap<>();
+		topbuttons = new ConcurrentHashMap<>();
+		sidebuttons = new ConcurrentHashMap<>();
+		textfields = new ConcurrentHashMap<>();
+		labels = new ConcurrentHashMap<>();
+		scrolls = new ConcurrentHashMap<>();
+		sliders = new ConcurrentHashMap<>();
+		extra = new ConcurrentHashMap<>();
 	}
 
 	public void initPacket() {
@@ -374,7 +374,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		if (subgui != null) {
 			subgui.keyTyped(c, i);
 		}
-		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 			tf.textboxKeyTyped(c, i);
 		}
 		if (closeOnEsc && ((i == 1) || (!GuiNpcTextField.isActive() && isInventoryKey(i)))) {
@@ -390,14 +390,14 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		if (subgui != null) {
 			subgui.mouseClicked(i, j, k);
 		} else {
-			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 				if (tf.enabled) {
 					tf.mouseClicked(i, j, k);
 				}
 			}
 			mouseEvent(i, j, k);
 			if (k == 0) {
-				for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+				for (GuiCustomScroll scroll : new ArrayList<>(scrolls.values())) {
 					scroll.mouseClicked(i, j, k);
 				}
 				for (GuiButton guibutton : buttonList) {
@@ -469,7 +469,7 @@ public abstract class GuiNPCInterface extends GuiScreen {
 		if (subgui != null) {
 			subgui.updateScreen();
 		} else {
-			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 				if (tf.enabled) {
 					tf.updateCursorCounter();
 				}

@@ -62,7 +62,7 @@ public class GuiRoleDialog extends GuiNPCInterface2 implements ISubGuiListener {
 
 	@Override
 	public void save() {
-		HashMap<Integer, String> map = new HashMap<Integer, String>();
+		HashMap<Integer, String> map = new HashMap<>();
 		for (int i = 1; i <= 6; ++i) {
 			String text = getTextField(i).getText();
 			if (!text.isEmpty()) {

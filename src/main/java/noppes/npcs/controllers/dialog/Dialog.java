@@ -42,7 +42,7 @@ public class Dialog implements ICompatibilty, IDialog {
 		title = "";
 		text = "";
 		quest = -1;
-		options = new HashMap<Integer, DialogOption>();
+		options = new HashMap<>();
 		availability = new Availability();
 		factionOptions = new FactionOptions();
 		command = "";
@@ -92,7 +92,7 @@ public class Dialog implements ICompatibilty, IDialog {
 
 	@Override
 	public List<IDialogOption> getOptions() {
-		return new ArrayList<IDialogOption>(options.values());
+		return new ArrayList<>(options.values());
 	}
 
 	@Override
@@ -149,7 +149,7 @@ public class Dialog implements ICompatibilty, IDialog {
 		showWheel = compound.getBoolean("DialogShowWheel");
 		disableEsc = compound.getBoolean("DialogDisableEsc");
 		NBTTagList options = compound.getTagList("Options", 10);
-		HashMap<Integer, DialogOption> newoptions = new HashMap<Integer, DialogOption>();
+		HashMap<Integer, DialogOption> newoptions = new HashMap<>();
 		for (int iii = 0; iii < options.tagCount(); ++iii) {
 			NBTTagCompound option = options.getCompoundTagAt(iii);
 			int opslot = option.getInteger("OptionSlot");

@@ -78,7 +78,7 @@ public class DataAI implements INPCAi {
 		bodyOffsetZ = 5.0f;
 		walkingRange = 10;
 		moveSpeed = 5;
-		movingPath = new ArrayList<int[]>();
+		movingPath = new ArrayList<>();
 		startPos = null;
 		movingPos = 0;
 		movingPattern = 0;

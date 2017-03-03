@@ -15,7 +15,6 @@ import net.minecraft.client.resources.AbstractResourcePack;
 import net.minecraft.client.resources.FallbackResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourcePack;
-import net.minecraft.client.resources.ResourcePackRepository;
 import net.minecraft.client.resources.SimpleReloadableResourceManager;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ModContainer;
@@ -49,15 +48,15 @@ public class AssetsBrowser {
 	private String[] extensions;
 
 	public AssetsBrowser(String folder, String[] extensions) {
-		folders = new HashSet<String>();
-		files = new HashSet<String>();
+		folders = new HashSet<>();
+		files = new HashSet<>();
 		this.extensions = extensions;
 		setFolder(folder);
 	}
 
 	public AssetsBrowser(String[] extensions) {
-		folders = new HashSet<String>();
-		files = new HashSet<String>();
+		folders = new HashSet<>();
+		files = new HashSet<>();
 		this.extensions = extensions;
 	}
 
@@ -112,12 +111,12 @@ public class AssetsBrowser {
 	private void getFiles() {
 		folders.clear();
 		files.clear();
-		ResourcePackRepository resourcePak = Minecraft.getMinecraft().getResourcePackRepository();
+		Minecraft.getMinecraft().getResourcePackRepository();
 		SimpleReloadableResourceManager simplemanager = (SimpleReloadableResourceManager) Minecraft.getMinecraft()
 				.getResourceManager();
 		Map<String, IResourceManager> map = (Map<String, IResourceManager>) ObfuscationReflectionHelper
 				.getPrivateValue((Class) SimpleReloadableResourceManager.class, simplemanager, 2);
-		HashSet<String> set = new HashSet<String>();
+		HashSet<String> set = new HashSet<>();
 		for (String name : map.keySet()) {
 			if (!(map.get(name) instanceof FallbackResourceManager)) {
 				continue;

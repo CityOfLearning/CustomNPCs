@@ -26,7 +26,7 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 
 	@Override
 	public void clearPlayers() {
-		List<String> list = new ArrayList<String>(team.getMembershipCollection());
+		List<String> list = new ArrayList<>(team.getMembershipCollection());
 		for (String player : list) {
 			board.removePlayerFromTeam(player, team);
 		}
@@ -63,7 +63,7 @@ public class ScoreboardTeamWrapper implements IScoreboardTeam {
 
 	@Override
 	public String[] getPlayers() {
-		List<String> list = new ArrayList<String>(team.getMembershipCollection());
+		List<String> list = new ArrayList<>(team.getMembershipCollection());
 		return list.toArray(new String[list.size()]);
 	}
 

@@ -29,7 +29,7 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 	public GuiTradingBlock(ContainerTradingBlock container) {
 		super(null, container);
 		resource = new ResourceLocation("customnpcs", "textures/gui/tradingblock.png");
-		items = new HashMap<Integer, ItemStack>();
+		items = new HashMap<>();
 		this.container = container;
 		ySize = 230;
 		closeOnEsc = true;
@@ -123,7 +123,7 @@ public class GuiTradingBlock extends GuiContainerNPCInterface implements IGuiDat
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("Player")) {
-			items = new HashMap<Integer, ItemStack>();
+			items = new HashMap<>();
 			String id = compound.getString("Player");
 			if (id.isEmpty()) {
 				container.tile.setTrader2(null);

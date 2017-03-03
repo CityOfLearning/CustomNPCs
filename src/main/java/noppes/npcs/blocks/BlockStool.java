@@ -7,7 +7,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -26,17 +25,17 @@ public class BlockStool extends BlockRotated {
 	}
 
 	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		((TileStool) world.getTileEntity(pos)).killMount();
+		world.removeTileEntity(pos);
+		super.breakBlock(world, pos, state);
+	}
+
+	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileStool();
 	}
 
-	@Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        ((TileStool) world.getTileEntity(pos)).killMount();
-        world.removeTileEntity(pos);
-        super.breakBlock(world, pos, state);
-    }
-	
 	@Override
 	public int damageDropped(IBlockState state) {
 		return state.getValue(DAMAGE).intValue();
@@ -73,11 +72,11 @@ public class BlockStool extends BlockRotated {
 			ItemStack stack) {
 		world.setBlockState(pos, state.withProperty(DAMAGE, Integer.valueOf(stack.getItemDamage())), 2);
 		super.onBlockPlacedBy(world, pos, state, entity, stack);
-		
+
 		TileStool tile = ((TileStool) world.getTileEntity(pos));
 		EntityChairMount mount = new EntityChairMount(world, pos.getX() + 0.5F, pos.getY(), pos.getZ() + 0.5D);
-			mount.rotationYaw = tile.getRotation() * 90;
-			world.spawnEntityInWorld(mount);
-			tile.setMount(mount);
+		mount.rotationYaw = tile.getRotation() * 90;
+		world.spawnEntityInWorld(mount);
+		tile.setMount(mount);
 	}
 }

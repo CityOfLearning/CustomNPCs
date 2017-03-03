@@ -33,7 +33,7 @@ public class TileScriptedDoor extends TileDoor implements ITickable, IScriptBloc
 	public int prevPower;
 
 	public TileScriptedDoor() {
-		scripts = new ArrayList<ScriptContainer>();
+		scripts = new ArrayList<>();
 		shouldRefreshData = false;
 		scriptLanguage = "ECMAScript";
 		enabled = false;

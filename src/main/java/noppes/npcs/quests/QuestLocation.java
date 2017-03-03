@@ -38,7 +38,7 @@ public class QuestLocation extends QuestInterface {
 
 	@Override
 	public Vector<String> getQuestLogStatus(EntityPlayer player) {
-		Vector<String> vec = new Vector<String>();
+		Vector<String> vec = new Vector<>();
 		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
 		QuestData data = playerdata.activeQuests.get(questId);
 		if (data == null) {

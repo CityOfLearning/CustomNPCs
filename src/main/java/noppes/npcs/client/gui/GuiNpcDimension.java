@@ -20,7 +20,7 @@ public class GuiNpcDimension extends GuiNPCInterface implements IScrollData {
 	private HashMap<String, Integer> data;
 
 	public GuiNpcDimension() {
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		xSize = 256;
 		setBackground("menubg.png");
 	}

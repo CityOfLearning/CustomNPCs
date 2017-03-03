@@ -44,7 +44,7 @@ import noppes.npcs.util.NoppesUtilServer;
 public class WorldWrapper implements IWorld {
 	public static Map<String, Object> tempData;
 	static {
-		WorldWrapper.tempData = new HashMap<String, Object>();
+		WorldWrapper.tempData = new HashMap<>();
 	}
 	public WorldServer world;
 	private IData tempdata;
@@ -219,7 +219,7 @@ public class WorldWrapper implements IWorld {
 		AxisAlignedBB bb = AxisAlignedBB.fromBounds(0.0, 0.0, 0.0, 1.0, 1.0, 1.0).offset(x, y, z).expand(range, range,
 				range);
 		List<Entity> entities = world.getEntitiesWithinAABB(getClassForType(type), bb);
-		List<IEntity> list = new ArrayList<IEntity>();
+		List<IEntity> list = new ArrayList<>();
 		for (Entity living : entities) {
 			list.add(NpcAPI.Instance().getIEntity(living));
 		}

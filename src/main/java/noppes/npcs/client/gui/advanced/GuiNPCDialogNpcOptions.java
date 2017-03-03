@@ -25,7 +25,7 @@ public class GuiNPCDialogNpcOptions extends GuiNPCInterface2 implements GuiSelec
 
 	public GuiNPCDialogNpcOptions(EntityNPCInterface npc, GuiScreen parent) {
 		super(npc);
-		data = new HashMap<Integer, DialogOption>();
+		data = new HashMap<>();
 		this.parent = parent;
 		drawDefaultBackground = true;
 		Client.sendData(EnumPacketServer.DialogNpcGet, new Object[0]);

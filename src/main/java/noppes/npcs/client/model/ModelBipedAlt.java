@@ -30,7 +30,7 @@ public class ModelBipedAlt extends ModelBiped {
 
 	public ModelBipedAlt(float scale) {
 		super(scale);
-		map = new HashMap<EnumParts, List<ModelScaleRenderer>>();
+		map = new HashMap<>();
 		bipedLeftArm = createScale(bipedLeftArm, EnumParts.ARM_LEFT);
 		bipedRightArm = createScale(bipedRightArm, EnumParts.ARM_RIGHT);
 		bipedLeftLeg = createScale(bipedLeftLeg, EnumParts.LEG_LEFT);
@@ -51,7 +51,7 @@ public class ModelBipedAlt extends ModelBiped {
 		copyModelAngles(renderer, model);
 		List<ModelScaleRenderer> list = map.get(part);
 		if (list == null) {
-			map.put(part, list = new ArrayList<ModelScaleRenderer>());
+			map.put(part, list = new ArrayList<>());
 		}
 		list.add(model);
 		return model;

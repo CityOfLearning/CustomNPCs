@@ -41,8 +41,8 @@ public class ScriptController {
 	public boolean shouldSave;
 
 	public ScriptController() {
-		languages = new HashMap<String, String>();
-		scripts = new HashMap<String, String>();
+		languages = new HashMap<>();
+		scripts = new HashMap<>();
 		lastLoaded = 0L;
 		compound = new NBTTagCompound();
 		shouldSave = false;
@@ -71,7 +71,7 @@ public class ScriptController {
 	}
 
 	private List<String> getScripts(String language) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		String ext = languages.get(language);
 		if (ext == null) {
 			return list;

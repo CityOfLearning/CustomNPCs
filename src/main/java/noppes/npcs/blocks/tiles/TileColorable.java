@@ -60,7 +60,7 @@ public class TileColorable extends TileNpcEntity {
 	}
 
 	public void setColor(int color) {
-//		new RuntimeException().printStackTrace();
+		// new RuntimeException().printStackTrace();
 		this.color = color;
 	}
 

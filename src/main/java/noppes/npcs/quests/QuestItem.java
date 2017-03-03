@@ -24,7 +24,7 @@ public class QuestItem extends QuestInterface {
 	}
 
 	public HashMap<Integer, ItemStack> getProcessSet(EntityPlayer player) {
-		HashMap<Integer, ItemStack> map = new HashMap<Integer, ItemStack>();
+		HashMap<Integer, ItemStack> map = new HashMap<>();
 		for (int slot : items.items.keySet()) {
 			ItemStack item = items.items.get(slot);
 			if (item == null) {
@@ -49,7 +49,7 @@ public class QuestItem extends QuestInterface {
 
 	@Override
 	public Vector<String> getQuestLogStatus(EntityPlayer player) {
-		Vector<String> vec = new Vector<String>();
+		Vector<String> vec = new Vector<>();
 		HashMap<Integer, ItemStack> map = getProcessSet(player);
 		for (int slot : map.keySet()) {
 			ItemStack item = map.get(slot);

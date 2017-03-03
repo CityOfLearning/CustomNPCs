@@ -62,9 +62,9 @@ public class JobConversation extends JobInterface {
 	public JobConversation(EntityNPCInterface npc) {
 		super(npc);
 		availability = new Availability();
-		names = new ArrayList<String>();
-		npcs = new HashMap<String, EntityNPCInterface>();
-		lines = new HashMap<Integer, ConversationLine>();
+		names = new ArrayList<>();
+		npcs = new HashMap<>();
+		lines = new HashMap<>();
 		quest = -1;
 		questTitle = "";
 		generalDelay = 400;
@@ -189,7 +189,7 @@ public class JobConversation extends JobInterface {
 		range = compound.getInteger("ConversationRange");
 		mode = compound.getInteger("ConversationMode");
 		NBTTagList nbttaglist = compound.getTagList("ConversationLines", 10);
-		HashMap<Integer, ConversationLine> map = new HashMap<Integer, ConversationLine>();
+		HashMap<Integer, ConversationLine> map = new HashMap<>();
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
 			ConversationLine line = new ConversationLine();

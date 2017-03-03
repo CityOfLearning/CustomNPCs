@@ -32,7 +32,7 @@ public abstract class CommandNoppesBase extends CommandBase {
 	public Map<String, Method> subcommands;
 
 	public CommandNoppesBase() {
-		subcommands = new HashMap<String, Method>();
+		subcommands = new HashMap<>();
 		for (Method m : this.getClass().getDeclaredMethods()) {
 			SubCommand sc = m.getAnnotation(SubCommand.class);
 			if (sc != null) {
@@ -47,7 +47,7 @@ public abstract class CommandNoppesBase extends CommandBase {
 
 	public void canRun(ICommandSender sender, String usage, String[] args) throws CommandException {
 		String[] np = usage.split(" ");
-		List<String> required = new ArrayList<String>();
+		List<String> required = new ArrayList<>();
 		for (int i = 0; i < np.length; ++i) {
 			String command = np[i];
 			if (command.startsWith("<")) {

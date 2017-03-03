@@ -15,12 +15,12 @@ public class QuestDialog extends QuestInterface {
 	public HashMap<Integer, Integer> dialogs;
 
 	public QuestDialog() {
-		dialogs = new HashMap<Integer, Integer>();
+		dialogs = new HashMap<>();
 	}
 
 	@Override
 	public Vector<String> getQuestLogStatus(EntityPlayer player) {
-		Vector<String> vec = new Vector<String>();
+		Vector<String> vec = new Vector<>();
 		for (int dialogId : dialogs.values()) {
 			Dialog dialog = DialogController.instance.dialogs.get(dialogId);
 			if (dialog == null) {

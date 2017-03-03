@@ -51,7 +51,7 @@ public class ContainerTradingBlock extends ContainerNpcInterface {
 	}
 
 	public static Map<Integer, ItemStack> CompToItem(NBTTagCompound compound) {
-		Map<Integer, ItemStack> items = new HashMap<Integer, ItemStack>();
+		Map<Integer, ItemStack> items = new HashMap<>();
 		NBTTagList list = compound.getTagList("Items", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
 			NBTTagCompound c = list.getCompoundTagAt(i);

@@ -12,8 +12,8 @@ public class PlayerItemGiverData {
 	private HashMap<Integer, Integer> chained;
 
 	public PlayerItemGiverData() {
-		itemgivers = new HashMap<Integer, Long>();
-		chained = new HashMap<Integer, Integer>();
+		itemgivers = new HashMap<>();
+		chained = new HashMap<>();
 	}
 
 	public int getItemIndex(JobItemGiver jobItemGiver) {

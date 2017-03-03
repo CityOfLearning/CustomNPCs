@@ -10,11 +10,11 @@ public class PlayerTransportData {
 	public HashSet<Integer> transports;
 
 	public PlayerTransportData() {
-		transports = new HashSet<Integer>();
+		transports = new HashSet<>();
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
-		HashSet<Integer> dialogsRead = new HashSet<Integer>();
+		HashSet<Integer> dialogsRead = new HashSet<>();
 		if (compound == null) {
 			return;
 		}

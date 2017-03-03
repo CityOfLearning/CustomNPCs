@@ -131,7 +131,7 @@ public class JobBuilder extends JobInterface {
 					compound.getInteger("BuildZ"));
 		}
 		if ((possibleBuildPos != null) && compound.hasKey("Placing")) {
-			Stack<BlockData> placing = new Stack<BlockData>();
+			Stack<BlockData> placing = new Stack<>();
 			NBTTagList list = compound.getTagList("Placing", 10);
 			for (int i = 0; i < list.tagCount(); ++i) {
 				BlockData data = BlockData.getData(list.getCompoundTagAt(i));

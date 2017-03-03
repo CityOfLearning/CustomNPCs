@@ -44,7 +44,7 @@ public class LinkedNpcController {
 	public List<LinkedData> list;
 
 	public LinkedNpcController() {
-		list = new ArrayList<LinkedData>();
+		list = new ArrayList<>();
 		(LinkedNpcController.Instance = this).load();
 	}
 
@@ -121,7 +121,7 @@ public class LinkedNpcController {
 	private void loadNpcs() {
 		File dir = getDir();
 		if (dir.exists()) {
-			List<LinkedData> list = new ArrayList<LinkedData>();
+			List<LinkedData> list = new ArrayList<>();
 			for (File file : dir.listFiles()) {
 				if (file.getName().endsWith(".json")) {
 					try {

@@ -74,9 +74,9 @@ public class GlyphCache {
 		imageBuffer = ByteBuffer.allocateDirect(262144).order(ByteOrder.BIG_ENDIAN).asIntBuffer();
 		singleIntBuffer = GLAllocation.createDirectIntBuffer(1);
 		allFonts = Arrays.asList(GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts());
-		usedFonts = new ArrayList<Font>();
-		fontCache = new LinkedHashMap<Font, Integer>();
-		glyphCache = new LinkedHashMap<Long, Entry>();
+		usedFonts = new ArrayList<>();
+		fontCache = new LinkedHashMap<>();
+		glyphCache = new LinkedHashMap<>();
 		cachePosX = 1;
 		cachePosY = 1;
 		cacheLineHeight = 0;

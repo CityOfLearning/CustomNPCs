@@ -34,7 +34,7 @@ public class GuiNpcNaturalSpawns extends GuiNPCInterface2
 
 	public GuiNpcNaturalSpawns(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		spawn = new SpawnData();
 		Client.sendData(EnumPacketServer.NaturalSpawnGetAll, new Object[0]);
 	}

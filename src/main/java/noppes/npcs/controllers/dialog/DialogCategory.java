@@ -14,7 +14,7 @@ public class DialogCategory {
 	public DialogCategory() {
 		id = -1;
 		title = "";
-		dialogs = new HashMap<Integer, Dialog>();
+		dialogs = new HashMap<>();
 	}
 
 	public void readNBT(NBTTagCompound compound) {

@@ -264,7 +264,7 @@ public class NoppesUtilPlayer {
 		if (currency == null) {
 			return;
 		}
-		HashMap<ItemStack, Integer> cd = new HashMap<ItemStack, Integer>();
+		HashMap<ItemStack, Integer> cd = new HashMap<>();
 		for (int i : role.inventory.items.keySet()) {
 			ItemStack is = role.inventory.items.get(i);
 			if ((is != null) && (is.getItem() == currency.getItem())) {
@@ -364,7 +364,7 @@ public class NoppesUtilPlayer {
 				NoppesUtilServer.GivePlayerItem(player, player, item);
 			}
 		} else {
-			List<ItemStack> list = new ArrayList<ItemStack>();
+			List<ItemStack> list = new ArrayList<>();
 			for (ItemStack item2 : data.quest.rewardItems.items.values()) {
 				if ((item2 != null) && (item2.getItem() != null)) {
 					list.add(item2);

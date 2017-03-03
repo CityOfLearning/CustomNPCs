@@ -23,7 +23,7 @@ public class GuiScriptList extends SubGuiInterface {
 		xSize = 346;
 		ySize = 216;
 		if (scripts == null) {
-			scripts = new ArrayList<String>();
+			scripts = new ArrayList<>();
 		}
 		this.scripts = scripts;
 	}
@@ -79,7 +79,7 @@ public class GuiScriptList extends SubGuiInterface {
 		scroll2.guiTop = guiTop + 14;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(2, "script.loadedScripts", guiLeft + 200, guiTop + 4));
-		List<String> temp = new ArrayList<String>(scripts);
+		List<String> temp = new ArrayList<>(scripts);
 		temp.removeAll(container.scripts);
 		scroll1.setList(temp);
 		scroll2.setList(container.scripts);

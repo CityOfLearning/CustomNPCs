@@ -79,7 +79,7 @@ public class DataAdvanced implements INPCAdvanced {
 	}
 
 	private HashMap<Integer, DialogOption> getDialogs(NBTTagList tagList) {
-		HashMap<Integer, DialogOption> map = new HashMap<Integer, DialogOption>();
+		HashMap<Integer, DialogOption> map = new HashMap<>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
 			int slot = nbttagcompound.getInteger("DialogSlot");

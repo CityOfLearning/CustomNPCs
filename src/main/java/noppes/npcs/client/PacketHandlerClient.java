@@ -85,10 +85,10 @@ public class PacketHandlerClient extends PacketHandlerServer {
 		} else if (type == EnumPacketClient.SYNCRECIPES_WORKBENCH) {
 			RecipeController.instance.globalRecipes = RecipeController.syncRecipes;
 			RecipeController.instance.reloadGlobalRecipes();
-			RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
+			RecipeController.syncRecipes = new HashMap<>();
 		} else if (type == EnumPacketClient.SYNCRECIPES_CARPENTRYBENCH) {
 			RecipeController.instance.anvilRecipes = RecipeController.syncRecipes;
-			RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
+			RecipeController.syncRecipes = new HashMap<>();
 		} else if (type == EnumPacketClient.DIALOG) {
 			Entity entity = Minecraft.getMinecraft().theWorld.getEntityByID(buffer.readInt());
 			if ((entity == null) || !(entity instanceof EntityNPCInterface)) {

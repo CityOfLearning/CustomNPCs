@@ -12,7 +12,7 @@ public class TileNpcEntity extends TileEntity {
 	public NBTTagCompound extraData;
 
 	public TileNpcEntity() {
-		tempData = new HashMap<String, Object>();
+		tempData = new HashMap<>();
 		extraData = new NBTTagCompound();
 	}
 

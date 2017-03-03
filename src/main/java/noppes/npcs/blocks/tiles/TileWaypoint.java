@@ -26,7 +26,7 @@ public class TileWaypoint extends TileNpcEntity implements ITickable {
 	public TileWaypoint() {
 		name = "";
 		ticks = 10;
-		recentlyChecked = new ArrayList<EntityPlayer>();
+		recentlyChecked = new ArrayList<>();
 		range = 10;
 	}
 

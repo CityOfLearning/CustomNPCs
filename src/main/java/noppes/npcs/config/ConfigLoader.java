@@ -26,7 +26,7 @@ public class ConfigLoader {
 		}
 		this.dir = dir;
 		configClass = clss;
-		configFields = new LinkedList<Field>();
+		configFields = new LinkedList<>();
 		this.fileName = fileName + ".cfg";
 		Field[] declaredFields;
 		declaredFields = configClass.getDeclaredFields();
@@ -40,7 +40,7 @@ public class ConfigLoader {
 	public void loadConfig() {
 		try {
 			File configFile = new File(dir, fileName);
-			HashMap<String, Field> types = new HashMap<String, Field>();
+			HashMap<String, Field> types = new HashMap<>();
 			for (Field field : configFields) {
 				ConfigProp prop = field.getAnnotation(ConfigProp.class);
 				types.put(prop.name().isEmpty() ? field.getName() : prop.name(), field);
@@ -73,7 +73,7 @@ public class ConfigLoader {
 	}
 
 	private HashMap<String, Object> parseConfig(File file, HashMap<String, Field> types) throws Exception {
-		HashMap<String, Object> config = new HashMap<String, Object>();
+		HashMap<String, Object> config = new HashMap<>();
 		BufferedReader reader = new BufferedReader(new FileReader(file));
 		String strLine;
 		while ((strLine = reader.readLine()) != null) {

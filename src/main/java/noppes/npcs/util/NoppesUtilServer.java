@@ -70,7 +70,7 @@ import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.roles.RoleTransporter;
 
 public class NoppesUtilServer {
-	private static HashMap<String, Quest> editingQuests = new HashMap<String, Quest>();
+	private static HashMap<String, Quest> editingQuests = new HashMap<>();
 
 	public static void consumeItemStack(int i, EntityPlayer player) {
 		ItemStack item = player.inventory.getCurrentItem();
@@ -145,7 +145,7 @@ public class NoppesUtilServer {
 	private static ArrayList<String> getScrollData(EntityPlayer player, EnumGuiType gui, EntityNPCInterface npc) {
 		if (gui == EnumGuiType.PlayerTransporter) {
 			RoleTransporter role = (RoleTransporter) npc.roleInterface;
-			ArrayList<String> list = new ArrayList<String>();
+			ArrayList<String> list = new ArrayList<>();
 			TransportLocation location = role.getLocation();
 			String name = role.getLocation().name;
 			for (TransportLocation loc : location.category.getDefaultLocations()) {
@@ -342,7 +342,7 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendBankDataAll(EntityPlayerMP player) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<>();
 		for (Bank bank : BankController.getInstance().banks.values()) {
 			map.put(bank.name, bank.id);
 		}
@@ -353,7 +353,7 @@ public class NoppesUtilServer {
 		if (category == null) {
 			return;
 		}
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (Dialog dialog : category.dialogs.values()) {
 			map.put(dialog.title, dialog.id);
 		}
@@ -369,7 +369,7 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendFactionDataAll(EntityPlayerMP player) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<>();
 		for (Faction faction : FactionController.getInstance().factions.values()) {
 			map.put(faction.name, faction.id);
 		}
@@ -387,7 +387,7 @@ public class NoppesUtilServer {
 	public static void sendNearbyNpcs(EntityPlayerMP player) {
 		List<EntityNPCInterface> npcs = player.worldObj.getEntitiesWithinAABB((Class) EntityNPCInterface.class,
 				player.getEntityBoundingBox().expand(120.0, 120.0, 120.0));
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (EntityNPCInterface npc : npcs) {
 			if (npc.isDead) {
 				continue;
@@ -444,7 +444,7 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendPlayerData(EnumPlayerData type, EntityPlayerMP player, String name) throws IOException {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<>();
 		if (type == EnumPlayerData.Players) {
 			PlayerDataController.instance.getSaveDir();
 			for (String username : PlayerDataController.instance.getUsernameData().keySet()) {
@@ -510,7 +510,7 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendQuestCategoryData(EntityPlayerMP player) {
-		Map<String, Integer> map = new HashMap<String, Integer>();
+		Map<String, Integer> map = new HashMap<>();
 		for (QuestCategory category : QuestController.instance.categories.values()) {
 			map.put(category.title, category.id);
 		}
@@ -521,7 +521,7 @@ public class NoppesUtilServer {
 		if (category == null) {
 			return;
 		}
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (Quest quest : category.quests.values()) {
 			map.put(quest.title, quest.id);
 		}
@@ -529,7 +529,7 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendRecipeData(EntityPlayerMP player, int size) {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		if (size == 3) {
 			for (RecipeCarpentry recipe : RecipeController.instance.globalRecipes.values()) {
 				map.put(recipe.name, recipe.id);
@@ -554,19 +554,19 @@ public class NoppesUtilServer {
 	}
 
 	public static void sendScrollData(EntityPlayerMP player, Map<String, Integer> map) {
-		Map<String, Integer> send = new HashMap<String, Integer>();
+		Map<String, Integer> send = new HashMap<>();
 		for (String key : map.keySet()) {
 			send.put(key, map.get(key));
 			if (send.size() == 100) {
 				Server.sendData(player, EnumPacketClient.SCROLL_DATA_PART, send);
-				send = new HashMap<String, Integer>();
+				send = new HashMap<>();
 			}
 		}
 		Server.sendData(player, EnumPacketClient.SCROLL_DATA, send);
 	}
 
 	public static void sendTransportCategoryData(EntityPlayerMP player) {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (TransportCategory category : TransportController.getInstance().categories.values()) {
 			map.put(category.title, category.id);
 		}
@@ -578,7 +578,7 @@ public class NoppesUtilServer {
 		if (category == null) {
 			return;
 		}
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (TransportLocation transport : category.locations.values()) {
 			map.put(transport.name, transport.id);
 		}

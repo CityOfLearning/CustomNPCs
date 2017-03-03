@@ -72,7 +72,7 @@ public class ScoreboardWrapper implements IScoreboard {
 
 	@Override
 	public IScoreboardObjective[] getObjectives() {
-		List<ScoreObjective> collection = new ArrayList<ScoreObjective>(board.getScoreObjectives());
+		List<ScoreObjective> collection = new ArrayList<>(board.getScoreObjectives());
 		IScoreboardObjective[] objectives = new IScoreboardObjective[collection.size()];
 		for (int i = 0; i < collection.size(); ++i) {
 			objectives[i] = new ScoreboardObjectiveWrapper(collection.get(i));
@@ -108,7 +108,7 @@ public class ScoreboardWrapper implements IScoreboard {
 
 	@Override
 	public IScoreboardTeam[] getTeams() {
-		List<ScorePlayerTeam> list = new ArrayList<ScorePlayerTeam>(board.getTeams());
+		List<ScorePlayerTeam> list = new ArrayList<>(board.getTeams());
 		IScoreboardTeam[] teams = new IScoreboardTeam[list.size()];
 		for (int i = 0; i < list.size(); ++i) {
 			teams[i] = new ScoreboardTeamWrapper(list.get(i), board);

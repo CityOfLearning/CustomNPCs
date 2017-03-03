@@ -3,11 +3,7 @@ package noppes.npcs.blocks;
 import java.util.List;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,20 +16,24 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.blocks.tiles.TileChair;
 import noppes.npcs.blocks.tiles.TileColorable;
 import noppes.npcs.blocks.tiles.TileCouchWool;
-import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.entity.EntityChairMount;
 import noppes.npcs.util.NoppesUtilServer;
 
 public class BlockCouchWool extends BlockRotated {
 
-
 	public BlockCouchWool() {
 		super(Material.wood);
+	}
+
+	@Override
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		((TileChair) world.getTileEntity(pos)).killMount();
+		world.removeTileEntity(pos);
+		super.breakBlock(world, pos, state);
 	}
 
 	private boolean compareCornerTiles(TileCouchWool tile, BlockPos pos, World world, int meta, boolean isLeft) {
@@ -81,13 +81,6 @@ public class BlockCouchWool extends BlockRotated {
 	@Override
 	public TileEntity createNewTileEntity(World var1, int var2) {
 		return new TileCouchWool();
-	}
-
-	@Override
-	public void breakBlock(World world, BlockPos pos, IBlockState state) {
-		((TileChair) world.getTileEntity(pos)).killMount();
-		world.removeTileEntity(pos);
-		super.breakBlock(world, pos, state);
 	}
 
 	@Override

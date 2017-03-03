@@ -105,20 +105,20 @@ public class PacketHandlerServer {
 			DataScenes.Reset(player, null);
 		} else if (type == EnumPacketServer.LinkedAdd) {
 			LinkedNpcController.Instance.addData(Server.readString(buffer));
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			for (LinkedNpcController.LinkedData data : LinkedNpcController.Instance.list) {
 				list.add(data.name);
 			}
 			Server.sendData(player, EnumPacketClient.SCROLL_LIST, list);
 		} else if (type == EnumPacketServer.LinkedRemove) {
 			LinkedNpcController.Instance.removeData(Server.readString(buffer));
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			for (LinkedNpcController.LinkedData data : LinkedNpcController.Instance.list) {
 				list.add(data.name);
 			}
 			Server.sendData(player, EnumPacketClient.SCROLL_LIST, list);
 		} else if (type == EnumPacketServer.LinkedGetAll) {
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			for (LinkedNpcController.LinkedData data : LinkedNpcController.Instance.list) {
 				list.add(data.name);
 			}
@@ -583,7 +583,7 @@ public class PacketHandlerServer {
 			compound3.setTag("Languages", ScriptController.Instance.nbtLanguages());
 			Server.sendData(player, EnumPacketClient.GUI_DATA, compound3);
 		} else if (type == EnumPacketServer.DimensionsGet) {
-			HashMap<String, Integer> map = new HashMap<String, Integer>();
+			HashMap<String, Integer> map = new HashMap<>();
 			for (int id2 : DimensionManager.getStaticDimensionIDs()) {
 				WorldProvider provider = DimensionManager.createProviderFor(id2);
 				map.put(provider.getDimensionName(), id2);

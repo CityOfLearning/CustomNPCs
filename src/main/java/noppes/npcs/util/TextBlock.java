@@ -10,6 +10,6 @@ public class TextBlock {
 	public List<IChatComponent> lines;
 
 	public TextBlock() {
-		lines = new ArrayList<IChatComponent>();
+		lines = new ArrayList<>();
 	}
 }

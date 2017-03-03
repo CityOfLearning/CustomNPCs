@@ -33,7 +33,7 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 	private ResourceLocation indicator;
 
 	public GuiFaction() {
-		playerFactions = new ArrayList<Faction>();
+		playerFactions = new ArrayList<>();
 		page = 0;
 		pages = 1;
 		xSize = 200;
@@ -147,7 +147,7 @@ public class GuiFaction extends GuiNPCInterface implements IGuiData {
 
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
-		playerFactions = new ArrayList<Faction>();
+		playerFactions = new ArrayList<>();
 		NBTTagList list = compound.getTagList("FactionList", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
 			Faction faction = new Faction();

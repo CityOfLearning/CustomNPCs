@@ -20,12 +20,12 @@ public class QuestLogData {
 	public HashMap<String, String> finish;
 
 	public QuestLogData() {
-		categories = new HashMap<String, Vector<String>>();
+		categories = new HashMap<>();
 		selectedQuest = "";
 		selectedCategory = "";
-		questText = new HashMap<String, String>();
-		questStatus = new HashMap<String, Vector<String>>();
-		finish = new HashMap<String, String>();
+		questText = new HashMap<>();
+		questStatus = new HashMap<>();
+		finish = new HashMap<>();
 	}
 
 	public String getComplete() {

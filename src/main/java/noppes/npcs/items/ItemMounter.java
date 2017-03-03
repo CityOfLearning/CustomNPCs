@@ -4,7 +4,6 @@ package noppes.npcs.items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
-import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.util.IPermission;

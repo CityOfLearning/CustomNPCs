@@ -78,7 +78,7 @@ public class SubGuiNpcBiomes extends SubGuiInterface {
 		scroll2.guiTop = guiTop + 14;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(2, "spawning.spawningBiomes", guiLeft + 200, guiTop + 4));
-		List<String> biomes = new ArrayList<String>();
+		List<String> biomes = new ArrayList<>();
 		for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 			if ((base != null) && (base.biomeName != null) && !data.biomes.contains(base.biomeName)) {
 				biomes.add(base.biomeName);

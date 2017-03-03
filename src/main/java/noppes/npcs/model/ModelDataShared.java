@@ -29,7 +29,7 @@ public class ModelDataShared {
 		head = new ModelPartConfig();
 		legParts = new ModelPartData("legs");
 		extra = new NBTTagCompound();
-		parts = new HashMap<EnumParts, ModelPartData>();
+		parts = new HashMap<>();
 	}
 
 	public void clearEntity() {
@@ -104,7 +104,7 @@ public class ModelDataShared {
 		head.readFromNBT(compound.getCompoundTag("HeadConfig"));
 		legParts.readFromNBT(compound.getCompoundTag("LegParts"));
 		extra = compound.getCompoundTag("ExtraData");
-		HashMap<EnumParts, ModelPartData> parts = new HashMap<EnumParts, ModelPartData>();
+		HashMap<EnumParts, ModelPartData> parts = new HashMap<>();
 		NBTTagList list = compound.getTagList("Parts", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
 			NBTTagCompound item = list.getCompoundTagAt(i);

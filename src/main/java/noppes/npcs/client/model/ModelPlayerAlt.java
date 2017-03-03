@@ -32,7 +32,7 @@ public class ModelPlayerAlt extends ModelPlayer {
 
 	public ModelPlayerAlt(float scale, boolean bo) {
 		super(scale, bo);
-		map = new HashMap<EnumParts, List<ModelScaleRenderer>>();
+		map = new HashMap<>();
 		(bipedDeadmau5Head = new ModelScaleRenderer(this, 24, 0, EnumParts.HEAD)).addBox(-3.0f, -6.0f, -1.0f, 6, 6, 1,
 				scale);
 		(bipedCape = new ModelScaleRenderer(this, 0, 0, EnumParts.BODY)).setTextureSize(64, 32);
@@ -64,7 +64,7 @@ public class ModelPlayerAlt extends ModelPlayer {
 		copyModelAngles(renderer, model);
 		List<ModelScaleRenderer> list = map.get(part);
 		if (list == null) {
-			map.put(part, list = new ArrayList<ModelScaleRenderer>());
+			map.put(part, list = new ArrayList<>());
 		}
 		list.add(model);
 		return model;

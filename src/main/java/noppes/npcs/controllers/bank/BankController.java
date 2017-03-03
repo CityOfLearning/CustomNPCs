@@ -37,7 +37,7 @@ public class BankController {
 	public BankController() {
 		filePath = "";
 		BankController.instance = this;
-		banks = new HashMap<Integer, Bank>();
+		banks = new HashMap<>();
 		this.loadBanks();
 		if (banks.isEmpty()) {
 			Bank bank = new Bank();
@@ -104,7 +104,7 @@ public class BankController {
 	}
 
 	public void loadBanks(NBTTagCompound nbttagcompound1) throws IOException {
-		HashMap<Integer, Bank> banks = new HashMap<Integer, Bank>();
+		HashMap<Integer, Bank> banks = new HashMap<>();
 		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {

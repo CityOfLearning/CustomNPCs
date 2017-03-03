@@ -23,7 +23,7 @@ public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, IC
 
 	public GuiNpcBankSetup(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		role = (RoleBank) npc.roleInterface;
 	}
 

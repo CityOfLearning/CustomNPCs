@@ -35,7 +35,7 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 
 	public GuiNPCManageFactions(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		faction = new Faction();
 		selected = null;
 		Client.sendData(EnumPacketServer.FactionsGet, new Object[0]);
@@ -81,7 +81,7 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 			selected = scrollFactions.getSelected();
 			Client.sendData(EnumPacketServer.FactionGet, data.get(selected));
 		} else if (guiCustomScroll.id == 1) {
-			HashSet<Integer> set = new HashSet<Integer>();
+			HashSet<Integer> set = new HashSet<>();
 			for (String s : guiCustomScroll.getSelectedList()) {
 				if (data.containsKey(s)) {
 					set.add(data.get(s));
@@ -126,9 +126,9 @@ public class GuiNPCManageFactions extends GuiNPCInterface2
 		addButton(new GuiNpcButton(4, guiLeft + 100, guiTop + 92, 45, 20, new String[] { "gui.no", "gui.yes" },
 				faction.getsAttacked ? 1 : 0));
 		addLabel(new GuiNpcLabel(6, "faction.hostiles", guiLeft + 8, guiTop + 145));
-		ArrayList<String> hostileList = new ArrayList<String>(scrollFactions.getList());
+		ArrayList<String> hostileList = new ArrayList<>(scrollFactions.getList());
 		hostileList.remove(faction.name);
-		HashSet<String> set = new HashSet<String>();
+		HashSet<String> set = new HashSet<>();
 		for (String s : data.keySet()) {
 			if (!s.equals(faction.name) && faction.attackFactions.contains(data.get(s))) {
 				set.add(s);

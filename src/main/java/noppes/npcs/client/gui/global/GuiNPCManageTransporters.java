@@ -28,7 +28,7 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 		Client.sendData(EnumPacketServer.TransportCategoriesGet, new Object[0]);
 		drawDefaultBackground = false;
 		title = "Transport Categories";
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class GuiNPCManageTransporters extends GuiNPCInterface implements IScroll
 	@Override
 	public void initGui() {
 		super.initGui();
-		Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<>();
 		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);
 		addButton(new GuiNpcButton(0, (width / 2) - 100, height - 52, 65, 20, "gui.add"));
 		addButton(new GuiNpcButton(1, (width / 2) - 33, height - 52, 65, 20, "selectServer.edit"));

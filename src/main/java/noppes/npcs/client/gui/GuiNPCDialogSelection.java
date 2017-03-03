@@ -27,7 +27,7 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
 
 	public GuiNPCDialogSelection(EntityNPCInterface npc, GuiScreen parent, int dialog) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		selectCategory = true;
 		drawDefaultBackground = false;
 		title = "Select Dialog Category";
@@ -87,7 +87,7 @@ public class GuiNPCDialogSelection extends GuiNPCInterface implements IScrollDat
 	@Override
 	public void initGui() {
 		super.initGui();
-		Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<>();
 		addButton(new GuiNpcButton(2, (width / 2) - 100, height - 41, 98, 20, "gui.back"));
 		addButton(new GuiNpcButton(4, (width / 2) + 2, height - 41, 98, 20, "mco.template.button.select"));
 		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);

@@ -26,7 +26,7 @@ public class EntityWrapper<T extends Entity> implements IEntity {
 	private IData storeddata;
 
 	public EntityWrapper(T entity) {
-		this.tempData = new HashMap<String, Object>();
+		this.tempData = new HashMap<>();
 		this.tempdata = new IData() {
 			@Override
 			public void clear() {

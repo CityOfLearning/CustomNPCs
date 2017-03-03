@@ -52,7 +52,7 @@ public class GuiNPCManageQuest extends GuiNPCInterface2 implements IScrollData, 
 
 	public GuiNPCManageQuest(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		category = new QuestCategory();
 		categorySelection = true;
 		questlogTA = false;

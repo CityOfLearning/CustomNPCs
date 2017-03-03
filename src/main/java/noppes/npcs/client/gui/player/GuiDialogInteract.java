@@ -40,7 +40,7 @@ public class GuiDialogInteract extends Show {
 
 	public GuiDialogInteract(EntityNPCInterface npc, Dialog dialog) {
 		setBackground(new DefaultBackground());
-		lines = new ArrayList<String>();
+		lines = new ArrayList<>();
 		this.npc = npc;
 		this.dialog = dialog;
 		appendDialog(this.dialog);
@@ -128,7 +128,7 @@ public class GuiDialogInteract extends Show {
 		registerComponent(npcDialog);
 
 		// components
-		ArrayList<ListEntry> dOptions = new ArrayList<ListEntry>();
+		ArrayList<ListEntry> dOptions = new ArrayList<>();
 
 		for (int slot : dialog.options.keySet()) {
 			DialogOption option = dialog.options.get(slot);

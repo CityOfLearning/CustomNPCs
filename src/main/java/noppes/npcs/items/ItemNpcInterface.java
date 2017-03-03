@@ -71,7 +71,7 @@ public class ItemNpcInterface extends Item implements ItemRenderInterface {
 		super.setUnlocalizedName(name);
 		GameRegistry.registerItem(this, name);
 		if (hasSubtypes) {
-			List<ItemStack> list = new ArrayList<ItemStack>();
+			List<ItemStack> list = new ArrayList<>();
 			getSubItems(this, null, list);
 			for (ItemStack stack : list) {
 				CustomNpcs.proxy.registerItem(this, name, stack.getItemDamage());

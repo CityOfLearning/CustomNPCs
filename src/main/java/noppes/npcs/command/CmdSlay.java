@@ -32,13 +32,13 @@ public class CmdSlay extends CommandNoppesBase {
 	public Map<String, Class<?>> SlayMap;
 
 	public CmdSlay() {
-		(SlayMap = new LinkedHashMap<String, Class<?>>()).clear();
+		(SlayMap = new LinkedHashMap<>()).clear();
 		SlayMap.put("all", EntityLivingBase.class);
 		SlayMap.put("mobs", EntityMob.class);
 		SlayMap.put("animals", EntityAnimal.class);
 		SlayMap.put("items", EntityItem.class);
 		SlayMap.put("xporbs", EntityXPOrb.class);
-		HashMap<String, Class<?>> list = new HashMap<String, Class<?>>(EntityList.stringToClassMapping);
+		HashMap<String, Class<?>> list = new HashMap<>(EntityList.stringToClassMapping);
 		for (String name : list.keySet()) {
 			Class<?> cls = list.get(name);
 			if (EntityNPCInterface.class.isAssignableFrom(cls)) {
@@ -87,7 +87,7 @@ public class CmdSlay extends CommandNoppesBase {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
-		ArrayList<Class<?>> toDelete = new ArrayList<Class<?>>();
+		ArrayList<Class<?>> toDelete = new ArrayList<>();
 		boolean deleteNPCs = false;
 		for (String delete : args) {
 			delete = delete.toLowerCase();

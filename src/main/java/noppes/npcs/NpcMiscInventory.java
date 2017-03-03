@@ -17,7 +17,7 @@ public class NpcMiscInventory implements IInventory {
 	private int size;
 
 	public NpcMiscInventory(int size) {
-		items = new HashMap<Integer, ItemStack>();
+		items = new HashMap<>();
 		stackLimit = 64;
 		this.size = size;
 	}

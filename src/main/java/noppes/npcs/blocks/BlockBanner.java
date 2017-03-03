@@ -11,10 +11,8 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -112,9 +110,10 @@ public class BlockBanner extends BlockContainer implements ITileRenderer {
 		if (item.getItem() != Items.dye) {
 			return false;
 		}
-//		EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(color))
-//		int color = EnumDyeColor.byMetadata(item.getItemDamage()).getMapColor().colorValue;
-		int color = 15-item.getItemDamage();
+		// EntitySheep.getDyeRgb(EnumDyeColor.byDyeDamage(color))
+		// int color =
+		// EnumDyeColor.byMetadata(item.getItemDamage()).getMapColor().colorValue;
+		int color = 15 - item.getItemDamage();
 		if (tile.getColor() != color) {
 			NoppesUtilServer.consumeItemStack(1, player);
 			tile.setColor(color);

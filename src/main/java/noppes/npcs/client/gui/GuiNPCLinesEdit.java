@@ -72,7 +72,7 @@ public class GuiNPCLinesEdit extends GuiNPCInterface2 implements IGuiData {
 	}
 
 	private void saveLines() {
-		HashMap<Integer, Line> lines = new HashMap<Integer, Line>();
+		HashMap<Integer, Line> lines = new HashMap<>();
 		for (int i = 0; i < guiLines; ++i) {
 			GuiNpcTextField tf = getTextField(i);
 			GuiNpcTextField tf2 = getTextField(i + guiLines);

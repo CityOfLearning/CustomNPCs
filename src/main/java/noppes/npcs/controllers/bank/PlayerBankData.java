@@ -10,7 +10,7 @@ public class PlayerBankData {
 	public HashMap<Integer, BankData> banks;
 
 	public PlayerBankData() {
-		banks = new HashMap<Integer, BankData>();
+		banks = new HashMap<>();
 	}
 
 	public BankData getBank(int bankId) {
@@ -31,7 +31,7 @@ public class PlayerBankData {
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
-		HashMap<Integer, BankData> banks = new HashMap<Integer, BankData>();
+		HashMap<Integer, BankData> banks = new HashMap<>();
 		NBTTagList list = compound.getTagList("BankData", 10);
 		if (list == null) {
 			return;

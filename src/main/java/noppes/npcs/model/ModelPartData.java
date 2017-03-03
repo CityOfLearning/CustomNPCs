@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 public class ModelPartData {
 	private static Map<String, ResourceLocation> resources;
 	static {
-		ModelPartData.resources = new HashMap<String, ResourceLocation>();
+		ModelPartData.resources = new HashMap<>();
 	}
 	public int color;
 	public int colorPattern;

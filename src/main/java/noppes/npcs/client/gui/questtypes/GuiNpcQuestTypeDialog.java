@@ -25,7 +25,7 @@ public class GuiNpcQuestTypeDialog extends SubGuiInterface implements GuiSelecti
 	private int selectedSlot;
 
 	public GuiNpcQuestTypeDialog(EntityNPCInterface npc, Quest q, GuiScreen parent) {
-		data = new HashMap<Integer, String>();
+		data = new HashMap<>();
 		this.npc = npc;
 		this.parent = parent;
 		title = "Quest Dialog Setup";

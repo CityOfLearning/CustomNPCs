@@ -85,7 +85,7 @@ public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
 
 	@Override
 	public void save() {
-		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> map = new HashMap<>();
 		for (int i = 0; i < role.inventory.getSizeInventory(); ++i) {
 			ItemStack item = role.inventory.getStackInSlot(i);
 			if (item != null) {

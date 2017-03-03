@@ -23,7 +23,7 @@ public class GuiNPCFactionSetup extends GuiNPCInterface2 implements IScrollData,
 
 	public GuiNPCFactionSetup(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 	}
 
 	@Override

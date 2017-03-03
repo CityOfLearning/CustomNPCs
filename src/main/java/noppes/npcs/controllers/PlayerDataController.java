@@ -75,7 +75,7 @@ public class PlayerDataController {
 	}
 
 	public List<PlayerData> getPlayersData(ICommandSender sender, String username) {
-		ArrayList<PlayerData> list = new ArrayList<PlayerData>();
+		ArrayList<PlayerData> list = new ArrayList<>();
 		List<EntityPlayerMP> players = PlayerSelector.matchEntities(sender, username, EntityPlayerMP.class);
 		if (players.isEmpty()) {
 			PlayerData data = PlayerDataController.instance.getDataFromUsername(username);
@@ -104,7 +104,7 @@ public class PlayerDataController {
 	}
 
 	public Map<String, NBTTagCompound> getUsernameData() {
-		Map<String, NBTTagCompound> map = new HashMap<String, NBTTagCompound>();
+		Map<String, NBTTagCompound> map = new HashMap<>();
 		for (File file : getSaveDir().listFiles()) {
 			if (!file.isDirectory()) {
 				if (file.getName().endsWith(".json")) {

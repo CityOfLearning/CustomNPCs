@@ -22,8 +22,8 @@ public class QuestController {
 	private int lastUsedQuestID;
 
 	public QuestController() {
-		categories = new HashMap<Integer, QuestCategory>();
-		quests = new HashMap<Integer, Quest>();
+		categories = new HashMap<>();
+		quests = new HashMap<>();
 		lastUsedCatID = 0;
 		lastUsedQuestID = 0;
 		QuestController.instance = this;

@@ -10,11 +10,11 @@ public class PlayerDialogData {
 	public HashSet<Integer> dialogsRead;
 
 	public PlayerDialogData() {
-		dialogsRead = new HashSet<Integer>();
+		dialogsRead = new HashSet<>();
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
-		HashSet<Integer> dialogsRead = new HashSet<Integer>();
+		HashSet<Integer> dialogsRead = new HashSet<>();
 		if (compound == null) {
 			return;
 		}

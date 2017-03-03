@@ -21,26 +21,26 @@ public class EntityChairMount extends Entity {
 
 	public EntityChairMount(World worldIn, double x, double y, double z) {
 		this(worldIn);
-		this.setPosition(x, y, z);
-		this.motionX = 0.0D;
-		this.motionY = 0.0D;
-		this.motionZ = 0.0D;
-		this.prevPosX = x;
-		this.prevPosY = y;
-		this.prevPosZ = z;
+		setPosition(x, y, z);
+		motionX = 0.0D;
+		motionY = 0.0D;
+		motionZ = 0.0D;
+		prevPosX = x;
+		prevPosY = y;
+		prevPosZ = z;
 	}
 
 	public EntityChairMount(World worldIn, double x, double y, double z, float yaw) {
 		this(worldIn);
-		this.setPosition(x, y, z);
-		this.motionX = 0.0D;
-		this.motionY = 0.0D;
-		this.motionZ = 0.0D;
-		this.prevPosX = x;
-		this.prevPosY = y;
-		this.prevPosZ = z;
-		this.rotationYaw = yaw;
-		this.prevRotationYaw = yaw;
+		setPosition(x, y, z);
+		motionX = 0.0D;
+		motionY = 0.0D;
+		motionZ = 0.0D;
+		prevPosX = x;
+		prevPosY = y;
+		prevPosZ = z;
+		rotationYaw = yaw;
+		prevRotationYaw = yaw;
 	}
 
 	@Override
@@ -49,12 +49,12 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	protected boolean canTriggerWalking() {
+	public boolean canBePushed() {
 		return false;
 	}
 
 	@Override
-	public boolean canBePushed() {
+	protected boolean canTriggerWalking() {
 		return false;
 	}
 
@@ -96,22 +96,9 @@ public class EntityChairMount extends Entity {
 		}
 	}
 
-	public void updateRiderPosition() {
-		super.updateRiderPosition();
-		if (this.riddenByEntity != null && worldObj != null && worldObj.getBlockState(getPosition()) != null) {
-			Block b = worldObj.getBlockState(getPosition()).getBlock();
-			if (b instanceof BlockChair) {
-				if (Math.abs(this.riddenByEntity.rotationYaw - this.rotationYaw) > 90) {
-					this.riddenByEntity.rotationYaw = this.riddenByEntity.rotationYaw - this.rotationYaw > 0
-							? rotationYaw + 90 : rotationYaw - 90;
-				}
-			} else if (b instanceof BlockCouchWood || b instanceof BlockCouchWool) {
-				if (Math.abs(this.riddenByEntity.rotationYaw - this.rotationYaw) > 45) {
-					this.riddenByEntity.rotationYaw = this.riddenByEntity.rotationYaw - this.rotationYaw > 0
-							? rotationYaw + 45 : rotationYaw - 45;
-				}
-			}
-		}
+	@Override
+	public void readEntityFromNBT(NBTTagCompound tagCompound) {
+
 	}
 
 	@Override
@@ -123,8 +110,22 @@ public class EntityChairMount extends Entity {
 	}
 
 	@Override
-	public void readEntityFromNBT(NBTTagCompound tagCompound) {
-
+	public void updateRiderPosition() {
+		super.updateRiderPosition();
+		if ((riddenByEntity != null) && (worldObj != null) && (worldObj.getBlockState(getPosition()) != null)) {
+			Block b = worldObj.getBlockState(getPosition()).getBlock();
+			if (b instanceof BlockChair) {
+				if (Math.abs(riddenByEntity.rotationYaw - rotationYaw) > 90) {
+					riddenByEntity.rotationYaw = (riddenByEntity.rotationYaw - rotationYaw) > 0 ? rotationYaw + 90
+							: rotationYaw - 90;
+				}
+			} else if ((b instanceof BlockCouchWood) || (b instanceof BlockCouchWool)) {
+				if (Math.abs(riddenByEntity.rotationYaw - rotationYaw) > 45) {
+					riddenByEntity.rotationYaw = (riddenByEntity.rotationYaw - rotationYaw) > 0 ? rotationYaw + 45
+							: rotationYaw - 45;
+				}
+			}
+		}
 	}
 
 	@Override

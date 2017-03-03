@@ -52,7 +52,7 @@ public class GuiCustomScroll extends GuiScreen {
 		ySize = 159;
 		selected = -1;
 		hover = -1;
-		selectedList = new HashSet<String>();
+		selectedList = new HashSet<>();
 		listHeight = 0;
 		scrollY = 0;
 		scrollHeight = 0;
@@ -60,7 +60,7 @@ public class GuiCustomScroll extends GuiScreen {
 		if (parent instanceof ICustomScrollListener) {
 			listener = (ICustomScrollListener) parent;
 		}
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		this.id = id;
 	}
 
@@ -70,7 +70,7 @@ public class GuiCustomScroll extends GuiScreen {
 	}
 
 	public void clear() {
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		selected = -1;
 		scrollY = 0;
 		setSize(xSize, ySize);

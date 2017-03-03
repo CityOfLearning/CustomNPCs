@@ -253,7 +253,7 @@ public class GuiCreationParts extends GuiCreationScreenInterface implements ITex
 			return;
 		}
 		if (scroll == null) {
-			List<String> list = new ArrayList<String>();
+			List<String> list = new ArrayList<>();
 			for (GuiPart part : parts) {
 				list.add(StatCollector.translateToLocal("part." + part.part.name));
 			}

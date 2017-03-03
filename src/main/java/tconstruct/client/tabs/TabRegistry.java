@@ -19,7 +19,7 @@ public class TabRegistry {
 	private static Minecraft mc;
 
 	static {
-		TabRegistry.tabList = new ArrayList<AbstractTab>();
+		TabRegistry.tabList = new ArrayList<>();
 		TabRegistry.mc = FMLClientHandler.instance().getClient();
 	}
 

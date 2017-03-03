@@ -25,15 +25,15 @@ public class BlockChair extends BlockRotated {
 	}
 
 	@Override
-	public TileEntity createNewTileEntity(World var1, int var2) {
-		return new TileChair();
-	}
-
-	@Override
 	public void breakBlock(World world, BlockPos pos, IBlockState state) {
 		((TileChair) world.getTileEntity(pos)).killMount();
 		world.removeTileEntity(pos);
 		super.breakBlock(world, pos, state);
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World var1, int var2) {
+		return new TileChair();
 	}
 
 	@Override

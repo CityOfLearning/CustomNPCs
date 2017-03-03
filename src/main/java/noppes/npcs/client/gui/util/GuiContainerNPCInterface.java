@@ -44,12 +44,12 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	public GuiContainerNPCInterface(EntityNPCInterface npc, Container cont) {
 		super(cont);
 		drawDefaultBackground = false;
-		buttons = new HashMap<Integer, GuiNpcButton>();
-		topbuttons = new HashMap<Integer, GuiMenuTopButton>();
-		textfields = new HashMap<Integer, GuiNpcTextField>();
-		labels = new HashMap<Integer, GuiNpcLabel>();
-		scrolls = new HashMap<Integer, GuiCustomScroll>();
-		sliders = new HashMap<Integer, GuiNpcSlider>();
+		buttons = new HashMap<>();
+		topbuttons = new HashMap<>();
+		textfields = new HashMap<>();
+		labels = new HashMap<>();
+		scrolls = new HashMap<>();
+		sliders = new HashMap<>();
 		closeOnEsc = false;
 		player = Minecraft.getMinecraft().thePlayer;
 		this.npc = npc;
@@ -125,13 +125,13 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
 		drawCenteredString(fontRendererObj, StatCollector.translateToLocal(title), width / 2, guiTop - 8, 16777215);
-		for (GuiNpcLabel label : new ArrayList<GuiNpcLabel>(labels.values())) {
+		for (GuiNpcLabel label : new ArrayList<>(labels.values())) {
 			label.drawLabel(this, fontRendererObj);
 		}
-		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 			tf.drawTextBox(i, j);
 		}
-		for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+		for (GuiCustomScroll scroll : new ArrayList<>(scrolls.values())) {
 			scroll.drawScreen(i, j, f, hasSubGui() ? 0 : Mouse.getDWheel());
 		}
 	}
@@ -278,7 +278,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		if (subgui != null) {
 			subgui.keyTyped(c, i);
 		} else {
-			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 				tf.textboxKeyTyped(c, i);
 			}
 			if (closeOnEsc && ((i == 1)
@@ -293,13 +293,13 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 		if (subgui != null) {
 			subgui.mouseClicked(i, j, k);
 		} else {
-			for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+			for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 				if (tf.enabled) {
 					tf.mouseClicked(i, j, k);
 				}
 			}
 			if (k == 0) {
-				for (GuiCustomScroll scroll : new ArrayList<GuiCustomScroll>(scrolls.values())) {
+				for (GuiCustomScroll scroll : new ArrayList<>(scrolls.values())) {
 					scroll.mouseClicked(i, j, k);
 				}
 			}
@@ -326,7 +326,7 @@ public abstract class GuiContainerNPCInterface extends GuiContainer {
 
 	@Override
 	public void updateScreen() {
-		for (GuiNpcTextField tf : new ArrayList<GuiNpcTextField>(textfields.values())) {
+		for (GuiNpcTextField tf : new ArrayList<>(textfields.values())) {
 			if (tf.enabled) {
 				tf.updateCursorCounter();
 			}

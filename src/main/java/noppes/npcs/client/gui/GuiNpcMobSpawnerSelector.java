@@ -63,9 +63,9 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
 
 	private List<String> getSearchList() {
 		if (GuiNpcMobSpawnerSelector.search.isEmpty()) {
-			return new ArrayList<String>(list);
+			return new ArrayList<>(list);
 		}
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (String name : this.list) {
 			if (name.toLowerCase().contains(GuiNpcMobSpawnerSelector.search)) {
 				list.add(name);
@@ -131,7 +131,7 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
 		NBTTagList nbtlist = compound.getTagList("List", 8);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (int i = 0; i < nbtlist.tagCount(); ++i) {
 			list.add(nbtlist.getStringTagAt(i));
 		}
@@ -145,7 +145,7 @@ public class GuiNpcMobSpawnerSelector extends SubGuiInterface implements IGuiDat
 			return;
 		}
 		new ArrayList<String>();
-		list = new ArrayList<String>(ClientCloneController.Instance.getClones(activeTab));
+		list = new ArrayList<>(ClientCloneController.Instance.getClones(activeTab));
 		scroll.setList(getSearchList());
 	}
 }

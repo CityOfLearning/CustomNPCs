@@ -19,7 +19,7 @@ public class CommandNoppes extends CommandBase {
 	public CmdHelp help;
 
 	public CommandNoppes() {
-		map = new HashMap<String, CommandNoppesBase>();
+		map = new HashMap<>();
 		registerCommand(help = new CmdHelp(this));
 		registerCommand(new CmdScript());
 		registerCommand(new CmdScene());

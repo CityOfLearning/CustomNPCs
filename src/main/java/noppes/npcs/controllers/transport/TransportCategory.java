@@ -15,11 +15,11 @@ public class TransportCategory {
 	public TransportCategory() {
 		id = -1;
 		title = "";
-		locations = new HashMap<Integer, TransportLocation>();
+		locations = new HashMap<>();
 	}
 
 	public Vector<TransportLocation> getDefaultLocations() {
-		Vector<TransportLocation> list = new Vector<TransportLocation>();
+		Vector<TransportLocation> list = new Vector<>();
 		for (TransportLocation loc : locations.values()) {
 			if (loc.isDefault()) {
 				list.add(loc);

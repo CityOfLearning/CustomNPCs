@@ -36,7 +36,7 @@ public class GuiNpcManageRecipes extends GuiContainerNPCInterface2
 
 	public GuiNpcManageRecipes(EntityNPCInterface npc, ContainerManageRecipes container) {
 		super(npc, container);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		selected = null;
 		this.container = container;
 		drawDefaultBackground = false;

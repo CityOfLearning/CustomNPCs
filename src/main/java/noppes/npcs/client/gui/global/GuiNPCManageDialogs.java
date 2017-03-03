@@ -41,7 +41,7 @@ public class GuiNPCManageDialogs extends GuiNPCInterface2 implements IScrollData
 
 	public GuiNPCManageDialogs(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		dialog = new Dialog();
 		category = new DialogCategory();
 		categorySelection = true;

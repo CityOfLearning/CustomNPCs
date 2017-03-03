@@ -24,7 +24,7 @@ public class SubGuiNpcFactionOptions extends SubGuiInterface implements IScrollD
 	private int selected;
 
 	public SubGuiNpcFactionOptions(FactionOptions options) {
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		selected = -1;
 		this.options = options;
 		setBackground("menubg.png");

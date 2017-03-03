@@ -136,9 +136,9 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
 
 	private List<String> getSearchList() {
 		if (GuiNpcMobSpawner.search.isEmpty()) {
-			return new ArrayList<String>(list);
+			return new ArrayList<>(list);
 		}
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (String name : this.list) {
 			if (name.toLowerCase().contains(GuiNpcMobSpawner.search)) {
 				list.add(name);
@@ -205,7 +205,7 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
 		NBTTagList nbtlist = compound.getTagList("List", 8);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (int i = 0; i < nbtlist.tagCount(); ++i) {
 			list.add(nbtlist.getStringTagAt(i));
 		}
@@ -225,8 +225,8 @@ public class GuiNpcMobSpawner extends GuiNPCInterface implements IGuiData {
 
 	private void showEntities() {
 		Map<?, ?> data = EntityList.stringToClassMapping;
-		ArrayList<String> list = new ArrayList<String>();
-		List<Class> classes = new ArrayList<Class>();
+		ArrayList<String> list = new ArrayList<>();
+		List<Class> classes = new ArrayList<>();
 		for (Object name : data.keySet()) {
 			Class<?> c = (Class<?>) data.get(name);
 			try {

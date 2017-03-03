@@ -19,7 +19,7 @@ public class JobGuard extends JobInterface {
 
 	public JobGuard(EntityNPCInterface npc) {
 		super(npc);
-		targets = new ArrayList<String>();
+		targets = new ArrayList<>();
 	}
 
 	public boolean isEntityApplicable(Entity entity) {

@@ -28,8 +28,8 @@ public class BankData {
 	public BankData() {
 		unlockedSlots = 0;
 		bankId = -1;
-		itemSlots = new HashMap<Integer, NpcMiscInventory>();
-		upgradedSlots = new HashMap<Integer, Boolean>();
+		itemSlots = new HashMap<>();
+		upgradedSlots = new HashMap<>();
 		for (int i = 0; i < 6; ++i) {
 			itemSlots.put(i, new NpcMiscInventory(54));
 			upgradedSlots.put(i, false);
@@ -45,7 +45,7 @@ public class BankData {
 	}
 
 	private HashMap<Integer, NpcMiscInventory> getItemSlots(NBTTagList tagList) {
-		HashMap<Integer, NpcMiscInventory> list = new HashMap<Integer, NpcMiscInventory>();
+		HashMap<Integer, NpcMiscInventory> list = new HashMap<>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
 			int slot = nbttagcompound.getInteger("Slot");

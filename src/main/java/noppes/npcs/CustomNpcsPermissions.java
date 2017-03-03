@@ -15,7 +15,7 @@ public class CustomNpcsPermissions {
 	public static class Permission {
 		private static List<String> permissions;
 		static {
-			permissions = new ArrayList<String>();
+			permissions = new ArrayList<>();
 		}
 
 		public String name;

@@ -55,7 +55,7 @@ public class TileScripted extends TileNpcEntity implements ITickable, IScriptBlo
 	public ITickable renderTileUpdate;
 
 	public TileScripted() {
-		scripts = new ArrayList<ScriptContainer>();
+		scripts = new ArrayList<>();
 		scriptLanguage = "ECMAScript";
 		enabled = false;
 		blockDummy = null;

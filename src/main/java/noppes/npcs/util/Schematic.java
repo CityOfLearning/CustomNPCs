@@ -161,7 +161,7 @@ public class Schematic {
 			int z = teTag.getInteger("z");
 			Map<ChunkCoordIntPair, NBTTagCompound> map = tileEntities[y];
 			if (map == null) {
-				map = (tileEntities[y] = new HashMap<ChunkCoordIntPair, NBTTagCompound>());
+				map = (tileEntities[y] = new HashMap<>());
 			}
 			map.put(new ChunkCoordIntPair(x, z), teTag);
 		}

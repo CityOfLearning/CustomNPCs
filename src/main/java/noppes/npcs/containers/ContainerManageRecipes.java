@@ -48,7 +48,7 @@ public class ContainerManageRecipes extends Container {
 	public void saveRecipe() {
 		int nextChar = 0;
 		char[] chars = { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P' };
-		Map<ItemStack, Character> nameMapping = new HashMap<ItemStack, Character>();
+		Map<ItemStack, Character> nameMapping = new HashMap<>();
 		int firstRow = width;
 		int lastRow = 0;
 		int firstColumn = width;
@@ -89,7 +89,7 @@ public class ContainerManageRecipes extends Container {
 				}
 			}
 		}
-		ArrayList<Object> recipe = new ArrayList<Object>();
+		ArrayList<Object> recipe = new ArrayList<>();
 		for (int k = 0; k < width; ++k) {
 			if (k >= firstRow) {
 				if (k <= lastRow) {

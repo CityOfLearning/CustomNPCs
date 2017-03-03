@@ -121,7 +121,7 @@ public class NBTJsonUtil {
 	}
 
 	public static String Convert(NBTTagCompound compound) {
-		List<JsonLine> list = new ArrayList<JsonLine>();
+		List<JsonLine> list = new ArrayList<>();
 		JsonLine line = ReadTag("", compound, list);
 		line.removeComma();
 		return ConvertList(list);

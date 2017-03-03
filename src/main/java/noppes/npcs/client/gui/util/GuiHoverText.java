@@ -32,7 +32,7 @@ public class GuiHoverText extends GuiScreen {
 		mc.getTextureManager().bindTexture(GuiHoverText.buttonTextures);
 		this.drawTexturedModalRect(x, y, 0, 0, 12, 12);
 		if (inArea(x, y, 12, 12, par1, par2)) {
-			List<String> lines = new ArrayList<String>();
+			List<String> lines = new ArrayList<>();
 			lines.add(text);
 			this.drawHoveringText(lines, x + 8, y + 6, fontRendererObj);
 			GlStateManager.disableLighting();

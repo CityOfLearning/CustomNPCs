@@ -74,7 +74,7 @@ public class RoleCompanion extends RoleInterface {
 		super(npc);
 		uuid = "";
 		ownerName = "";
-		talents = new TreeMap<EnumCompanionTalent, Integer>();
+		talents = new TreeMap<>();
 		canAge = true;
 		ticksActive = 0L;
 		stage = EnumCompanionStage.FULLGROWN;
@@ -345,7 +345,7 @@ public class RoleCompanion extends RoleInterface {
 	}
 
 	private IItemStack getFood() {
-		List<ItemStack> food = new ArrayList<ItemStack>(inventory.items.values());
+		List<ItemStack> food = new ArrayList<>(inventory.items.values());
 		Iterator<ItemStack> ite = food.iterator();
 		int i = -1;
 		while (ite.hasNext()) {
@@ -586,7 +586,7 @@ public class RoleCompanion extends RoleInterface {
 		defendOwner = compound.getBoolean("CompanionDefendOwner");
 		foodstats.readNBT(compound);
 		NBTTagList list = compound.getTagList("CompanionTalents", 10);
-		Map<EnumCompanionTalent, Integer> talents = new TreeMap<EnumCompanionTalent, Integer>();
+		Map<EnumCompanionTalent, Integer> talents = new TreeMap<>();
 		for (int i = 0; i < list.tagCount(); ++i) {
 			NBTTagCompound c = list.getCompoundTagAt(i);
 			EnumCompanionTalent talent = EnumCompanionTalent.values()[c.getInteger("Talent")];

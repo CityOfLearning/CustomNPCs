@@ -24,7 +24,7 @@ public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScroll
 
 	public GuiNPCAdvancedLinkedNpc(EntityNPCInterface npc) {
 		super(npc);
-		data = new ArrayList<String>();
+		data = new ArrayList<>();
 		GuiNPCAdvancedLinkedNpc.Instance = this;
 	}
 
@@ -65,7 +65,7 @@ public class GuiNPCAdvancedLinkedNpc extends GuiNPCInterface2 implements IScroll
 
 	@Override
 	public void setData(Vector<String> list, HashMap<String, Integer> data) {
-		this.data = new ArrayList<String>(list);
+		this.data = new ArrayList<>(list);
 		initGui();
 	}
 

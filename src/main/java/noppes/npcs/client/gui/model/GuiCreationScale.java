@@ -27,7 +27,7 @@ public class GuiCreationScale extends GuiCreationScreenInterface implements ISli
 
 	public GuiCreationScale(EntityNPCInterface npc) {
 		super(npc);
-		data = new ArrayList<EnumParts>();
+		data = new ArrayList<>();
 		active = 3;
 		xOffset = 140;
 	}

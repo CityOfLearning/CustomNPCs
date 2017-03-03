@@ -14,7 +14,7 @@ public class QuestCategory {
 	public QuestCategory() {
 		id = -1;
 		title = "";
-		quests = new HashMap<Integer, Quest>();
+		quests = new HashMap<>();
 	}
 
 	public void readNBT(NBTTagCompound nbttagcompound) {

@@ -20,8 +20,8 @@ public class PlayerQuestData {
 	public HashMap<Integer, Long> finishedQuests;
 
 	public PlayerQuestData() {
-		activeQuests = new HashMap<Integer, QuestData>();
-		finishedQuests = new HashMap<Integer, Long>();
+		activeQuests = new HashMap<>();
+		finishedQuests = new HashMap<>();
 	}
 
 	public boolean checkQuestCompletion(EntityPlayer player, EnumQuestType type) {
@@ -69,7 +69,7 @@ public class PlayerQuestData {
 		NBTTagCompound compound = mainCompound.getCompoundTag("QuestData");
 		NBTTagList list = compound.getTagList("CompletedQuests", 10);
 		if (list != null) {
-			HashMap<Integer, Long> finishedQuests = new HashMap<Integer, Long>();
+			HashMap<Integer, Long> finishedQuests = new HashMap<>();
 			for (int i = 0; i < list.tagCount(); ++i) {
 				NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);
 				finishedQuests.put(nbttagcompound.getInteger("Quest"), nbttagcompound.getLong("Date"));
@@ -78,7 +78,7 @@ public class PlayerQuestData {
 		}
 		NBTTagList list2 = compound.getTagList("ActiveQuests", 10);
 		if (list2 != null) {
-			HashMap<Integer, QuestData> activeQuests = new HashMap<Integer, QuestData>();
+			HashMap<Integer, QuestData> activeQuests = new HashMap<>();
 			for (int j = 0; j < list2.tagCount(); ++j) {
 				NBTTagCompound nbttagcompound2 = list2.getCompoundTagAt(j);
 				int id = nbttagcompound2.getInteger("Quest");

@@ -25,7 +25,7 @@ public class RenderChatMessages implements IChatMessages {
 	private long lastMessageTime;
 
 	public RenderChatMessages() {
-		messages = new TreeMap<Long, TextBlockClient>();
+		messages = new TreeMap<>();
 		boxLength = 46;
 		scale = 0.5f;
 		lastMessage = "";
@@ -41,7 +41,7 @@ public class RenderChatMessages implements IChatMessages {
 		if (message.equals(lastMessage) && ((lastMessageTime + 5000L) > time)) {
 			return;
 		}
-		Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>(this.messages);
+		Map<Long, TextBlockClient> messages = new TreeMap<>(this.messages);
 		messages.put(time, new TextBlockClient(message, boxLength * 4, true,
 				new Object[] { Minecraft.getMinecraft().thePlayer, npc }));
 		if (messages.size() > 3) {
@@ -78,7 +78,7 @@ public class RenderChatMessages implements IChatMessages {
 	}
 
 	private Map<Long, TextBlockClient> getMessages() {
-		Map<Long, TextBlockClient> messages = new TreeMap<Long, TextBlockClient>();
+		Map<Long, TextBlockClient> messages = new TreeMap<>();
 		long time = System.currentTimeMillis();
 		for (Map.Entry<Long, TextBlockClient> entry : this.messages.entrySet()) {
 			if (time > (entry.getKey() + 10000L)) {

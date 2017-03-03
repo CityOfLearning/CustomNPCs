@@ -75,7 +75,7 @@ public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 
 	@Override
 	public void save() {
-		List<String> lines = new ArrayList<String>();
+		List<String> lines = new ArrayList<>();
 		for (int i = 1; i < 4; ++i) {
 			GuiNpcTextField tf = getTextField(i);
 			if (!tf.isEmpty()) {

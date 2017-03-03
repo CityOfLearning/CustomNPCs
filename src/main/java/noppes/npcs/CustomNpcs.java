@@ -215,10 +215,10 @@ public class CustomNpcs {
 		registerNpc(EntityNPCGolem.class, "npcGolem");
 		registerNpc(EntityCustomNpc.class, "CustomNpc");
 		registerNpc(EntityNPC64x32.class, "CustomNpc64x32");
-		
+
 		registerNewEntity(EntityChairMount.class, "CustomNpcChairMount", 64, 10, false);
-		
-		ArrayList<BiomeGenBase> list = new ArrayList<BiomeGenBase>();
+
+		ArrayList<BiomeGenBase> list = new ArrayList<>();
 		for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
 			if (base != null) {
 				list.add(base);
@@ -231,7 +231,7 @@ public class CustomNpcs {
 	private void registerNewEntity(Class<? extends Entity> cl, String name, int range, int update, boolean velocity) {
 		EntityRegistry.registerModEntity(cl, name, NewEntityStartId++, this, range, update, velocity);
 	}
-	
+
 	private void registerNpc(Class<? extends Entity> cl, String name) {
 		// EntityList.stringToClassMapping.put(name, cl);
 		EntityRegistry.registerModEntity(cl, name, CustomNpcs.NewEntityStartId++, this, 64, 3, true);

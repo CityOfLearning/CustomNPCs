@@ -136,8 +136,8 @@ public class StringCache {
 	public int fontHeight;
 
 	public StringCache() {
-		stringCache = new WeakHashMap<Key, Entry>();
-		weakRefCache = new WeakHashMap<String, Key>();
+		stringCache = new WeakHashMap<>();
+		weakRefCache = new WeakHashMap<>();
 		lookupKey = new Key();
 		digitGlyphs = new Glyph[4][];
 		digitGlyphsReady = false;
@@ -190,7 +190,7 @@ public class StringCache {
 			char[] text = str.toCharArray();
 			entry = new Entry();
 			int length = stripColorCodes(entry, str, text);
-			List<Glyph> glyphList = new ArrayList<Glyph>();
+			List<Glyph> glyphList = new ArrayList<>();
 			entry.advance = layoutBidiString(glyphList, text, 0, length, entry.colors);
 			entry.glyphs = new Glyph[glyphList.size()];
 			Arrays.sort(entry.glyphs = glyphList.toArray(entry.glyphs));
@@ -207,7 +207,7 @@ public class StringCache {
 			if (mainThread == Thread.currentThread()) {
 				Key key = new Key();
 				key.str = new String(str);
-				entry.keyRef = new WeakReference<Key>(key);
+				entry.keyRef = new WeakReference<>(key);
 				stringCache.put(key, entry);
 			}
 		}
@@ -493,7 +493,7 @@ public class StringCache {
 	}
 
 	private int stripColorCodes(Entry cacheEntry, String str, char[] text) {
-		List<ColorCode> colorList = new ArrayList<ColorCode>();
+		List<ColorCode> colorList = new ArrayList<>();
 		int start = 0;
 		int shift = 0;
 		byte fontStyle = 0;

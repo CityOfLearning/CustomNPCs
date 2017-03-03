@@ -83,7 +83,7 @@ public class ServerCloneController {
 	}
 
 	public List<String> getClones(int tab) {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		File dir = new File(getDir(), tab + "");
 		if (!dir.exists() || !dir.isDirectory()) {
 			return list;
@@ -127,7 +127,7 @@ public class ServerCloneController {
 	}
 
 	private Map<Integer, Map<String, NBTTagCompound>> loadOldClones(File file) throws Exception {
-		Map<Integer, Map<String, NBTTagCompound>> clones = new HashMap<Integer, Map<String, NBTTagCompound>>();
+		Map<Integer, Map<String, NBTTagCompound>> clones = new HashMap<>();
 		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
 		if (list == null) {
@@ -140,7 +140,7 @@ public class ServerCloneController {
 			}
 			Map<String, NBTTagCompound> tab = clones.get(compound.getInteger("ClonedTab"));
 			if (tab == null) {
-				clones.put(compound.getInteger("ClonedTab"), tab = new HashMap<String, NBTTagCompound>());
+				clones.put(compound.getInteger("ClonedTab"), tab = new HashMap<>());
 			}
 			String name = compound.getString("ClonedName");
 			for (int number = 1; tab

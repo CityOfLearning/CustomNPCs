@@ -28,7 +28,7 @@ public class RecipeController implements IRecipeHandler {
 	public static int version = 1;
 	public static HashMap<Integer, RecipeCarpentry> syncRecipes;
 	static {
-		RecipeController.syncRecipes = new HashMap<Integer, RecipeCarpentry>();
+		RecipeController.syncRecipes = new HashMap<>();
 	}
 	public HashMap<Integer, RecipeCarpentry> globalRecipes;
 	public HashMap<Integer, RecipeCarpentry> anvilRecipes;
@@ -36,8 +36,8 @@ public class RecipeController implements IRecipeHandler {
 	public int nextId;
 
 	public RecipeController() {
-		globalRecipes = new HashMap<Integer, RecipeCarpentry>();
-		anvilRecipes = new HashMap<Integer, RecipeCarpentry>();
+		globalRecipes = new HashMap<>();
+		anvilRecipes = new HashMap<>();
 		nextId = 1;
 		RecipeController.instance = this;
 	}
@@ -109,12 +109,12 @@ public class RecipeController implements IRecipeHandler {
 
 	@Override
 	public List<IRecipe> getCarpentryList() {
-		return new ArrayList<IRecipe>(anvilRecipes.values());
+		return new ArrayList<>(anvilRecipes.values());
 	}
 
 	@Override
 	public List<IRecipe> getGlobalList() {
-		return new ArrayList<IRecipe>(globalRecipes.values());
+		return new ArrayList<>(globalRecipes.values());
 	}
 
 	public RecipeCarpentry getRecipe(int id) {
@@ -165,8 +165,8 @@ public class RecipeController implements IRecipeHandler {
 		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		nextId = nbttagcompound1.getInteger("LastId");
 		NBTTagList list = nbttagcompound1.getTagList("Data", 10);
-		HashMap<Integer, RecipeCarpentry> globalRecipes = new HashMap<Integer, RecipeCarpentry>();
-		HashMap<Integer, RecipeCarpentry> anvilRecipes = new HashMap<Integer, RecipeCarpentry>();
+		HashMap<Integer, RecipeCarpentry> globalRecipes = new HashMap<>();
+		HashMap<Integer, RecipeCarpentry> anvilRecipes = new HashMap<>();
 		if (list != null) {
 			for (int i = 0; i < list.tagCount(); ++i) {
 				RecipeCarpentry recipe = RecipeCarpentry.read(list.getCompoundTagAt(i));
@@ -198,7 +198,7 @@ public class RecipeController implements IRecipeHandler {
 		if (RecipeController.prevRecipes != null) {
 			list.removeAll(RecipeController.prevRecipes);
 		}
-		RecipeController.prevRecipes = new HashSet<RecipeCarpentry>();
+		RecipeController.prevRecipes = new HashSet<>();
 		for (RecipeCarpentry recipe : globalRecipes.values()) {
 			if (recipe.isValid()) {
 				RecipeController.prevRecipes.add(recipe);

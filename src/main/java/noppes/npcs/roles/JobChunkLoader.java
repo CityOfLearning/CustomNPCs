@@ -19,7 +19,7 @@ public class JobChunkLoader extends JobInterface {
 
 	public JobChunkLoader(EntityNPCInterface npc) {
 		super(npc);
-		chunks = new ArrayList<ChunkCoordIntPair>();
+		chunks = new ArrayList<>();
 		ticks = 20;
 		playerLastSeen = 0L;
 	}
@@ -52,7 +52,7 @@ public class JobChunkLoader extends JobInterface {
 		}
 		double x = npc.posX / 16.0;
 		double z = npc.posZ / 16.0;
-		List<ChunkCoordIntPair> list = new ArrayList<ChunkCoordIntPair>();
+		List<ChunkCoordIntPair> list = new ArrayList<>();
 		list.add(new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.floor_double(z)));
 		list.add(new ChunkCoordIntPair(MathHelper.ceiling_double_int(x), MathHelper.ceiling_double_int(z)));
 		list.add(new ChunkCoordIntPair(MathHelper.floor_double(x), MathHelper.ceiling_double_int(z)));

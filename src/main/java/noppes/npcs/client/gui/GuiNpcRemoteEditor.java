@@ -24,7 +24,7 @@ public class GuiNpcRemoteEditor extends GuiNPCInterface implements IScrollData, 
 	private HashMap<String, Integer> data;
 
 	public GuiNpcRemoteEditor() {
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		xSize = 256;
 		setBackground("menubg.png");
 	}

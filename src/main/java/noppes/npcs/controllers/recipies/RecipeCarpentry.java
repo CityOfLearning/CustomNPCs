@@ -41,7 +41,7 @@ public class RecipeCarpentry extends ShapedRecipes implements IRecipe {
 				var3 += var12;
 			}
 		}
-		HashMap<Character, ItemStack> var13 = new HashMap<Character, ItemStack>();
+		HashMap<Character, ItemStack> var13 = new HashMap<>();
 		while (var4 < par2ArrayOfObj.length) {
 			Character var14 = (Character) par2ArrayOfObj[var4];
 			ItemStack var15 = null;

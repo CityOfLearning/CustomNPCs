@@ -18,11 +18,11 @@ public class RoleInnkeeper extends RoleInterface {
 	public RoleInnkeeper(EntityNPCInterface npc) {
 		super(npc);
 		innName = "Inn";
-		doors = new HashMap<String, InnDoorData>();
+		doors = new HashMap<>();
 	}
 
 	private HashMap<String, InnDoorData> getInnDoors(NBTTagList tagList) {
-		HashMap<String, InnDoorData> list = new HashMap<String, InnDoorData>();
+		HashMap<String, InnDoorData> list = new HashMap<>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
 			String name = nbttagcompound.getString("Name");

@@ -38,7 +38,7 @@ public class Faction implements IFaction {
 		defaultPoints = 1000;
 		hideFaction = false;
 		getsAttacked = false;
-		attackFactions = new HashSet<Integer>();
+		attackFactions = new HashSet<>();
 	}
 
 	public Faction(int id, String name, int color, int defaultPoints) {
@@ -54,7 +54,7 @@ public class Faction implements IFaction {
 		this.color = color;
 		this.defaultPoints = defaultPoints;
 		this.id = id;
-		attackFactions = new HashSet<Integer>();
+		attackFactions = new HashSet<>();
 	}
 
 	@Override

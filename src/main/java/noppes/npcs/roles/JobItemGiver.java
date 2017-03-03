@@ -38,9 +38,9 @@ public class JobItemGiver extends JobInterface {
 		givingMethod = 0;
 		cooldown = 10;
 		itemGiverId = 0;
-		lines = new ArrayList<String>();
+		lines = new ArrayList<>();
 		ticks = 10;
-		recentlyChecked = new ArrayList<EntityPlayer>();
+		recentlyChecked = new ArrayList<>();
 		availability = new Availability();
 		inventory = new NpcMiscInventory(9);
 		lines.add("Have these items {player}");
@@ -113,7 +113,7 @@ public class JobItemGiver extends JobInterface {
 	}
 
 	public HashMap<String, Long> getNBTLines(NBTTagList tagList) {
-		HashMap<String, Long> map = new HashMap<String, Long>();
+		HashMap<String, Long> map = new HashMap<>();
 		for (int i = 0; i < tagList.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = tagList.getCompoundTagAt(i);
 			String line = nbttagcompound.getString("Line");
@@ -128,8 +128,8 @@ public class JobItemGiver extends JobInterface {
 		if (!canPlayerInteract(data)) {
 			return false;
 		}
-		Vector<ItemStack> items = new Vector<ItemStack>();
-		Vector<ItemStack> toGive = new Vector<ItemStack>();
+		Vector<ItemStack> items = new Vector<>();
+		Vector<ItemStack> toGive = new Vector<>();
 		for (ItemStack is : inventory.items.values()) {
 			if (is != null) {
 				items.add(is.copy());

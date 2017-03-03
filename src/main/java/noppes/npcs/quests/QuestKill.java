@@ -15,7 +15,7 @@ public class QuestKill extends QuestInterface {
 	public HashMap<String, Integer> targets;
 
 	public QuestKill() {
-		targets = new HashMap<String, Integer>();
+		targets = new HashMap<>();
 	}
 
 	public HashMap<String, Integer> getKilled(QuestData data) {
@@ -24,7 +24,7 @@ public class QuestKill extends QuestInterface {
 
 	@Override
 	public Vector<String> getQuestLogStatus(EntityPlayer player) {
-		Vector<String> vec = new Vector<String>();
+		Vector<String> vec = new Vector<>();
 		PlayerQuestData playerdata = PlayerDataController.instance.getPlayerData(player).questData;
 		QuestData data = playerdata.activeQuests.get(questId);
 		if (data == null) {

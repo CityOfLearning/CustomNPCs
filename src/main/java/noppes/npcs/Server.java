@@ -150,7 +150,7 @@ public class Server {
 	}
 
 	public static void sendToAll(EnumPacketClient enu, Object... obs) {
-		List<EntityPlayerMP> list = new ArrayList<EntityPlayerMP>(
+		List<EntityPlayerMP> list = new ArrayList<>(
 				MinecraftServer.getServer().getConfigurationManager().playerEntityList);
 		CustomNPCsScheduler.runTack(() -> {
 			PacketBuffer buffer = new PacketBuffer(Unpooled.buffer());

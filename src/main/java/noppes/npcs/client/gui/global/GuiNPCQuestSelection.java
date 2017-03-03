@@ -31,7 +31,7 @@ public class GuiNPCQuestSelection extends GuiNPCInterface implements IScrollData
 		drawDefaultBackground = false;
 		title = "Select Quest Category";
 		this.parent = parent;
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		this.quest = quest;
 		if (parent instanceof GuiSelectionListener) {
 			listener = (GuiSelectionListener) parent;
@@ -94,7 +94,7 @@ public class GuiNPCQuestSelection extends GuiNPCInterface implements IScrollData
 	@Override
 	public void initGui() {
 		super.initGui();
-		Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<>();
 		(slot = new GuiNPCStringSlot(list, this, false, 18)).registerScrollButtons(4, 5);
 		addButton(new GuiNpcButton(2, (width / 2) - 100, height - 41, 98, 20, "gui.back"));
 		addButton(new GuiNpcButton(4, (width / 2) + 2, height - 41, 98, 20, "mco.template.button.select"));

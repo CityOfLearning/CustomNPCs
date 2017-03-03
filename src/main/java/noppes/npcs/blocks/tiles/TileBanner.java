@@ -31,6 +31,11 @@ public class TileBanner extends TileColorable {
 		icon = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("BannerIcon"));
 	}
 
+	@Override
+	public void setColor(int color) {
+		super.setColor(color);
+	}
+
 	public void setIcon(ItemStack is) {
 		icon = is;
 	}
@@ -39,11 +44,6 @@ public class TileBanner extends TileColorable {
 		this.time = time;
 	}
 
-	@Override
-	public void setColor(int color) {
-		super.setColor(color);
-	}
-	
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);

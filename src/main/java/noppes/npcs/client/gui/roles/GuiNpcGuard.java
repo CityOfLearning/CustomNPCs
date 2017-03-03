@@ -83,7 +83,7 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 		}
 		if (button.id == 13) {
 			role.targets.clear();
-			List<String> all = new ArrayList<String>();
+			List<String> all = new ArrayList<>();
 			for (Object entity2 : EntityList.stringToClassMapping.keySet()) {
 				String name2 = "entity." + entity2 + ".name";
 				Class cl2 = EntityList.stringToClassMapping.get(entity2);
@@ -124,7 +124,7 @@ public class GuiNpcGuard extends GuiNPCInterface2 {
 		scroll2.guiTop = guiTop + 58;
 		addScroll(scroll2);
 		addLabel(new GuiNpcLabel(12, "guard.currentTargets", guiLeft + 235, guiTop + 48));
-		List<String> all = new ArrayList<String>();
+		List<String> all = new ArrayList<>();
 		for (Object entity : EntityList.stringToClassMapping.keySet()) {
 			String name = "entity." + entity + ".name";
 			Class cl = EntityList.stringToClassMapping.get(entity);

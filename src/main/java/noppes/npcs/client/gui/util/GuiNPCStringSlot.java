@@ -20,9 +20,9 @@ public class GuiNPCStringSlot extends GuiSlot {
 
 	public GuiNPCStringSlot(Collection<String> list, GuiNPCInterface parent, boolean multiSelect, int size) {
 		super(Minecraft.getMinecraft(), parent.width, parent.height, 32, parent.height - 64, size);
-		selectedList = new HashSet<String>();
+		selectedList = new HashSet<>();
 		this.parent = parent;
-		Collections.sort(this.list = new ArrayList<String>(list), String.CASE_INSENSITIVE_ORDER);
+		Collections.sort(this.list = new ArrayList<>(list), String.CASE_INSENSITIVE_ORDER);
 		this.multiSelect = multiSelect;
 		this.size = size;
 	}

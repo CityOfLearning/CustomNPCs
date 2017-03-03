@@ -31,7 +31,7 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 		super(npc);
 		selectedPlayer = null;
 		selected = null;
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		selection = EnumPlayerData.Players;
 		search = "";
 		Client.sendData(EnumPacketServer.PlayerDataGet, selection);
@@ -80,9 +80,9 @@ public class GuiNpcManagePlayerData extends GuiNPCInterface2 implements IScrollD
 
 	private List<String> getSearchList() {
 		if (search.isEmpty() || (selection != EnumPlayerData.Players)) {
-			return new ArrayList<String>(data.keySet());
+			return new ArrayList<>(data.keySet());
 		}
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (String name : data.keySet()) {
 			if (name.toLowerCase().contains(search)) {
 				list.add(name);

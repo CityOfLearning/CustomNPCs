@@ -31,8 +31,8 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 		super(npc);
 		up = "..<" + StatCollector.translateToLocal("gui.up") + ">..";
 		root = "";
-		dataFolder = new HashSet<String>();
-		dataTextures = new HashSet<String>();
+		dataFolder = new HashSet<>();
+		dataTextures = new HashSet<>();
 		root = AssetsBrowser.getRoot(sound);
 		assets = new AssetsBrowser(root, getExtension());
 		drawDefaultBackground = false;
@@ -105,7 +105,7 @@ public abstract class GuiNpcSelectionInterface extends GuiNPCInterface {
 		dataFolder.clear();
 		String ss = "Current Folder: /assets" + root;
 		addLabel(new GuiNpcLabel(0, ss, (width / 2) - (fontRendererObj.getStringWidth(ss) / 2), 20, 16777215));
-		Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<>();
 		if (!assets.isRoot) {
 			list.add(up);
 		}

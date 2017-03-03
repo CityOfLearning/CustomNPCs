@@ -37,7 +37,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 
 	public GuiScriptInterface() {
 		activeTab = 0;
-		languages = new HashMap<String, List<String>>();
+		languages = new HashMap<>();
 		drawDefaultBackground = true;
 		closeOnEsc = true;
 		xSize = 420;
@@ -133,7 +133,7 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	}
 
 	private String getConsoleText() {
-		Map<Long, String> map = new TreeMap<Long, String>();
+		Map<Long, String> map = new TreeMap<>();
 		int tab = 0;
 		for (ScriptContainer script : handler.getScripts()) {
 			++tab;
@@ -243,10 +243,10 @@ public class GuiScriptInterface extends GuiNPCInterface implements IGuiData, Gui
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
 		NBTTagList data = compound.getTagList("Languages", 10);
-		Map<String, List<String>> languages = new HashMap<String, List<String>>();
+		Map<String, List<String>> languages = new HashMap<>();
 		for (int i = 0; i < data.tagCount(); ++i) {
 			NBTTagCompound comp = data.getCompoundTagAt(i);
-			List<String> scripts = new ArrayList<String>();
+			List<String> scripts = new ArrayList<>();
 			NBTTagList list = comp.getTagList("Scripts", 8);
 			for (int j = 0; j < list.tagCount(); ++j) {
 				scripts.add(list.getStringTagAt(j));

@@ -32,7 +32,7 @@ public class ServerTickHandler {
 			for (DataScenes.SceneContainer entry : DataScenes.ScenesToRun) {
 				entry.update();
 			}
-			DataScenes.ScenesToRun = new ArrayList<DataScenes.SceneContainer>();
+			DataScenes.ScenesToRun = new ArrayList<>();
 		}
 	}
 

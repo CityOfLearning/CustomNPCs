@@ -18,7 +18,7 @@ public class SpawnData extends WeightedRandom.Item {
 
 	public SpawnData() {
 		super(10);
-		biomes = new ArrayList<String>();
+		biomes = new ArrayList<>();
 		id = -1;
 		name = "";
 		compound1 = new NBTTagCompound();

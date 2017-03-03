@@ -35,7 +35,7 @@ public class FactionController implements IFactionHandler {
 	public FactionController() {
 		lastUsedID = 0;
 		FactionController.instance = this;
-		factions = new HashMap<Integer, Faction>();
+		factions = new HashMap<>();
 		this.loadFactions();
 		if (factions.isEmpty()) {
 			factions.put(0, new Faction(0, "Friendly", 56576, 2000));
@@ -141,7 +141,7 @@ public class FactionController implements IFactionHandler {
 
 	@Override
 	public List<IFaction> list() {
-		return new ArrayList<IFaction>(factions.values());
+		return new ArrayList<>(factions.values());
 	}
 
 	private void loadFactions() {
@@ -166,7 +166,7 @@ public class FactionController implements IFactionHandler {
 	}
 
 	public void loadFactions(DataInputStream stream) throws IOException {
-		HashMap<Integer, Faction> factions = new HashMap<Integer, Faction>();
+		HashMap<Integer, Faction> factions = new HashMap<>();
 		NBTTagCompound nbttagcompound1 = CompressedStreamTools.read(stream);
 		lastUsedID = nbttagcompound1.getInteger("lastID");
 		NBTTagList list = nbttagcompound1.getTagList("NPCFactions", 10);

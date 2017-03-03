@@ -18,7 +18,7 @@ public class GuiCreationLoad extends GuiCreationScreenInterface implements ICust
 
 	public GuiCreationLoad(EntityNPCInterface npc) {
 		super(npc);
-		list = new ArrayList<String>();
+		list = new ArrayList<>();
 		active = 5;
 		xOffset = 60;
 		PresetController.instance.load();

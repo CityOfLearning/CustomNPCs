@@ -51,7 +51,7 @@ public class DataTimers implements ITimers {
 	private Map<Integer, Timer> timers;
 
 	public DataTimers(Object parent) {
-		timers = new HashMap<Integer, Timer>();
+		timers = new HashMap<>();
 		this.parent = parent;
 	}
 
@@ -61,7 +61,7 @@ public class DataTimers implements ITimers {
 	}
 
 	public void readFromNBT(NBTTagCompound compound) {
-		Map<Integer, Timer> timers = new HashMap<Integer, Timer>();
+		Map<Integer, Timer> timers = new HashMap<>();
 		NBTTagList list = compound.getTagList("NpcsTimers", 10);
 		for (int i = 0; i < list.tagCount(); ++i) {
 			NBTTagCompound c = list.getCompoundTagAt(i);
@@ -86,7 +86,7 @@ public class DataTimers implements ITimers {
 	}
 
 	public void update() {
-		for (Timer timer : new ArrayList<Timer>(timers.values())) {
+		for (Timer timer : new ArrayList<>(timers.values())) {
 			timer.update();
 		}
 	}

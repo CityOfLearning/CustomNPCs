@@ -23,7 +23,7 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 	private DataAI ai;
 
 	public GuiNpcPather(EntityNPCInterface npc) {
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 		drawDefaultBackground = false;
 		xSize = 176;
 		title = "Npc Pather";
@@ -83,7 +83,7 @@ public class GuiNpcPather extends GuiNPCInterface implements IGuiData {
 	public void initGui() {
 		super.initGui();
 		(scroll = new GuiCustomScroll(this, 0)).setSize(160, 164);
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		for (int[] arr : ai.getMovingPath()) {
 			list.add("x:" + arr[0] + " y:" + arr[1] + " z:" + arr[2]);
 		}

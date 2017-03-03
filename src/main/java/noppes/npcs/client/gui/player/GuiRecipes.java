@@ -36,7 +36,7 @@ public class GuiRecipes extends GuiNPCInterface {
 
 	public GuiRecipes() {
 		page = 0;
-		recipes = new ArrayList<IRecipe>();
+		recipes = new ArrayList<>();
 		ySize = 182;
 		xSize = 256;
 		setBackground("recipes.png");

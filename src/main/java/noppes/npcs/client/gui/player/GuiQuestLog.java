@@ -42,7 +42,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 
 	public GuiQuestLog(EntityPlayer player) {
 		resource = new ResourceLocation("customnpcs", "textures/gui/standardbg.png");
-		sideButtons = new HashMap<Integer, GuiMenuSideButton>();
+		sideButtons = new HashMap<>();
 		data = new QuestLogData();
 		noQuests = false;
 		questDetails = true;
@@ -177,7 +177,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 			noQuests = true;
 			return;
 		}
-		List<String> categories = new ArrayList<String>();
+		List<String> categories = new ArrayList<>();
 		categories.addAll(data.categories.keySet());
 		Collections.sort(categories, String.CASE_INSENSITIVE_ORDER);
 		int i = 0;
@@ -218,7 +218,7 @@ public class GuiQuestLog extends GuiNPCInterface implements ITopButtonListener, 
 			if (scroll != null) {
 				scroll.mouseClicked(i, j, k);
 			}
-			for (GuiMenuSideButton button : new ArrayList<GuiMenuSideButton>(sideButtons.values())) {
+			for (GuiMenuSideButton button : new ArrayList<>(sideButtons.values())) {
 				if (button.mousePressed(mc, i, j)) {
 					sideButtonPressed(button);
 				}

@@ -98,7 +98,7 @@ public class NPCSpawning {
 		if (countNPCs(world) > (NPCSpawning.eligibleChunksForSpawning.size() / 16)) {
 			return;
 		}
-		ArrayList<ChunkCoordIntPair> tmp = new ArrayList<ChunkCoordIntPair>(NPCSpawning.eligibleChunksForSpawning);
+		ArrayList<ChunkCoordIntPair> tmp = new ArrayList<>(NPCSpawning.eligibleChunksForSpawning);
 		Collections.shuffle(tmp);
 		for (ChunkCoordIntPair chunkcoordintpair2 : tmp) {
 			BlockPos chunkposition = getChunk(world, chunkcoordintpair2.chunkXPos, chunkcoordintpair2.chunkZPos);

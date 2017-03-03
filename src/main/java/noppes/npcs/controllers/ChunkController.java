@@ -18,12 +18,12 @@ public class ChunkController implements ForgeChunkManager.LoadingCallback {
 	private HashMap<Entity, ForgeChunkManager.Ticket> tickets;
 
 	public ChunkController() {
-		tickets = new HashMap<Entity, ForgeChunkManager.Ticket>();
+		tickets = new HashMap<>();
 		ChunkController.instance = this;
 	}
 
 	public void clear() {
-		tickets = new HashMap<Entity, ForgeChunkManager.Ticket>();
+		tickets = new HashMap<>();
 	}
 
 	public void deleteNPC(EntityNPCInterface npc) {

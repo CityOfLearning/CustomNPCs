@@ -27,7 +27,7 @@ public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, 
 	public GuiNpcTransporter(EntityNPCInterface npc) {
 		super(npc);
 		location = new TransportLocation();
-		data = new HashMap<String, Integer>();
+		data = new HashMap<>();
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class GuiNpcTransporter extends GuiNPCInterface2 implements IScrollData, 
 	@Override
 	public void initGui() {
 		super.initGui();
-		Vector<String> list = new Vector<String>();
+		Vector<String> list = new Vector<>();
 		list.addAll(data.keySet());
 		if (scroll == null) {
 			(scroll = new GuiCustomScroll(this, 0)).setSize(143, 208);

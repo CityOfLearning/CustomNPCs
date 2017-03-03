@@ -48,8 +48,8 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	public JobSpawner(EntityNPCInterface npc) {
 		super(npc);
 		number = 0;
-		spawned = new ArrayList<EntityLivingBase>();
-		cooldown = new HashMap<String, Long>();
+		spawned = new ArrayList<>();
+		cooldown = new HashMap<>();
 		id = RandomStringUtils.random(8, true, true);
 		doesntDie = false;
 		spawnType = 0;
@@ -111,7 +111,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 				}
 			}
 			if (spawnType == 2) {
-				ArrayList<NBTTagCompound> list = new ArrayList<NBTTagCompound>();
+				ArrayList<NBTTagCompound> list = new ArrayList<>();
 				if ((compound1 != null) && compound1.hasKey("id")) {
 					list.add(compound1);
 				}
@@ -204,7 +204,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 	}
 
 	private List<EntityLivingBase> getNearbySpawned() {
-		List<EntityLivingBase> spawnList = new ArrayList<EntityLivingBase>();
+		List<EntityLivingBase> spawnList = new ArrayList<>();
 		List<EntityLivingBase> list = npc.worldObj.getEntitiesWithinAABB(EntityLivingBase.class,
 				npc.getEntityBoundingBox().expand(40.0, 40.0, 40.0));
 		for (EntityLivingBase entity : list) {
@@ -302,7 +302,7 @@ public class JobSpawner extends JobInterface implements IJobSpawner {
 		for (EntityLivingBase entity : spawned) {
 			entity.isDead = true;
 		}
-		spawned = new ArrayList<EntityLivingBase>();
+		spawned = new ArrayList<>();
 	}
 
 	@Override

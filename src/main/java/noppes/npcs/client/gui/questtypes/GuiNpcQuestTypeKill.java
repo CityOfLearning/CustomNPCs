@@ -78,7 +78,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 			++i;
 		}
 		Map<?, ?> data = EntityList.stringToClassMapping;
-		ArrayList<String> list = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<>();
 		for (Object name2 : data.keySet()) {
 			Class<?> c = (Class<?>) data.get(name2);
 			try {
@@ -115,7 +115,7 @@ public class GuiNpcQuestTypeKill extends SubGuiInterface implements ITextfieldLi
 	}
 
 	private void saveTargets() {
-		HashMap<String, Integer> map = new HashMap<String, Integer>();
+		HashMap<String, Integer> map = new HashMap<>();
 		for (int i = 0; i < 3; ++i) {
 			String name = getTextField(i).getText();
 			if (!name.isEmpty()) {

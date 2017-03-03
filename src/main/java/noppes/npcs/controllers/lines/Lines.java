@@ -20,7 +20,7 @@ public class Lines {
 
 	public Lines() {
 		lastLine = -1;
-		lines = new HashMap<Integer, Line>();
+		lines = new HashMap<>();
 	}
 
 	public Line getLine(boolean isRandom) {
@@ -28,7 +28,7 @@ public class Lines {
 			return null;
 		}
 		if (isRandom) {
-			List<Line> lines = new ArrayList<Line>(this.lines.values());
+			List<Line> lines = new ArrayList<>(this.lines.values());
 			Line line;
 			while (true) { // dont get random empty lines...
 				line = lines.get(Lines.random.nextInt(lines.size()));
@@ -57,7 +57,7 @@ public class Lines {
 
 	public void readNBT(NBTTagCompound compound) {
 		NBTTagList nbttaglist = compound.getTagList("Lines", 10);
-		HashMap<Integer, Line> map = new HashMap<Integer, Line>();
+		HashMap<Integer, Line> map = new HashMap<>();
 		for (int i = 0; i < nbttaglist.tagCount(); ++i) {
 			NBTTagCompound nbttagcompound = nbttaglist.getCompoundTagAt(i);
 			Line line = new Line();

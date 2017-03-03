@@ -193,7 +193,7 @@ public class GuiNpcTextArea extends GuiNpcTextField {
 	}
 
 	private List<String> getLines() {
-		List<String> list = new ArrayList<String>();
+		List<String> list = new ArrayList<>();
 		String line = "";
 		for (char c : getText().toCharArray()) {
 			if ((c == '\r') || (c == '\n')) {

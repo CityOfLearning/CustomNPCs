@@ -41,7 +41,7 @@ public class DataScenes {
 			enabled = false;
 			ticks = -1;
 			state = null;
-			events = new ArrayList<SceneEvent>();
+			events = new ArrayList<>();
 		}
 
 		private void handle(SceneEvent event) throws Exception {
@@ -193,7 +193,7 @@ public class DataScenes {
 			lines = compound.getString("Lines");
 			btn = compound.getInteger("Button");
 			ticks = compound.getInteger("Ticks");
-			events = new ArrayList<SceneEvent>();
+			events = new ArrayList<>();
 			for (String line : lines.split("\r\n|\r|\n")) {
 				SceneEvent event = SceneEvent.parse(line);
 				if (event != null) {
@@ -318,8 +318,8 @@ public class DataScenes {
 	public static List<SceneContainer> ScenesToRun;
 
 	static {
-		DataScenes.StartedScenes = new HashMap<String, SceneState>();
-		DataScenes.ScenesToRun = new ArrayList<SceneContainer>();
+		DataScenes.StartedScenes = new HashMap<>();
+		DataScenes.ScenesToRun = new ArrayList<>();
 	}
 
 	public static void Pause(ICommandSender sender, String id) {
@@ -337,7 +337,7 @@ public class DataScenes {
 
 	public static void Reset(ICommandSender sender, String id) {
 		if (id == null) {
-			DataScenes.StartedScenes = new HashMap<String, SceneState>();
+			DataScenes.StartedScenes = new HashMap<>();
 			NoppesUtilServer.NotifyOPs("Reset all scene", new Object[0]);
 		} else if (DataScenes.StartedScenes.remove(id.toLowerCase()) == null) {
 			sender.addChatMessage(new ChatComponentTranslation("Unknown scene %s ", new Object[] { id }));
@@ -376,7 +376,7 @@ public class DataScenes {
 	private String ownerScene;
 
 	public DataScenes(EntityNPCInterface npc) {
-		scenes = new ArrayList<SceneContainer>();
+		scenes = new ArrayList<>();
 		owner = null;
 		ownerScene = null;
 		this.npc = npc;
@@ -397,7 +397,7 @@ public class DataScenes {
 
 	public void readFromNBT(NBTTagCompound compound) {
 		NBTTagList list = compound.getTagList("Scenes", 10);
-		List<SceneContainer> scenes = new ArrayList<SceneContainer>();
+		List<SceneContainer> scenes = new ArrayList<>();
 		for (int i = 0; i < list.tagCount(); ++i) {
 			SceneContainer scene = new SceneContainer();
 			scene.readFromNBT(list.getCompoundTagAt(i));

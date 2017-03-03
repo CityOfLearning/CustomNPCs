@@ -54,10 +54,10 @@ public class BlockCouchWoolRenderer extends BlockRendererInterface {
 		bindTexture(BlockTallLampRenderer.resourceTop);
 		if (tile.getColor() > colorTable.length) {
 			int color = tile.getColor();
-			float f3 = (float) (color >> 24 & 255) / 255.0F;
-			float f = (float) (color >> 16 & 255) / 255.0F;
-			float f1 = (float) (color >> 8 & 255) / 255.0F;
-			float f2 = (float) (color & 255) / 255.0F;
+			float f3 = ((color >> 24) & 255) / 255.0F;
+			float f = ((color >> 16) & 255) / 255.0F;
+			float f1 = ((color >> 8) & 255) / 255.0F;
+			float f2 = (color & 255) / 255.0F;
 			GlStateManager.color(f, f1, f2, f3);
 		} else {
 			float[] color = colorTable[tile.getColor()];

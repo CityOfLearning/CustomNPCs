@@ -42,7 +42,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 	public JobFarmer(EntityNPCInterface npc) {
 		super(npc);
 		chestMode = 1;
-		trackedBlocks = new ArrayList<BlockPos>();
+		trackedBlocks = new ArrayList<>();
 		ticks = 0;
 		walkTicks = 0;
 		blockTicks = 800;
@@ -247,7 +247,7 @@ public class JobFarmer extends JobInterface implements MassBlockController.IMass
 
 	@Override
 	public void processed(List<BlockData> list) {
-		List<BlockPos> trackedBlocks = new ArrayList<BlockPos>();
+		List<BlockPos> trackedBlocks = new ArrayList<>();
 		BlockPos chest = null;
 		for (BlockData data : list) {
 			Block b = data.state.getBlock();

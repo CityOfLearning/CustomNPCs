@@ -10,7 +10,7 @@ public class PlayerMailData {
 	public ArrayList<PlayerMail> playermail;
 
 	public PlayerMailData() {
-		playermail = new ArrayList<PlayerMail>();
+		playermail = new ArrayList<>();
 	}
 
 	public boolean hasMail() {
@@ -23,7 +23,7 @@ public class PlayerMailData {
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
-		ArrayList<PlayerMail> newmail = new ArrayList<PlayerMail>();
+		ArrayList<PlayerMail> newmail = new ArrayList<>();
 		NBTTagList list = compound.getTagList("MailData", 10);
 		if (list == null) {
 			return;

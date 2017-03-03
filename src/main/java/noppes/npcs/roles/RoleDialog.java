@@ -28,8 +28,8 @@ public class RoleDialog extends RoleInterface implements IRoleDialog {
 		super(npc);
 		dialog = "";
 		questId = -1;
-		options = new HashMap<Integer, String>();
-		optionsTexts = new HashMap<Integer, String>();
+		options = new HashMap<>();
+		optionsTexts = new HashMap<>();
 	}
 
 	@Override

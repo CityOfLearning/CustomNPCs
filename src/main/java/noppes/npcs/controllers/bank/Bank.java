@@ -21,7 +21,7 @@ public class Bank {
 		name = "";
 		startSlots = 1;
 		maxSlots = 6;
-		slotTypes = new HashMap<Integer, Integer>();
+		slotTypes = new HashMap<>();
 		currencyInventory = new NpcMiscInventory(6);
 		upgradeInventory = new NpcMiscInventory(6);
 		for (int i = 0; i < 6; ++i) {

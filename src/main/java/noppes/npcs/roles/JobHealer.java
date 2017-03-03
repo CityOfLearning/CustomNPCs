@@ -28,8 +28,8 @@ public class JobHealer extends JobInterface {
 		range = 8;
 		type = 2;
 		speed = 20;
-		effects = new HashMap<Integer, Integer>();
-		affected = new ArrayList<EntityLivingBase>();
+		effects = new HashMap<>();
+		affected = new ArrayList<>();
 	}
 
 	@Override

@@ -21,7 +21,7 @@ public class RolePostman extends RoleInterface {
 	public RolePostman(EntityNPCInterface npc) {
 		super(npc);
 		inventory = new NpcMiscInventory(1);
-		recentlyChecked = new ArrayList<EntityPlayer>();
+		recentlyChecked = new ArrayList<>();
 	}
 
 	@Override

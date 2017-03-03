@@ -17,7 +17,7 @@ public class PresetController {
 	private File dir;
 
 	public PresetController(File dir) {
-		presets = new HashMap<String, Preset>();
+		presets = new HashMap<>();
 		PresetController.instance = this;
 		this.dir = dir;
 		load();
@@ -40,7 +40,7 @@ public class PresetController {
 
 	public void load() {
 		NBTTagCompound compound = loadPreset();
-		HashMap<String, Preset> presets = new HashMap<String, Preset>();
+		HashMap<String, Preset> presets = new HashMap<>();
 		if (compound != null) {
 			NBTTagList list = compound.getTagList("Presets", 10);
 			for (int i = 0; i < list.tagCount(); ++i) {

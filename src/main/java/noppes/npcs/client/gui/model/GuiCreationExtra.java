@@ -122,7 +122,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	public GuiCreationExtra(EntityNPCInterface npc) {
 		super(npc);
 		ignoredTags = new String[] { "CanBreakDoors", "Bred", "PlayerCreated", "HasReproduced" };
-		data = new HashMap<String, GuiType>();
+		data = new HashMap<>();
 		active = 2;
 	}
 
@@ -144,7 +144,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 	}
 
 	public Map<String, GuiType> getData(EntityLivingBase entity) {
-		Map<String, GuiType> data = new HashMap<String, GuiType>();
+		Map<String, GuiType> data = new HashMap<>();
 		NBTTagCompound compound = getExtras(entity);
 		Set<String> keys = compound.getKeySet();
 		for (String name : keys) {
@@ -196,7 +196,7 @@ public class GuiCreationExtra extends GuiCreationScreenInterface implements ICus
 		if (scroll == null) {
 			data = getData(entity);
 			scroll = new GuiCustomScroll(this, 0);
-			List<String> list = new ArrayList<String>(data.keySet());
+			List<String> list = new ArrayList<>(data.keySet());
 			scroll.setList(list);
 			if (list.isEmpty()) {
 				return;

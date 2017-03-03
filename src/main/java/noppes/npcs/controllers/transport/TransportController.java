@@ -28,8 +28,8 @@ public class TransportController {
 	private int lastUsedID;
 
 	public TransportController() {
-		locations = new HashMap<Integer, TransportLocation>();
-		categories = new HashMap<Integer, TransportCategory>();
+		locations = new HashMap<>();
+		categories = new HashMap<>();
 		lastUsedID = 0;
 		(TransportController.instance = this).loadCategories();
 		if (categories.isEmpty()) {
@@ -131,8 +131,8 @@ public class TransportController {
 	}
 
 	public void loadCategories(File file) throws IOException {
-		HashMap<Integer, TransportLocation> locations = new HashMap<Integer, TransportLocation>();
-		HashMap<Integer, TransportCategory> categories = new HashMap<Integer, TransportCategory>();
+		HashMap<Integer, TransportLocation> locations = new HashMap<>();
+		HashMap<Integer, TransportCategory> categories = new HashMap<>();
 		NBTTagCompound nbttagcompound1 = CompressedStreamTools.readCompressed(new FileInputStream(file));
 		lastUsedID = nbttagcompound1.getInteger("lastID");
 		NBTTagList list = nbttagcompound1.getTagList("NPCTransportCategories", 10);

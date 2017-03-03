@@ -10,7 +10,7 @@ public class PlayerFactionData {
 	public HashMap<Integer, Integer> factionData;
 
 	public PlayerFactionData() {
-		factionData = new HashMap<Integer, Integer>();
+		factionData = new HashMap<>();
 	}
 
 	public int getFactionPoints(int id) {
@@ -49,7 +49,7 @@ public class PlayerFactionData {
 	}
 
 	public void loadNBTData(NBTTagCompound compound) {
-		HashMap<Integer, Integer> factionData = new HashMap<Integer, Integer>();
+		HashMap<Integer, Integer> factionData = new HashMap<>();
 		if (compound == null) {
 			return;
 		}

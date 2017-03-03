@@ -64,8 +64,8 @@ public class TileBuilder extends TileEntity implements ITickable {
 		started = false;
 		finished = false;
 		availability = new Availability();
-		positions = new Stack<Integer>();
-		positionsSecond = new Stack<Integer>();
+		positions = new Stack<>();
+		positionsSecond = new Stack<>();
 		ticks = 20;
 	}
 
@@ -78,7 +78,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 			return null;
 		}
 		boolean bo = positions.isEmpty();
-		Stack<BlockData> list = new Stack<BlockData>();
+		Stack<BlockData> list = new Stack<>();
 		int size = (schematic.width * schematic.length) / 4;
 		if (size > 30) {
 			size = 30;
@@ -175,10 +175,10 @@ public class TileBuilder extends TileEntity implements ITickable {
 		if (compound.hasKey("SchematicName")) {
 			schematic = SchematicController.Instance.load(compound.getString("SchematicName"));
 		}
-		Stack<Integer> positions = new Stack<Integer>();
+		Stack<Integer> positions = new Stack<>();
 		positions.addAll(NBTTags.getIntegerList(compound.getTagList("Positions", 10)));
 		this.positions = positions;
-		positions = new Stack<Integer>();
+		positions = new Stack<>();
 		positions.addAll(NBTTags.getIntegerList(compound.getTagList("PositionsSecond", 10)));
 		positionsSecond = positions;
 		readPartNBT(compound);
@@ -229,7 +229,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 			positionsSecond.clear();
 			return;
 		}
-		Stack<Integer> positions = new Stack<Integer>();
+		Stack<Integer> positions = new Stack<>();
 		for (int y = 0; y < schematics.height; ++y) {
 			for (int z = 0; z < (schematics.length / 2); ++z) {
 				for (int x = 0; x < (schematics.width / 2); ++x) {
@@ -322,8 +322,8 @@ public class TileBuilder extends TileEntity implements ITickable {
 		if (schematic != null) {
 			compound.setString("SchematicName", schematic.name);
 		}
-		compound.setTag("Positions", NBTTags.nbtIntegerCollection(new ArrayList<Integer>(positions)));
-		compound.setTag("PositionsSecond", NBTTags.nbtIntegerCollection(new ArrayList<Integer>(positionsSecond)));
+		compound.setTag("Positions", NBTTags.nbtIntegerCollection(new ArrayList<>(positions)));
+		compound.setTag("PositionsSecond", NBTTags.nbtIntegerCollection(new ArrayList<>(positionsSecond)));
 		writePartNBT(compound);
 	}
 }
