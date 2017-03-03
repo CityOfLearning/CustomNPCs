@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNpcButton;
@@ -31,7 +32,7 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 
 	public GuiCreationEntities(EntityNPCInterface npc) {
 		super(npc);
-		data = new HashMap<String, Class<? extends EntityLivingBase>>();
+		data = new HashMap<>();
 		resetToSelected = true;
 		for (String name : EntityList.stringToClassMapping.keySet()) {
 			Class<? extends Entity> c = EntityList.stringToClassMapping.get(name);
@@ -45,14 +46,15 @@ public class GuiCreationEntities extends GuiCreationScreenInterface implements I
 				if (s.toLowerCase().contains("customnpc")) {
 					continue;
 				}
-				data.put(name.toString(), c.asSubclass(EntityLivingBase.class));
+				data.put(StatCollector.translateToLocal("entity." + name + ".name"),
+						c.asSubclass(EntityLivingBase.class));
 			} catch (SecurityException e) {
 				e.printStackTrace();
 			} catch (NoSuchMethodException ex) {
 			}
 		}
 		data.put("NPC 64x32", EntityNPC64x32.class);
-		(list = new ArrayList<String>(data.keySet())).add("NPC");
+		(list = new ArrayList<>(data.keySet())).add("NPC");
 		Collections.sort(list, String.CASE_INSENSITIVE_ORDER);
 		active = 1;
 		xOffset = 60;
