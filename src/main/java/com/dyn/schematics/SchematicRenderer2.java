@@ -17,10 +17,8 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.util.ShaderProgram;
-
 public class SchematicRenderer2 {
-	private static final ShaderProgram SHADER_ALPHA = new ShaderProgram("customnpcs", null, "shaders/alpha.frag");
+private static final ShaderProgram SHADER_ALPHA = new ShaderProgram("customnpcs", null, "shaders/alpha.frag");
 	private static int displayList = -1;
 	private static boolean compiled;
 	private static Schematic compiledSchematic;

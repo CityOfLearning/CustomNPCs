@@ -15,13 +15,11 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.BlockPos;
 import noppes.npcs.CustomNpcs;
-import noppes.npcs.util.ShaderProgram;
-
 public class SchematicRenderer {
-	private static final ShaderProgram SHADER_ALPHA = new ShaderProgram("customnpcs", null, "shaders/alpha.frag");
+private static final ShaderProgram SHADER_ALPHA = new ShaderProgram("customnpcs", null, "shaders/alpha.frag");
 
 	public static int compileSchematic(Schematic schematic, BlockPos offset, int rotation) {
-		int retListId = -1;
+		int retListId = -1; 
 		GlStateManager.pushMatrix();
 		RenderHelper.enableStandardItemLighting();
 		GlStateManager.translate(offset.getX() - TileEntityRendererDispatcher.staticPlayerX,
