@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.roles;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,6 +32,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import noppes.npcs.NpcMiscInventory;
+import noppes.npcs.ai.roles.companion.CompanionFarmer;
+import noppes.npcs.ai.roles.companion.CompanionFoodStats;
+import noppes.npcs.ai.roles.companion.CompanionGuard;
+import noppes.npcs.ai.roles.companion.CompanionJobInterface;
+import noppes.npcs.ai.roles.companion.CompanionTrader;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.EnumCompanionJobs;
@@ -43,11 +48,6 @@ import noppes.npcs.controllers.PlayerData;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.companion.CompanionFarmer;
-import noppes.npcs.roles.companion.CompanionFoodStats;
-import noppes.npcs.roles.companion.CompanionGuard;
-import noppes.npcs.roles.companion.CompanionJobInterface;
-import noppes.npcs.roles.companion.CompanionTrader;
 import noppes.npcs.util.NoppesUtilServer;
 
 public class RoleCompanion extends RoleInterface {

@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles.companion;
+package noppes.npcs.ai.roles.companion;
 
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;

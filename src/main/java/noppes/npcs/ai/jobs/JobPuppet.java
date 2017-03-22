@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.jobs;
 
 import net.minecraft.nbt.NBTTagCompound;
 import noppes.npcs.entity.EntityNPCInterface;

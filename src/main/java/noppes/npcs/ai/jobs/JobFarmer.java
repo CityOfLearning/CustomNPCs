@@ -1,9 +1,11 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.jobs;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import com.dyn.schematics.BlockData;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
@@ -22,7 +24,6 @@ import net.minecraft.util.EnumFacing;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.AiMutex;
-import noppes.npcs.controllers.BlockData;
 import noppes.npcs.controllers.MassBlockController;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.NoppesUtilPlayer;

@@ -1,7 +1,9 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.jobs;
 
 import java.util.Stack;
+
+import com.dyn.schematics.BlockData;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.init.Blocks;
@@ -13,7 +15,6 @@ import net.minecraft.util.BlockPos;
 import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.blocks.tiles.TileBuilder;
-import noppes.npcs.controllers.BlockData;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.util.NoppesUtilServer;
 

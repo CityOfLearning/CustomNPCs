@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles.companion;
+package noppes.npcs.ai.roles.companion;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;

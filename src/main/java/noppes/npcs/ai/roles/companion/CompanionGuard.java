@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles.companion;
+package noppes.npcs.ai.roles.companion;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityCreeper;

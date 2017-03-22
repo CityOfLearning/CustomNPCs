@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.jobs;
 
 import java.util.ArrayList;
 import java.util.HashMap;

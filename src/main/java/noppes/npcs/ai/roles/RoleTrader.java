@@ -1,5 +1,5 @@
 
-package noppes.npcs.roles;
+package noppes.npcs.ai.roles;
 
 import java.io.File;
 import java.util.logging.Level;
