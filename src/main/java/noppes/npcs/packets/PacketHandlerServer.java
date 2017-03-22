@@ -33,6 +33,10 @@ import noppes.npcs.CustomNpcs;
 import noppes.npcs.CustomNpcsPermissions;
 import noppes.npcs.Server;
 import noppes.npcs.ServerEventsHandler;
+import noppes.npcs.ai.jobs.JobSpawner;
+import noppes.npcs.ai.roles.RoleCompanion;
+import noppes.npcs.ai.roles.RoleTrader;
+import noppes.npcs.ai.roles.RoleTransporter;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.blocks.tiles.TileCopy;
 import noppes.npcs.blocks.tiles.TileScripted;
@@ -70,10 +74,6 @@ import noppes.npcs.controllers.transport.TransportLocation;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.entity.data.DataScenes;
-import noppes.npcs.roles.JobSpawner;
-import noppes.npcs.roles.RoleCompanion;
-import noppes.npcs.roles.RoleTrader;
-import noppes.npcs.roles.RoleTransporter;
 import noppes.npcs.util.IPermission;
 import noppes.npcs.util.NBTTags;
 import noppes.npcs.util.NoppesUtilPlayer;
@@ -705,7 +705,7 @@ public class PacketHandlerServer {
 				return;
 			}
 			Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.writePartNBT(new NBTTagCompound()));
-			Server.sendData(player, EnumPacketClient.SCROLL_LIST, SchematicController.Instance.list());
+			Server.sendData(player, EnumPacketClient.SCROLL_LIST, SchematicController.instance.list());
 			if (tile3.hasSchematic()) {
 				Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.getSchematic().getNBTSmall());
 			}
@@ -713,7 +713,7 @@ public class PacketHandlerServer {
 			BlockPos pos2 = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 			TileBuilder tile3 = (TileBuilder) player.worldObj.getTileEntity(pos2);
 			String name4 = Server.readString(buffer);
-			tile3.setSchematic(SchematicController.Instance.load(name4));
+			tile3.setSchematic(SchematicController.instance.load(name4));
 			if (tile3.hasSchematic()) {
 				Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.getSchematic().getNBTSmall());
 			}
@@ -727,7 +727,7 @@ public class PacketHandlerServer {
 			if ((tile4 == null) || name5.isEmpty()) {
 				return;
 			}
-			SchematicController.Instance.save(player, name5, tile4.getPos(), tile4.getHeight(), tile4.getWidth(),
+			SchematicController.instance.save(player, name5, tile4.getPos(), tile4.getHeight(), tile4.getWidth(),
 					tile4.getLength());
 		}
 	}

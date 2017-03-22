@@ -89,6 +89,7 @@ public class CustomNpcs {
 	public static long ticks;
 	@SidedProxy(clientSide = "noppes.npcs.client.ClientProxy", serverSide = "noppes.npcs.CommonProxy")
 	public static CommonProxy proxy;
+
 	public static CustomNpcs instance;
 	public static boolean FreezeNPCs;
 	@ConfigProp(info = "Only ops can create and edit npcs")
@@ -185,6 +186,7 @@ public class CustomNpcs {
 		if (CustomNpcs.NpcNavRange < 16) {
 			CustomNpcs.NpcNavRange = 16;
 		}
+
 		CustomItems.load();
 		NetworkRegistry.INSTANCE.registerGuiHandler(this, CustomNpcs.proxy);
 		MinecraftForge.EVENT_BUS.register(new ServerEventsHandler());

@@ -4,8 +4,8 @@ package noppes.npcs.containers;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
-import noppes.npcs.roles.RoleCompanion;
 
 class SlotCompanionWeapon extends Slot {
 	RoleCompanion role;

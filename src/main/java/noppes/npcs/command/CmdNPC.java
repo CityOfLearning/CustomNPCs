@@ -16,11 +16,11 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
+import noppes.npcs.ai.roles.RoleCompanion;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleCompanion;
-import noppes.npcs.roles.RoleFollower;
 
 public class CmdNPC extends CommandNoppesBase {
 	public EntityNPCInterface selectedNpc;

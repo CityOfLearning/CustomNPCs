@@ -3,13 +3,13 @@ package noppes.npcs.client.gui.roles;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.jobs.JobFarmer;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobFarmer;
 
 public class GuiJobFarmer extends GuiNPCInterface2 {
 	private JobFarmer job;

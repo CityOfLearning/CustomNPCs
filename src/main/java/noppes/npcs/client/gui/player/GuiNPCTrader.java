@@ -6,11 +6,11 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import noppes.npcs.ai.roles.RoleTrader;
 import noppes.npcs.client.CustomNpcResourceListener;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.containers.ContainerNPCTrader;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleTrader;
 import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiNPCTrader extends GuiContainerNPCInterface {

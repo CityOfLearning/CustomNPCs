@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface2;
 import noppes.npcs.client.gui.util.GuiNpcButton;
@@ -16,7 +17,6 @@ import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.containers.ContainerNPCFollowerSetup;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleFollower;
 
 public class GuiNpcFollowerSetup extends GuiContainerNPCInterface2 {
 	private static ResourceLocation field_110422_t;

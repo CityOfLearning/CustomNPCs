@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.roles.RoleDialog;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.SubGuiNpcTextArea;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
@@ -15,7 +16,6 @@ import noppes.npcs.client.gui.util.ISubGuiListener;
 import noppes.npcs.client.gui.util.SubGuiInterface;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleDialog;
 
 public class GuiRoleDialog extends GuiNPCInterface2 implements ISubGuiListener {
 	private RoleDialog role;

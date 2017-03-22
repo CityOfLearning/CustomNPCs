@@ -12,8 +12,8 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.CustomNpcs;
+import noppes.npcs.ai.roles.RoleTransporter;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleTransporter;
 
 public class TransportController {
 	private static TransportController instance;

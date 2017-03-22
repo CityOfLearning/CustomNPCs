@@ -35,6 +35,7 @@ import net.minecraft.world.World;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
+import noppes.npcs.ai.roles.RoleTransporter;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerData;
@@ -67,7 +68,6 @@ import noppes.npcs.controllers.transport.TransportController;
 import noppes.npcs.controllers.transport.TransportLocation;
 import noppes.npcs.entity.EntityDialogNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleTransporter;
 
 public class NoppesUtilServer {
 	private static HashMap<String, Quest> editingQuests = new HashMap<>();

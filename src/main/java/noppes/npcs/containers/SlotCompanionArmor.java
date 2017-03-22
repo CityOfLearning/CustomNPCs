@@ -8,7 +8,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import noppes.npcs.roles.RoleCompanion;
+import noppes.npcs.ai.roles.RoleCompanion;
 
 class SlotCompanionArmor extends Slot {
 	int armorType;

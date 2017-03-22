@@ -4,9 +4,9 @@ package noppes.npcs.containers;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleCompanion;
 
 public class ContainerNPCCompanion extends ContainerNpcInterface {
 	public InventoryNPC currencyMatrix;

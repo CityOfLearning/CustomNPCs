@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.jobs.JobItemGiver;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.SubGuiNpcAvailability;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface2;
@@ -15,7 +16,6 @@ import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.containers.ContainerNpcItemGiver;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobItemGiver;
 
 public class GuiNpcItemGiver extends GuiContainerNPCInterface2 {
 	private JobItemGiver role;

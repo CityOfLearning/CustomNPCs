@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.controllers.bank.PlayerBankData;
 import noppes.npcs.controllers.dialog.PlayerDialogData;
 import noppes.npcs.controllers.faction.PlayerFactionData;
@@ -14,7 +15,6 @@ import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.controllers.transport.PlayerTransportData;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleCompanion;
 
 public class PlayerData implements IExtendedEntityProperties {
 	public PlayerDialogData dialogData;

@@ -7,13 +7,13 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.client.CustomNpcResourceListener;
 import noppes.npcs.client.gui.util.GuiContainerNPCInterface;
 import noppes.npcs.client.gui.util.GuiNpcButton;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerNPCFollowerHire;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.util.NoppesUtilPlayer;
 
 public class GuiNpcFollowerHire extends GuiContainerNPCInterface {

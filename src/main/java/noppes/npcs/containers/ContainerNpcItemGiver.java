@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.ai.jobs.JobItemGiver;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobItemGiver;
 
 public class ContainerNpcItemGiver extends Container {
 	private JobItemGiver role;

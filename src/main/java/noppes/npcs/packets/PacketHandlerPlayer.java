@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
+import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.blocks.tiles.TileTextArea;
@@ -36,7 +37,6 @@ import noppes.npcs.controllers.mail.PlayerMailData;
 import noppes.npcs.controllers.quest.PlayerQuestController;
 import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleCompanion;
 import noppes.npcs.util.NoppesUtilPlayer;
 import noppes.npcs.util.NoppesUtilServer;
 

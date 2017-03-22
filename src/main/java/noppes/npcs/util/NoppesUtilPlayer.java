@@ -25,6 +25,8 @@ import noppes.npcs.CustomTeleporter;
 import noppes.npcs.EventHooks;
 import noppes.npcs.QuestLogData;
 import noppes.npcs.Server;
+import noppes.npcs.ai.roles.RoleDialog;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumPacketClient;
@@ -48,8 +50,6 @@ import noppes.npcs.controllers.transport.PlayerTransportData;
 import noppes.npcs.controllers.transport.TransportController;
 import noppes.npcs.controllers.transport.TransportLocation;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleDialog;
-import noppes.npcs.roles.RoleFollower;
 
 public class NoppesUtilPlayer {
 	public static void bankUnlock(EntityPlayerMP player, EntityNPCInterface npc) {

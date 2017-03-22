@@ -6,11 +6,11 @@ import com.google.common.base.Predicate;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
+import noppes.npcs.ai.jobs.JobGuard;
+import noppes.npcs.ai.roles.RoleCompanion;
+import noppes.npcs.ai.roles.companion.CompanionGuard;
 import noppes.npcs.constants.EnumCompanionJobs;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobGuard;
-import noppes.npcs.roles.RoleCompanion;
-import noppes.npcs.roles.companion.CompanionGuard;
 
 public class NPCAttackSelector implements Predicate {
 	private EntityNPCInterface npc;

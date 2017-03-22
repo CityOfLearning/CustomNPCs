@@ -6,6 +6,7 @@ import java.util.Vector;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.roles.RoleBank;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.util.GuiCustomScroll;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
@@ -14,7 +15,6 @@ import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.controllers.bank.Bank;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleBank;
 
 public class GuiNpcBankSetup extends GuiNPCInterface2 implements IScrollData, ICustomScrollListener {
 	private GuiCustomScroll scroll;

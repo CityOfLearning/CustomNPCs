@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.ai.roles.RoleTrader;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleTrader;
 
 public class ContainerNPCTraderSetup extends Container {
 	public RoleTrader role;

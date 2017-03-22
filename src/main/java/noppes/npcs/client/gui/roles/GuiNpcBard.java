@@ -3,6 +3,7 @@ package noppes.npcs.client.gui.roles;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.jobs.JobBard;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.controllers.MusicController;
@@ -13,7 +14,6 @@ import noppes.npcs.client.gui.util.GuiNpcLabel;
 import noppes.npcs.client.gui.util.GuiNpcTextField;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobBard;
 
 public class GuiNpcBard extends GuiNPCInterface2 {
 	private JobBard job;

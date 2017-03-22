@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.constants.EnumGuiType;
@@ -44,7 +45,6 @@ import noppes.npcs.controllers.recipies.RecipeCarpentry;
 import noppes.npcs.controllers.recipies.RecipeController;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.quests.QuestKill;
-import noppes.npcs.roles.RoleFollower;
 import noppes.npcs.util.NoppesUtilServer;
 
 public class ServerEventsHandler {

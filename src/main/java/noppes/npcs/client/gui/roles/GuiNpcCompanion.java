@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
+import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.client.Client;
 import noppes.npcs.client.gui.player.companion.GuiNpcCompanionTalents;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
@@ -19,7 +20,6 @@ import noppes.npcs.constants.EnumCompanionStage;
 import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumPacketServer;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleCompanion;
 
 public class GuiNpcCompanion extends GuiNPCInterface2 implements ITextfieldListener, ISliderListener {
 	private RoleCompanion role;

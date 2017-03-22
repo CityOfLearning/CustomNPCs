@@ -5,8 +5,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryBasic;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.RoleFollower;
 
 public class ContainerNPCFollowerHire extends ContainerNpcInterface {
 	public InventoryBasic currencyMatrix;
