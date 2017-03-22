@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
@@ -27,6 +28,7 @@ import noppes.npcs.blocks.tiles.TileMailbox;
 import noppes.npcs.client.renderer.ITileRenderer;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
+import noppes.npcs.controllers.PlayerDataController;
 
 public class BlockMailbox extends BlockContainer implements ITileRenderer {
 	public static PropertyInteger ROTATION;
@@ -104,8 +106,13 @@ public class BlockMailbox extends BlockContainer implements ITileRenderer {
 	public boolean onBlockActivated(World par1World, BlockPos pos, IBlockState state, EntityPlayer player,
 			EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!par1World.isRemote) {
-			Server.sendData((EntityPlayerMP) player, EnumPacketClient.GUI, EnumGuiType.PlayerMailbox, pos.getX(),
-					pos.getY(), pos.getZ());
+			if (PlayerDataController.instance.getPlayerData(player).mailData.hasMail()) {
+				Server.sendData((EntityPlayerMP) player, EnumPacketClient.GUI, EnumGuiType.PlayerMailbox, pos.getX(),
+						pos.getY(), pos.getZ());
+			} else {
+				player.addChatComponentMessage(
+						new ChatComponentTranslation("Sorry, it looks like you don't have any mail"));
+			}
 		}
 		return true;
 	}
