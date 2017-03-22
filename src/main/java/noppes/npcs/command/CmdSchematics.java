@@ -3,6 +3,8 @@ package noppes.npcs.command;
 
 import java.util.List;
 
+import com.dyn.schematics.Schematic;
+
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -13,13 +15,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.controllers.SchematicController;
-import noppes.npcs.util.Schematic;
 
 public class CmdSchematics extends CommandNoppesBase {
 	@Override
 	public List addTabCompletionOptions(ICommandSender par1, String[] args, BlockPos pos) {
 		if (args[0].equalsIgnoreCase("build") && (args.length == 2)) {
-			List<String> list = SchematicController.Instance.list();
+			List<String> list = SchematicController.instance.list();
 			return CommandBase.getListOfStringsMatchingLastWord(args, list.toArray(new String[list.size()]));
 		}
 		return null;
@@ -28,7 +29,7 @@ public class CmdSchematics extends CommandNoppesBase {
 	@SubCommand(desc = "Build the schematic", usage = "<name> [rotation] [[world:]x,y,z]]", permission = 4)
 	public void build(ICommandSender sender, String[] args) throws CommandException {
 		String name = args[0];
-		Schematic schem = SchematicController.Instance.load(name);
+		Schematic schem = SchematicController.instance.load(name);
 		if (schem == null) {
 			throw new CommandException("Unknown schematic: " + name, new Object[0]);
 		}
@@ -69,7 +70,7 @@ public class CmdSchematics extends CommandNoppesBase {
 			throw new CommandException("Location needed", new Object[0]);
 		}
 		schem.init(pos, world, rotation);
-		SchematicController.Instance.build(schem, sender);
+		SchematicController.instance.build(schem, sender);
 	}
 
 	@Override
@@ -95,12 +96,12 @@ public class CmdSchematics extends CommandNoppesBase {
 
 	@SubCommand(desc = "Gives info about the current build", permission = 4)
 	public void info(ICommandSender sender, String[] args) {
-		SchematicController.Instance.info(sender);
+		SchematicController.instance.info(sender);
 	}
 
 	@SubCommand(desc = "Lists available schematics", permission = 4)
 	public void list(ICommandSender sender, String[] args) throws CommandException {
-		List<String> list = SchematicController.Instance.list();
+		List<String> list = SchematicController.instance.list();
 		if (list.isEmpty()) {
 			throw new CommandException("No available schematics", new Object[0]);
 		}
@@ -113,6 +114,6 @@ public class CmdSchematics extends CommandNoppesBase {
 
 	@SubCommand(desc = "Stops the current build", permission = 4)
 	public void stop(ICommandSender sender, String[] args) {
-		SchematicController.Instance.stop(sender);
+		SchematicController.instance.stop(sender);
 	}
 }

@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import com.dyn.schematics.BlockData;
+
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import noppes.npcs.entity.EntityNPCInterface;

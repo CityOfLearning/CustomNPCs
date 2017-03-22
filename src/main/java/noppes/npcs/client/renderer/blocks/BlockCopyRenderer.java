@@ -1,6 +1,8 @@
 
 package noppes.npcs.client.renderer.blocks;
 
+import com.dyn.schematics.Schematic;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -12,7 +14,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import noppes.npcs.CustomItems;
 import noppes.npcs.blocks.tiles.TileCopy;
-import noppes.npcs.util.Schematic;
 
 public class BlockCopyRenderer extends BlockRendererInterface {
 	private static ItemStack item;

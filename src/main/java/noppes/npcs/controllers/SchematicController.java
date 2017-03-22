@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.dyn.schematics.Schematic;
+import com.google.common.collect.Lists;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -25,30 +28,30 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import noppes.npcs.controllers.SchematicController;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.util.NoppesUtilServer;
-import noppes.npcs.util.Schematic;
 
 public class SchematicController {
-	public static SchematicController Instance;
+	public static SchematicController instance;
 	static {
-		SchematicController.Instance = new SchematicController();
+		SchematicController.instance = new SchematicController();
 	}
 	private Schematic building;
 	private ICommandSender buildStarter;
 	private int buildingPercentage;
 
-	public List<String> included;
+	public List<String> included = Lists.newArrayList();
 
 	public SchematicController() {
 		building = null;
 		buildStarter = null;
 		buildingPercentage = 0;
-		included = Arrays.asList("Archery_Range", "Bakery", "Barn", "Building_Site", "Chapel", "Church", "Gate",
+		included.addAll(Arrays.asList("Archery_Range", "Bakery", "Barn", "Building_Site", "Chapel", "Church", "Gate",
 				"Glassworks", "Guard_Tower", "Guild_House", "House", "House_Small", "Inn", "Library", "Lighthouse",
 				"Mill", "Observatory", "Rollercoaster", "Ship", "Shop", "Stall", "Stall2", "Stall3", "Tier_House1",
-				"Tier_House2", "Tier_House3", "Tower", "Wall", "Wall_Corner");
+				"Tier_House2", "Tier_House3", "Tower", "Wall", "Wall_Corner"));
 	}
 
 	public void build(Schematic schem, ICommandSender sender) {

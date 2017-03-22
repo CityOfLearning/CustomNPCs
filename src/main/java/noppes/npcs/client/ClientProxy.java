@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
+import com.dyn.schematics.SchematicRenderingRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.properties.IProperty;
@@ -540,7 +542,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void postload() {
-		MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
+		MinecraftForge.EVENT_BUS.register(new SchematicRenderingRegistry());
 		if (CustomNpcs.InventoryGuiEnabled) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
 			if (TabRegistry.getTabList().size() < 2) {

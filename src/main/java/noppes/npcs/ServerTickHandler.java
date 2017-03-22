@@ -20,7 +20,7 @@ public class ServerTickHandler {
 	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		if ((event.phase == TickEvent.Phase.START) && (ticks++ >= 20)) {
-			SchematicController.Instance.updateBuilding();
+			SchematicController.instance.updateBuilding();
 			MassBlockController.Update();
 			ticks = 0;
 			for (DataScenes.SceneState state : DataScenes.StartedScenes.values()) {

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import com.dyn.schematics.BlockData;
+import com.dyn.schematics.Schematic;
+import com.dyn.schematics.SchematicRenderingRegistry;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -17,25 +21,20 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import noppes.npcs.ai.jobs.JobBuilder;
 import noppes.npcs.controllers.Availability;
-import noppes.npcs.controllers.BlockData;
 import noppes.npcs.controllers.SchematicController;
 import noppes.npcs.entity.EntityNPCInterface;
-import noppes.npcs.roles.JobBuilder;
 import noppes.npcs.util.NBTTags;
-import noppes.npcs.util.Schematic;
 
 public class TileBuilder extends TileEntity implements ITickable {
 	public static BlockPos DrawPos;
-	public static boolean Compiled;
 	static {
 		TileBuilder.DrawPos = null;
-		TileBuilder.Compiled = false;
 	}
 
 	public static void SetDrawPos(BlockPos pos) {
 		TileBuilder.DrawPos = pos;
-		TileBuilder.Compiled = false;
 	}
 
 	private Schematic schematic;
@@ -149,7 +148,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 		return ticks;
 	}
 
-	public int getyOffest() {
+	public int getYOffset() {
 		return yOffest;
 	}
 
@@ -173,7 +172,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
 		if (compound.hasKey("SchematicName")) {
-			schematic = SchematicController.Instance.load(compound.getString("SchematicName"));
+			schematic = SchematicController.instance.load(compound.getString("SchematicName"));
 		}
 		Stack<Integer> positions = new Stack<>();
 		positions.addAll(NBTTags.getIntegerList(compound.getTagList("Positions", 10)));
@@ -198,8 +197,14 @@ public class TileBuilder extends TileEntity implements ITickable {
 	}
 
 	@SideOnly(Side.CLIENT)
-	public void setDrawSchematic(Schematic schematics) {
-		schematic = schematics;
+	public void setDrawSchematic(Schematic schematic) {
+		if (schematic != null) {
+			SchematicRenderingRegistry.addSchematic(schematic, TileBuilder.DrawPos, rotation);
+			if (this.schematic != null) {
+				SchematicRenderingRegistry.removeSchematic(this.schematic);
+			}
+		}
+		this.schematic = schematic;
 	}
 
 	public void setEnabled(boolean enabled) {

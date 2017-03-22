@@ -4,6 +4,8 @@ package noppes.npcs.client.gui;
 import java.util.HashMap;
 import java.util.Vector;
 
+import com.dyn.schematics.Schematic;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
@@ -20,7 +22,6 @@ import noppes.npcs.client.gui.util.ICustomScrollListener;
 import noppes.npcs.client.gui.util.IGuiData;
 import noppes.npcs.client.gui.util.IScrollData;
 import noppes.npcs.constants.EnumPacketServer;
-import noppes.npcs.util.Schematic;
 
 public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICustomScrollListener, IScrollData {
 	private int x;
@@ -135,7 +136,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 			int id7 = 9;
 			int i = guiLeft + 200;
 			y += 23;
-			addTextField(new GuiNpcTextField(id7, this, i, y, 50, 20, tile.getyOffest() + ""));
+			addTextField(new GuiNpcTextField(id7, this, i, y, 50, 20, tile.getYOffset() + ""));
 			addLabel(new GuiNpcLabel(9, StatCollector.translateToLocal("gui.yoffset"), guiLeft + 130, y + 5));
 			getTextField(9).numbersOnly = true;
 			getTextField(9).setMinMaxDefault(-10, 10, 0);
