@@ -141,7 +141,6 @@ import noppes.npcs.client.model.ModelNpcSlime;
 import noppes.npcs.client.model.ModelPlayerAlt;
 import noppes.npcs.client.renderer.RenderCustomNpc;
 import noppes.npcs.client.renderer.RenderNPCInterface;
-import noppes.npcs.client.renderer.RenderNPCPony;
 import noppes.npcs.client.renderer.RenderNpcCrystal;
 import noppes.npcs.client.renderer.RenderNpcDragon;
 import noppes.npcs.client.renderer.RenderNpcSlime;
@@ -196,7 +195,6 @@ import noppes.npcs.entity.EntityNPCGolem;
 import noppes.npcs.entity.EntityNPCInterface;
 import noppes.npcs.entity.EntityNpcCrystal;
 import noppes.npcs.entity.EntityNpcDragon;
-import noppes.npcs.entity.EntityNpcPony;
 import noppes.npcs.entity.EntityNpcSlime;
 import noppes.npcs.model.ModelData;
 import noppes.npcs.model.ModelPartData;
@@ -551,7 +549,6 @@ public class ClientProxy extends CommonProxy {
 			TabRegistry.registerTab(new InventoryTabFactions());
 			TabRegistry.registerTab(new InventoryTabQuests());
 		}
-		RenderingRegistry.registerEntityRenderingHandler(EntityNpcPony.class, new RenderNPCPony());
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcCrystal.class,
 				new RenderNpcCrystal(new ModelNpcCrystal(0.5F)));
 		RenderingRegistry.registerEntityRenderingHandler(EntityNpcDragon.class,

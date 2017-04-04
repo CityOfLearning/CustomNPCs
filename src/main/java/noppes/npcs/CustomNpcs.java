@@ -52,7 +52,6 @@ import noppes.npcs.entity.EntityNPC64x32;
 import noppes.npcs.entity.EntityNPCGolem;
 import noppes.npcs.entity.EntityNpcCrystal;
 import noppes.npcs.entity.EntityNpcDragon;
-import noppes.npcs.entity.EntityNpcPony;
 import noppes.npcs.entity.EntityNpcSlime;
 import noppes.npcs.entity.old.EntityNPCDwarfFemale;
 import noppes.npcs.entity.old.EntityNPCDwarfMale;
@@ -194,7 +193,6 @@ public class CustomNpcs {
 		MinecraftForge.EVENT_BUS.register(new ServerTickHandler());
 		registerNpc(EntityNPCHumanMale.class, "npchumanmale");
 		registerNpc(EntityNPCVillager.class, "npcvillager");
-		registerNpc(EntityNpcPony.class, "npcpony");
 		registerNpc(EntityNPCHumanFemale.class, "npchumanfemale");
 		registerNpc(EntityNPCDwarfMale.class, "npcdwarfmale");
 		registerNpc(EntityNPCFurryMale.class, "npcfurrymale");
