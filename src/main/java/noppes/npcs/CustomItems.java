@@ -189,7 +189,6 @@ public class CustomItems {
 		CustomItems.waypoint.setCreativeTab(CustomItems.tab);
 		CustomItems.border.setCreativeTab(CustomItems.tab);
 		CustomItems.scripted.setCreativeTab(CustomItems.tab);
-		CustomItems.scriptedDoor.setCreativeTab(CustomItems.tab);
 		CustomItems.scriptedDoorTool.setCreativeTab(CustomItems.tab);
 		CustomItems.builder.setCreativeTab(CustomItems.tab);
 		CustomItems.copy.setCreativeTab(CustomItems.tab);
