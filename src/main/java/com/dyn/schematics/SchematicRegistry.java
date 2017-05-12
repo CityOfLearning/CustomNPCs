@@ -44,14 +44,17 @@ public class SchematicRegistry {
 			}
 			break;
 		}
-		try {
-			Schematic schema = new Schematic(name);
-			schema.load(CompressedStreamTools.readCompressed(stream));
-			stream.close();
-			return schema;
-		} catch (IOException e) {
-			// CustomNpcs.logger.catching(e);
-			return null;
+		if (stream != null) {
+			try {
+				Schematic schema = new Schematic(name);
+				schema.load(CompressedStreamTools.readCompressed(stream));
+				stream.close();
+				return schema;
+			} catch (IOException e) {
+				// CustomNpcs.logger.catching(e);
+				return null;
+			}
 		}
+		return null;
 	}
 }
