@@ -6,7 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import com.dyn.schematics.SchematicRenderingRegistry;
+import com.dyn.schematics.registry.SchematicRenderingRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;

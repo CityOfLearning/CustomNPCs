@@ -7,7 +7,7 @@ import java.util.Stack;
 
 import com.dyn.schematics.BlockData;
 import com.dyn.schematics.Schematic;
-import com.dyn.schematics.SchematicRenderingRegistry;
+import com.dyn.schematics.registry.SchematicRenderingRegistry;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
