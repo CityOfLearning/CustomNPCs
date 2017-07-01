@@ -62,6 +62,7 @@ minecraft {
 
 dependencies {
 	compile 'com.github.CityOfLearning:rabbit-gui:DYN-CityServer-SNAPSHOT'
+	compile 'com.github.CityOfLearning:Schematic:master-SNAPSHOT'
 }
 
 processResources
