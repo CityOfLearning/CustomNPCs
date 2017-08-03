@@ -701,8 +701,11 @@ public class PacketHandlerServer {
 		} else if (type == EnumPacketServer.SchematicsTile) {
 			BlockPos pos2 = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
 			TileBuilder tile3 = (TileBuilder) player.worldObj.getTileEntity(pos2);
-			String name4 = Server.readString(buffer);
-			tile3.setSchematic(SchematicController.instance.load(name4));
+			if (tile3 == null) {
+				return;
+			}
+			Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.writePartNBT(new NBTTagCompound()));
+			Server.sendData(player, EnumPacketClient.SCROLL_LIST, SchematicController.instance.list());
 			if (tile3.hasSchematic()) {
 				Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.getSchematic().writeToNBT(new NBTTagCompound()));
 			}
@@ -712,7 +715,7 @@ public class PacketHandlerServer {
 			String name4 = Server.readString(buffer);
 			tile3.setSchematic(SchematicController.instance.load(name4));
 			if (tile3.hasSchematic()) {
-				Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.getSchematic().getNBTSmall());
+				Server.sendData(player, EnumPacketClient.GUI_DATA, tile3.getSchematic().writeToNBT(new NBTTagCompound()));
 			}
 		} else if (type == EnumPacketServer.SchematicsTileSave) {
 			BlockPos pos2 = new BlockPos(buffer.readInt(), buffer.readInt(), buffer.readInt());
