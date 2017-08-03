@@ -50,7 +50,7 @@ public class EntityAIAnimation extends EntityAIBase {
 	}
 
 	private boolean hasNavigation() {
-		return isAttacking || (npc.ai.returnToStart && !isAtStartpoint && !npc.isFollower()) || hasPath;
+		return isAttacking || (npc.ai.returnToStart && !isAtStartpoint) || hasPath;
 	}
 
 	@Override

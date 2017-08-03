@@ -90,10 +90,7 @@ import noppes.npcs.ai.EntityAIZigZagTarget;
 import noppes.npcs.ai.FlyingMoveHelper;
 import noppes.npcs.ai.PathNavigateFlying;
 import noppes.npcs.ai.jobs.JobBard;
-import noppes.npcs.ai.jobs.JobFollower;
 import noppes.npcs.ai.jobs.JobInterface;
-import noppes.npcs.ai.roles.RoleCompanion;
-import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.ai.roles.RoleInterface;
 import noppes.npcs.ai.selector.NPCAttackSelector;
 import noppes.npcs.ai.target.EntityAIClearTarget;
@@ -276,9 +273,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 
 	@Override
 	protected float applyArmorCalculations(DamageSource source, float damage) {
-		if (advanced.role == 6) {
-			damage = ((RoleCompanion) roleInterface).applyArmorCalculations(source, damage);
-		}
 		return damage;
 	}
 
@@ -325,9 +319,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 						MathHelper.cos((rotationYaw * 3.1415927f) / 180.0f) * stats.melee.getKnockback() * 0.5f);
 				motionX *= 0.6;
 				motionZ *= 0.6;
-			}
-			if (advanced.role == 6) {
-				((RoleCompanion) roleInterface).attackedEntity(par1Entity);
 			}
 		}
 		if (stats.melee.getEffectType() != 0) {
@@ -612,15 +603,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		if (advanced.scenes.getOwner() != null) {
 			return 4;
 		}
-		if ((advanced.role == 2) && ((RoleFollower) roleInterface).isFollowing()) {
-			return 6;
-		}
-		if ((advanced.role == 6) && ((RoleCompanion) roleInterface).isFollowing()) {
-			return 4;
-		}
-		if ((advanced.job == 5) && ((JobFollower) jobInterface).isFollowing()) {
-			return 4;
-		}
 		return 15;
 	}
 
@@ -733,8 +715,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		IItemStack item = null;
 		if (isAttacking()) {
 			item = inventory.getRightHand();
-		} else if (advanced.role == 6) {
-			item = ((RoleCompanion) roleInterface).getHeldItem();
 		} else if ((jobInterface != null) && jobInterface.overrideMainHand) {
 			item = jobInterface.getMainhand();
 		} else {
@@ -790,15 +770,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 	public EntityLivingBase getOwner() {
 		if (advanced.scenes.getOwner() != null) {
 			return advanced.scenes.getOwner();
-		}
-		if ((advanced.role == 2) && (roleInterface instanceof RoleFollower)) {
-			return ((RoleFollower) roleInterface).owner;
-		}
-		if ((advanced.role == 6) && (roleInterface instanceof RoleCompanion)) {
-			return ((RoleCompanion) roleInterface).owner;
-		}
-		if ((advanced.job == 5) && (jobInterface instanceof JobFollower)) {
-			return ((JobFollower) jobInterface).following;
 		}
 		return null;
 	}
@@ -877,10 +848,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 	}
 
 	public boolean hasOwner() {
-		return (advanced.scenes.getOwner() != null)
-				|| ((advanced.role == 2) && ((RoleFollower) roleInterface).hasOwner())
-				|| ((advanced.role == 6) && ((RoleCompanion) roleInterface).hasOwner())
-				|| ((advanced.job == 5) && ((JobFollower) jobInterface).hasOwner());
+		return (advanced.scenes.getOwner() != null);
 	}
 
 	@Override
@@ -932,13 +900,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 	@Override
 	public boolean isEntityAlive() {
 		return super.isEntityAlive() && !isKilled();
-	}
-
-	public boolean isFollower() {
-		return (advanced.scenes.getOwner() != null)
-				|| ((advanced.role == 2) && ((RoleFollower) roleInterface).isFollowing())
-				|| ((advanced.role == 6) && ((RoleCompanion) roleInterface).isFollowing())
-				|| ((advanced.job == 5) && ((JobFollower) jobInterface).isFollowing());
 	}
 
 	public boolean isInRange(double posX, double posY, double posZ, double range) {
@@ -1029,7 +990,7 @@ public abstract class EntityNPCInterface extends EntityCreature
 	}
 
 	public boolean isWalking() {
-		return (ai.getMovingType() != 0) || isAttacking() || isFollower() || getBoolFlag(1);
+		return (ai.getMovingType() != 0) || isAttacking() || getBoolFlag(1);
 	}
 
 	@Override
@@ -1057,9 +1018,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		double d2 = posY;
 		double d3 = posZ;
 		super.moveEntityWithHeading(p_70612_1_, p_70612_2_);
-		if ((advanced.role == 6) && !isRemote()) {
-			((RoleCompanion) roleInterface).addMovementStat(posX - d0, posY - d2, posZ - d3);
-		}
 	}
 
 	public boolean nearPosition(BlockPos pos) {
@@ -1317,10 +1275,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 		if (advanced.job == 9) {
 			NBTTagCompound puppet = compound.getCompoundTag("Puppet");
 			jobInterface.readFromNBT(puppet);
-		}
-		if (advanced.role == 6) {
-			NBTTagCompound puppet = compound.getCompoundTag("Companion");
-			roleInterface.readFromNBT(puppet);
 		}
 		if (this instanceof EntityCustomNpc) {
 			((EntityCustomNpc) this).modelData.readFromNBT(compound.getCompoundTag("ModelData"));
@@ -1748,11 +1702,6 @@ public abstract class EntityNPCInterface extends EntityCreature
 			NBTTagCompound bard = new NBTTagCompound();
 			jobInterface.writeToNBT(bard);
 			compound.setTag("Puppet", bard);
-		}
-		if (advanced.role == 6) {
-			NBTTagCompound bard = new NBTTagCompound();
-			roleInterface.writeToNBT(bard);
-			compound.setTag("Companion", bard);
 		}
 		if (this instanceof EntityCustomNpc) {
 			compound.setTag("ModelData", ((EntityCustomNpc) this).modelData.writeToNBT());

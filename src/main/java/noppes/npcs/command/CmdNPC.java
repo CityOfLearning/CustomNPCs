@@ -8,16 +8,11 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
-import noppes.npcs.ai.roles.RoleCompanion;
-import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.CommandNoppesBase;
 import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
@@ -104,36 +99,6 @@ public class CmdNPC extends CommandNoppesBase {
 		if (!selectedNpc.display.getName().equals(name)) {
 			selectedNpc.display.setName(name);
 			selectedNpc.updateClient = true;
-		}
-	}
-
-	@SubCommand(desc = "Sets the owner of an follower/companion", usage = "[player]")
-	public void owner(ICommandSender sender, String[] args) {
-		if (args.length < 1) {
-			EntityPlayer player = null;
-			if (selectedNpc.roleInterface instanceof RoleFollower) {
-				player = ((RoleFollower) selectedNpc.roleInterface).owner;
-			}
-			if (selectedNpc.roleInterface instanceof RoleCompanion) {
-				player = ((RoleCompanion) selectedNpc.roleInterface).owner;
-			}
-			if (player == null) {
-				sendMessage(sender, "No owner", new Object[0]);
-			} else {
-				sendMessage(sender, "Owner is: " + player.getName(), new Object[0]);
-			}
-		} else {
-			EntityPlayerMP player2 = null;
-			try {
-				player2 = CommandBase.getPlayer(sender, args[0]);
-			} catch (PlayerNotFoundException ex) {
-			}
-			if (selectedNpc.roleInterface instanceof RoleFollower) {
-				((RoleFollower) selectedNpc.roleInterface).setOwner(player2);
-			}
-			if (selectedNpc.roleInterface instanceof RoleCompanion) {
-				((RoleCompanion) selectedNpc.roleInterface).setOwner(player2);
-			}
 		}
 	}
 

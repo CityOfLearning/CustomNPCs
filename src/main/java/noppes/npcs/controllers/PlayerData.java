@@ -6,14 +6,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.controllers.bank.PlayerBankData;
 import noppes.npcs.controllers.dialog.PlayerDialogData;
 import noppes.npcs.controllers.faction.PlayerFactionData;
 import noppes.npcs.controllers.mail.PlayerMailData;
 import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.controllers.transport.PlayerTransportData;
-import noppes.npcs.entity.EntityCustomNpc;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class PlayerData implements IExtendedEntityProperties {
@@ -29,8 +27,6 @@ public class PlayerData implements IExtendedEntityProperties {
 	public EntityPlayer player;
 	public String playername;
 	public String uuid;
-	private EntityNPCInterface activeCompanion;
-	public int companionID;
 
 	public PlayerData() {
 		dialogData = new PlayerDialogData();
@@ -42,8 +38,6 @@ public class PlayerData implements IExtendedEntityProperties {
 		mailData = new PlayerMailData();
 		playername = "";
 		uuid = "";
-		activeCompanion = null;
-		companionID = 0;
 	}
 
 	public NBTTagCompound getNBT() {
@@ -61,18 +55,7 @@ public class PlayerData implements IExtendedEntityProperties {
 		mailData.saveNBTData(compound);
 		compound.setString("PlayerName", playername);
 		compound.setString("UUID", uuid);
-		compound.setInteger("PlayerCompanionId", companionID);
-		if (hasCompanion()) {
-			NBTTagCompound nbt = new NBTTagCompound();
-			if (activeCompanion.writeToNBTOptional(nbt)) {
-				compound.setTag("PlayerCompanion", nbt);
-			}
-		}
 		return compound;
-	}
-
-	public boolean hasCompanion() {
-		return (activeCompanion != null) && !activeCompanion.isDead;
 	}
 
 	@Override
@@ -93,17 +76,6 @@ public class PlayerData implements IExtendedEntityProperties {
 		PlayerDataController.instance.savePlayerData(this);
 	}
 
-	public void setCompanion(EntityNPCInterface npc) {
-		if ((npc != null) && (npc.advanced.role != 6)) {
-			return;
-		}
-		++companionID;
-		if ((activeCompanion = npc) != null) {
-			((RoleCompanion) npc.roleInterface).companionID = companionID;
-		}
-		saveNBTData(null);
-	}
-
 	public void setNBT(NBTTagCompound data) {
 		dialogData.loadNBTData(data);
 		bankData.loadNBTData(data);
@@ -119,36 +91,5 @@ public class PlayerData implements IExtendedEntityProperties {
 			playername = data.getString("PlayerName");
 			uuid = data.getString("UUID");
 		}
-		companionID = data.getInteger("PlayerCompanionId");
-		if (data.hasKey("PlayerCompanion") && !hasCompanion()) {
-			EntityCustomNpc npc = new EntityCustomNpc(player.worldObj);
-			npc.readEntityFromNBT(data.getCompoundTag("PlayerCompanion"));
-			npc.setPosition(player.posX, player.posY, player.posZ);
-			if (npc.advanced.role == 6) {
-				setCompanion(npc);
-				((RoleCompanion) npc.roleInterface).setSitting(false);
-				player.worldObj.spawnEntityInWorld(npc);
-			}
-		}
-	}
-
-	public void updateCompanion(World world) {
-		if (!hasCompanion() || (world == activeCompanion.worldObj)) {
-			return;
-		}
-		RoleCompanion role = (RoleCompanion) activeCompanion.roleInterface;
-		role.owner = player;
-		if (!role.isFollowing()) {
-			return;
-		}
-		NBTTagCompound nbt = new NBTTagCompound();
-		activeCompanion.writeToNBTOptional(nbt);
-		activeCompanion.isDead = true;
-		EntityCustomNpc npc = new EntityCustomNpc(world);
-		npc.readEntityFromNBT(nbt);
-		npc.setPosition(player.posX, player.posY, player.posZ);
-		setCompanion(npc);
-		((RoleCompanion) npc.roleInterface).setSitting(false);
-		world.spawnEntityInWorld(npc);
 	}
 }

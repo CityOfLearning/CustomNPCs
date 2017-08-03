@@ -19,7 +19,7 @@ public class EntityAIOwnerHurtTarget extends EntityAITarget {
 
 	@Override
 	public boolean shouldExecute() {
-		if (!npc.isFollower() || (npc.roleInterface == null) || !npc.roleInterface.defendOwner()) {
+		if ((npc.roleInterface == null) || !npc.roleInterface.defendOwner()) {
 			return false;
 		}
 		EntityLivingBase entitylivingbase = npc.getOwner();

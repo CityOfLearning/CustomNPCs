@@ -18,7 +18,7 @@ public class EntityAIFollow extends EntityAIBase {
 	}
 
 	public boolean canExcute() {
-		return npc.isEntityAlive() && npc.isFollower() && !npc.isAttacking() && ((owner = npc.getOwner()) != null)
+		return npc.isEntityAlive() && !npc.isAttacking() && ((owner = npc.getOwner()) != null)
 				&& (npc.ai.animationType != 1);
 	}
 

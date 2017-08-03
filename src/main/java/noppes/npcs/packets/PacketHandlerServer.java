@@ -34,14 +34,12 @@ import noppes.npcs.CustomNpcsPermissions;
 import noppes.npcs.Server;
 import noppes.npcs.ServerEventsHandler;
 import noppes.npcs.ai.jobs.JobSpawner;
-import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.ai.roles.RoleTrader;
 import noppes.npcs.ai.roles.RoleTransporter;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.blocks.tiles.TileCopy;
 import noppes.npcs.blocks.tiles.TileScripted;
 import noppes.npcs.blocks.tiles.TileScriptedDoor;
-import noppes.npcs.constants.EnumCompanionStage;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPacketServer;
@@ -444,12 +442,6 @@ public class PacketHandlerServer {
 				job.setJobCompound(buffer.readInt(), Server.readNBT(buffer));
 			}
 			Server.sendData(player, EnumPacketClient.GUI_DATA, job.getTitles());
-		} else if (type == EnumPacketServer.RoleCompanionUpdate) {
-			if (npc.advanced.role != 6) {
-				return;
-			}
-			((RoleCompanion) npc.roleInterface).matureTo(EnumCompanionStage.values()[buffer.readInt()]);
-			npc.updateClient = true;
 		} else if (type == EnumPacketServer.JobSpawnerRemove) {
 			if (npc.advanced.job != 6) {
 				return;

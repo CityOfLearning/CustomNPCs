@@ -3,7 +3,6 @@ package noppes.npcs.util;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import io.netty.buffer.ByteBuf;
@@ -11,7 +10,6 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.server.MinecraftServer;
@@ -26,14 +24,11 @@ import noppes.npcs.EventHooks;
 import noppes.npcs.QuestLogData;
 import noppes.npcs.Server;
 import noppes.npcs.ai.roles.RoleDialog;
-import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.constants.EnumOptionType;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerPacket;
 import noppes.npcs.containers.ContainerNPCBankInterface;
-import noppes.npcs.containers.ContainerNPCFollower;
-import noppes.npcs.containers.ContainerNPCFollowerHire;
 import noppes.npcs.controllers.PlayerDataController;
 import noppes.npcs.controllers.bank.Bank;
 import noppes.npcs.controllers.bank.BankController;
@@ -42,7 +37,6 @@ import noppes.npcs.controllers.bank.PlayerBankData;
 import noppes.npcs.controllers.dialog.Dialog;
 import noppes.npcs.controllers.dialog.DialogController;
 import noppes.npcs.controllers.dialog.DialogOption;
-import noppes.npcs.controllers.lines.Line;
 import noppes.npcs.controllers.quest.PlayerQuestController;
 import noppes.npcs.controllers.quest.PlayerQuestData;
 import noppes.npcs.controllers.quest.QuestData;
@@ -119,18 +113,6 @@ public class NoppesUtilPlayer {
 		RoleEvent.BankUpgradedEvent event = new RoleEvent.BankUpgradedEvent(player, npc.wrappedNPC, container.slot);
 		EventHooks.onNPCRole(npc, event);
 		bankData.openBankGui(player, npc, bank.id, container.slot);
-	}
-
-	public static void changeFollowerState(EntityPlayerMP player, EntityNPCInterface npc) {
-		if (npc.advanced.role != 2) {
-			return;
-		}
-		RoleFollower role = (RoleFollower) npc.roleInterface;
-		EntityPlayer owner = role.owner;
-		if ((owner == null) || !owner.getName().equals(player.getName())) {
-			return;
-		}
-		role.isFollowing = !role.isFollowing;
 	}
 
 	private static boolean compareItemDetails(ItemStack item, ItemStack item2, boolean ignoreDamage,
@@ -243,100 +225,6 @@ public class NoppesUtilPlayer {
 		} else {
 			Server.sendData(player, EnumPacketClient.GUI_CLOSE, new Object[0]);
 		}
-	}
-
-	public static void extendFollower(EntityPlayerMP player, EntityNPCInterface npc) {
-		if (npc.advanced.role != 2) {
-			return;
-		}
-		Container con = player.openContainer;
-		if ((con == null) || !(con instanceof ContainerNPCFollower)) {
-			return;
-		}
-		ContainerNPCFollower container = (ContainerNPCFollower) con;
-		RoleFollower role = (RoleFollower) npc.roleInterface;
-		followerBuy(role, container.currencyMatrix, player, npc);
-	}
-
-	private static void followerBuy(RoleFollower role, IInventory currencyInv, EntityPlayerMP player,
-			EntityNPCInterface npc) {
-		ItemStack currency = currencyInv.getStackInSlot(0);
-		if (currency == null) {
-			return;
-		}
-		HashMap<ItemStack, Integer> cd = new HashMap<>();
-		for (int i : role.inventory.items.keySet()) {
-			ItemStack is = role.inventory.items.get(i);
-			if ((is != null) && (is.getItem() == currency.getItem())) {
-				if (is.getHasSubtypes() && (is.getItemDamage() != currency.getItemDamage())) {
-					continue;
-				}
-				int days = 1;
-				if (role.rates.containsKey(i)) {
-					days = role.rates.get(i);
-				}
-				cd.put(is, days);
-			}
-		}
-		if (cd.size() == 0) {
-			return;
-		}
-		int stackSize = currency.stackSize;
-		int days2 = 0;
-		int possibleDays = 0;
-		int possibleSize = stackSize;
-		while (true) {
-			for (ItemStack item : cd.keySet()) {
-				int rDays = cd.get(item);
-				int rValue = item.stackSize;
-				if (rValue > stackSize) {
-					continue;
-				}
-				int newStackSize = stackSize % rValue;
-				int size = stackSize - newStackSize;
-				int posDays = (size / rValue) * rDays;
-				if (possibleDays > posDays) {
-					continue;
-				}
-				possibleDays = posDays;
-				possibleSize = newStackSize;
-			}
-			if (stackSize == possibleSize) {
-				break;
-			}
-			stackSize = possibleSize;
-			days2 += possibleDays;
-			possibleDays = 0;
-		}
-		RoleEvent.FollowerHireEvent event = new RoleEvent.FollowerHireEvent(player, npc.wrappedNPC, days2);
-		if (EventHooks.onNPCRole(npc, event)) {
-			return;
-		}
-		if (event.days == 0) {
-			return;
-		}
-		if (stackSize <= 0) {
-			currencyInv.setInventorySlotContents(0, (ItemStack) null);
-		} else {
-			currency = currency.splitStack(stackSize);
-		}
-		npc.say(player,
-				new Line(NoppesStringUtils.formatText(role.dialogHire.replace("{days}", days2 + ""), player, npc)));
-		role.setOwner(player);
-		role.addDays(days2);
-	}
-
-	public static void hireFollower(EntityPlayerMP player, EntityNPCInterface npc) {
-		if (npc.advanced.role != 2) {
-			return;
-		}
-		Container con = player.openContainer;
-		if ((con == null) || !(con instanceof ContainerNPCFollowerHire)) {
-			return;
-		}
-		ContainerNPCFollowerHire container = (ContainerNPCFollowerHire) con;
-		RoleFollower role = (RoleFollower) npc.roleInterface;
-		followerBuy(role, container.currencyMatrix, player, npc);
 	}
 
 	public static void questCompletion(EntityPlayerMP player, int questId) {

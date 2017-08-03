@@ -31,7 +31,7 @@ public class EntityAIReturn extends EntityAIBase {
 
 	@Override
 	public boolean continueExecuting() {
-		return !npc.isFollower() && !npc.isKilled() && !npc.isAttacking() && !npc.isVeryNearAssignedPlace()
+		return !npc.isKilled() && !npc.isAttacking() && !npc.isVeryNearAssignedPlace()
 				&& !npc.isInteracting() && (!npc.getNavigator().noPath() || !wasAttacked || isTooFar())
 				&& (totalTicks <= 600);
 	}

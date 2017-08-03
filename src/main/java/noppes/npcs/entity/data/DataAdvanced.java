@@ -7,19 +7,15 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import noppes.npcs.ai.jobs.JobBard;
 import noppes.npcs.ai.jobs.JobBuilder;
-import noppes.npcs.ai.jobs.JobChunkLoader;
 import noppes.npcs.ai.jobs.JobConversation;
 import noppes.npcs.ai.jobs.JobFarmer;
-import noppes.npcs.ai.jobs.JobFollower;
 import noppes.npcs.ai.jobs.JobGuard;
 import noppes.npcs.ai.jobs.JobHealer;
 import noppes.npcs.ai.jobs.JobItemGiver;
 import noppes.npcs.ai.jobs.JobPuppet;
 import noppes.npcs.ai.jobs.JobSpawner;
 import noppes.npcs.ai.roles.RoleBank;
-import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.ai.roles.RoleDialog;
-import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.ai.roles.RolePostman;
 import noppes.npcs.ai.roles.RoleTrader;
 import noppes.npcs.ai.roles.RoleTransporter;
@@ -213,14 +209,10 @@ public class DataAdvanced implements INPCAdvanced {
 			npc.jobInterface = new JobGuard(npc);
 		} else if ((job == 4) && !(npc.jobInterface instanceof JobItemGiver)) {
 			npc.jobInterface = new JobItemGiver(npc);
-		} else if ((job == 5) && !(npc.jobInterface instanceof JobFollower)) {
-			npc.jobInterface = new JobFollower(npc);
 		} else if ((job == 6) && !(npc.jobInterface instanceof JobSpawner)) {
 			npc.jobInterface = new JobSpawner(npc);
 		} else if ((job == 7) && !(npc.jobInterface instanceof JobConversation)) {
 			npc.jobInterface = new JobConversation(npc);
-		} else if ((job == 8) && !(npc.jobInterface instanceof JobChunkLoader)) {
-			npc.jobInterface = new JobChunkLoader(npc);
 		} else if ((job == 9) && !(npc.jobInterface instanceof JobPuppet)) {
 			npc.jobInterface = new JobPuppet(npc);
 		} else if ((job == 10) && !(npc.jobInterface instanceof JobBuilder)) {
@@ -254,16 +246,12 @@ public class DataAdvanced implements INPCAdvanced {
 			npc.roleInterface = null;
 		} else if ((role == 3) && !(npc.roleInterface instanceof RoleBank)) {
 			npc.roleInterface = new RoleBank(npc);
-		} else if ((role == 2) && !(npc.roleInterface instanceof RoleFollower)) {
-			npc.roleInterface = new RoleFollower(npc);
 		} else if ((role == 5) && !(npc.roleInterface instanceof RolePostman)) {
 			npc.roleInterface = new RolePostman(npc);
 		} else if ((role == 1) && !(npc.roleInterface instanceof RoleTrader)) {
 			npc.roleInterface = new RoleTrader(npc);
 		} else if ((role == 4) && !(npc.roleInterface instanceof RoleTransporter)) {
 			npc.roleInterface = new RoleTransporter(npc);
-		} else if ((role == 6) && !(npc.roleInterface instanceof RoleCompanion)) {
-			npc.roleInterface = new RoleCompanion(npc);
 		} else if ((role == 7) && !(npc.roleInterface instanceof RoleDialog)) {
 			npc.roleInterface = new RoleDialog(npc);
 		}

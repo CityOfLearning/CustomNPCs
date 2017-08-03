@@ -7,9 +7,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.potion.Potion;
 import noppes.npcs.ai.jobs.JobGuard;
-import noppes.npcs.ai.roles.RoleCompanion;
-import noppes.npcs.ai.roles.companion.CompanionGuard;
-import noppes.npcs.constants.EnumCompanionJobs;
 import noppes.npcs.entity.EntityNPCInterface;
 
 public class NPCAttackSelector implements Predicate {
@@ -35,7 +32,7 @@ public class NPCAttackSelector implements Predicate {
 		if (!npc.ai.attackInvisible && entity.isPotionActive(Potion.invisibility) && npc.isInRange(entity, 3.0)) {
 			return false;
 		}
-		if (!npc.isFollower() && npc.ai.returnToStart) {
+		if (npc.ai.returnToStart) {
 			int allowedDistance = npc.stats.aggroRange * 2;
 			if (npc.ai.getMovingType() == 1) {
 				allowedDistance += npc.ai.walkingRange;
@@ -51,13 +48,6 @@ public class NPCAttackSelector implements Predicate {
 		}
 		if ((npc.advanced.job == 3) && ((JobGuard) npc.jobInterface).isEntityApplicable(entity)) {
 			return true;
-		}
-		if (npc.advanced.role == 6) {
-			RoleCompanion role = (RoleCompanion) npc.roleInterface;
-			if ((role.job == EnumCompanionJobs.GUARD)
-					&& ((CompanionGuard) role.jobInterface).isEntityApplicable(entity)) {
-				return true;
-			}
 		}
 		if (!(entity instanceof EntityPlayerMP)) {
 			if (entity instanceof EntityNPCInterface) {

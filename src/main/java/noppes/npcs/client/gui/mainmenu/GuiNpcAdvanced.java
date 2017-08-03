@@ -14,9 +14,7 @@ import noppes.npcs.client.gui.advanced.GuiNPCScenes;
 import noppes.npcs.client.gui.advanced.GuiNPCSoundsMenu;
 import noppes.npcs.client.gui.roles.GuiJobFarmer;
 import noppes.npcs.client.gui.roles.GuiNpcBard;
-import noppes.npcs.client.gui.roles.GuiNpcCompanion;
 import noppes.npcs.client.gui.roles.GuiNpcConversation;
-import noppes.npcs.client.gui.roles.GuiNpcFollowerJob;
 import noppes.npcs.client.gui.roles.GuiNpcGuard;
 import noppes.npcs.client.gui.roles.GuiNpcHealer;
 import noppes.npcs.client.gui.roles.GuiNpcPuppet;
@@ -165,8 +163,6 @@ public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 				NoppesUtil.requestOpenGUI(EnumGuiType.SetupBank);
 			} else if (npc.advanced.role == 4) {
 				displayGuiScreen(new GuiNpcTransporter(npc));
-			} else if (npc.advanced.role == 6) {
-				displayGuiScreen(new GuiNpcCompanion(npc));
 			} else if (npc.advanced.role == 7) {
 				NoppesUtil.openGUI(player, new GuiRoleDialog(npc));
 			}
@@ -182,8 +178,6 @@ public class GuiNpcAdvanced extends GuiNPCInterface2 implements IGuiData {
 				NoppesUtil.openGUI(player, new GuiNpcGuard(npc));
 			} else if (npc.advanced.job == 4) {
 				NoppesUtil.requestOpenGUI(EnumGuiType.SetupItemGiver);
-			} else if (npc.advanced.job == 5) {
-				NoppesUtil.openGUI(player, new GuiNpcFollowerJob(npc));
 			} else if (npc.advanced.job == 6) {
 				NoppesUtil.openGUI(player, new GuiNpcSpawner(npc));
 			} else if (npc.advanced.job == 7) {
