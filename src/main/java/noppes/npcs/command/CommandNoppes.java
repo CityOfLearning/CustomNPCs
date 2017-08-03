@@ -26,7 +26,6 @@ public class CommandNoppes extends CommandBase {
 		registerCommand(new CmdSlay());
 		registerCommand(new CmdQuest());
 		registerCommand(new CmdDialog());
-		registerCommand(new CmdSchematics());
 		registerCommand(new CmdFaction());
 		registerCommand(new CmdNPC());
 	}

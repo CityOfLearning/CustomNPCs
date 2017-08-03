@@ -28,6 +28,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameData;
 import noppes.npcs.CustomItems;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.util.NoppesUtilServer;
@@ -39,29 +40,15 @@ public class SchematicController {
 	}
 	private Schematic building;
 	private ICommandSender buildStarter;
-	private int buildingPercentage;
-
 	public List<String> included = Lists.newArrayList();
 
 	public SchematicController() {
 		building = null;
 		buildStarter = null;
-		buildingPercentage = 0;
 		included.addAll(Arrays.asList("Archery_Range", "Bakery", "Barn", "Building_Site", "Chapel", "Church", "Gate",
 				"Glassworks", "Guard_Tower", "Guild_House", "House", "House_Small", "Inn", "Library", "Lighthouse",
 				"Mill", "Observatory", "Rollercoaster", "Ship", "Shop", "Stall", "Stall2", "Stall3", "Tier_House1",
 				"Tier_House2", "Tier_House3", "Tower", "Wall", "Wall_Corner"));
-	}
-
-	public void build(Schematic schem, ICommandSender sender) {
-		if ((building != null) && building.isBuilding) {
-			info(sender);
-			return;
-		}
-		buildingPercentage = 0;
-		building = schem;
-		building.isBuilding = true;
-		buildStarter = sender;
 	}
 
 	public File getDir() {
@@ -74,12 +61,9 @@ public class SchematicController {
 
 	public void info(ICommandSender sender) {
 		if (building == null) {
-			sendMessage(sender, "Nothing is being build");
-		} else {
-			sendMessage(sender, "Already building: " + building.name + " - " + building.getPercentage() + "%");
-			if (buildStarter != null) {
-				sendMessage(sender, "Build started by: " + buildStarter.getName());
-			}
+			sendMessage(sender, "Nothing is being built");
+		} else if (buildStarter != null) {
+			sendMessage(sender, "Build started by: " + buildStarter.getName());
 		}
 	}
 
@@ -114,7 +98,7 @@ public class SchematicController {
 		}
 		try {
 			Schematic schema = new Schematic(name);
-			schema.load(CompressedStreamTools.readCompressed(stream));
+			schema.readFromNBT(CompressedStreamTools.readCompressed(stream));
 			stream.close();
 			return schema;
 		} catch (IOException e) {
@@ -128,41 +112,73 @@ public class SchematicController {
 		if (included.contains(name)) {
 			return;
 		}
-		Schematic schema = new Schematic(name);
-		schema.height = height;
-		schema.width = width;
-		schema.length = length;
-		schema.size = height * width * length;
-		schema.blockArray = new short[schema.size];
-		schema.blockDataArray = new byte[schema.size];
+		NBTTagCompound nbt = new NBTTagCompound();
+		nbt.setShort("Width", width);
+		nbt.setShort("Height", height);
+		nbt.setShort("Length", length);
+
+		nbt.setString("Materials", "Alpha");
+
 		NoppesUtilServer.NotifyOPs("Creating schematic at: " + pos + " might lag slightly", new Object[0]);
 		World world = sender.getEntityWorld();
-		schema.tileList = new NBTTagList();
-		for (int i = 0; i < schema.size; ++i) {
+
+		NBTTagList tileEntities = new NBTTagList();
+
+		byte[] blocks = new byte[width * height * length];
+		byte[] blocksMeta = new byte[width * height * length];
+		byte[] addBlocks = null;
+
+		for (int i = 0; i < width * height * length; ++i) {
 			int x = i % width;
 			int z = ((i - x) / width) % length;
 			int y = (((i - x) / width) - z) / length;
 			IBlockState state = world.getBlockState(pos.add(x, y, z));
 			if (state.getBlock() != Blocks.air) {
 				if (state.getBlock() != CustomItems.copy) {
-					schema.blockArray[i] = (short) Block.blockRegistry.getIDForObject(state.getBlock());
-					schema.blockDataArray[i] = (byte) state.getBlock().getMetaFromState(state);
+					Block block = state.getBlock();
+					int id = GameData.getBlockRegistry().getId(block);
+					int meta = block.getMetaFromState(state);
+					int index = y * width * length + z * width + x;
+					if (id > 255) {
+						if (addBlocks == null) {
+							addBlocks = new byte[(blocks.length >> 1) + 1];
+						}
+
+						if ((index & 0x1) == 0x0) {
+							addBlocks[index >> 1] = (byte) ((addBlocks[index >> 1] & 0xF0) | ((id >> 8) & 0xF));
+						} else {
+							addBlocks[index >> 1] = (byte) ((addBlocks[index >> 1] & 0xF) | (((id >> 8) & 0xF) << 4));
+						}
+					}
+					blocks[index] = (byte) id;
+					blocksMeta[index] = (byte) meta;
+
 					if (state.getBlock() instanceof ITileEntityProvider) {
 						TileEntity tile = world.getTileEntity(pos.add(x, y, z));
-						NBTTagCompound compound = new NBTTagCompound();
-						tile.writeToNBT(compound);
-						compound.setInteger("x", x);
-						compound.setInteger("y", y);
-						compound.setInteger("z", z);
-						schema.tileList.appendTag(compound);
+						if (tile != null) {
+							NBTTagCompound tag = new NBTTagCompound();
+							tile.writeToNBT(tag);
+							tag.setInteger("x", x);
+							tag.setInteger("y", y);
+							tag.setInteger("z", z);
+							tileEntities.appendTag(tag);
+						}
 					}
 				}
 			}
 		}
+		
+		nbt.setByteArray("Blocks", blocks);
+		nbt.setByteArray("Data", blocksMeta);
+		if (addBlocks.length > 0) {
+			nbt.setByteArray("AddBlocks", addBlocks);
+		}
+		nbt.setTag("TileEntities", tileEntities);
+		
 		File file = new File(getDir(), name + ".schematic");
 		NoppesUtilServer.NotifyOPs("Schematic " + name + " succesfully created", new Object[0]);
 		try {
-			CompressedStreamTools.writeCompressed(schema.save(), new FileOutputStream(file));
+			CompressedStreamTools.writeCompressed(nbt, new FileOutputStream(file));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -176,28 +192,21 @@ public class SchematicController {
 	}
 
 	public void stop(ICommandSender sender) {
-		if ((building == null) || !building.isBuilding) {
+		if ((building == null)) {
 			sendMessage(sender, "Not building");
 		} else {
-			sendMessage(sender, "Stopped building: " + building.name);
+			sendMessage(sender, "Stopped building: " + building.getName());
 			building = null;
 		}
 	}
 
-	public void updateBuilding() {
-		if (building == null) {
+	public void build(Schematic schem, ICommandSender sender, World world, BlockPos pos, int rotation) {
+		if ((building != null)) {
+			info(sender);
 			return;
 		}
-		building.build();
-		if ((buildStarter != null) && ((building.getPercentage() - buildingPercentage) >= 10)) {
-			sendMessage(buildStarter, "Building at " + building.getPercentage() + "%");
-			buildingPercentage = building.getPercentage();
-		}
-		if (!building.isBuilding) {
-			if (buildStarter != null) {
-				sendMessage(buildStarter, "Building finished");
-			}
-			building = null;
-		}
+		building = schem;
+		buildStarter = sender;
+		building.build(world, pos, rotation, sender);
 	}
 }

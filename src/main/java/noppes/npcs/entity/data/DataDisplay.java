@@ -1,5 +1,12 @@
 package noppes.npcs.entity.data;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -10,7 +17,9 @@ import com.mojang.authlib.properties.Property;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTUtil;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StringUtils;
+import noppes.npcs.CustomNpcs;
 import noppes.npcs.api.CustomNPCsException;
 import noppes.npcs.api.entity.data.INPCDisplay;
 import noppes.npcs.constants.EnumParts;
@@ -41,7 +50,12 @@ public class DataDisplay implements INPCDisplay {
 		title = "";
 		skinType = 0;
 		url = "";
-		texture = "customnpcs:textures/entity/humanmale/Steve.png";
+		boolean gender = new Random().nextBoolean();
+		if (gender) {
+			texture = "customnpcs:textures/entity/humanmale/Steve.png";
+		} else {
+			texture = "customnpcs:textures/entity/humanfemale/Stephanie.png";
+		}
 		cloakTexture = "";
 		glowTexture = "";
 		visible = 0;
@@ -51,23 +65,39 @@ public class DataDisplay implements INPCDisplay {
 		disableLivingAnimation = false;
 		showBossBar = 0;
 		this.npc = npc;
-		String[] names = { "Noppes", "Noppes", "Noppes", "Noppes", "Atesson", "Rothcersul", "Achdranys", "Pegato",
-				"Chald", "Gareld", "Nalworche", "Ineald", "Tia'kim", "Torerod", "Turturdar", "Ranler", "Dyntan",
-				"Oldrake", "Gharis", "Elmn", "Tanal", "Waran-ess", "Ach-aldhat", "Athi", "Itageray", "Tasr", "Ightech",
-				"Gakih", "Adkal", "Qua'an", "Sieq", "Urnp", "Rods", "Vorbani", "Smaik", "Fian", "Hir", "Ristai",
-				"Kineth", "Naif", "Issraya", "Arisotura", "Honf", "Rilfom", "Estz", "Ghatroth", "Yosil", "Darage",
-				"Aldny", "Tyltran", "Armos", "Loxiku", "Burhat", "Tinlt", "Ightyd", "Mia", "Ken", "Karla", "Lily",
-				"Carina", "Daniel", "Slater", "Zidane", "Valentine", "Eirina", "Carnow", "Grave", "Shadow", "Drakken",
-				"Kaoz", "Silk", "Drake", "Oldam", "Lynxx", "Lenyx", "Winter", "Seth", "Apolitho", "Amethyst", "Ankin",
-				"Seinkan", "Ayumu", "Sakamoto", "Divina", "Div", "Magia", "Magnus", "Tiakono", "Ruin", "Hailinx",
-				"Ethan", "Wate", "Carter", "William", "Brion", "Sparrow", "Basrrelen", "Gyaku", "Claire", "Crowfeather",
-				"Blackwell", "Raven", "Farcri", "Lucas", "Bangheart", "Kamoku", "Kyoukan", "Blaze", "Benjamin",
-				"Larianne", "Kakaragon", "Melancholy", "Epodyno", "Thanato", "Mika", "Dacks", "Ylander", "Neve",
-				"Meadow", "Cuero", "Embrera", "Eldamore", "Faolan", "Chim", "Nasu", "Kathrine", "Ariel", "Arei",
-				"Demytrix", "Kora", "Ava", "Larson", "Leonardo", "Wyrl", "Sakiama", "Lambton", "Kederath", "Malus",
-				"Riplette", "Andern", "Ezall", "Lucien", "Droco", "Cray", "Tymen", "Zenix", "Entranger", "Saenorath",
-				"Chris", "Christine", "Marble", "Mable", "Ross", "Rose", "Xalgan ", "Kennet", "Aphmau" };
-		name = names[new Random().nextInt(names.length)];
+		ResourceLocation nameTxt = new ResourceLocation("customnpcs", "male_names.txt");
+		
+		try {
+			if (gender) {
+				InputStream in = getClass().getResourceAsStream("/assets/customnpcs/male_names.txt");
+				BufferedReader input = new BufferedReader(new InputStreamReader(in));
+				List<String> names = new ArrayList();
+				String line = input.readLine();
+
+				while (line != null) {
+					names.add(line);
+
+					line = input.readLine();
+
+				}
+				name = names.get(new Random().nextInt(names.size()));
+			} else {
+				InputStream in = getClass().getResourceAsStream("/assets/customnpcs/female_names.txt");
+				BufferedReader input = new BufferedReader(new InputStreamReader(in));
+				List<String> names = new ArrayList();
+				String line = input.readLine();
+
+				while (line != null) {
+					names.add(line);
+					line = input.readLine();
+				}
+				name = names.get(new Random().nextInt(names.size()));
+			}
+		} catch (FileNotFoundException e) {
+			CustomNpcs.logger.error("Encountered an error", e);
+		} catch (IOException e) {
+			CustomNpcs.logger.error("Encountered an error", e);
+		}
 	}
 
 	@Override

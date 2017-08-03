@@ -3,8 +3,6 @@ package noppes.npcs.ai.jobs;
 
 import java.util.Stack;
 
-import com.dyn.schematics.BlockData;
-
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -16,6 +14,7 @@ import noppes.npcs.api.IItemStack;
 import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.blocks.tiles.TileBuilder;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.BlockData;
 import noppes.npcs.util.NoppesUtilServer;
 
 public class JobBuilder extends JobInterface {
@@ -135,7 +134,7 @@ public class JobBuilder extends JobInterface {
 			Stack<BlockData> placing = new Stack<>();
 			NBTTagList list = compound.getTagList("Placing", 10);
 			for (int i = 0; i < list.tagCount(); ++i) {
-				BlockData data = BlockData.getData(list.getCompoundTagAt(i));
+				BlockData data = BlockData.readFromNBT(list.getCompoundTagAt(i));
 				if (data != null) {
 					placing.add(data);
 				}
@@ -166,10 +165,12 @@ public class JobBuilder extends JobInterface {
 			if ((placingList != null) && !placingList.isEmpty()) {
 				NBTTagList list = new NBTTagList();
 				for (BlockData data : placingList) {
-					list.appendTag(data.getNBT());
+					NBTTagCompound subcompound = new NBTTagCompound();
+					list.appendTag(data.writeToNBT(subcompound));
 				}
 				if (placing != null) {
-					list.appendTag(placing.getNBT());
+					NBTTagCompound subcompound = new NBTTagCompound();
+					list.appendTag(placing.writeToNBT(subcompound)); 
 				}
 				compound.setTag("Placing", list);
 			}

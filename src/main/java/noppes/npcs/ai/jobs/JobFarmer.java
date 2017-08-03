@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.dyn.schematics.BlockData;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockChest;
 import net.minecraft.block.BlockCrops;
@@ -26,6 +24,7 @@ import noppes.npcs.api.wrapper.ItemStackWrapper;
 import noppes.npcs.constants.AiMutex;
 import noppes.npcs.controllers.MassBlockController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.BlockData;
 import noppes.npcs.util.NoppesUtilPlayer;
 import noppes.npcs.util.NoppesUtilServer;
 

@@ -50,10 +50,9 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 
 	@Override
 	public Packet getDescriptionPacket() {
-		NBTTagCompound compound = new NBTTagCompound();
-		compound.setInteger("Rotation", rotation);
-		S35PacketUpdateTileEntity packet = new S35PacketUpdateTileEntity(pos, 0, compound);
-		return packet;
+		NBTTagCompound tagCompound = new NBTTagCompound();
+		writeToNBT(tagCompound);
+		return new S35PacketUpdateTileEntity(pos, getBlockMetadata(), tagCompound);
 	}
 
 	public int getHeight() {
@@ -74,21 +73,17 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		NBTTagCompound compound = pkt.getNbtCompound();
-		rotation = compound.getInteger("Rotation");
-	}
-
-	public void readExtraNBT(NBTTagCompound compound) {
-		availability.readFromNBT(compound.getCompoundTag("BorderAvailability"));
-		rotation = compound.getInteger("BorderRotation");
-		height = compound.getInteger("BorderHeight");
-		message = compound.getString("BorderMessage");
+		super.onDataPacket(net, pkt);
+		readFromNBT(pkt.getNbtCompound());
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		readExtraNBT(compound);
+		availability.readFromNBT(compound.getCompoundTag("BorderAvailability"));
+		rotation = compound.getInteger("BorderRotation");
+		height = compound.getInteger("BorderHeight");
+		message = compound.getString("BorderMessage");
 		if (getWorld() != null) {
 			getWorld().setBlockState(getPos(),
 					CustomItems.border.getDefaultState().withProperty(BlockBorder.ROTATION, rotation));
@@ -158,16 +153,12 @@ public class TileBorder extends TileNpcEntity implements Predicate, ITickable {
 		}
 	}
 
-	public void writeExtraNBT(NBTTagCompound compound) {
+	@Override
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
 		compound.setTag("BorderAvailability", availability.writeToNBT(new NBTTagCompound()));
 		compound.setInteger("BorderRotation", rotation);
 		compound.setInteger("BorderHeight", height);
 		compound.setString("BorderMessage", message);
-	}
-
-	@Override
-	public void writeToNBT(NBTTagCompound compound) {
-		super.writeToNBT(compound);
-		writeExtraNBT(compound);
 	}
 }

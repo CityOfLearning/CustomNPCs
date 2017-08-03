@@ -78,7 +78,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 		if (!scroll.hasSelected()) {
 			return;
 		}
-		if ((selected != null) && (selected.size < 125000)) {
+		if ((selected != null) && (selected.getSize() < 100000)) {
 			// the button only appears if the schematic is under a certain size
 			getButton(3).setDisplay(0);
 		}
@@ -98,23 +98,23 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 		addScroll(scroll);
 		if (selected != null) {
 			int y = guiTop + 4;
-			if (selected.size < 125000) {
+			if (selected.getSize() < 100000) {
 				addButton(new GuiNpcButtonYesNo(3, guiLeft + 200, y,
 						(TileBuilder.DrawPos != null) && tile.getPos().equals(TileBuilder.DrawPos)));
 				addLabel(new GuiNpcLabel(3, "schematic.preview", guiLeft + 130, y + 5));
 			}
 			boolean id = false;
-			String string = StatCollector.translateToLocal("schematic.width") + ": " + selected.width;
+			String string = StatCollector.translateToLocal("schematic.width") + ": " + selected.getWidth();
 			int x = guiLeft + 130;
 			y += 22;
 			addLabel(new GuiNpcLabel(id ? 1 : 0, string, x, y));
 			boolean id2 = true;
-			String string2 = StatCollector.translateToLocal("schematic.length") + ": " + selected.length;
+			String string2 = StatCollector.translateToLocal("schematic.length") + ": " + selected.getLength();
 			int x2 = guiLeft + 130;
 			y += 12;
 			addLabel(new GuiNpcLabel(id2 ? 1 : 0, string2, x2, y));
 			int id3 = 2;
-			String string3 = StatCollector.translateToLocal("schematic.height") + ": " + selected.height;
+			String string3 = StatCollector.translateToLocal("schematic.height") + ": " + selected.getHeight();
 			int x3 = guiLeft + 130;
 			y += 12;
 			addLabel(new GuiNpcLabel(id3, string3, x3, y));
@@ -169,7 +169,7 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	public void setData(Vector<String> list, HashMap<String, Integer> data) {
 		scroll.setList(list);
 		if (selected != null) {
-			scroll.setSelected(selected.name);
+			scroll.setSelected(selected.getName());
 		}
 		initGui();
 	}
@@ -177,12 +177,12 @@ public class GuiBlockBuilder extends GuiNPCInterface implements IGuiData, ICusto
 	@Override
 	public void setGuiData(NBTTagCompound compound) {
 		if (compound.hasKey("Width")) {
-			(selected = new Schematic(compound.getString("SchematicName"))).load(compound);
+			(selected = new Schematic(compound.getString("SchematicName"))).readFromNBT(compound);
 			if ((TileBuilder.DrawPos != null) && TileBuilder.DrawPos.equals(tile.getPos())) {
 				tile.setDrawSchematic(selected);
 			}
-			scroll.setSelected(selected.name);
-			scroll.scrollTo(selected.name);
+			scroll.setSelected(selected.getName());
+			scroll.scrollTo(selected.getName());
 		} else {
 			tile.readPartNBT(compound);
 		}

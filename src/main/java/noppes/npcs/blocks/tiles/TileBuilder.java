@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.dyn.schematics.BlockData;
 import com.dyn.schematics.Schematic;
 import com.dyn.schematics.registry.SchematicRenderingRegistry;
 
@@ -25,6 +24,7 @@ import noppes.npcs.ai.jobs.JobBuilder;
 import noppes.npcs.controllers.Availability;
 import noppes.npcs.controllers.SchematicController;
 import noppes.npcs.entity.EntityNPCInterface;
+import noppes.npcs.util.BlockData;
 import noppes.npcs.util.NBTTags;
 
 public class TileBuilder extends TileEntity implements ITickable {
@@ -78,7 +78,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 		}
 		boolean bo = positions.isEmpty();
 		Stack<BlockData> list = new Stack<>();
-		int size = (schematic.width * schematic.length) / 4;
+		int size = (schematic.getWidth() * schematic.getLength()) / 4;
 		if (size > 30) {
 			size = 30;
 		}
@@ -87,18 +87,18 @@ public class TileBuilder extends TileEntity implements ITickable {
 				return list;
 			}
 			int pos = bo ? positionsSecond.pop() : positions.pop();
-			if (pos < schematic.blockArray.length) {
-				Block b = Block.getBlockById(schematic.blockArray[pos]);
+			if (pos < schematic.getSize()) {
+				Block b = Block.getBlockById(schematic.getBlockIdAtIndex(pos));
 				if (b == null) {
 					b = Blocks.air;
 				}
 				if (!b.isFullBlock() && !bo && (b != Blocks.air)) {
 					positionsSecond.add(0, pos);
 				} else {
-					int meta = schematic.blockDataArray[pos];
-					int x = pos % schematic.width;
-					int z = ((pos - x) / schematic.width) % schematic.length;
-					int y = (((pos - x) / schematic.width) - z) / schematic.length;
+					int meta = schematic.getBlockMetadataAtIndex(pos);
+					int x = pos % schematic.getWidth();
+					int z = ((pos - x) / schematic.getWidth()) % schematic.getLength();
+					int y = (((pos - x) / schematic.getWidth()) - z) / schematic.getLength();
 					BlockPos blockPos = getPos().add(1, yOffest, 1).add(schematic.rotatePos(x, y, z, rotation));
 					IBlockState original = worldObj.getBlockState(blockPos);
 					if (original.getBlock() == b) {
@@ -113,7 +113,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 					state = schematic.rotationState(state, rotation);
 					NBTTagCompound tile = null;
 					if (b instanceof ITileEntityProvider) {
-						tile = schematic.getTileEntity(x, y, z, blockPos);
+						tile = schematic.getTileEntityTag(x, y, z, blockPos);
 					}
 					list.add(0, new BlockData(blockPos, state, tile));
 				}
@@ -235,24 +235,24 @@ public class TileBuilder extends TileEntity implements ITickable {
 			return;
 		}
 		Stack<Integer> positions = new Stack<>();
-		for (int y = 0; y < schematics.height; ++y) {
-			for (int z = 0; z < (schematics.length / 2); ++z) {
-				for (int x = 0; x < (schematics.width / 2); ++x) {
+		for (int y = 0; y < schematics.getHeight(); ++y) {
+			for (int z = 0; z < (schematics.getLength() / 2); ++z) {
+				for (int x = 0; x < (schematics.getWidth() / 2); ++x) {
 					positions.add(0, schematics.xyzToIndex(x, y, z));
 				}
 			}
-			for (int z = 0; z < (schematics.length / 2); ++z) {
-				for (int x = schematics.width / 2; x < schematics.width; ++x) {
+			for (int z = 0; z < (schematics.getLength() / 2); ++z) {
+				for (int x = schematics.getWidth() / 2; x < schematics.getWidth(); ++x) {
 					positions.add(0, schematics.xyzToIndex(x, y, z));
 				}
 			}
-			for (int z = schematics.length / 2; z < schematics.length; ++z) {
-				for (int x = 0; x < (schematics.width / 2); ++x) {
+			for (int z = schematics.getLength() / 2; z < schematics.getLength(); ++z) {
+				for (int x = 0; x < (schematics.getWidth() / 2); ++x) {
 					positions.add(0, schematics.xyzToIndex(x, y, z));
 				}
 			}
-			for (int z = schematics.length / 2; z < schematics.length; ++z) {
-				for (int x = schematics.width / 2; x < schematics.width; ++x) {
+			for (int z = schematics.getLength() / 2; z < schematics.getLength(); ++z) {
+				for (int x = schematics.getWidth() / 2; x < schematics.getWidth(); ++x) {
 					positions.add(0, schematics.xyzToIndex(x, y, z));
 				}
 			}
@@ -325,7 +325,7 @@ public class TileBuilder extends TileEntity implements ITickable {
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
 		if (schematic != null) {
-			compound.setString("SchematicName", schematic.name);
+			compound.setString("SchematicName", schematic.getName());
 		}
 		compound.setTag("Positions", NBTTags.nbtIntegerCollection(new ArrayList<>(positions)));
 		compound.setTag("PositionsSecond", NBTTags.nbtIntegerCollection(new ArrayList<>(positionsSecond)));

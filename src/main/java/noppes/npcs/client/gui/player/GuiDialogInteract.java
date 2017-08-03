@@ -148,11 +148,11 @@ public class GuiDialogInteract extends Show {
 		optionsList.setId("dialogOptions");
 		registerComponent(optionsList);
 
-		registerComponent(new EntityComponent((int) (width * .15), (int) (height * .5), (int) (width * .2),
-				(int) (height * .2), nEntity, 0, 1.5f, false));
+		registerComponent(new EntityComponent((int) (width * .1), (int) (height * .1), (int) (width * .2),
+				(int) (height * .2), nEntity, 0, 2f, false));
 
-		registerComponent(new EntityComponent((int) (width * .8), (int) (height * .95), (int) (width * .2),
-				(int) (height * .2), pEntity, 0, 1.5f, false));
+		registerComponent(new EntityComponent((int) (width * .7), (int) (height * .5), (int) (width * .2),
+				(int) (height * .2), pEntity, 0, 2f, false));
 
 	}
 }

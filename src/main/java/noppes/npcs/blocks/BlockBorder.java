@@ -17,6 +17,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import noppes.npcs.CustomItems;
+import noppes.npcs.CustomNpcsPermissions;
 import noppes.npcs.blocks.tiles.TileBorder;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketServer;
@@ -87,10 +88,16 @@ public class BlockBorder extends BlockContainer implements IPermission {
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side,
 			float hitX, float hitY, float hitZ) {
 		ItemStack currentItem = player.inventory.getCurrentItem();
-		if (!world.isRemote && (currentItem != null) && (currentItem.getItem() == CustomItems.wand)) {
+		if (!world.isRemote) {
+			if (currentItem != null && (currentItem.getItem() == CustomItems.wand)) {
 			NoppesUtilServer.sendOpenGui(player, EnumGuiType.Border, null, pos.getX(), pos.getY(), pos.getZ());
 			return true;
-		}
+			} else {
+				if (CustomNpcsPermissions.hasPermission(player, CustomNpcsPermissions.EDIT_BLOCKS)) {
+					world.setBlockState(pos, state.cycleProperty(BlockBorder.ROTATION));
+				}
+			}
+		} 
 		return false;
 	}
 
@@ -113,8 +120,8 @@ public class BlockBorder extends BlockContainer implements IPermission {
 		}
 		if (adjacent != null) {
 			NBTTagCompound compound = new NBTTagCompound();
-			adjacent.writeExtraNBT(compound);
-			tile.readExtraNBT(compound);
+			adjacent.writeToNBT(compound);
+			tile.readFromNBT(compound);
 		}
 		tile.setRotation(l);
 		if ((entity instanceof EntityPlayer) && !world.isRemote) {

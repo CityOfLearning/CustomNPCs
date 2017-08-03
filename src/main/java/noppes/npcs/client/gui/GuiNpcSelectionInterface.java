@@ -6,10 +6,11 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Vector;
 
+import com.rabbit.gui.utils.AssetsBrowser;
+
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
-import noppes.npcs.client.AssetsBrowser;
 import noppes.npcs.client.NoppesUtil;
 import noppes.npcs.client.gui.util.GuiNPCInterface;
 import noppes.npcs.client.gui.util.GuiNPCInterface2;
