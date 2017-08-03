@@ -6,8 +6,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import com.dyn.schematics.registry.SchematicRenderingRegistry;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDoor;
 import net.minecraft.block.properties.IProperty;
@@ -119,17 +117,11 @@ import noppes.npcs.client.gui.player.GuiMailmanWrite;
 import noppes.npcs.client.gui.player.GuiNPCBankChest;
 import noppes.npcs.client.gui.player.GuiNPCTrader;
 import noppes.npcs.client.gui.player.GuiNpcCarpentryBench;
-import noppes.npcs.client.gui.player.GuiNpcFollower;
-import noppes.npcs.client.gui.player.GuiNpcFollowerHire;
 import noppes.npcs.client.gui.player.GuiTextSign;
 import noppes.npcs.client.gui.player.GuiTradingBlock;
 import noppes.npcs.client.gui.player.GuiTransportSelection;
-import noppes.npcs.client.gui.player.companion.GuiNpcCompanionInv;
-import noppes.npcs.client.gui.player.companion.GuiNpcCompanionStats;
-import noppes.npcs.client.gui.player.companion.GuiNpcCompanionTalents;
 import noppes.npcs.client.gui.questtypes.GuiNpcQuestTypeItem;
 import noppes.npcs.client.gui.roles.GuiNpcBankSetup;
-import noppes.npcs.client.gui.roles.GuiNpcFollowerSetup;
 import noppes.npcs.client.gui.roles.GuiNpcItemGiver;
 import noppes.npcs.client.gui.roles.GuiNpcTraderSetup;
 import noppes.npcs.client.gui.roles.GuiNpcTransporter;
@@ -178,10 +170,6 @@ import noppes.npcs.containers.ContainerMail;
 import noppes.npcs.containers.ContainerManageBanks;
 import noppes.npcs.containers.ContainerManageRecipes;
 import noppes.npcs.containers.ContainerNPCBankInterface;
-import noppes.npcs.containers.ContainerNPCCompanion;
-import noppes.npcs.containers.ContainerNPCFollower;
-import noppes.npcs.containers.ContainerNPCFollowerHire;
-import noppes.npcs.containers.ContainerNPCFollowerSetup;
 import noppes.npcs.containers.ContainerNPCInv;
 import noppes.npcs.containers.ContainerNPCTrader;
 import noppes.npcs.containers.ContainerNPCTraderSetup;
@@ -332,12 +320,6 @@ public class ClientProxy extends CommonProxy {
 			if (gui == EnumGuiType.MainMenuAI) {
 				return new GuiNpcAI(npc);
 			}
-			if (gui == EnumGuiType.PlayerFollowerHire) {
-				return new GuiNpcFollowerHire(npc, (ContainerNPCFollowerHire) container);
-			}
-			if (gui == EnumGuiType.PlayerFollower) {
-				return new GuiNpcFollower(npc, (ContainerNPCFollower) container);
-			}
 			if (gui == EnumGuiType.PlayerTrader) {
 				return new GuiNPCTrader(npc, (ContainerNPCTrader) container);
 			}
@@ -359,9 +341,6 @@ public class ClientProxy extends CommonProxy {
 			}
 			if (gui == EnumGuiType.PlayerAnvil) {
 				return new GuiNpcCarpentryBench((ContainerCarpentryBench) container);
-			}
-			if (gui == EnumGuiType.SetupFollower) {
-				return new GuiNpcFollowerSetup(npc, (ContainerNPCFollowerSetup) container);
 			}
 			if (gui == EnumGuiType.SetupItemGiver) {
 				return new GuiNpcItemGiver(npc, (ContainerNpcItemGiver) container);
@@ -413,15 +392,6 @@ public class ClientProxy extends CommonProxy {
 			}
 			if (gui == EnumGuiType.Waypoint) {
 				return new GuiNpcWaypoint(x, y, z);
-			}
-			if (gui == EnumGuiType.Companion) {
-				return new GuiNpcCompanionStats(npc);
-			}
-			if (gui == EnumGuiType.CompanionTalent) {
-				return new GuiNpcCompanionTalents(npc);
-			}
-			if (gui == EnumGuiType.CompanionInv) {
-				return new GuiNpcCompanionInv(npc, (ContainerNPCCompanion) container);
 			}
 		}
 		return null;
@@ -540,7 +510,6 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void postload() {
-		MinecraftForge.EVENT_BUS.register(new SchematicRenderingRegistry());
 		if (CustomNpcs.InventoryGuiEnabled) {
 			MinecraftForge.EVENT_BUS.register(new TabRegistry());
 			if (TabRegistry.getTabList().size() < 2) {

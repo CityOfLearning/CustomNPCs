@@ -25,10 +25,6 @@ import noppes.npcs.containers.ContainerNPCBankLarge;
 import noppes.npcs.containers.ContainerNPCBankSmall;
 import noppes.npcs.containers.ContainerNPCBankUnlock;
 import noppes.npcs.containers.ContainerNPCBankUpgrade;
-import noppes.npcs.containers.ContainerNPCCompanion;
-import noppes.npcs.containers.ContainerNPCFollower;
-import noppes.npcs.containers.ContainerNPCFollowerHire;
-import noppes.npcs.containers.ContainerNPCFollowerSetup;
 import noppes.npcs.containers.ContainerNPCInv;
 import noppes.npcs.containers.ContainerNPCTrader;
 import noppes.npcs.containers.ContainerNPCTraderSetup;
@@ -71,12 +67,6 @@ public class CommonProxy implements IGuiHandler {
 		if (gui == EnumGuiType.PlayerBankLarge) {
 			return new ContainerNPCBankLarge(player, x, y);
 		}
-		if (gui == EnumGuiType.PlayerFollowerHire) {
-			return new ContainerNPCFollowerHire(npc, player);
-		}
-		if (gui == EnumGuiType.PlayerFollower) {
-			return new ContainerNPCFollower(npc, player);
-		}
 		if (gui == EnumGuiType.PlayerTrader) {
 			return new ContainerNPCTrader(npc, player);
 		}
@@ -88,9 +78,6 @@ public class CommonProxy implements IGuiHandler {
 		}
 		if (gui == EnumGuiType.SetupTrader) {
 			return new ContainerNPCTraderSetup(npc, player);
-		}
-		if (gui == EnumGuiType.SetupFollower) {
-			return new ContainerNPCFollowerSetup(npc, player);
 		}
 		if (gui == EnumGuiType.QuestReward) {
 			return new ContainerNpcQuestReward(player);
@@ -113,9 +100,6 @@ public class CommonProxy implements IGuiHandler {
 		}
 		if (gui == EnumGuiType.PlayerMailman) {
 			return new ContainerMail(player, x == 1, y == 1);
-		}
-		if (gui == EnumGuiType.CompanionInv) {
-			return new ContainerNPCCompanion(npc, player);
 		}
 		if (gui == EnumGuiType.TradingBlock) {
 			return new ContainerTradingBlock(player, new BlockPos(x, y, z));

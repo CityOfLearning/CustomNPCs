@@ -30,7 +30,6 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import noppes.npcs.ai.roles.RoleFollower;
 import noppes.npcs.api.constants.EnumQuestType;
 import noppes.npcs.blocks.tiles.TileBanner;
 import noppes.npcs.constants.EnumGuiType;
@@ -182,9 +181,6 @@ public class ServerEventsHandler {
 			EntityPlayer player = null;
 			if (event.source.getEntity() instanceof EntityPlayer) {
 				player = (EntityPlayer) event.source.getEntity();
-			} else if ((event.source.getEntity() instanceof EntityNPCInterface)
-					&& (((EntityNPCInterface) event.source.getEntity()).advanced.role == 2)) {
-				player = ((RoleFollower) ((EntityNPCInterface) event.source.getEntity()).roleInterface).owner;
 			}
 			if (player != null) {
 				doQuest(player, event.entityLiving, true);
@@ -319,14 +315,5 @@ public class ServerEventsHandler {
 	@SubscribeEvent
 	public void populateChunk(PopulateChunkEvent.Post event) {
 		NPCSpawning.performWorldGenSpawning(event.world, event.chunkX, event.chunkZ, event.rand);
-	}
-
-	@SubscribeEvent
-	public void world(EntityJoinWorldEvent event) {
-		if (event.world.isRemote || !(event.entity instanceof EntityPlayer)) {
-			return;
-		}
-		PlayerData data = PlayerDataController.instance.getPlayerData((EntityPlayer) event.entity);
-		data.updateCompanion(event.world);
 	}
 }

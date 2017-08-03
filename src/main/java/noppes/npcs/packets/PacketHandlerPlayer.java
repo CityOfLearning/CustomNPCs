@@ -19,11 +19,9 @@ import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import noppes.npcs.CustomNpcs;
 import noppes.npcs.EventHooks;
 import noppes.npcs.Server;
-import noppes.npcs.ai.roles.RoleCompanion;
 import noppes.npcs.api.event.RoleEvent;
 import noppes.npcs.blocks.tiles.TileBook;
 import noppes.npcs.blocks.tiles.TileTextArea;
-import noppes.npcs.constants.EnumCompanionTalent;
 import noppes.npcs.constants.EnumGuiType;
 import noppes.npcs.constants.EnumPacketClient;
 import noppes.npcs.constants.EnumPlayerPacket;
@@ -57,27 +55,7 @@ public class PacketHandlerPlayer {
 	}
 
 	private void player(ByteBuf buffer, EntityPlayerMP player, EnumPlayerPacket type) throws Exception {
-		if (type == EnumPlayerPacket.CompanionTalentExp) {
-			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-			if ((npc == null) || (npc.advanced.role != 6) || (player != npc.getOwner())) {
-				return;
-			}
-			int id = buffer.readInt();
-			int exp = buffer.readInt();
-			RoleCompanion role = (RoleCompanion) npc.roleInterface;
-			if ((exp <= 0) || !role.canAddExp(-exp) || (id < 0) || (id >= EnumCompanionTalent.values().length)) {
-				return;
-			}
-			EnumCompanionTalent talent = EnumCompanionTalent.values()[id];
-			role.addExp(-exp);
-			role.addTalentExp(talent, exp);
-		} else if (type == EnumPlayerPacket.CompanionOpenInv) {
-			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-			if ((npc == null) || (npc.advanced.role != 6) || (player != npc.getOwner())) {
-				return;
-			}
-			NoppesUtilServer.sendOpenGui(player, EnumGuiType.CompanionInv, npc);
-		} else if (type == EnumPlayerPacket.TradeAccept) {
+		if (type == EnumPlayerPacket.TradeAccept) {
 			if (!(player.openContainer instanceof ContainerTradingBlock)) {
 				return;
 			}
@@ -98,26 +76,6 @@ public class PacketHandlerPlayer {
 					con2.craftMatrix.setInventorySlotContents(i, item);
 				}
 			}
-		} else if (type == EnumPlayerPacket.FollowerHire) {
-			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-			if ((npc == null) || (npc.advanced.role != 2)) {
-				return;
-			}
-			NoppesUtilPlayer.hireFollower(player, npc);
-		} else if (type == EnumPlayerPacket.FollowerExtend) {
-			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-			if ((npc == null) || (npc.advanced.role != 2)) {
-				return;
-			}
-			NoppesUtilPlayer.extendFollower(player, npc);
-			Server.sendData(player, EnumPacketClient.GUI_DATA, npc.roleInterface.writeToNBT(new NBTTagCompound()));
-		} else if (type == EnumPlayerPacket.FollowerState) {
-			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
-			if ((npc == null) || (npc.advanced.role != 2)) {
-				return;
-			}
-			NoppesUtilPlayer.changeFollowerState(player, npc);
-			Server.sendData(player, EnumPacketClient.GUI_DATA, npc.roleInterface.writeToNBT(new NBTTagCompound()));
 		} else if (type == EnumPlayerPacket.RoleGet) {
 			EntityNPCInterface npc = NoppesUtilServer.getEditingNpc(player);
 			if ((npc == null) || (npc.advanced.role == 0)) {
